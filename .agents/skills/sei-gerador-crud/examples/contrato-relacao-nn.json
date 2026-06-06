@@ -1,0 +1,79 @@
+{
+  "entidade": {
+    "tabela": "md_ana_rel_projeto_tema",
+    "singular": "Vinculo projeto x tema",
+    "plural": "Vinculos projeto x tema",
+    "artigo": "o",
+    "campoPrincipal": "str_descricao",
+    "comentario": "Relaciona projetos e temas."
+  },
+  "colunas": [
+    {
+      "nome": "id_md_ana_projeto",
+      "tipoBanco": "int",
+      "obrigatorio": true,
+      "chavePrimaria": true,
+      "chaveEstrangeira": true,
+      "comentario": "Projeto relacionado."
+    },
+    {
+      "nome": "id_md_ana_tema",
+      "tipoBanco": "int",
+      "obrigatorio": true,
+      "chavePrimaria": true,
+      "chaveEstrangeira": true,
+      "comentario": "Tema relacionado."
+    },
+    {
+      "nome": "str_descricao",
+      "tipoBanco": "varchar",
+      "tamanho": 100,
+      "obrigatorio": true,
+      "comentario": "Descricao do vinculo."
+    }
+  ],
+  "relacionamentos": [
+    {
+      "coluna": "id_md_ana_projeto",
+      "tabelaReferencia": "md_ana_projeto",
+      "campoExibicao": "nome",
+      "tipoFk": "obrigatoria",
+      "filtroFk": "on"
+    },
+    {
+      "coluna": "id_md_ana_tema",
+      "tabelaReferencia": "md_ana_tema",
+      "campoExibicao": "nome",
+      "tipoFk": "obrigatoria",
+      "filtroFk": "on"
+    }
+  ],
+  "relacionamentosNn": [
+    {
+      "tabelaOrigem": "md_ana_projeto",
+      "classeInt": "MdAnaProjetoINT",
+      "metodoInt": "montarSelectNome",
+      "rotulo": "Projeto"
+    },
+    {
+      "tabelaOrigem": "md_ana_tema",
+      "classeInt": "MdAnaTemaINT",
+      "metodoInt": "montarSelectNome",
+      "rotulo": "Tema"
+    }
+  ],
+  "regrasGeracao": {
+    "campoSinAtivo": null
+  },
+  "ui": {
+      "ordemFormulario": [
+        "str_descricao"
+      ],
+      "campos": {
+        "str_descricao": {
+        "rotulo": "Descricao",
+        "teclaAtalho": "d"
+      }
+    }
+  }
+}

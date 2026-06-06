@@ -1,0 +1,79 @@
+{
+  "entidade": {
+    "tabela": "md_ana_projeto",
+    "singular": "Projeto",
+    "plural": "Projetos",
+    "artigo": "o",
+    "campoPrincipal": "nome",
+    "comentario": "Cadastro de projetos internos."
+  },
+  "colunas": [
+    {
+      "nome": "id_md_ana_projeto",
+      "tipoBanco": "int",
+      "obrigatorio": false,
+      "chavePrimaria": true,
+      "comentario": "Identificador sequencial do projeto."
+    },
+    {
+      "nome": "nome",
+      "tipoBanco": "varchar",
+      "tamanho": 100,
+      "obrigatorio": true,
+      "comentario": "Nome do projeto."
+    },
+    {
+      "nome": "id_md_ana_tema",
+      "tipoBanco": "int",
+      "obrigatorio": true,
+      "chaveEstrangeira": true,
+      "comentario": "Tema associado ao projeto."
+    },
+    {
+      "nome": "dta_inicio",
+      "tipoBanco": "date",
+      "obrigatorio": true,
+      "comentario": "Data de inicio do projeto."
+    },
+    {
+      "nome": "sin_ativo",
+      "tipoBanco": "char",
+      "tamanho": 1,
+      "obrigatorio": true,
+      "comentario": "Indica se o projeto esta ativo."
+    }
+  ],
+  "relacionamentos": [
+    {
+      "coluna": "id_md_ana_tema",
+      "tabelaReferencia": "md_ana_tema",
+      "campoExibicao": "nome",
+      "tipoFk": "obrigatoria",
+      "filtroFk": "on"
+    }
+  ],
+  "regrasGeracao": {
+    "campoSinAtivo": "sin_ativo"
+  },
+  "ui": {
+    "ordemFormulario": [
+      "nome",
+      "id_md_ana_tema",
+      "dta_inicio"
+    ],
+    "campos": {
+      "nome": {
+        "rotulo": "Nome do projeto",
+        "teclaAtalho": "n"
+      },
+      "id_md_ana_tema": {
+        "rotulo": "Tema",
+        "teclaAtalho": "t"
+      },
+      "dta_inicio": {
+        "rotulo": "Data de inicio",
+        "teclaAtalho": "d"
+      }
+    }
+  }
+}

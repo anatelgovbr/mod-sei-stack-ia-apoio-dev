@@ -1,0 +1,36 @@
+{
+  "entidade": {
+    "tabela": "md_ana_categoria",
+    "singular": "Categoria",
+    "plural": "Categorias",
+    "artigo": "a",
+    "campoPrincipal": "nome",
+    "comentario": "Cadastro de categorias internas."
+  },
+  "colunas": [
+    {
+      "nome": "id_md_ana_categoria",
+      "tipoBanco": "int",
+      "obrigatorio": false,
+      "chavePrimaria": true,
+      "comentario": "Identificador sequencial da categoria."
+    },
+    {
+      "nome": "nome",
+      "tipoBanco": "varchar",
+      "tamanho": 100,
+      "obrigatorio": true,
+      "comentario": "Nome da categoria."
+    },
+    {
+      "nome": "descricao",
+      "tipoBanco": "varchar",
+      "tamanho": 250,
+      "obrigatorio": false,
+      "comentario": "Descricao complementar da categoria."
+    }
+  ],
+  "regrasGeracao": {
+    "campoSinAtivo": null
+  }
+}

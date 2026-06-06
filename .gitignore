@@ -1,0 +1,68 @@
+# Sobre os codigos-fontes do SEI e Vagrant/Docker do SEI Localhost
+/fontes/sei/src/main/php/.vagrant
+/fontes/sei/src/main/php/Vagrantfile
+/fontes/sei/src/main/php/destruir_VM_Dev_Localhost_SEI.bat
+/fontes/sei/src/main/php/iniciar_VM_Dev_Localhost_SEI.bat
+/fontes/sei/src/main/php/parar_VM_Dev_Localhost_SEI.bat
+/fontes/sei/src/main/php/provisionar_VM_Dev_Localhost_SEI.bat
+/fontes/sei/src/main/php/box_update_VM_Dev_Localhost_SEI.bat
+/fontes/sei/src/main/php/Testes-SEI_LOCALHOST-soapui-project.xml
+
+/fontes/sei/src/main/php/sei/config/ConfiguracaoSEI*.*
+/fontes/sei/src/main/php/sip/config/ConfiguracaoSip*.*
+/fontes/sei/src/main/php/sei/temp/
+/fontes/sei/src/main/php/sip/temp/
+/fontes/sei/src/main/php/sei/config/mod-pen/ConfiguracaoModPEN.php
+/fontes/sei/src/main/php/.env
+/fontes/sei/src/main/php/docker-compose.yml
+phpinfo.php
+
+/fontes/sei/ops/.env
+/fontes/sei/ops_sei-docker/.env
+/fontes/sei/src/main/php/remi/
+
+# Extensoes e pastas gerais
+*.bak
+*.*~
+*~
+/tmp
+/solr
+/rh
+/lost+found
+/java
+/backup
+/apache-tomcat-6.0.48
+/tomcat
+
+# Extensoes e Pastas de IDEs de Programacao
+*.code-workspace
+/fontes/sei/src/main/php/nbproject/**
+/.idea
+/.idea/copyright
+/.idea/dictionaries
+/.idea/inspectionProfiles
+.idea
+/.settings/
+/.buildpath
+/.project
+
+# OpenCode / spec-kit / local tooling
+node_modules/
+vendor/
+/specs/
+*.log
+*.cache
+.env*
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+__pycache__/
+.ruff_cache/
+desktop.ini
+
+# Spec Kit — configuracao de ferramenta de IA e por desenvolvedor.
+# Cada desenvolvedor configura a sua ferramenta localmente.
+# Nao versionar esses arquivos para nao criar dependencia implicita de uma ferramenta especifica.
+/.specify/init-options.json
+/.specify/integration.json
