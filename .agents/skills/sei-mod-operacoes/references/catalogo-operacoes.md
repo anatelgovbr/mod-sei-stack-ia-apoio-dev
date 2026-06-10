@@ -134,11 +134,11 @@
 
 2. `definirControlePrazo` e `definirMarcador` usam cabecalho "Saida" nos exemplos, mas os campos correspondem a entrada. Tratar como operacao de escrita (entrada).
 
-3. `consultarPublicacao` retorna `SaidaConsultarPublicacaoAPI` segundo o catalogo da `sei-api` (cap 8), nao `PublicacaoAPI` como mencionado na secao de operacao.
+3. `consultarPublicacao` retorna `SaidaConsultarPublicacaoAPI` segundo o catalogo da `sei-mod-api` (cap 8), nao `PublicacaoAPI` como mencionado na secao de operacao.
 
 4. `RetornoInclusaoDocumentoAPI` aparece em `SaidaGerarProcedimentoAPI` mas nao tem definicao propria. Pode ser subclasse interna nao exposta como API publica.
 
 ## Aviso
 
 **Nao e recomendado usar classes internas do sistema alem das classes API documentadas no capitulo 8 e operacoes listadas acima.**
-Antes de criar logica propria equivalente a uma operacao existente, usar `sei-api` para confirmar que nao ha contrato oficial.
+Antes de criar logica propria equivalente a uma operacao existente, usar `sei-mod-api` para confirmar que nao ha contrato oficial.

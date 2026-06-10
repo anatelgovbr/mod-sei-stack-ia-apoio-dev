@@ -4,7 +4,7 @@ description: |
   Maintain a per-repo napkin as a continuously curated runbook (not a session
   log). Activates EVERY session. Read and curate it before work, keep only
   recurring high-value guidance, organize by priority-sorted categories, and
-  cap each category at top 10 items. The canonical napkin lives at
+  cap each category at top 10 items. The standard napkin lives at
   `.agents/memory/runbook.md` (portable, any tool).
 author: Codex
 version: 6.1.0
@@ -20,7 +20,7 @@ must be continuously curated for fast reuse in future sessions.
 
 ## Session Start: Read And Curate
 
-First thing, every session — read `.agents/memory/runbook.md` (canonical, portable).
+First thing, every session — read `.agents/memory/runbook.md` (standard, portable).
 Internalize what's there and apply it silently. Don't announce that you read it.
 Just apply what you know.
 
@@ -33,7 +33,7 @@ Every time you read it, curate it immediately:
 - Enforce category caps (top 10 per category).
 
 If no runbook exists yet, create the file:
-- `.agents/memory/runbook.md` (canonical — qualquer ferramenta)
+- `.agents/memory/runbook.md` (padrao — qualquer ferramenta)
 
 ```markdown
 # Runbook Operacional

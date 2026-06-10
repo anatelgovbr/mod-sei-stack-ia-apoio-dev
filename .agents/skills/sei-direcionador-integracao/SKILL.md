@@ -3,7 +3,7 @@ name: sei-direcionador-integracao
 description: >
   Skill mediadora que, a partir de uma intencao ambigua do desenvolvedor,
   consulta os catalogos de API, eventos e operacoes do SEI e pergunta
-  qual caminho oficial e o correto antes de encaminhar para a skill canonica.
+  qual caminho oficial e o correto antes de encaminhar para a skill padrao.
 
   Use quando:
   - O desenvolvedor nao sabe se precisa de um contrato API, de um hook de
@@ -14,7 +14,7 @@ description: >
 
   Esta skill NAO implementa, NAO roteia diretamente e NAO tem catalogo proprio.
   A unica saida e uma pergunta objetiva ao desenvolvedor e o encaminhamento
-  para a skill canonica correta.
+  para a skill padrao correta.
 ---
 
 # sei-direcionador-integracao
@@ -23,7 +23,7 @@ description: >
 
 Mediar a primeira etapa de descoberta quando o desenvolvedor tem uma necessidade
 ambigua em relacao a API, eventos ou operacoes do core do SEI, mostrando as
-opcoes encontradas nos tres catalogos canônicos e perguntando qual o caminho
+opcoes encontradas nos tres catalogos padrao e perguntando qual o caminho
 correto antes de encaminhar.
 
 ## Quando usar
@@ -36,10 +36,10 @@ correto antes de encaminhar.
 ## Procedimento
 
 1. **Receber a intencao** do desenvolvedor (textual, informal, em portugues).
-2. **Consultar os tres catalogos canônicos** nesta ordem:
-   - `sei-api`: `references/catalogo-api.md`
-   - `sei-eventos`: `references/catalogo-eventos.md`
-   - `sei-operacoes`: `references/catalogo-operacoes.md`
+2. **Consultar os tres catalogos padrao** nesta ordem:
+   - `sei-mod-api`: `references/catalogo-api.md`
+   - `sei-mod-eventos`: `references/catalogo-eventos.md`
+   - `sei-mod-operacoes`: `references/catalogo-operacoes.md`
 3. **Pesquisar nos catalogos** usando esta prioridade:
    - nome oficial do recurso
    - sinais de dominio
@@ -47,7 +47,7 @@ correto antes de encaminhar.
    - entrada principal
    - saida principal
 4. **Avaliar os resultados**:
-   - Se encontrar correspondência em apenas **1 catalogo**: indicar o caminho e a skill canonica correspondente.
+   - Se encontrar correspondência em apenas **1 catalogo**: indicar o caminho e a skill padrao correspondente.
    - Se encontrar correspondência em **2 ou 3 catalogos**: listar cada opcao com uma frase curta explicando por que se aplica.
    - Se houver muitas correspondencias no mesmo catalogo: priorizar as que tenham mais sinais de dominio aderentes a intencao textual.
 5. **Formular a pergunta objetiva** ao desenvolvedor:
@@ -55,10 +55,10 @@ correto antes de encaminhar.
    - Cada opcao deve ter: nome do recurso, catalogo de origem, uma linha de contexto e, quando existir, o principal sinal de dominio encontrado.
    - Pergunta deve ser do tipo "qual" ou "voce quer", nunca "deveria".
    - Usar o formato de resposta padrao abaixo.
-6. **Aguardar resposta** do desenvolvedor e **encaminhar** para a skill canonica correta:
-   - Resposta indica API/contrato -> `sei-api`
-   - Resposta indica evento/hook -> `sei-eventos`
-   - Resposta indica operacao/metodo `SeiRN` -> `sei-operacoes`
+6. **Aguardar resposta** do desenvolvedor e **encaminhar** para a skill padrao correta:
+   - Resposta indica API/contrato -> `sei-mod-api`
+   - Resposta indica evento/hook -> `sei-mod-eventos`
+   - Resposta indica operacao/metodo `SeiRN` -> `sei-mod-operacoes`
 7. **Se nenhuma correspondencia** for encontrada em nenhum catalogo:
    - Informar que nenhum contrato oficial foi encontrado no catalogo.
    - Sinalizar que sera necessaria implementacao propria com justificativa de seguranca.
@@ -72,7 +72,7 @@ Quando houver 1 correspondencia forte:
 Encontrei 1 opcao oficial relacionada ao que voce descreveu:
 
 1. <NomeOficial>
-   Catalogo: <sei-api|sei-eventos|sei-operacoes>
+   Catalogo: <sei-mod-api|sei-mod-eventos|sei-mod-operacoes>
    Contexto: <descricao curta + sinal de dominio>
 
 Voce quer seguir por esse caminho?
@@ -84,11 +84,11 @@ Quando houver 2 ou 3 correspondencias plausiveis:
 Encontrei estas opcoes oficiais relacionadas ao que voce descreveu:
 
 1. <NomeOficial>
-   Catalogo: <sei-api|sei-eventos|sei-operacoes>
+   Catalogo: <sei-mod-api|sei-mod-eventos|sei-mod-operacoes>
    Contexto: <descricao curta + sinal de dominio>
 
 2. <NomeOficial>
-   Catalogo: <sei-api|sei-eventos|sei-operacoes>
+   Catalogo: <sei-mod-api|sei-mod-eventos|sei-mod-operacoes>
    Contexto: <descricao curta + sinal de dominio>
 
 Qual destas opcoes corresponde melhor ao seu caso?
@@ -110,13 +110,13 @@ Se a necessidade continuar a mesma, o proximo passo e avaliar implementacao prop
 - [ ] A triagem considerou sinais de dominio antes de concluir que nao havia correspondencia relevante.
 - [ ] O encaminhamento respeita a escolha do desenvolvedor.
 - [ ] Se nenhuma correspondencia foi encontrada, a resposta informa isso claramente.
-- [ ] A skill nao tem catalogo proprio — usa exclusivamente os catalogos das 3 skills canônicas.
+- [ ] A skill nao tem catalogo proprio — usa exclusivamente os catalogos das 3 skills padrao.
 
 ## Referências
 
-- Catalogo `sei-api`: `.agents/skills/sei-api/references/catalogo-api.md`
-- Catalogo `sei-eventos`: `.agents/skills/sei-eventos/references/catalogo-eventos.md`
-- Catalogo `sei-operacoes`: `.agents/skills/sei-operacoes/references/catalogo-operacoes.md`
-- Skill canonica `sei-api`: `.agents/skills/sei-api/SKILL.md`
-- Skill canonica `sei-eventos`: `.agents/skills/sei-eventos/SKILL.md`
-- Skill canonica `sei-operacoes`: `.agents/skills/sei-operacoes/SKILL.md`
+- Catalogo `sei-mod-api`: `.agents/skills/sei-mod-api/references/catalogo-api.md`
+- Catalogo `sei-mod-eventos`: `.agents/skills/sei-mod-eventos/references/catalogo-eventos.md`
+- Catalogo `sei-mod-operacoes`: `.agents/skills/sei-mod-operacoes/references/catalogo-operacoes.md`
+- Skill padrao `sei-mod-api`: `.agents/skills/sei-mod-api/SKILL.md`
+- Skill padrao `sei-mod-eventos`: `.agents/skills/sei-mod-eventos/SKILL.md`
+- Skill padrao `sei-mod-operacoes`: `.agents/skills/sei-mod-operacoes/SKILL.md`

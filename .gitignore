@@ -66,3 +66,5 @@ desktop.ini
 # Nao versionar esses arquivos para nao criar dependencia implicita de uma ferramenta especifica.
 /.specify/init-options.json
 /.specify/integration.json
+
+/.agents/memory/runbook.md

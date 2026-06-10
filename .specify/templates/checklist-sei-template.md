@@ -86,17 +86,17 @@
 ## 11. Validações Técnicas Automatizadas
 
 > Execute as skills de validacao para verificar conformidade tecnica.
-> Evidencias geradas em `/tmp/sei-sdd-validacoes/` (nao commitadas).
+> Evidencias geradas em `/tmp/sei-validacoes/` (nao commitadas).
 
 ### Rotas Canonicas
 
 ```bash
-mkdir -p /tmp/sei-sdd-validacoes/
-python3 .agents/skills/sei-verificacao-pagina/audit.py --input <modulo> --format json > /tmp/sei-sdd-validacoes/pagina-seguranca.json
-python3 .agents/skills/sei-verificacao-rn/audit.py --input <modulo>/rn --format json > /tmp/sei-sdd-validacoes/rn-transacao.json
-python3 .agents/skills/sei-verificacao-banco-dados/audit.py --input <modulo>/dto --format json > /tmp/sei-sdd-validacoes/banco-dados.json
-python3 .agents/skills/sei-verificacao-tarefa/audit.py --input <modulo>/scripts --format json > /tmp/sei-sdd-validacoes/tarefa-modulo.json
-python3 .agents/skills/sei-verificacao-controladores/audit.py --input <modulo> --format json --output /tmp/sei-sdd-validacoes/
+mkdir -p /tmp/sei-validacoes/
+python3 .agents/skills/sei-verificacao-pagina/audit.py --input <modulo> --format json > /tmp/sei-validacoes/pagina-seguranca.json
+python3 .agents/skills/sei-verificacao-rn/audit.py --input <modulo>/rn --format json > /tmp/sei-validacoes/rn-transacao.json
+python3 .agents/skills/sei-verificacao-banco-dados/audit.py --input <modulo>/dto --format json > /tmp/sei-validacoes/banco-dados.json
+python3 .agents/skills/sei-verificacao-tarefa/audit.py --input <modulo>/scripts --format json > /tmp/sei-validacoes/tarefa-modulo.json
+python3 .agents/skills/sei-verificacao-controladores/audit.py --input <modulo> --format json --output /tmp/sei-validacoes/
 
 | sei-verificacao-pagina | | [ ] PASS / [ ] WARN / [ ] BLOCK | |
 | sei-verificacao-rn | | [ ] PASS / [ ] WARN / [ ] BLOCK | |

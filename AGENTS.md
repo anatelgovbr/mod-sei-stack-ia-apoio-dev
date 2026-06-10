@@ -96,12 +96,14 @@ Se e-mail ou indexação falharem dentro da transação, `cancelarTransacao()` p
 
 - Ao aplicar qualquer regra, citar o arquivo e a seção de origem
 - Nunca inventar padrão não documentado neste repositório
+- Em documentação, prompts e instruções internas, nunca usar a palavra "canonica" ou variantes; usar sempre a palavra "padrao"
 - Em caso de conflito entre documentos: parar, identificar os dois documentos conflitantes e aguardar decisão do desenvolvedor antes de prosseguir
 - Em caso de ambiguidade de contrato ou requisito: perguntar, nunca inferir
 
 ## Fontes de Contexto
 
-- **PRD.md**: fonte de contexto funcional e regras de negócio. Consultar quando a tarefa depender de contexto de módulo, usuário, regra de domínio, fluxo funcional ou impacto de negócio. Se a regra de negócio não estiver em PRD.md, perguntar ao desenvolvedor.
+- **Documentacao do modulo e contexto do desenvolvedor**: para contexto funcional e regras de negocio, consultar primeiro o README do modulo e demais documentos especificos do repositorio. Se a regra de negocio nao estiver documentada, perguntar ao desenvolvedor.
+- **Spec Kit**: o fluxo padrao do Spec Kit no repositorio fica em `.agents/skills/speckit/`; integracoes de ferramenta apenas expõem esse conteudo com adapters leves.
 - **docs/manual_desenvolvimento_md/**: manual oficial de desenvolvimento de módulos SEI (capítulos 2-10). Fonte primária para criação/ativação de módulo, InfraPHP, modelagem, codificação, gerador CRUD, classes API, eventos e operações.
 - **skill-routing-and-contracts.md**: matriz de demanda, skill principal, skills complementares, contratos obrigatórios e gate de bloqueio.
 - **implementation-gates.md**: gates de bloqueio para problemas técnicos críticos.

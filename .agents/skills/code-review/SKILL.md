@@ -11,7 +11,7 @@ Realize um code review crítico e construtivo. **Não faça alterações de cód
 
 1. Consulte os padrões do projeto:
    - `AGENTS.md` — guardrails técnicos e convenções operacionais
-   - `PRD.md` — contexto de produto e objetivos gerais
+   - Documentacao funcional existente no repositorio e contexto fornecido pelo desenvolvedor
    - `.agents/decisions/` — ADRs relevantes para entender decisões existentes
 2. Entenda o contexto da mudança:
    - Qual o objetivo da alteração?
@@ -40,7 +40,7 @@ Avalie cada dimensão. Use os níveis de severidade para classificar achados.
 - Ausência de código duplicado?
 
 ### 4. Arquitetura e Padrões
-- Respeitando as camadas definidas no PRD?
+- Respeitando as camadas definidas no projeto e na documentacao existente?
 - Dependências fluem na direção correta?
 - Sem acoplamento indevido entre módulos?
 

@@ -39,7 +39,7 @@ Nao e gate obrigatorio e nao deve ser acionada por heuristica ampla.
 ## Quando nao usar
 
 - Demandas em que a mudanca principal e de comportamento, release, evento,
-  operacao, pagina, menu ou modelagem; nesses casos, usar a skill canonica da
+  operacao, pagina, menu ou modelagem; nesses casos, usar a skill padrao da
   demanda e tratar esta skill como complementar apenas se houver tipagem
   envolvida
 - Demandas gerais de manutencao em que o desenvolvedor nao pediu tipagem de
@@ -141,7 +141,7 @@ Aplicar preferencialmente nesta ordem:
 
 ### Scripts `sei/scripts/*` e `sip/scripts/*`
 
-- Preservar a estrutura canonica do script de release
+- Preservar a estrutura padrao do script de release
 - Nao alterar bootstrap, `switch`, estrategia de versao, lookups ou helpers por
   motivo cosmetico
 - Esta skill pode atuar em tipagem/PHPDoc desses scripts, mas a referencia

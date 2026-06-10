@@ -96,8 +96,8 @@ Para o protocolo completo de integracao com PR, ver `guia-security-review-pr.md`
 |----------|-------------------|
 | PR com nova pagina PHP ou acao | 1.1, 1.6 + skill `sei-pagina-seguranca-check` |
 | PR com nova acao AJAX no modulo | 1.2, 1.6 + skill `sei-controladores-integracao-check` |
-| PR com novo evento em `*Integracao` | 1.3, 1.6 + skill `sei-eventos` |
-| PR com nova operacao API/WS | 1.4, 1.6 + skill `sei-api-operacoes` |
+| PR com novo evento em `*Integracao` | 1.3, 1.6 + skill `sei-mod-eventos` |
+| PR com nova operacao API/WS | 1.4, 1.6 + skill `sei-mod-operacoes` |
 | PR com mudanca em BD (DDL, DTO, BD) | 1.5 + skill `sei-banco-dados-check` |
 | Hardening geral de modulo | Todas as secoes + skill `sei-modulo-guardrails` |
 | Revisao de modulo completo | Todas as secoes + `template-security-review-modulo.md` |

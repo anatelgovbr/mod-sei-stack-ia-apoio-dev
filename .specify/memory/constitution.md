@@ -1,9 +1,9 @@
-# sei-sdd — Modulos SEI Constitution
+# SEI — Modulos SEI Constitution
 
 ## Uso no Spec Kit
 
 Use este arquivo apenas em `/speckit.*`.
-Use `PRD.md` como fonte funcional para spec, plan e tasks.
+Use a documentacao funcional existente no repositorio como fonte para spec, plan e tasks. Se faltar regra de negocio, peca contexto ao desenvolvedor.
 Em conflito com `AGENTS.md` dentro do fluxo Spec Kit, siga este arquivo para regras de fase e bloqueio.
 
 ## Hierarquia de Verdade e Politica de Conflito

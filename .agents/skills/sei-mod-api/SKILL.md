@@ -1,5 +1,5 @@
 ---
-name: sei-api
+name: sei-mod-api
 description: >
   Verifica se existe classe API oficial do SEI antes de usar classe interna,
   acesso direto ao core ou implementacao propria. Auxilia o agente a localizar
@@ -14,11 +14,11 @@ description: >
 
   Esta skill NAO implementa operacoes nem eventos — apenas orienta a localizacao
   correta do contrato oficial.
-  Para implementacao de operacao, usar sei-operacoes.
-  Para interceptacao de eventos, usar sei-eventos.
+  Para implementacao de operacao, usar sei-mod-operacoes.
+  Para interceptacao de eventos, usar sei-mod-eventos.
 ---
 
-# sei-api
+# sei-mod-api
 
 ## Objetivo
 
@@ -48,11 +48,11 @@ quando ja existe contrato oficial.
 - [ ] Nao foi recomendada classe interna do core como solucao quando existe API oficial.
 - [ ] Nomes oficiais preservados conforme capitulo 8 do manual.
 - [ ] Ambiguidades do manual sinalizadas quando aplicavel.
-- [ ] Referencias cruzadas a `sei-operacoes` e `sei-eventos` corretas.
+- [ ] Referencias cruzadas a `sei-mod-operacoes` e `sei-mod-eventos` corretas.
 
 ## Referências
 
 - Catalogo: `references/catalogo-api.md`
 - Manual SEI cap 8: `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_8_classes_api.md`
-- Para implementacao de operacao: `sei-operacoes`
-- Para interceptacao de eventos: `sei-eventos`
+- Para implementacao de operacao: `sei-mod-operacoes`
+- Para interceptacao de eventos: `sei-mod-eventos`

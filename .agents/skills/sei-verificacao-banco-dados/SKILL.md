@@ -152,7 +152,7 @@ Skill agnóstica — pode ser chamada por:
 - `sei-gerador-crud` (gate pré-geração opcional)
 - `sei-gerador-scripts-release` (verificacao pre-release SEI)
 - `sip-gerador-scripts-release` (verificacao pre-release SIP, quando houver DDL)
-- `sei-eventos` (validação de modelo)
+- `sei-mod-eventos` (validação de modelo)
 - Qualquer prompt ou agente que precise auditar modelagem
 
 ## Modos de auditoria

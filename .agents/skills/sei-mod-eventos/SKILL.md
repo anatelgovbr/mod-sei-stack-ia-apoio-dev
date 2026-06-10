@@ -1,5 +1,5 @@
 ---
-name: sei-eventos
+name: sei-mod-eventos
 description: >
   Intercepta eventos do SEI via metodos na classe *Integracao (SeiIntegracao),
   usando objetos da API, com foco em permissao/link assinado, consistencia
@@ -14,10 +14,10 @@ description: >
     "adicionar botao no controle de processos"
 
   Esta skill foca em interceptAR eventos — para verificar se um evento existe
-  antes de implementar, usar sei-api.
+  antes de implementar, usar sei-mod-api.
 ---
 
-# sei-eventos
+# sei-mod-eventos
 
 ## Objetivo
 
@@ -54,7 +54,7 @@ e auditoria quando aplicavel.
 ## Referências
 
 - Catalogo de eventos: `references/catalogo-eventos.md`
-- Classes API (entrada): `sei-api` / `references/catalogo-api.md`
-- Operacoes relacionadas: `sei-operacoes`
+- Classes API (entrada): `sei-mod-api` / `references/catalogo-api.md`
+- Operacoes relacionadas: `sei-mod-operacoes`
 - Manual SEI cap 9: `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_9_eventos.md`
-- Para verificar se existe evento oficial antes de implementar: `sei-api`
+- Para verificar se existe evento oficial antes de implementar: `sei-mod-api`

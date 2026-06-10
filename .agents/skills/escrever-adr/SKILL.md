@@ -23,7 +23,7 @@ Crie um ADR quando a decisão:
 ## Antes de Criar
 
 1. Consulte `.agents/decisions/` — verificar se já existe um ADR similar
-2. Leia `PRD.md` — contexto arquitetural para embasar a decisão
+2. Leia a documentacao funcional e arquitetural existente no repositorio para embasar a decisao
 3. Se o usuário não forneceu detalhes suficientes, **pergunte**:
    - Qual é o problema ou contexto que levou à decisão?
    - Quais opções foram consideradas?

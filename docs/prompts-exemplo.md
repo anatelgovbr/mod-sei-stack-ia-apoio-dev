@@ -11,10 +11,10 @@ Antes de enviar o pedido:
 - descreva o comportamento esperado, não só o problema atual
 - se houver erro, cole a mensagem e os passos para reproduzir
 - se houver impacto em banco, menu, permissão ou release, diga isso no pedido
-- se a regra de negócio não estiver em `PRD.md`, escreva a regra no próprio prompt
+- se a regra de negócio não estiver documentada no repositório, escreva a regra no próprio prompt
 - não precisa citar skills internas nem detalhes da stack de IA
 
-Se surgir dúvida sobre regra do projeto, consulte `AGENTS.md` e `PRD.md`.
+Se surgir dúvida sobre regra do projeto, consulte `AGENTS.md`, a documentação do módulo e os documentos em `docs/`.
 
 ## Exemplo 1: Só análise, sem alterar arquivos
 
@@ -183,7 +183,7 @@ Antes de alterar arquivos:
 
 - Se você quiser só leitura e análise, diga: `não altere arquivos ainda`.
 - Se você quiser implementação direta, diga: `pode implementar`.
-- Se a regra de negócio não estiver em `PRD.md`, escreva a regra no próprio prompt.
+- Se a regra de negócio não estiver documentada no repositório, escreva a regra no próprio prompt.
 - Se houver decisão arquitetural sensível, peça primeiro uma análise de impacto.
 - Se a demanda envolver tabela, coluna, DTO, BD, RN ou script, mencione isso explicitamente.
 - Se quiser aprender com a resposta, peça: `explique também o raciocínio e os trade-offs`.

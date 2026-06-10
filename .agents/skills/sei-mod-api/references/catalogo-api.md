@@ -29,7 +29,7 @@
 
 | Nome | Descrição | Campos de domínio relevantes | Quando usar |
 |---|---|---|---|
-| EntradaGerarProcedimentoAPI | Dados para geracao de processo: procedimento, documentos, relacionados, envio, prazo, marcador | `UnidadesEnvio`, `SinManterAbertoUnidade`, `SinEnviarEmailNotificacao`, `DataRetornoProgramado`, `DiasRetornoProgramado`, `IdMarcador`, `TextoMarcador`, `DataControlePrazo`, `DiasControlePrazo` | Gerar novo processo via sei-operacoes; geracao automatica; fluxo de trabalho com prazo, envio e organizacao |
+| EntradaGerarProcedimentoAPI | Dados para geracao de processo: procedimento, documentos, relacionados, envio, prazo, marcador | `UnidadesEnvio`, `SinManterAbertoUnidade`, `SinEnviarEmailNotificacao`, `DataRetornoProgramado`, `DiasRetornoProgramado`, `IdMarcador`, `TextoMarcador`, `DataControlePrazo`, `DiasControlePrazo` | Gerar novo processo via sei-mod-operacoes; geracao automatica; fluxo de trabalho com prazo, envio e organizacao |
 | EntradaEnviarProcessoAPI | Dados para enviar processo a unidades | `UnidadesDestino`, `SinManterAbertoUnidade`, `SinRemoverAnotacao`, `SinEnviarEmailNotificacao`, `DataRetornoProgramado`, `DiasRetornoProgramado`, `SinDiasUteisRetornoProgramado`, `SinReabrir` | Enviar processo a outra unidade; fluxo de trabalho; retorno programado |
 | EntradaAtribuirProcessoAPI | Dados para atribuir processo a usuario na unidade | `IdUsuario`, `SinReabrir` | Atribuir processo; redistribuir carga; definir responsavel |
 | EntradaDefinirControlePrazoAPI | Dados para definir prazo em processo | `DataPrazo`, `Dias`, `SinDiasUteis` | Definir controle de prazo em processo; vencimento; acompanhamento |
@@ -42,9 +42,9 @@
 
 | Nome | Descrição | Quando usar |
 |---|---|---|
-| EntradaConsultarProcedimentoAPI | Filtros para consulta de processo com opcoes de retorno detalhado (assuntos, interessados, andamentos, etc.) | Consultar processo especifico via sei-operacoes |
+| EntradaConsultarProcedimentoAPI | Filtros para consulta de processo com opcoes de retorno detalhado (assuntos, interessados, andamentos, etc.) | Consultar processo especifico via sei-mod-operacoes |
 | EntradaConsultarProcedimentoIndividualAPI | Filtros por orgao, tipo procedimento e usuario para consulta individual | Consulta restrita a contexto de usuario/orgao |
-| EntradaConsultarDocumentoAPI | Filtros para consulta de documento com opcoes de retorno (andamento, assinaturas) | Consultar documento especifico via sei-operacoes |
+| EntradaConsultarDocumentoAPI | Filtros para consulta de documento com opcoes de retorno (andamento, assinaturas) | Consultar documento especifico via sei-mod-operacoes |
 | EntradaConsultarPublicacaoAPI | Filtros para consulta de publicacao (id, documento, protocolo, retornos) | Verificar publicacao de documento especifico |
 | EntradaListarAndamentosAPI | Filtros para listar andamentos de processo com opcao de atributos e filtros por id | Listar historico completo com filtro granular |
 | EntradaListarAndamentosMarcadoresAPI | Filtros por marcadores para listar andamentos de processo por marcador | Listar andamentos por marcador especifico |

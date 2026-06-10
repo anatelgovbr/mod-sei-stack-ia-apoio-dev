@@ -20,7 +20,7 @@ A tabela abaixo define os gatilhos. Uma demanda pode ter multiplos gatilhos ativ
 | Nova acao AJAX em `*Integracao.php` | `sei-verificacao-pagina` | Sim — verificar A1-A7 do checklist |
 | Nova RN de escrita (`*RN.php`) | `sei-verificacao-rn` | Sim — verificar V07 (efeito colateral em transacao) |
 | Novo BD ou DDL (`*BD.php`, script `.sql`) | `sei-verificacao-banco-dados` | Sim — verificar B1-B6 do checklist |
-| Nova operacao API/WS | `sei-operacoes` | Sim — verificar W1-W5 do checklist |
+| Nova operacao API/WS | `sei-mod-operacoes` | Sim — verificar W1-W5 do checklist |
 | Mudanca em encoding de qualquer arquivo PHP | `sei-testes-validacao` (php -l) | Verificar G1 — encoding ISO-8859-1 |
 | Hardening geral / revisao de modulo | `sei-guardrails-modulo` | Todos os vetores aplicaveis |
 
@@ -115,7 +115,7 @@ Para revisoes completas de modulo (nao vinculadas a um PR especifico):
 3. Registrar issues para cada achado BLOQUEANTE ou ALTA ainda nao resolvido.
 4. Agendar revalidacao quando houver mudancas significativas no modulo.
 
-**Modulos em producao sem revisao de seguranca registrada** (referencia: `PRD.md`):
+**Modulos em producao sem revisao de seguranca registrada**:
 
 | Modulo | Status |
 |--------|--------|

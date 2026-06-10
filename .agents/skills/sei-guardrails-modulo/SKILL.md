@@ -37,7 +37,7 @@ description: Guardrails obrigatorios para qualquer trabalho em modulos SEI — v
    - transação quando houver escrita relevante
    - auditoria quando aplicável
 6. Acionar as skills específicas quando necessário:
-   - `sei-menu-pagina`, `sei-eventos`, `sei-operacoes`,
+   - `sei-menu-pagina`, `sei-mod-eventos`, `sei-mod-operacoes`,
       `sei-gerador-scripts-release`, `sip-gerador-scripts-release`, `sei-testes-validacao`
     - Se o desenvolvedor escolheu `sei-gerador-crud` para o CRUD, delegar
       ao gerador e considerar que a skill dele deve cobrir tambem a fase de
