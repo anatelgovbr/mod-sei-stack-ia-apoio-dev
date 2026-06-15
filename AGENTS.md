@@ -2,10 +2,11 @@
 
 ## Contexto
 
-Repositorio de customizacoes e modulos SEI/SIP com release versionado e padroes InfraPHP. Trate o projeto como sistema administrativo legado com requisitos de auditoria, permissao e compatibilidade de release.
+Repositório de customizações e módulos do SEI com release versionada e padrões InfraPHP. Trate o projeto como sistema administrativo, com requisitos de auditoria, permissão e compatibilidade de release.
 
 ## Dependências Técnicas do Projeto
 
+- Sistema Operacional Linux;
 - **PHP 8.2** — encoding ISO-8859-1 (Latin-1)
 - Extensões PHP previstas no manual de instalação do SEI
 - Módulos SEI / SIP
@@ -34,7 +35,7 @@ Mudança no core exige proposta documentada — sem patch direto.
 
 - Em Fluxo Direto, siga este arquivo.
 - Em Spec Kit, siga `constitution.md` para regras de fase e bloqueio.
-- Se houver conflito entre documentos, pare e peca decisao do desenvolvedor.
+- Se houver conflito entre documentos, pare e solicite decisão.
 
 ## Guardrails Universais
 
@@ -49,8 +50,8 @@ Mudança no core exige proposta documentada — sem patch direto.
 - **Assets**: se `css/` ou `js/` já existirem, editar; nunca criar novos
 - **Core**: `ConfiguracaoSEI.php` é somente referência; não editar
 - **Gabaritos**: referência mínima `abc/exemplo`; referência robusta `trf4/julgamento`
-- **CRUD com impacto de release**: quando a demanda envolver novo DTO, nova tabela, nova entidade CRUD base, alteracao de colunas de DTO existente em modulo mapeado em `.agents/references/mapa-modulos-scripts.md`, avise explicitamente o desenvolvedor que a entrega tambem exige atualizacao dos scripts SEI/SIP do modulo, com sincronizacao de versao em `*Integracao.php` quando aplicavel.
-- **Gerador de CRUD**: use `sei-gerador-crud` apenas com escolha explícita do desenvolvedor. Se usado, a skill propria cobre a fase de release. Se nao usado, roteie release para `sei-gerador-scripts-release` e/ou `sip-gerador-scripts-release`.
+- **CRUD com impacto de release**: quando a demanda envolver novo DTO, nova tabela, nova entidade CRUD base, alteração de colunas de DTO existente em módulo mapeado em `.agents/references/mapa-modulos-scripts.md`, avise explicitamente o desenvolvedor que a entrega também exige atualização dos scripts SEI/SIP do módulo, com sincronização de versao em `*Integracao.php` quando aplicável.
+- **Gerador de CRUD**: use `sei-gerador-crud` apenas com escolha explícita do desenvolvedor. Se usado, a skill própria cobre a fase de release. Se não usado, roteie release para `sei-gerador-scripts-release` e/ou `sip-gerador-scripts-release`.
 
 ### Padrão Transacional Obrigatório
 
@@ -75,7 +76,7 @@ protected function gerarProcedimentoControlado($arrParametros)
 
 protected function gerarProcedimentoInterno($arrParametros)
 {
-    // Apenas persistencia em banco; executado dentro da transacao.
+    // Apenas persistência em banco; executado dentro da transação.
 }
 ```
 
@@ -92,7 +93,7 @@ Se e-mail ou indexação falharem dentro da transação, `cancelarTransacao()` p
 - **Ferramentas opcionais**: quando aplicável, rodar `composer test`, `phpcs` ou `phpstan`
 - **Release/BD**: compatibilidade multi-SGBD; sincronismo de versão entre SEI, SIP e `*Integracao.php`
 
-## Regras de Decisao
+## Regras de Decisão
 
 - Ao aplicar qualquer regra, citar o arquivo e a seção de origem
 - Nunca inventar padrão não documentado neste repositório
@@ -102,8 +103,8 @@ Se e-mail ou indexação falharem dentro da transação, `cancelarTransacao()` p
 
 ## Fontes de Contexto
 
-- **Documentacao do modulo e contexto do desenvolvedor**: para contexto funcional e regras de negocio, consultar primeiro o README do modulo e demais documentos especificos do repositorio. Se a regra de negocio nao estiver documentada, perguntar ao desenvolvedor.
-- **Spec Kit**: o fluxo padrao do Spec Kit no repositorio fica em `.agents/skills/speckit/`; integracoes de ferramenta apenas expõem esse conteudo com adapters leves.
+- **Documentação do módulo e contexto do desenvolvedor**: para contexto funcional e regras de negócio, consultar primeiro o README do módulo e demais documentos específicos do repositório. Se a regra de negócio não estiver documentada, perguntar ao desenvolvedor.
+- **Spec Kit**: o fluxo padrão do Spec Kit no repositório fica em `.agents/skills/speckit/`; integrações  de ferramenta apenas expõem esse conteúdo com adapters leves.
 - **docs/manual_desenvolvimento_md/**: manual oficial de desenvolvimento de módulos SEI (capítulos 2-10). Fonte primária para criação/ativação de módulo, InfraPHP, modelagem, codificação, gerador CRUD, classes API, eventos e operações.
 - **skill-routing-and-contracts.md**: matriz de demanda, skill principal, skills complementares, contratos obrigatórios e gate de bloqueio.
 - **implementation-gates.md**: gates de bloqueio para problemas técnicos críticos.

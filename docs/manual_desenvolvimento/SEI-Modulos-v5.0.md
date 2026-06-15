@@ -425,10 +425,11 @@ O desenvolvimento de módulos deve considerar as restrições do ambiente defini
 
 Além do uso do framework PHP padrão do sistema, existem algumas dependências técnicas importantes que o desenvolvedor deve observar:
 
+- Sistema Operacional Linux;
 - PHP 8.2 e extensões adicionais previstas no manual de instalação;
 - Bootstrap 5.3.1;
 - jQuery 3.7.0; e
-- jQuery UI 1.13.2;
+- jQuery UI 1.13.2.
 
 ### Codificação de arquivos (charset)
 
