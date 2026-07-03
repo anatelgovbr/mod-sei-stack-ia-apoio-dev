@@ -2,7 +2,7 @@
 name: sei-verificacao-controladores
 description: >
   Skill padrao de validacao para controladores de integracao SEI em
-  `*Integracao.php`. Audita somente regras com base clara no manual do SEI para
+  `*Integracao.php`. Audita regras de dispatch, autorizacao por acao/servico,
   `processarControladorAjax`, `processarControladorAjaxExterno`,
   `processarControladorWebServices` e `tratarLinkSemAssinatura`, mais um aviso
   complementar sobre payload sensivel. Nao assume responsabilidades do
@@ -17,23 +17,20 @@ description: >
 
 # sei-verificacao-controladores
 
-## Regras SEI Explicitas (bloqueantes)
+## Regras de validacao
 
 | ID | Regra | Severidade | Base |
 |---|---|---|---|
-| CI1 | `tratarLinkSemAssinatura()` usa `preg_match` restritivo | **Erro** | Manual 9.1648 |
-| CI2 | `processarControladorWebServices()` faz dispatch explicito por servico | **Erro** | Manual 9.1442 |
-| CI3 | `processarControladorAjax*()` faz dispatch explicito por acao | **Erro** | Manual 9.1363 |
-
-## Guardrail Complementar (aviso)
-
-| ID | Regra | Severidade | Base |
-|---|---|---|---|
-| CI4 | evitar payload sensivel em retorno de controlador | **Aviso** | hardening do projeto |
+| CI1 | `tratarLinkSemAssinatura()` usa `preg_match` restritivo | **Erro** | `references/padroes-controladores.md` CI1 |
+| CI2 | `processarControladorWebServices()` faz dispatch explicito por servico | **Erro** | `references/padroes-controladores.md` CI2 |
+| CI3 | `processarControladorAjax*()` faz dispatch explicito por acao | **Erro** | `references/padroes-controladores.md` CI3 |
+| CI4 | cada acao/servico sensivel valida permissao/autorizacao especifica antes de executar | **Erro** | `.agents/security/matriz-vulnerabilidades-sei.md` V03 |
+| CI5 | evitar payload sensivel em retorno de controlador | **Aviso** | hardening do projeto |
 
 ## Referencias Autoritativas
 
-- `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_9_eventos.md`
+- `references/padroes-controladores.md` (cobre CI1-CI5; curado das secoes 1363, 1442 e 1648 do cap. 9 do manual)
+- `.agents/security/matriz-vulnerabilidades-sei.md`
 - `fontes/sei/src/main/php/sei/web/SeiIntegracao.php`
 - `fontes/sei/src/main/php/sei/web/controlador_ajax.php`
 - `fontes/sei/src/main/php/sei/web/controlador_ajax_externo.php`

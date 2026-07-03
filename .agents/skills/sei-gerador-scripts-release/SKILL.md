@@ -1,6 +1,6 @@
 ---
 name: sei-gerador-scripts-release
-description: Use when editing `fontes/sei/src/main/php/sei/scripts/*`, creating `instalarv*`, adding tables, columns, indices, sequences, DDL, seeds, or syncing `getVersao()` for SEI module release scripts.
+description: Usar para editar `fontes/sei/src/main/php/sei/scripts/*`, criar `instalarv*`, adicionar tabelas, colunas, indices, sequences, DDL, seeds ou sincronizar `getVersao()` em scripts de release do modulo SEI.
 ---
 
 # Skill: Script de Release SEI

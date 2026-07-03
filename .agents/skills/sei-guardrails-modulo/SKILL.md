@@ -11,7 +11,6 @@ description: Guardrails obrigatorios para qualquer trabalho em modulos SEI — v
 
 ## Fonte de verdade
 - `AGENTS.md` (guardrails universais, padrão transacional e fontes de contexto)
-- `docs/manual_desenvolvimento_md/` (manual SEI-Módulos v5.0)
 - `.agents/security/matriz-vulnerabilidades-sei.md`
 - `.agents/references/padrao-codificacao-php.md`
 
@@ -37,13 +36,19 @@ description: Guardrails obrigatorios para qualquer trabalho em modulos SEI — v
    - transação quando houver escrita relevante
    - auditoria quando aplicável
 6. Acionar as skills específicas quando necessário:
-   - `sei-menu-pagina`, `sei-mod-eventos`, `sei-mod-operacoes`,
+   - **Implementacao**: `sei-menu-pagina`, `sei-mod-api-eventos`, `sei-mod-api-operacoes`,
       `sei-gerador-scripts-release`, `sip-gerador-scripts-release`, `sei-testes-validacao`
-    - Se o desenvolvedor escolheu `sei-gerador-crud` para o CRUD, delegar
-      ao gerador e considerar que a skill dele deve cobrir tambem a fase de
-      release.
-    - Se o CRUD for manual, manter esta skill como guardrail central e acionar
-      `sei-gerador-scripts-release` e/ou `sip-gerador-scripts-release` para a parte de release.
+   - **Gates de verificacao** (obrigatorios conforme artefatos presentes):
+     - `sei-verificacao-pagina` — para toda pagina `*_lista.php` ou `*_cadastro.php`
+     - `sei-verificacao-controladores` — para metodos de controlador em `*Integracao.php`
+     - `sei-verificacao-rn` — para `*RN.php`
+     - `sei-verificacao-banco-dados` — para `*DTO.php`, `*BD.php` ou DDL de release
+     - `sei-verificacao-tarefa` — quando houver atribuicao de andamento/tarefa
+   - Se o desenvolvedor escolheu `sei-gerador-crud` para o CRUD, delegar
+     ao gerador e considerar que a skill dele deve cobrir tambem a fase de
+     release.
+   - Se o CRUD for manual, manter esta skill como guardrail central e acionar
+     `sei-gerador-scripts-release` e/ou `sip-gerador-scripts-release` para a parte de release.
 7. Validar a entrega contra escopo, segurança, impacto de release e gates obrigatórios aplicáveis.
 
 ## Saída esperada

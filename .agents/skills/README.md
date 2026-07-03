@@ -1,0 +1,757 @@
+# Skills — Registro de Auditoria
+
+Este documento é o registro de auditoria de todas as skills disponíveis no repositório: origem, versão, licença e composição.
+
+---
+
+## Índice
+
+- [caveman](#caveman)
+- [code-review](#code-review)
+- [escrever-adr](#escrever-adr)
+- [grill-me](#grill-me)
+- [grilling](#grilling)
+- [napkin](#napkin)
+- [ponytail](#ponytail)
+- [ponytail-audit](#ponytail-audit)
+- [ponytail-debt](#ponytail-debt)
+- [ponytail-gain](#ponytail-gain)
+- [ponytail-help](#ponytail-help)
+- [ponytail-review](#ponytail-review)
+- [sei-code-review-security](#sei-code-review-security)
+- [sei-direcionador-integracao](#sei-direcionador-integracao)
+- [sei-gerador-crud](#sei-gerador-crud)
+- [sei-gerador-scripts-release](#sei-gerador-scripts-release)
+- [sei-guardrails-modulo](#sei-guardrails-modulo)
+- [sei-menu-pagina](#sei-menu-pagina)
+- [sei-mod-api-classes](#sei-mod-api-classes)
+- [sei-mod-api-eventos](#sei-mod-api-eventos)
+- [sei-mod-api-operacoes](#sei-mod-api-operacoes)
+- [sei-report-todos](#sei-report-todos)
+- [sei-testes-validacao](#sei-testes-validacao)
+- [sei-tipagem-phpdoc](#sei-tipagem-phpdoc)
+- [sei-verificacao-banco-dados](#sei-verificacao-banco-dados)
+- [sei-verificacao-controladores](#sei-verificacao-controladores)
+- [sei-verificacao-pagina](#sei-verificacao-pagina)
+- [sei-verificacao-rn](#sei-verificacao-rn)
+- [sei-verificacao-tarefa](#sei-verificacao-tarefa)
+- [sip-gerador-scripts-release](#sip-gerador-scripts-release)
+- [speckit](#speckit)
+- [speckit-analyze](#speckit-analyze)
+- [speckit-checklist](#speckit-checklist)
+- [speckit-clarify](#speckit-clarify)
+- [speckit-constitution](#speckit-constitution)
+- [speckit-implement](#speckit-implement)
+- [speckit-plan](#speckit-plan)
+- [speckit-specify](#speckit-specify)
+- [speckit-tasks](#speckit-tasks)
+- [speckit-taskstoissues](#speckit-taskstoissues)
+
+---
+
+## Tabela de Auditoria
+
+| Skill | Tipo | Versão | Licença | Repositório |
+|---|---|---|---|---|
+| caveman | externa | v1.9.0 | MIT | github.com/JuliusBrussee/caveman |
+| code-review | interna | — | — | — |
+| escrever-adr | interna | — | — | — |
+| grill-me | externa | v1.0.1 | MIT | github.com/mattpocock/skills |
+| grilling | externa | v1.0.1 | MIT | github.com/mattpocock/skills |
+| napkin | externa | v6.1.0 | MIT | github.com/blader/napkin |
+| ponytail | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
+| ponytail-audit | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
+| ponytail-debt | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
+| ponytail-gain | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
+| ponytail-help | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
+| ponytail-review | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
+| sei-code-review-security | interna | — | — | — |
+| sei-direcionador-integracao | interna | — | — | — |
+| sei-gerador-crud | interna | — | — | — |
+| sei-gerador-scripts-release | interna | — | — | — |
+| sei-guardrails-modulo | interna | — | — | — |
+| sei-menu-pagina | interna | — | — | — |
+| sei-mod-api-classes | interna | — | — | — |
+| sei-mod-api-eventos | interna | — | — | — |
+| sei-mod-api-operacoes | interna | — | — | — |
+| sei-report-todos | interna | — | — | — |
+| sei-testes-validacao | interna | — | — | — |
+| sei-tipagem-phpdoc | interna | — | — | — |
+| sei-verificacao-banco-dados | interna | — | — | — |
+| sei-verificacao-controladores | interna | — | — | — |
+| sei-verificacao-pagina | interna | — | — | — |
+| sei-verificacao-rn | interna | — | — | — |
+| sei-verificacao-tarefa | interna | — | — | — |
+| sip-gerador-scripts-release | interna | — | — | — |
+| speckit | externa | v0.12.4 | MIT | github.com/github/spec-kit |
+| speckit-analyze | externa | v0.12.4 | MIT | github.com/github/spec-kit |
+| speckit-checklist | externa | v0.12.4 | MIT | github.com/github/spec-kit |
+| speckit-clarify | externa | v0.12.4 | MIT | github.com/github/spec-kit |
+| speckit-constitution | externa | v0.12.4 | MIT | github.com/github/spec-kit |
+| speckit-implement | externa | v0.12.4 | MIT | github.com/github/spec-kit |
+| speckit-plan | externa | v0.12.4 | MIT | github.com/github/spec-kit |
+| speckit-specify | externa | v0.12.4 | MIT | github.com/github/spec-kit |
+| speckit-tasks | externa | v0.12.4 | MIT | github.com/github/spec-kit |
+| speckit-taskstoissues | externa | v0.12.4 | MIT | github.com/github/spec-kit |
+
+---
+
+## caveman
+
+> **Skill externa** — mantida por terceiros. Atualizações devem ser rastreadas no repositório de origem.
+
+**Repositório:** https://github.com/JuliusBrussee/caveman — repositório autoritativo para rastreio de versão.
+Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/productivity.
+
+**Versão instalada:** v1.9.0
+
+**Licença:** MIT
+
+**Alteração local:** Pequenos ajustes de idioma na descrição do frontmatter. Conteúdo das instruções preservado integralmente.
+
+**Composição:**
+- Seis níveis de intensidade: `lite`, `full` (padrão), `ultra`, `wenyan-lite`, `wenyan-full`, `wenyan-ultra`.
+- Modo `full` elimina artigos, hedging e filler preservando todo conteúdo técnico.
+- Modos `wenyan-*` comprimem no registro clássico chinês (文言文).
+- Regra de auto-clareza: retorna à prosa normal em warnings destrutivos, sequências ambíguas ou confirmações de ação irreversível.
+- Persiste na sessão até `stop caveman` ou `normal mode`.
+
+**Como invocar:** `/caveman`, `/caveman lite`, `/caveman ultra`, `/caveman wenyan`
+
+---
+
+## code-review
+
+**Origem:** Skill interna composta para o projeto, focada em dimensões de qualidade e manutenibilidade sem gate SEI.
+
+**Composição:**
+- Complementar a `sei-code-review-security`: não emite veredito de merge para diffs SEI.
+- Cinco dimensões: correção funcional, qualidade de código, arquitetura e padrões, testes, manutenibilidade e performance.
+- Classifica achados como `[introduzido]`, `[pre-existente]` ou `[incerto]`.
+- Segunda passada obrigatória para derrubar falso positivo.
+- Quatro severidades: Crítico, Alto, Médio, Sugestão.
+
+---
+
+## escrever-adr
+
+**Origem:** Padrão Architecture Decision Record (ADR), popularizado por Michael Nygard (2011) e adotado em projetos como MADR (Markdown ADR). Adaptado para o fluxo do repositório com template próprio em `.agents/decisions/`.
+
+**Composição:**
+- Cria arquivo `ADR-XXX-titulo-em-kebab-case.md` em `.agents/decisions/`.
+- Template exige: contexto, opções consideradas (com prós/contras), decisão com justificativa, consequências.
+- ADRs são imutáveis — revisão cria novo ADR que supera o anterior.
+- Não cria ADR para mudanças triviais.
+
+---
+
+## grill-me
+
+> **Skill externa** — mantida por terceiros. Atualizações devem ser rastreadas no repositório de origem.
+
+**Repositório:** https://github.com/mattpocock/skills/tree/main/skills/productivity
+
+**Versão instalada:** v1.0.1
+
+**Licença:** MIT
+
+**Composição:** Alias fino que delega para `grilling`.
+
+**Como invocar:** `/grill-me`
+
+---
+
+## grilling
+
+> **Skill externa** — mantida por terceiros. Atualizações devem ser rastreadas no repositório de origem.
+
+**Repositório:** https://github.com/mattpocock/skills/tree/main/skills/productivity
+
+**Versão instalada:** v1.0.1
+
+**Licença:** MIT
+
+**Composição:**
+- Entrevista socrática sobre cada aspecto do plano ou design.
+- Percorre cada galho da árvore de decisão resolvendo dependências uma a uma.
+- Cada pergunta acompanha uma resposta recomendada.
+- Perguntas são feitas uma por vez.
+- Se uma pergunta puder ser respondida explorando o código, o agente explora o código em vez de perguntar.
+
+**Como invocar:** `/grilling` ou `/grill-me`
+
+---
+
+## napkin
+
+> **Skill externa** — mantida por terceiros. Atualizações devem ser rastreadas no repositório de origem.
+
+**Repositório:** https://github.com/blader/napkin
+
+**Versão instalada:** v6.1.0
+
+**Licença:** MIT
+
+**Alteração local:** O caminho do runbook foi movido para `.agents/memory/runbook.md` (marcado como `portable, any tool`), tornando a skill agnóstica de runtime.
+
+**Composição:**
+- Sempre ativa — sem trigger. Lê e cuida o runbook no início de cada sessão.
+- Runbook vive em `.agents/memory/runbook.md`.
+- Critério de inclusão: gotchas recorrentes, diretivas do usuário, táticas não óbvias que funcionam repetidamente.
+- Critério de exclusão: notas cronológicas, postmortems sem ação concreta, logs de erro sem "Do instead".
+- Máximo 10 itens por categoria; re-prioriza a cada leitura.
+
+---
+
+## ponytail
+
+> **Skill externa** — mantida por terceiros. Atualizações devem ser rastreadas no repositório de origem.
+
+**Repositório:** https://github.com/DietrichGebert/ponytail/tree/main/skills
+
+**Versão instalada:** v4.8.4
+
+**Licença:** MIT
+
+**Composição:**
+- Modo principal de codificação — ativo em toda resposta após invocação.
+- Força solução mínima via ladder: YAGNI → reutilizar codebase → stdlib → feature nativa → dependência instalada → one-liner → apenas então escrever código novo.
+- Três intensidades: `lite` (nomeia a alternativa mais simples), `full` (ladder completa, padrão), `ultra` (YAGNI extremista, desafia o requisito antes de construir).
+- Marca simplificações deliberadas com comentário `ponytail: <teto>, <gatilho de upgrade>`.
+- Nunca simplifica: validação de entrada, tratamento de erro que previne perda de dados, segurança, acessibilidade ou funcionalidade explicitamente solicitada.
+- Desativar: `stop ponytail` / `normal mode`.
+
+**Como invocar:** `/ponytail`, `/ponytail lite`, `/ponytail ultra`
+
+---
+
+## ponytail-audit
+
+> **Skill externa** — mantida por terceiros. Atualizações devem ser rastreadas no repositório de origem.
+
+**Repositório:** https://github.com/DietrichGebert/ponytail/tree/main/skills
+
+**Versão instalada:** v4.8.4
+
+**Licença:** MIT
+
+**Composição:**
+- Igual ao `ponytail-review`, mas varre o repositório inteiro em vez de um diff.
+- Ranking por impacto: maior corte primeiro.
+- One-shot — lista achados, não aplica.
+- Tags: `delete:`, `stdlib:`, `native:`, `yagni:`, `shrink:`.
+
+**Como invocar:** `/ponytail-audit`
+
+---
+
+## ponytail-debt
+
+> **Skill externa** — mantida por terceiros. Atualizações devem ser rastreadas no repositório de origem.
+
+**Repositório:** https://github.com/DietrichGebert/ponytail/tree/main/skills
+
+**Versão instalada:** v4.8.4
+
+**Licença:** MIT
+
+**Composição:**
+- Coleta todos os comentários `ponytail:` do repo em um ledger de dívida técnica.
+- Comando: `grep -rnE '(#|//) ?ponytail:' .`
+- Sinaliza entradas sem gatilho de upgrade com tag `no-trigger` (risco de rot silencioso).
+- Fecha com `<N> markers, <M> with no trigger.` ou `No ponytail: debt. Clean ledger.`
+- Pode persistir o ledger em `PONYTAIL-DEBT.md` se solicitado.
+
+**Como invocar:** `/ponytail-debt`
+
+---
+
+## ponytail-gain
+
+> **Skill externa** — mantida por terceiros. Atualizações devem ser rastreadas no repositório de origem.
+
+**Repositório:** https://github.com/DietrichGebert/ponytail/tree/main/skills
+
+**Versão instalada:** v4.8.4
+
+**Licença:** MIT
+
+**Composição:**
+- Exibe scoreboard ASCII com medianas dos benchmarks publicados (5 tarefas × 3 modelos).
+- Não calcula número por repositório — nunca inventa baseline de código que não foi escrito.
+- One-shot; não altera modo nem persiste estado.
+
+**Como invocar:** `/ponytail-gain`
+
+---
+
+## ponytail-help
+
+> **Skill externa** — mantida por terceiros. Atualizações devem ser rastreadas no repositório de origem.
+
+**Repositório:** https://github.com/DietrichGebert/ponytail/tree/main/skills
+
+**Versão instalada:** v4.8.4
+
+**Licença:** MIT
+
+**Composição:**
+- Cartão de referência rápida: todos os modos, skills e comandos ponytail.
+- One-shot; não altera modo.
+
+**Como invocar:** `/ponytail-help`
+
+---
+
+## ponytail-review
+
+> **Skill externa** — mantida por terceiros. Atualizações devem ser rastreadas no repositório de origem.
+
+**Repositório:** https://github.com/DietrichGebert/ponytail/tree/main/skills
+
+**Versão instalada:** v4.8.4
+
+**Licença:** MIT
+
+**Composição:**
+- Review focado **exclusivamente** em over-engineering — não avalia correção, segurança ou performance.
+- Tags: `delete:`, `stdlib:`, `native:`, `yagni:`, `shrink:`.
+- Um achado por linha: `L<n>: <tag> <o que cortar>. <substituto>.`
+- Fecha com `net: -<N> lines possible.` ou `Lean already. Ship.`
+- Complementa `code-review` e `sei-code-review-security` sem sobreposição de escopo.
+
+**Como invocar:** `/ponytail-review`
+
+---
+
+## sei-code-review-security
+
+**Origem:** Skill interna orquestradora criada para consolidar todos os gates por artefato, segurança, reaproveitamento e qualidade em um único veredito de merge para diffs, PRs e módulos SEI completos.
+
+**Composição:**
+- Classifica a mudança usando a matriz de roteamento.
+- Aciona gates por artefato: `sei-verificacao-pagina` (P1-P10), `sei-verificacao-rn` (T1-T5/A1-A2), `sei-verificacao-banco-dados` (R1-R15), `sei-verificacao-controladores` (CI1-CI5), `sei-verificacao-tarefa` (K1-K7).
+- Aplica matriz de vulnerabilidades V01-V10 e checklist de segurança C1-C10.
+- Análise de fluxo de dados: entrada → SQL, HTML/JS, arquivo, desserialização, redirect, chamada externa.
+- Checklist de reaproveitamento U1-U10 para RN/INT/DTO novos ou alterados.
+- Segunda passada obrigatória para derrubar falso positivo.
+- Veredito exclusivo desta skill: `aprovado`, `aprovado com ajustes`, `bloquear merge`, `precisa de análise humana`.
+
+**Fontes:**
+- `AGENTS.md`
+- `.agents/references/roteamento-de-skills.md`
+- `.agents/references/gates-de-implementacao.md`
+- `.agents/security/matriz-vulnerabilidades-sei.md`
+- `.agents/checklists/checklist-seguranca.md`
+- `.agents/skills/sei-code-review-security/references/reutilizacao-rn-int-dto.md`
+- `.agents/security/origem-referencias-seguranca.md`
+
+---
+
+## sei-direcionador-integracao
+
+**Origem:** Skill mediadora interna criada para resolver a ambiguidade entre os três caminhos de integração do core SEI: contrato API, hook de evento e operação via SeiRN.
+
+**Composição:**
+- Recebe intenção textual do desenvolvedor.
+- Consulta os três catálogos: `.agents/skills/sei-mod-api-classes/references/catalogo-api.md`, `.agents/skills/sei-mod-api-eventos/references/catalogo-eventos.md`, `.agents/skills/sei-mod-api-operacoes/references/catalogo-operacoes.md`.
+- Apresenta até 3 opções com contexto e aguarda escolha do desenvolvedor.
+- Encaminha para a skill correta: `sei-mod-api-classes`, `sei-mod-api-eventos` ou `sei-mod-api-operacoes`.
+- Não tem catálogo próprio; não implementa; não roteia sem confirmação.
+
+---
+
+## sei-gerador-crud
+
+**Origem:** Skill interna criada para automatizar a geração dos 6 artefatos CRUD InfraPHP a partir de um contrato JSON, seguindo o padrão estrutural TRF4 documentado no manual oficial de desenvolvimento SEI.
+
+**Composição:**
+- Três caminhos: documentação disponível (A), descrição em linguagem natural (B), JSON pronto (C).
+- Motor: `generate_from_contrato.py` + templates `templates/*.tpl`.
+- Referência estrutural: `.agents/skills/sei-gerador-crud/references/gabarito-trf4.md` (padrão TRF4 — não usado como template literal).
+- Gates pós-geração: permissão/link assinado, `PaginaSEI::tratarHTML`, validação de lista N:N, helpers INT, validadores RN.
+- Fase de Release integrada quando o módulo está mapeado.
+
+**Fontes:**
+- Manual SEI — cap. 3, 4 e 5
+- `.agents/skills/sei-gerador-crud/references/gabarito-trf4.md`
+- `.agents/skills/sei-gerador-crud/references/padroes-sei.md`
+- `.agents/references/padrao-modelagem-dados.md`
+- `.agents/references/padrao-codificacao-php.md`
+- `.agents/skills/sei-gerador-crud/references/mapeamento-tipos-e-widgets.md`
+
+---
+
+## sei-gerador-scripts-release
+
+**Origem:** Skill interna para padronizar a geração e atualização de scripts de release do lado SEI (`fontes/sei/src/main/php/sei/scripts/*`).
+
+**Composição:**
+- Padrão primário: `sei_atualizar_versao_modulo_ia.php`.
+- Estrutura obrigatória: `*AtualizadorSeiRN extends InfraRN`, `atualizarVersaoConectado()`, `switch` com fallthrough, métodos `instalarv*()`, bootstrap final com `InfraScriptVersao::solicitarAutenticacao()`.
+- DDL multi-SGBD via `InfraMetaBD::tipo*()`.
+- Sincroniza `getVersao()` em `*Integracao.php`.
+- Validação: `php -l` + `sei-verificacao-banco-dados` em modo `release_check`.
+
+**Fontes:**
+- `.agents/references/padrao-modelagem-dados.md`
+- `.agents/skills/sei-gerador-scripts-release/references/sei-update-script-rules.md`
+- Scripts de referência no repositório
+
+---
+
+## sei-guardrails-modulo
+
+**Origem:** Skill interna para centralizar os guardrails obrigatórios do manual de desenvolvimento SEI/SIP antes e durante a implementação de qualquer módulo.
+
+**Composição:**
+- Verifica scripts de instalação existentes contra `.agents/references/mapa-modulos-scripts.md`.
+- Guarda de assets: impede criação de novos CSS/JS quando já existem.
+- Identifica pontos de impacto: menu/página, eventos, botões, operações, BD.
+- Garante base obrigatória: link assinado, permissão, transação, auditoria.
+- Aciona skills especializadas conforme artefatos presentes.
+
+**Fontes:**
+- `AGENTS.md`
+- `.agents/security/matriz-vulnerabilidades-sei.md`
+- `.agents/references/padrao-codificacao-php.md`
+
+---
+
+## sei-menu-pagina
+
+**Origem:** Skill interna criada a partir das regras de configuração de menu interno via SIP documentadas no manual SEI.
+
+**Composição:**
+- Decide origem do menu: interno via SIP ou externo/publicações via hook (`sei-mod-api-eventos`).
+- Implementa recurso SIP, validação de permissão e link assinado.
+- Ícone de menu via evento `obterDiretorioIconesMenu` + SVG.
+- Escopo limitado a menu interno, página e ação do módulo.
+
+**Fontes:**
+- `.agents/skills/sei-menu-pagina/references/sip-recursos-menus-perfis.md`
+- `AGENTS.md`
+- `.agents/references/padrao-auditoria-sip-sei.md`
+
+---
+
+## sei-mod-api-classes
+
+**Origem:** Skill interna criada a partir do capítulo 8 do manual oficial SEI — classes `Entrada*API`, `Saida*API` e `*API` do core.
+
+**Composição:**
+- Localiza e confirma o contrato API oficial antes de propor acesso interno.
+- Fonte primária: `.agents/skills/sei-mod-api-classes/references/catalogo-api.md`.
+- Não implementa operações nem eventos; apenas orienta a localização do contrato correto.
+
+**Fontes:**
+- Manual SEI — cap. 8
+- `.agents/skills/sei-mod-api-classes/references/catalogo-api.md`
+
+---
+
+## sei-mod-api-eventos
+
+**Origem:** Skill interna criada a partir das seções de eventos e hooks do manual oficial SEI.
+
+**Composição:**
+- Escolhe o hook no catálogo `.agents/skills/sei-mod-api-eventos/references/catalogo-eventos.md`.
+- Confirma assinatura em `SeiIntegracao.php` do core antes de implementar.
+- Lógica mínima no hook; delegação para RN quando crescer.
+- Segurança: negar por padrão; validar permissão para qualquer efeito colateral.
+- Consistência transacional quando o evento gerar escrita relevante.
+
+**Fontes:**
+- Manual SEI — cap. 9
+- `.agents/skills/sei-mod-api-eventos/references/catalogo-eventos.md`
+
+---
+
+## sei-mod-api-operacoes
+
+**Origem:** Skill interna criada a partir das operações oficiais do SEI via `SeiRN`.
+
+**Composição:**
+- Identifica a operação no catálogo `.agents/skills/sei-mod-api-operacoes/references/catalogo-operacoes.md`.
+- Monta objetos `Entrada*API`/`*API` sem usar classes internas.
+- Executa via `SeiRN`; trata erro sem expor stacktrace.
+- Transação coerente para múltiplas escritas.
+
+**Fontes:**
+- Manual SEI — operações via SeiRN
+- `.agents/skills/sei-mod-api-operacoes/references/catalogo-operacoes.md`
+- `.agents/skills/sei-mod-api-operacoes/references/andamentos.md`
+
+---
+
+## sei-report-todos
+
+**Origem:** Skill interna para mapear pendências `TODO:` em módulos SEI, gerando um report estruturado sem alterar código.
+
+**Composição:**
+- Busca somente o marcador `TODO:` — não normaliza marcadores alternativos.
+- Não executa até o usuário escolher módulos explicitamente.
+- Classifica cada ocorrência: `dívida conhecida`, `risco relevante`, `bloqueante potencial`, `ignorar no report executivo`.
+- Report opcional salvo em `.agents/reports/todos-<data>.md`.
+
+**Fontes:**
+- `AGENTS.md`
+- `.agents/references/gates-de-implementacao.md`
+
+---
+
+## sei-testes-validacao
+
+**Origem:** Skill interna que consolida as validações obrigatórias e opcionais após qualquer entrega PHP no repositório.
+
+**Composição:**
+- Mínimo obrigatório: `php -l` em todos os arquivos PHP alterados.
+- Checks automatizados por artefato: `audit.py` de página, RN, BD, tarefa e controladores.
+- Recomendações quando disponíveis: `composer test`, `phpcs`, `phpstan`.
+- Smoke manual: happy path, sem permissão, link inválido, parâmetros inválidos, sessão expirada.
+
+---
+
+## sei-tipagem-phpdoc
+
+**Origem:** Skill interna opt-in para modernizar assinaturas PHP com type hints e PHPDoc breve, respeitando contratos herdados do InfraPHP.
+
+**Composição:**
+- Só ativada com pedido explícito do desenvolvedor — não é gate obrigatório.
+- Classifica métodos antes de tipar: `private`, construtor, `public`/`protected` sem override, override do core.
+- PHPDoc breve com `@param`, `@return`, `@throws` apenas quando agregam contexto real.
+- Não toca páginas procedurais `*_lista.php` e `*_cadastro.php` por padrão.
+
+**Fontes:**
+- `AGENTS.md`
+- `.agents/references/padrao-codificacao-php.md`
+
+---
+
+## sei-verificacao-banco-dados
+
+**Origem:** Gate criado a partir do capítulo 5 do manual oficial SEI/SIP (padrão de modelagem de dados) e seções do capítulo 4 (InfraPHP).
+
+**Composição:**
+- 15 regras (R1-R15): nomenclatura de tabela, N:N, limites Oracle (26/30 chars), PK, FK, exclusão lógica, constraint PK, tipos SQL-99, índice em FK, sequence, AK, COMMENT/docblock, verbos, singular, formato.
+- Aceita PHP (DTO/BD), DDL SQL, arquivo ou diretório de módulo.
+- 4 modos: `adhoc`, `pre_generate`, `audit`, `release_check`.
+- Script `audit.py` com exit codes 0/1/2 (PASS/WARN/BLOCK).
+
+**Fontes:**
+- Manual SEI — cap. 5 e cap. 4
+- `.agents/skills/sei-verificacao-banco-dados/references/padroes-manual-md.md`
+
+---
+
+## sei-verificacao-controladores
+
+**Origem:** Gate criado a partir das seções 1363, 1442 e 1648 do capítulo 9 do manual oficial SEI.
+
+**Composição:**
+- 4 regras bloqueantes (CI1-CI4): `tratarLinkSemAssinatura` com `preg_match` restritivo, dispatch explícito por serviço em WS, dispatch explícito por ação em AJAX, validação de permissão por ação/serviço sensível.
+- 1 aviso (CI5): payload sensível em retorno de controlador.
+- Script `audit.py` com exit codes 0/1/2 (PASS/WARN/BLOCK).
+
+**Fontes:**
+- Manual SEI — cap. 9, seções 1363, 1442 e 1648
+- `.agents/skills/sei-verificacao-controladores/references/padroes-controladores.md`
+- `.agents/security/matriz-vulnerabilidades-sei.md` — vetor V03
+
+---
+
+## sei-verificacao-pagina
+
+**Origem:** Gate criado a partir dos capítulos 3, 4 e 9 do manual oficial SEI.
+
+**Composição:**
+- 4 regras bloqueantes (P1-P4): `validarLink`, `validarPermissao`, encoding Latin-1 sem BOM, `assinarLink`.
+- 6 guardrails locais (P5-P10): proibição de `$_REQUEST`, normalização de entrada HTTP, `verificarPermissao` em UI condicional, `PaginaSEI::tratarHTML`, hardening JS, mutação de estado via GET.
+- Script `audit.py` com exit codes 0/1/2 (PASS/WARN/BLOCK).
+
+**Fontes:**
+- Manual SEI — cap. 3, 4 e 9
+- `.agents/skills/sei-verificacao-pagina/references/padroes-seguranca.md`
+
+---
+
+## sei-verificacao-rn
+
+**Origem:** Gate criado a partir dos padrões de transação e separação de camadas do manual SEI.
+
+**Composição:**
+- 5 regras de transação (T1-T5): sufixo CRUD coerente, `inicializarObjInfraIBanco()`, isolamento de BD, controle manual de transação, `try/catch` com `InfraException`.
+- 2 regras de auditoria (A1-A2): `validarAuditarPermissao` em métodos de escrita, ausência de check de permissão.
+- Script `audit.py` com exit codes 0/1/2 (PASS/WARN/BLOCK).
+
+**Fontes:**
+- Manual SEI — InfraRN, BancoSEI, padrões de transação
+- `.agents/skills/sei-verificacao-rn/references/padroes-transacao.md`
+- `.agents/references/padrao-auditoria-sip-sei.md`
+
+---
+
+## sei-verificacao-tarefa
+
+**Origem:** Gate criado a partir das regras de `id_tarefa_modulo` do manual SEI.
+
+**Composição:**
+- 7 regras (K1-K7): ID >= 1000, range reservado, prefixo `MD_sigla_modulo` maiúsculas, máx. 50 chars, tabela de tarefas, unicidade de ID, uso correto do ID 65 (free-text com `DESCRICAO`).
+- Script `audit.py` com exit codes 0/1/2 (PASS/WARN/BLOCK).
+
+**Fontes:**
+- Manual SEI — regras de `id_tarefa_modulo`
+- `.agents/skills/sei-verificacao-tarefa/references/padroes-tarefa.md`
+
+---
+
+## sip-gerador-scripts-release
+
+**Origem:** Skill interna para padronizar a geração e atualização de scripts de release do lado SIP (`fontes/sei/src/main/php/sip/scripts/*`).
+
+**Composição:**
+- Família padrão: `*AtualizadorSipRN extends InfraRN`.
+- Padrão primário: `sip_atualizar_versao_modulo_ia.php`.
+- Criação idempotente de recursos, menus e vínculos (lookup antes de cadastrar).
+- Auditoria ao final: `_cadastrar`, `_alterar`, `_excluir` (nunca `_listar`); `replicarRegraAuditoria` obrigatório.
+- Literais obrigatórios: `SEI`, `Principal`, `Administrador`, `Basico`.
+
+**Fontes:**
+- `.agents/references/padrao-modelagem-dados.md`
+- `.agents/skills/sip-gerador-scripts-release/references/sip-update-script-rules.md`
+- `.agents/references/padrao-auditoria-sip-sei.md`
+- Scripts de referência no repositório
+
+---
+
+## speckit
+
+> **Skill externa** — mantida por terceiros. Atualizações devem ser rastreadas no repositório de origem.
+
+**Repositório:** https://github.com/github/spec-kit
+
+**Versão instalada:** v0.12.4
+
+**Licença:** MIT
+
+Framework de geração e gestão de especificações de features com workflows estruturados por fase. Integrado diretamente nas skills de fase — `constitution.md` está intencionalmente vazio e não governa o fluxo. As 9 sub-skills abaixo possuem cada uma seu próprio `SKILL.md` em `.agents/skills/speckit/speckit-*/`.
+
+| Sub-skill | Fase | O que faz |
+|---|---|---|
+| `speckit-specify` | Especificar | Cria ou atualiza a spec a partir de descrição em linguagem natural. |
+| `speckit-clarify` | Clarificar | Resolve ambiguidades e perguntas abertas na spec antes do planejamento. |
+| `speckit-analyze` | Analisar | Analisa o código existente para informar o planejamento da feature. |
+| `speckit-plan` | Planejar | Gera o plano de implementação a partir da spec aprovada. |
+| `speckit-checklist` | Checklist | Gera ou atualiza o checklist de implementação da feature. |
+| `speckit-implement` | Implementar | Executa a implementação seguindo o plano aprovado. |
+| `speckit-tasks` | Tarefas | Cria e gerencia tarefas derivadas do plano. |
+| `speckit-taskstoissues` | Issues | Converte tarefas do plano em issues no rastreador. |
+| `speckit-constitution` | Constituição | Manutenção de `constitution.md` — não governa o fluxo das fases. |
+
+---
+
+## speckit-analyze
+
+> **Skill externa** — parte do framework [speckit](#speckit).
+
+**Repositório:** https://github.com/github/spec-kit | **Versão:** v0.12.4 | **Licença:** MIT
+
+Analisa o código existente para informar o planejamento da feature.
+
+**Como invocar:** OpenCode `/speckit.analyze`; Copilot `speckit.analyze`
+
+---
+
+## speckit-checklist
+
+> **Skill externa** — parte do framework [speckit](#speckit).
+
+**Repositório:** https://github.com/github/spec-kit | **Versão:** v0.12.4 | **Licença:** MIT
+
+Gera ou atualiza o checklist de implementação da feature.
+
+**Como invocar:** OpenCode `/speckit.checklist`; Copilot `speckit.checklist`
+
+---
+
+## speckit-clarify
+
+> **Skill externa** — parte do framework [speckit](#speckit).
+
+**Repositório:** https://github.com/github/spec-kit | **Versão:** v0.12.4 | **Licença:** MIT
+
+Resolve ambiguidades e perguntas abertas na spec antes do planejamento.
+
+**Como invocar:** OpenCode `/speckit.clarify`; Copilot `speckit.clarify`
+
+---
+
+## speckit-constitution
+
+> **Skill externa** — parte do framework [speckit](#speckit).
+
+**Repositório:** https://github.com/github/spec-kit | **Versão:** v0.12.4 | **Licença:** MIT
+
+Ferramenta de manutenção de `constitution.md`. Não governa o fluxo das fases — as regras vivem nas próprias skills de fase.
+
+**Como invocar:** OpenCode `/speckit.constitution`; Copilot `speckit.constitution`
+
+---
+
+## speckit-implement
+
+> **Skill externa** — parte do framework [speckit](#speckit).
+
+**Repositório:** https://github.com/github/spec-kit | **Versão:** v0.12.4 | **Licença:** MIT
+
+Executa a implementação seguindo o plano aprovado.
+
+**Como invocar:** OpenCode `/speckit.implement`; Copilot `speckit.implement`
+
+---
+
+## speckit-plan
+
+> **Skill externa** — parte do framework [speckit](#speckit).
+
+**Repositório:** https://github.com/github/spec-kit | **Versão:** v0.12.4 | **Licença:** MIT
+
+Gera o plano de implementação a partir da spec aprovada.
+
+**Como invocar:** OpenCode `/speckit.plan`; Copilot `speckit.plan`
+
+---
+
+## speckit-specify
+
+> **Skill externa** — parte do framework [speckit](#speckit).
+
+**Repositório:** https://github.com/github/spec-kit | **Versão:** v0.12.4 | **Licença:** MIT
+
+Cria ou atualiza a spec a partir de descrição em linguagem natural. Inicializa o workspace da feature (diretório, branch, arquivo de spec).
+
+**Como invocar:** OpenCode `/speckit.specify`; Copilot `speckit.specify`
+
+---
+
+## speckit-tasks
+
+> **Skill externa** — parte do framework [speckit](#speckit).
+
+**Repositório:** https://github.com/github/spec-kit | **Versão:** v0.12.4 | **Licença:** MIT
+
+Cria e gerencia tarefas derivadas do plano.
+
+**Como invocar:** OpenCode `/speckit.tasks`; Copilot `speckit.tasks`
+
+---
+
+## speckit-taskstoissues
+
+> **Skill externa** — parte do framework [speckit](#speckit).
+
+**Repositório:** https://github.com/github/spec-kit | **Versão:** v0.12.4 | **Licença:** MIT
+
+Converte tarefas do plano em issues no rastreador.
+
+**Como invocar:** OpenCode `/speckit.taskstoissues`; Copilot `speckit.taskstoissues`

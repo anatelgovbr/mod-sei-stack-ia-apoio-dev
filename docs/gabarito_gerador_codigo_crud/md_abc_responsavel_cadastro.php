@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4� REGI�O
+ * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
  * 15/04/2026 - criado por rafaelmontedo@hotmail.com
  *
- * Vers�o do Gerador de C�digo: 1.46.4
+ * VersÃ£o do Gerador de CÃ³digo: 1.46.4
  **/
 
 
@@ -34,7 +34,7 @@ try {
   
   switch ($_GET['acao']) {
     case 'md_abc_responsavel_cadastrar':
-      $strTitulo = 'Novo Respons�vel';
+      $strTitulo = 'Novo ResponsÃ¡vel';
       $arrComandos[] = '<button type="submit" accesskey="S" name="sbmCadastrarMdAbcResponsavel" value="Salvar" class="infraButton"><span class="infraTeclaAtalho">S</span>alvar</button>';
       $arrComandos[] = '<button type="button" accesskey="C" name="btnCancelar" id="btnCancelar" value="Cancelar" onclick="location.href=\''.Sessaoabc::getInstance()->assinarLink('controlador.php?acao='.Paginaabc::getInstance()->getAcaoRetorno().'&acao_origem='.$_GET['acao']).'\';" class="infraButton"><span class="infraTeclaAtalho">C</span>ancelar</button>';
 
@@ -54,7 +54,7 @@ try {
         try {
           $objMdAbcResponsavelRN = new MdAbcResponsavelRN();
           $objMdAbcResponsavelDTO = $objMdAbcResponsavelRN->cadastrar($objMdAbcResponsavelDTO);
-          Paginaabc::getInstance()->adicionarMensagem('Respons�vel "'.$objMdAbcResponsavelDTO->getStrNome().'" cadastrado com sucesso.');
+          Paginaabc::getInstance()->adicionarMensagem('ResponsÃ¡vel "'.$objMdAbcResponsavelDTO->getStrNome().'" cadastrado com sucesso.');
           header('Location: '.Sessaoabc::getInstance()->assinarLink('controlador.php?acao='.Paginaabc::getInstance()->getAcaoRetorno().'&acao_origem='.Paginaabc::GET('acao').'&id_md_abc_responsavel='.$objMdAbcResponsavelDTO->getNumIdMdAbcResponsavel().Paginaabc::getInstance()->montarAncora($objMdAbcResponsavelDTO->getNumIdMdAbcResponsavel())));
           die;
         } catch (Exception $e) {
@@ -64,7 +64,7 @@ try {
       break;
 
     case 'md_abc_responsavel_alterar':
-      $strTitulo = 'Alterar Respons�vel';
+      $strTitulo = 'Alterar ResponsÃ¡vel';
       $arrComandos[] = '<button type="submit" accesskey="S" name="sbmAlterarMdAbcResponsavel" value="Salvar" class="infraButton"><span class="infraTeclaAtalho">S</span>alvar</button>';
       $strDesabilitar = 'disabled="disabled"';
 
@@ -74,7 +74,7 @@ try {
         $objMdAbcResponsavelRN = new MdAbcResponsavelRN();
         $objMdAbcResponsavelDTO = $objMdAbcResponsavelRN->consultar($objMdAbcResponsavelDTO);
         if ($objMdAbcResponsavelDTO===null) {
-          throw new InfraException("Registro n�o encontrado.");
+          throw new InfraException("Registro nÃ£o encontrado.");
         }
       } else {
         $objMdAbcResponsavelDTO->setNumIdMdAbcResponsavel(Paginaabc::POST('hdnIdMdAbcResponsavel'));
@@ -90,7 +90,7 @@ try {
         try {
           $objMdAbcResponsavelRN = new MdAbcResponsavelRN();
           $objMdAbcResponsavelRN->alterar($objMdAbcResponsavelDTO);
-          Paginaabc::getInstance()->adicionarMensagem('Respons�vel "'.$objMdAbcResponsavelDTO->getStrNome().'" alterado com sucesso.');
+          Paginaabc::getInstance()->adicionarMensagem('ResponsÃ¡vel "'.$objMdAbcResponsavelDTO->getStrNome().'" alterado com sucesso.');
           header('Location: '.Sessaoabc::getInstance()->assinarLink('controlador.php?acao='.Paginaabc::getInstance()->getAcaoRetorno().'&acao_origem='.Paginaabc::GET('acao').Paginaabc::getInstance()->montarAncora($objMdAbcResponsavelDTO->getNumIdMdAbcResponsavel())));
           die;
         } catch (Exception $e) {
@@ -100,7 +100,7 @@ try {
       break;
 
     case 'md_abc_responsavel_consultar':
-      $strTitulo = 'Consultar Respons�vel';
+      $strTitulo = 'Consultar ResponsÃ¡vel';
       $arrComandos[] = '<button type="button" accesskey="F" name="btnFechar" value="Fechar" onclick="location.href=\''.Sessaoabc::getInstance()->assinarLink('controlador.php?acao='.Paginaabc::getInstance()->getAcaoRetorno().'&acao_origem='.Paginaabc::GET('acao').Paginaabc::getInstance()->montarAncora(Paginaabc::GET('id_md_abc_responsavel'))).'\';" class="infraButton"><span class="infraTeclaAtalho">F</span>echar</button>';
       $objMdAbcResponsavelDTO->setNumIdMdAbcResponsavel(Paginaabc::GET('id_md_abc_responsavel'));
       $objMdAbcResponsavelDTO->setBolExclusaoLogica(false);
@@ -108,12 +108,12 @@ try {
       $objMdAbcResponsavelRN = new MdAbcResponsavelRN();
       $objMdAbcResponsavelDTO = $objMdAbcResponsavelRN->consultar($objMdAbcResponsavelDTO);
       if ($objMdAbcResponsavelDTO===null) {
-        throw new InfraException("Registro n�o encontrado.");
+        throw new InfraException("Registro nÃ£o encontrado.");
       }
       break;
 
     default:
-      throw new InfraException("A��o '" . Paginaabc::GET('acao') . "' n�o reconhecida.");
+      throw new InfraException("AÃ§Ã£o '" . Paginaabc::GET('acao') . "' nÃ£o reconhecida.");
   }
 
   $strItensSelMdAbcContrato = MdAbcContratoINT::montarSelectIdMdAbcContrato('null','&nbsp;',$objMdAbcResponsavelDTO->getNumIdMdAbcContrato());

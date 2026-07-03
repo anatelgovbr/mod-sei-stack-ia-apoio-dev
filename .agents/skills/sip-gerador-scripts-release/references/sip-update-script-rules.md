@@ -7,21 +7,29 @@ Esta referencia cobre apenas `fontes/sei/src/main/php/sip/scripts/*`.
 ## Estrutura do script
 
 - `require_once dirname(__FILE__) . '/../web/Sip.php';`
-- classe `*AtualizadorSipRN` estendendo `InfraRN`
+- familia estrutural principal no repositorio: classe `*AtualizadorSipRN` estendendo `InfraRN`
+- variante estrutural existente no repositorio: adaptador com `InfraScriptVersao` delegando para uma RN de atualizacao do modulo
 - propriedades para versao atual, nome do modulo, nome do parametro e historico de versoes
 - `inicializarObjInfraIBanco()` retornando `BancoSip::getInstance()`
 - `inicializar()`, `logar()` e `finalizar()` no corpo da classe
 - `atualizarVersaoConectado()` como fluxo principal
 - `switch` com `fallthrough` para chamar `instalarv*()`
 - `instalarv*()` incremental por versao
-- helper local no proprio script para recurso, item de menu e auditoria, salvo referencia estrutural diferente aprovada
-- bootstrap final com `SessaoSip::getInstance(false)`, `BancoSip::getInstance()->setBolScript(true)`, autenticacao via `InfraScriptVersao::solicitarAutenticacao()` e chamada a `atualizarVersao()`
+- helper local no proprio script para recurso, item de menu, vinculos de perfil e auditoria, salvo referencia estrutural diferente aprovada
+- bootstrap final compativel com a familia estrutural escolhida
 
 ## Referencias principais
 
 - Padrao principal: `fontes/sei/src/main/php/sip/scripts/sip_atualizar_versao_modulo_ia.php`
 - Referencia secundaria: `fontes/sei/src/main/php/sip/scripts/sip_atualizar_versao_modulo_relacionamento_institucional.php`
+- Variante consolidada: `fontes/sei/src/main/php/sip/scripts/sip_atualizar_versao_modulo_pen.php`
 - Se o desenvolvedor apontar outra referencia, ela substitui o padrao principal para a estrutura do arquivo.
+
+## Escolha da familia estrutural
+
+- Se o modulo-alvo ja possui script SIP, preservar a familia estrutural existente.
+- Para script novo sem historico, preferir a familia `*AtualizadorSipRN extends InfraRN`.
+- Nao forcar migracao entre familias estruturais sem necessidade real ou pedido explicito do desenvolvedor.
 
 ## Fluxo base observado
 
@@ -41,7 +49,7 @@ Esta referencia cobre apenas `fontes/sei/src/main/php/sip/scripts/*`.
 
 ## Bloqueios estruturais
 
-- Bloquear se o script for gerado em `InfraScriptVersao` como classe base sem autorizacao explicita.
+- Bloquear se a familia estrutural consolidada do modulo-alvo for trocada sem desvio aprovado explicitamente.
 - Bloquear se faltar `atualizarVersaoConectado()`.
 - Bloquear se faltar `switch` incremental com `fallthrough`.
 - Bloquear se faltar qualquer um dos metadados de versao do modulo.
@@ -57,6 +65,7 @@ Esta referencia cobre apenas `fontes/sei/src/main/php/sip/scripts/*`.
 - criar recursos
 - criar itens de menu
 - criar relacoes perfil-recurso e perfil-item-menu
+- remover ou desativar recursos, itens e relacoes quando a release exigir manutencao controlada
 - tratar auditoria e replicacao
 
 ## Helpers observados no script de referencia
@@ -64,11 +73,13 @@ Esta referencia cobre apenas `fontes/sei/src/main/php/sip/scripts/*`.
 - `adicionarRecursoPerfil(...)`: consulta, cria recurso se ausente e cria vinculo de perfil se necessario
 - `adicionarItemMenu(...)`: consulta, cria item se ausente e cria relacoes de perfil se necessario
 - `_cadastrarAuditoria(...)`: cria ou consulta regra, vincula recursos e replica a regra
+- `removerRecursoPerfil(...)`, `desativarRecurso(...)`, `removerRecurso(...)`: padroes reais de manutencao observados em scripts historicos do repositorio
 
 ## Regras operacionais
 
 - use RN/DTO do SIP antes de qualquer SQL direto
 - consulte antes de cadastrar qualquer recurso, item de menu ou relacao
+- em manutencao, consulte antes de remover, desativar ou excluir qualquer recurso, item de menu ou relacao
 - use SQL direto em auditoria apenas como fallback controlado, e sempre com checagem de existencia ou justificativa clara
 - nao transporte checagens de `ConfiguracaoSEI` ou `class_exists(*Integracao)` para o bootstrap SIP
 

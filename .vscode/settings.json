@@ -1,12 +1,23 @@
 {
-  "chat.useAgentsMdFile": true,
-  "chat.useNestedAgentsMdFiles": false,
-  "chat.agentSkillsLocations": {
-    ".agents/skills": true,
-    ".github/skills": false,
-    ".claude/skills": false,
-    "~/.copilot/skills": false,
-    "~/.agents/skills": false,
-    "~/.claude/skills": false
-  }
+    "chat.useAgentsMdFile": true,
+    "chat.useNestedAgentsMdFiles": false,
+    "chat.agentSkillsLocations": {
+        ".agents/skills": true,
+        ".github/skills": false,
+        ".claude/skills": false,
+        "~/.copilot/skills": false,
+        "~/.agents/skills": false,
+        "~/.claude/skills": false
+    },
+    "chat.promptFilesRecommendations": {
+        "speckit.constitution": true,
+        "speckit.specify": true,
+        "speckit.plan": true,
+        "speckit.tasks": true,
+        "speckit.implement": true
+    },
+    "chat.tools.terminal.autoApprove": {
+        ".specify/scripts/bash/": true,
+        ".specify/scripts/powershell/": true
+    }
 }

@@ -1,6 +1,6 @@
 ---
 name: sip-gerador-scripts-release
-description: Use when editing `fontes/sei/src/main/php/sip/scripts/*`, creating `instalarv*`, adding SIP resources, profiles, menus, audit bindings, parameters, or syncing SIP module versioning.
+description: Usar para editar `fontes/sei/src/main/php/sip/scripts/*`, criar `instalarv*`, adicionar recursos SIP, perfis, menus, vinculos de auditoria, parametros ou sincronizar versionamento do modulo SIP.
 ---
 
 # Skill: Script de Release SIP
@@ -9,8 +9,11 @@ description: Use when editing `fontes/sei/src/main/php/sip/scripts/*`, creating 
 
 Ative esta skill quando a demanda envolver o script de release do SIP:
 - novos recursos SIP
+- alteracao, desativacao ou remocao controlada de recursos SIP
 - vinculos com perfis
+- alteracao ou remocao controlada de vinculos perfil-recurso e perfil-item-menu
 - itens de menu
+- alteracao, desativacao ou remocao controlada de itens de menu
 - regra ou replicacao de auditoria
 - parametros do SIP
 - ajuste de `instalarv*`, `switch`, historico de versoes ou parametro de versao
@@ -38,21 +41,27 @@ Se faltar informacao sobre perfis, menus, recursos ou escopo de auditoria, pergu
 
 - Padrao primario de estrutura: `fontes/sei/src/main/php/sip/scripts/sip_atualizar_versao_modulo_ia.php`
 - Referencia secundaria de validacao: `fontes/sei/src/main/php/sip/scripts/sip_atualizar_versao_modulo_relacionamento_institucional.php`
+- Variante estrutural existente no repositorio: `fontes/sei/src/main/php/sip/scripts/sip_atualizar_versao_modulo_pen.php`
 - Se o desenvolvedor informar outra referencia explicita, essa referencia passa a ser obrigatoria para a estrutura do script.
 - Nao tratar referencia estrutural como exemplo ilustrativo. Tratar como restricao de implementacao.
+
+### Escolha da familia estrutural
+
+- Se o modulo-alvo ja possui script SIP proprio, preservar a mesma familia estrutural do arquivo existente.
+- Para modulo novo ou script novo sem historico, preferir a familia `*AtualizadorSipRN extends InfraRN` observada em IA/Relacionamento Institucional/Correios.
+- A variante com `InfraScriptVersao` so deve ser usada quando o modulo-alvo ja seguir esse padrao consolidado ou quando o desenvolvedor exigir explicitamente compatibilidade com ele.
 
 ### Estrutura esperada do arquivo
 
 - `require_once dirname(__FILE__) . '/../web/Sip.php';`
-- classe `*AtualizadorSipRN extends InfraRN`
+- classe principal alinhada a familia estrutural escolhida
 - propriedades de classe para versao atual, nome do modulo, nome do parametro e historico de versoes
 - `inicializarObjInfraIBanco()` retornando `BancoSip::getInstance()`
-- metodos `inicializar()`, `logar()`, `finalizar()`
-- metodo principal `atualizarVersaoConectado()`
+- fluxo incremental de versao preservado (`atualizarVersaoConectado()` ou adaptador equivalente)
 - `switch` com `fallthrough` sobre a versao instalada
-- metodos incrementais `instalarv*()`
-- helper local no proprio script para `adicionarRecursoPerfil()`, `adicionarItemMenu()` e auditoria, salvo quando houver referencia estrutural diferente aprovada
-- bootstrap final do script com `SessaoSip::getInstance(false)`, `BancoSip::getInstance()->setBolScript(true)`, autenticacao via `InfraScriptVersao::solicitarAutenticacao()` e chamada a `$objVersaoSipRN->atualizarVersao()`
+- metodos incrementais `instalarv*()` ou `instalarV*()` conforme a familia escolhida
+- helper local no proprio script para recurso, item de menu, vinculos de perfil e auditoria, salvo quando houver referencia estrutural diferente aprovada
+- bootstrap final compativel com a familia estrutural escolhida
 
 ### Literais obrigatorios do lado SIP
 
@@ -63,7 +72,7 @@ Se faltar informacao sobre perfis, menus, recursos ou escopo de auditoria, pergu
 
 ### Bloqueios estruturais
 
-- Bloquear se o script usar `InfraScriptVersao` como classe base sem autorizacao explicita do desenvolvedor.
+- Bloquear se a estrutura final divergir da familia estrutural ja consolidada no modulo-alvo sem desvio aprovado explicitamente.
 - Bloquear se faltar `atualizarVersaoConectado()`.
 - Bloquear se faltar `switch` incremental com `fallthrough`.
 - Bloquear se faltar qualquer um dos metadados de versao: versao atual, nome do modulo, nome do parametro ou historico de versoes.
@@ -77,6 +86,7 @@ Se faltar informacao sobre perfis, menus, recursos ou escopo de auditoria, pergu
 2. Nao use SQL bruto para criar recurso, perfil, menu ou vinculo quando existir RN/DTO equivalente.
 3. So use SQL direto em auditoria como fallback controlado, apos tentar RN/DTO/helper.
 4. Nao aplique regras de bootstrap ou ativacao do SEI em `sip/scripts/*`.
+5. Trate manutencao SIP como escopo legitimo do release: criar, alterar, desativar e remover recurso/menu/vinculo de forma controlada e idempotente quando o script historico do modulo ja fizer isso.
 
 ## Execucao
 
@@ -87,6 +97,7 @@ Leia nesta ordem:
 - `references/sip-update-script-rules.md`
 - `fontes/sei/src/main/php/sip/scripts/sip_atualizar_versao_modulo_ia.php`
 - `fontes/sei/src/main/php/sip/scripts/sip_atualizar_versao_modulo_relacionamento_institucional.php`
+- `fontes/sei/src/main/php/sip/scripts/sip_atualizar_versao_modulo_pen.php` quando o modulo-alvo ja seguir familia baseada em `InfraScriptVersao`
 
 ### 2. Resolver contexto SIP
 
@@ -99,7 +110,8 @@ Leia nesta ordem:
 - crie recursos de forma idempotente: consultar antes de cadastrar
 - crie itens de menu de forma idempotente: consultar antes de cadastrar
 - vincule perfil-recurso e perfil-item-menu apenas quando a relacao nao existir
-- trate auditoria ao final; se nao houver helper claro, use fallback controlado
+- quando a demanda for de manutencao, remova ou desative recursos/vinculos/itens apenas com lookup previo e limpando as relacoes dependentes observadas no script historico do modulo
+- trate auditoria ao final: incluir na regra apenas recursos de escrita (`_cadastrar`, `_alterar`, `_excluir`; `_desativar`/`_reativar` quando aplicavel) — `_listar` nunca entra; chamar `replicarRegraAuditoria` obrigatoriamente apos criar ou atualizar a regra; se nao houver helper claro, usar fallback SQL controlado; ver `.agents/references/padrao-auditoria-sip-sei.md`
 - em `instalarv100()`, siga o padrao do modulo IA para inserir o parametro inicial de versao em `infra_parametro`
 - em upgrades posteriores, so use helper local de atualizacao de versao se ele existir e seguir o padrao do script de referencia
 
@@ -122,15 +134,16 @@ Leia nesta ordem:
 ## Checklist
 
 - [ ] script-alvo SIP correto localizado
-- [ ] padrao estrutural do script definido e confirmado
+- [ ] familia estrutural do script definida e confirmada
 - [ ] `BancoSip` e `SessaoSip` corretos
-- [ ] classe base `InfraRN` preservada
+- [ ] classe base/adapter estrutural preservado conforme o modulo-alvo
 - [ ] `atualizarVersaoConectado()` presente
 - [ ] `switch` incremental com `fallthrough` presente
-- [ ] helper local de recurso/menu/auditoria alinhado a referencia escolhida
+- [ ] helper local de recurso/menu/vinculo/auditoria alinhado a referencia escolhida
 - [ ] recursos criados com idempotencia
 - [ ] menus criados com idempotencia
 - [ ] vinculos de perfil sem duplicidade
+- [ ] remocoes ou desativacoes tratadas com lookup e limpeza de dependencias quando aplicavel
 - [ ] auditoria tratada por helper ou fallback controlado
 - [ ] `sei-verificacao-banco-dados` executado no script SIP quando houver DDL gerado/alterado
 - [ ] `switch`, historico e parametro de versao atualizados

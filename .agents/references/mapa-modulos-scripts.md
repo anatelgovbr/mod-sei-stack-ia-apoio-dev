@@ -34,6 +34,7 @@ Consultar este arquivo ANTES de qualquer trabalho em `fontes/sei/src/main/php/se
 | `utilidades/`                            | `sei_atualizar_versao_modulo_utilidades.php`                       | `sip_atualizar_versao_modulo_utilidades.php`                       |
 | `cgu/`                                   | `md_cgu_eouv_atualizar_modulo.php`                                 | `md_cgu_eouv_atualizar_modulo.php`                                 |
 | `trf4/julgamento/`                       | `md_julgar_atualizacao_sei.php`                                    | `md_julgar_atualizacao_sip.php`                                    |
+| `apoio-plano-trabalho/`                  | `sei_atualizar_versao_modulo_apt.php`                              | `sip_atualizar_versao_modulo_apt.php`                              |
 
 ---
 

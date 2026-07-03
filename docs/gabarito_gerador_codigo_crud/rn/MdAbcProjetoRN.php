@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4� REGI�O
+ * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
  * 29/03/2026 - criado por abc
  *
- * Vers�o do Gerador de C�digo: 1.46.4
+ * VersÃ£o do Gerador de CÃ³digo: 1.46.4
  **/
 
 
@@ -29,11 +29,11 @@ class MdAbcProjetoRN extends InfraRN
   private function validarStrIdentificacao(MdAbcProjetoDTO $objMdAbcProjetoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcProjetoDTO->getStrIdentificacao())) {
-      $objInfraException->adicionarValidacao('Identifica��o n�o informada.');
+      $objInfraException->adicionarValidacao('IdentificaÃ§Ã£o nÃ£o informada.');
     } else {
       $objMdAbcProjetoDTO->setStrIdentificacao(trim($objMdAbcProjetoDTO->getStrIdentificacao()));
       if (strlen($objMdAbcProjetoDTO->getStrIdentificacao())>50) {
-        $objInfraException->adicionarValidacao('Identifica��o possui tamanho superior a 50 caracteres.');
+        $objInfraException->adicionarValidacao('IdentificaÃ§Ã£o possui tamanho superior a 50 caracteres.');
       }
     }
   }
@@ -50,18 +50,18 @@ class MdAbcProjetoRN extends InfraRN
   private function validarDtaCadastramento(MdAbcProjetoDTO $objMdAbcProjetoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcProjetoDTO->getDtaCadastramento())) {
-      $objInfraException->adicionarValidacao('Data de In�cio n�o informada.');
+      $objInfraException->adicionarValidacao('Data de InÃ­cio nÃ£o informada.');
     } elseif (!InfraData::validarData($objMdAbcProjetoDTO->getDtaCadastramento())) {
-      $objInfraException->adicionarValidacao('Data de In�cio inv�lida.');
+      $objInfraException->adicionarValidacao('Data de InÃ­cio invÃ¡lida.');
     }
   }
 
   private function validarStrSinAtivo(MdAbcProjetoDTO $objMdAbcProjetoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcProjetoDTO->getStrSinAtivo())) {
-      $objInfraException->adicionarValidacao('Sinalizador de Exclus�o L�gica n�o informado.');
+      $objInfraException->adicionarValidacao('Sinalizador de ExclusÃ£o LÃ³gica nÃ£o informado.');
     } elseif (!InfraUtil::isBolSinalizadorValido($objMdAbcProjetoDTO->getStrSinAtivo())) {
-      $objInfraException->adicionarValidacao('Sinalizador de Exclus�o L�gica inv�lido.');
+      $objInfraException->adicionarValidacao('Sinalizador de ExclusÃ£o LÃ³gica invÃ¡lido.');
     }
   }
 

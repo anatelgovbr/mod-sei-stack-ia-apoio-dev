@@ -53,6 +53,18 @@ RE_COLUNA_RELACIONADA = re.compile(
 )
 RE_DOCBLOCK_TABLE = re.compile(r"@table\s+(.+)")
 RE_DOCBLOCK_COLUMN = re.compile(r"@column\s+(\w+)\s+(.+)")
+RE_META_PK_CALL = re.compile(
+    r"adicionarChavePrimaria\s*\(\s*['\"]([^'\"]+)['\"]\s*,\s*['\"]([^'\"]+)['\"]\s*,\s*\[([^\]]*)\]",
+    re.IGNORECASE,
+)
+RE_META_FK_CALL = re.compile(
+    r"adicionarChaveEstrangeira\s*\(\s*['\"]([^'\"]+)['\"]\s*,\s*['\"]([^'\"]+)['\"]\s*,\s*\[([^\]]*)\]\s*,\s*['\"]([^'\"]+)['\"]\s*,\s*\[([^\]]*)\]",
+    re.IGNORECASE,
+)
+RE_META_INDEX_CALL = re.compile(
+    r"criarIndice\s*\(\s*['\"]([^'\"]+)['\"]\s*,\s*['\"]([^'\"]+)['\"]\s*,\s*\[([^\]]*)\]",
+    re.IGNORECASE,
+)
 
 RE_SIN_ATIVO_COLUNA = re.compile(r"['\"]sin_ativo['\"]", re.IGNORECASE)
 RE_FK_CONSTRAINT = re.compile(r"fk_md_\w+_\w+_\w+")
@@ -253,6 +265,8 @@ class Entity:
         self.constraints_fk = []
         self.constraints_ak = []
         self.constraints_index = []
+        self.indices = []
+        self.supplemental_constraints_fk = []
         self.tem_sequence = False
         self.tipos_invalidos = []
         self.sequencias_encontradas = []
@@ -264,7 +278,88 @@ class Entity:
         self.colunas.append({"nome": nome, "tipo": tipo})
 
     def adicionar_fk(self, coluna: str, tabela_ref: str, coluna_ref: str):
-        self.fks.append({"coluna": coluna, "tabela_ref": tabela_ref, "coluna_ref": coluna_ref})
+        self.fks.append({
+            "coluna": coluna,
+            "coluna_sql": coluna,
+            "tabela_ref": tabela_ref,
+            "tabela_ref_base": normalize_table_ref(tabela_ref),
+            "coluna_ref": coluna_ref,
+            "coluna_ref_base": normalize_column_ref(coluna_ref),
+        })
+
+
+def parse_php_array_items(raw: str) -> list[str]:
+    return [match.group(1).strip() for match in re.finditer(r"['\"]([^'\"]+)['\"]", raw)]
+
+
+def normalize_table_ref(tabela_ref: str) -> str:
+    return tabela_ref.strip().split()[0]
+
+
+def normalize_column_ref(coluna_ref: str) -> str:
+    return coluna_ref.strip().split('.')[-1]
+
+
+def merge_entity(base: Entity, extra: Entity):
+    for arquivo in extra.arquivos:
+        if arquivo not in base.arquivos:
+            base.arquivos.append(arquivo)
+
+    if extra.pk_coluna and not base.pk_coluna:
+        base.pk_coluna = extra.pk_coluna
+
+    if extra.pk_tipo and not base.pk_tipo:
+        base.pk_tipo = extra.pk_tipo
+
+    if extra.constraint_pk and not base.constraint_pk:
+        base.constraint_pk = extra.constraint_pk
+
+    if extra.tem_sequence:
+        base.tem_sequence = True
+
+    for seq in extra.sequencias_encontradas:
+        if seq not in base.sequencias_encontradas:
+            base.sequencias_encontradas.append(seq)
+
+    existing_fk_keys = {
+        (
+            fk.get("coluna_sql") or fk["coluna"],
+            fk.get("tabela_ref_base") or normalize_table_ref(fk["tabela_ref"]),
+            fk.get("coluna_ref_base") or normalize_column_ref(fk["coluna_ref"]),
+        )
+        for fk in base.fks
+    }
+    for fk in extra.fks:
+        key = (
+            fk.get("coluna_sql") or fk["coluna"],
+            fk.get("tabela_ref_base") or normalize_table_ref(fk["tabela_ref"]),
+            fk.get("coluna_ref_base") or normalize_column_ref(fk["coluna_ref"]),
+        )
+        if key not in existing_fk_keys:
+            base.fks.append(fk)
+            existing_fk_keys.add(key)
+
+    for valor in extra.constraints_fk:
+        if valor not in base.constraints_fk:
+            base.constraints_fk.append(valor)
+        if valor not in base.supplemental_constraints_fk:
+            base.supplemental_constraints_fk.append(valor)
+
+    for nome_lista in ("constraints_ak", "constraints_index"):
+        base_lista = getattr(base, nome_lista)
+        for valor in getattr(extra, nome_lista):
+            if valor not in base_lista:
+                base_lista.append(valor)
+
+    existing_indices = {
+        (indice.get("nome", ""), tuple(indice.get("colunas", [])))
+        for indice in base.indices
+    }
+    for indice in extra.indices:
+        key = (indice.get("nome", ""), tuple(indice.get("colunas", [])))
+        if key not in existing_indices:
+            base.indices.append(indice)
+            existing_indices.add(key)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -275,6 +370,7 @@ def parse_php_dto(caminho: str, conteudo: str) -> Optional[Entity]:
     nome_tabela = None
     colunas = []
     pk_coluna = None
+    pk_coluna_sql = None
     pk_tipo = None
     fks = []
     tem_exclusao_logica = False
@@ -315,7 +411,19 @@ def parse_php_dto(caminho: str, conteudo: str) -> Optional[Entity]:
         attr = match_fk.group(1).strip()
         tabela_ref = match_fk.group(2).strip()
         campo_ref = match_fk.group(3).strip()
-        fks.append({"coluna": attr, "tabela_ref": tabela_ref, "coluna_ref": campo_ref})
+        coluna_sql = None
+        for col_item in colunas:
+            if col_item.get("nome_attr") == attr:
+                coluna_sql = col_item["nome"]
+                break
+        fks.append({
+            "coluna": attr,
+            "coluna_sql": coluna_sql,
+            "tabela_ref": tabela_ref,
+            "tabela_ref_base": normalize_table_ref(tabela_ref),
+            "coluna_ref": campo_ref,
+            "coluna_ref_base": normalize_column_ref(campo_ref),
+        })
 
     for match_exc in RE_EXC_LOGICA.finditer(conteudo):
         tem_exclusao_logica = True
@@ -377,7 +485,7 @@ def parse_php_release_script(caminho: str, conteudo: str) -> list[Entity]:
     if "CREATE TABLE" not in conteudo.upper():
         return []
 
-    entities = []
+    entities_by_name = {}
     create_pattern = re.compile(
         r'CREATE\s+TABLE\s+(\w+)\s*\((.+?)\)\s*[\'"]',
         re.DOTALL | re.IGNORECASE
@@ -385,12 +493,15 @@ def parse_php_release_script(caminho: str, conteudo: str) -> list[Entity]:
     for match in create_pattern.finditer(conteudo):
         nome_tabela = match.group(1).strip()
 
-        if nome_tabela.lower() == "sei_teste":
+        if nome_tabela.lower() in {"sei_teste", "sip_teste"}:
             continue
 
         is_sequence_table = nome_tabela.startswith("seq_")
 
-        entity = Entity(nome_tabela, [caminho])
+        entity = entities_by_name.get(nome_tabela)
+        if entity is None:
+            entity = Entity(nome_tabela, [caminho])
+            entities_by_name[nome_tabela] = entity
         # Release scripts are not DTOs, so docblock checks do not apply.
         entity.tem_docblock = True
 
@@ -401,7 +512,6 @@ def parse_php_release_script(caminho: str, conteudo: str) -> list[Entity]:
             for sm in seq_pat.finditer(nome_tabela):
                 if sm.group(1) not in entity.sequencias_encontradas:
                     entity.sequencias_encontradas.append(sm.group(1))
-            entities.append(entity)
             continue
 
         pk_match = RE_PRIMARY_KEY.search(match.group(2))
@@ -433,18 +543,61 @@ def parse_php_release_script(caminho: str, conteudo: str) -> list[Entity]:
             entity.tipos_invalidos.append("money")
 
         col_pat = re.compile(
-            r'(\w+)\s+(?:varchar\s*\(\s*\d+\s*\)|var?char\s*\(\s*\d+\s*\)|'
-            r'numeric\s*\(\s*\d+\s*(?:,\s*\d+)?\s*\)|'
-            r'(?:big|small|tiny)?\s*int(?:eger)?\s*(?:\(\s*\d+\s*\))?|'
-            r'date|timestamp|datetime|boolean|clob|blob|text|money|decimal)',
-            re.IGNORECASE
+            r'^\s*(\w+)\s+\'\s*\.',
+            re.MULTILINE
         )
         for cm in col_pat.finditer(match.group(2)):
             entity.adicionar_coluna(cm.group(1).strip(), "")
 
-        entities.append(entity)
+    for match_pk in RE_META_PK_CALL.finditer(conteudo):
+        tabela = match_pk.group(1).strip()
+        nome_constraint = match_pk.group(2).strip()
+        colunas = parse_php_array_items(match_pk.group(3))
+        entity = entities_by_name.get(tabela)
+        if entity is None:
+            continue
+        entity.constraint_pk = nome_constraint
+        if colunas and not entity.pk_coluna:
+            entity.pk_coluna = colunas[0]
+            entity.pk_tipo = "sequencial"
 
-    return entities
+    for match_fk in RE_META_FK_CALL.finditer(conteudo):
+        nome_constraint = match_fk.group(1).strip()
+        tabela = match_fk.group(2).strip()
+        colunas = parse_php_array_items(match_fk.group(3))
+        tabela_ref = match_fk.group(4).strip()
+        colunas_ref = parse_php_array_items(match_fk.group(5))
+        entity = entities_by_name.get(tabela)
+        if entity is None:
+            continue
+        if nome_constraint not in entity.constraints_fk:
+            entity.constraints_fk.append(nome_constraint)
+        if nome_constraint not in entity.supplemental_constraints_fk:
+            entity.supplemental_constraints_fk.append(nome_constraint)
+        if colunas:
+            entity.adicionar_fk(colunas[0], tabela_ref, colunas_ref[0] if colunas_ref else "")
+
+    for match_idx in RE_META_INDEX_CALL.finditer(conteudo):
+        tabela = match_idx.group(1).strip()
+        nome_indice = match_idx.group(2).strip()
+        colunas = parse_php_array_items(match_idx.group(3))
+        entity = entities_by_name.get(tabela)
+        if entity is None:
+            continue
+        if nome_indice not in entity.constraints_index:
+            entity.constraints_index.append(nome_indice)
+        entity.indices.append({"nome": nome_indice, "colunas": colunas})
+
+    for match_seq in RE_SEQ_NATIVE.finditer(conteudo):
+        tabela = match_seq.group(1).strip()
+        entity = entities_by_name.get(tabela)
+        if entity is None:
+            continue
+        entity.tem_sequence = True
+        if tabela not in entity.sequencias_encontradas:
+            entity.sequencias_encontradas.append(tabela)
+
+    return list(entities_by_name.values())
 
 
 def parse_ddl(caminho: str, conteudo: str) -> list[Entity]:
@@ -529,8 +682,38 @@ def parse_ddl(caminho: str, conteudo: str) -> list[Entity]:
         for ent in entidades_afetadas:
             if idx_nome and idx_nome not in ent.constraints_index:
                 ent.constraints_index.append(idx_nome)
+            ent.indices.append({
+                "nome": idx_nome,
+                "colunas": [col.strip().strip('"').strip("'") for col in cols_idx.split(',')],
+            })
 
     return list(entities_by_name.values())
+
+
+def enrich_entities_with_release_scripts(entities: dict[str, Entity]):
+    if not entities:
+        return
+
+    repo_root = Path(__file__).resolve().parents[3]
+    siglas = set()
+
+    for nome_tabela in entities:
+        match = re.match(r'^md_([a-z]+)_', nome_tabela)
+        if match:
+            siglas.add(match.group(1))
+
+    for sigla in sorted(siglas):
+        for script_relpath in (
+            f"fontes/sei/src/main/php/sei/scripts/sei_atualizar_versao_modulo_{sigla}.php",
+            f"fontes/sei/src/main/php/sip/scripts/sip_atualizar_versao_modulo_{sigla}.php",
+        ):
+            script_path = repo_root / script_relpath
+            if not script_path.is_file():
+                continue
+
+            for extra in audit_file(str(script_path)):
+                if extra.nome_tabela in entities:
+                    merge_entity(entities[extra.nome_tabela], extra)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -557,6 +740,7 @@ def validar_entity(entity: Entity) -> tuple[list, list]:
     fks = entity.fks
     pk_e_fk_composta = (
         len(fks) >= 2 and
+        len(entity.colunas) > 0 and
         len(entity.colunas) <= 4 and
         entity.pk_coluna and
         any(fk["coluna"].lower().replace("_", "").isalpha() for fk in fks)
@@ -619,12 +803,13 @@ def validar_entity(entity: Entity) -> tuple[list, list]:
                 fk_nome_encontrado = cfk
                 break
         if fk_nome_encontrado and not re.match(r'^fk_md_\w+_\w+_\w+$', fk_nome_encontrado):
-            erros.append({
-                "codigo": "E005", "regra": 5,
-                "mensagem": f"FK constraint '{fk_nome_encontrado}' nao segue padrao fk_md_<sigla>_<ent>_<ref>",
-                "remedio": f"Renomear para fk_{tbl}_{fk['tabela_ref']}",
-                "base": "Manual SEI MD §Chave Estrangeira"
-            })
+            if fk_nome_encontrado not in entity.supplemental_constraints_fk:
+                erros.append({
+                    "codigo": "E005", "regra": 5,
+                    "mensagem": f"FK constraint '{fk_nome_encontrado}' nao segue padrao fk_md_<sigla>_<ent>_<ref>",
+                    "remedio": f"Renomear para fk_{tbl}_{fk['tabela_ref_base']}",
+                    "base": "Manual SEI MD §Chave Estrangeira"
+                })
 
     # R6 — sin_ativo em exclusao logica
     if entity.tem_exclusao_logica:
@@ -670,22 +855,34 @@ def validar_entity(entity: Entity) -> tuple[list, list]:
 
     # R9 — indice em FK
     for fk in entity.fks:
+        fk_coluna_sql = fk.get("coluna_sql")
+        if fk_coluna_sql is None:
+            continue
+
         fk_nome = f"fk_{tbl}_{fk['tabela_ref']}"
         tem_indice = any(
-            idx == fk_nome or idx.startswith('i') and '_' in idx
-            for idx in entity.constraints_index
+            fk_coluna_sql in indice.get("colunas", [])
+            for indice in entity.indices
         )
+        if not tem_indice:
+            tem_indice = any(
+                idx == fk_nome or (idx.startswith('i') and '_' in idx)
+                for idx in entity.constraints_index
+            )
         if not tem_indice:
             avisos.append({
                 "codigo": "W001", "regra": 9,
-                "mensagem": f"FK '{fk['coluna']}' sem indice explicito",
+                "mensagem": f"FK '{fk_coluna_sql}' sem indice explicito",
                 "remedio": "Criar indice para FK (i01_ ou mesmo nome da FK)",
                 "base": "Manual SEI MD §Índices"
             })
 
     # R10 — sequence naming
     if entity.tem_sequence:
-        tem_seq_naming = any(re.match(r'^seq_\w+$', s) for s in [entity.constraint_pk] if s)
+        nomes_seq = list(entity.sequencias_encontradas)
+        if entity.constraint_pk:
+            nomes_seq.append(entity.constraint_pk)
+        tem_seq_naming = any(re.match(r'^md_\w+$', s) or re.match(r'^seq_\w+$', s) for s in nomes_seq if s)
         if not tem_seq_naming:
             avisos.append({
                 "codigo": "W002", "regra": 10,
@@ -892,7 +1089,10 @@ def run_audit(input_path: str, input_type: str = None, mode: str = "adhoc") -> t
         dto_dir = os.path.join(input_path, "dto")
         bd_dir = os.path.join(input_path, "bd")
 
-        if os.path.isdir(input_path) and any(f.endswith(".php") for f in os.listdir(input_path) if os.path.isfile(os.path.join(input_path, f))):
+        # If the input itself is a DTO/BD directory, audit it directly.
+        # For module roots, prefer dto/ and bd/ subdirectories even when the root
+        # also contains PHP pages or integration classes.
+        if not os.path.isdir(dto_dir) and os.path.isdir(input_path) and any(f.endswith(".php") for f in os.listdir(input_path) if os.path.isfile(os.path.join(input_path, f))):
             dto_dir = input_path
             bd_dir = None
 
@@ -915,6 +1115,8 @@ def run_audit(input_path: str, input_type: str = None, mode: str = "adhoc") -> t
                     with open(caminho, "r", encoding="utf-8", errors="replace") as fh:
                         conteudo = fh.read()
                     parse_php_bd(caminho, conteudo, entities)
+
+        enrich_entities_with_release_scripts(entities)
 
     elif "," in input_path:
         for path in input_path.split(","):

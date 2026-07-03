@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4� REGI�O
+ * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
  * 29/03/2026 - criado por abc
  *
- * Vers�o do Gerador de C�digo: 1.46.4
+ * VersÃ£o do Gerador de CÃ³digo: 1.46.4
  **/
 
 
@@ -38,7 +38,7 @@ try {
         }
         $objMdAbcProjetoRN = new MdAbcProjetoRN();
         $objMdAbcProjetoRN->excluir($arrObjMdAbcProjetoDTO);
-        PaginaSEI::getInstance()->adicionarMensagem('Opera��o realizada com sucesso.');
+        PaginaSEI::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
       } catch (Exception $e) {
         PaginaSEI::getInstance()->processarExcecao($e);
       } 
@@ -56,7 +56,7 @@ try {
         }
         $objMdAbcProjetoRN = new MdAbcProjetoRN();
         $objMdAbcProjetoRN->desativar($arrObjMdAbcProjetoDTO);
-        PaginaSEI::getInstance()->adicionarMensagem('Opera��o realizada com sucesso.');
+        PaginaSEI::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
       } catch (Exception $e) {
         PaginaSEI::getInstance()->processarExcecao($e);
       } 
@@ -78,7 +78,7 @@ try {
         }
         $objMdAbcProjetoRN = new MdAbcProjetoRN();
         $objMdAbcProjetoRN->reativar($arrObjMdAbcProjetoDTO);
-        PaginaSEI::getInstance()->adicionarMensagem('Opera��o realizada com sucesso.');
+        PaginaSEI::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
       } catch (Exception $e) {
         PaginaSEI::getInstance()->processarExcecao($e);
       } 
@@ -99,7 +99,7 @@ try {
       break;
 
     default:
-      throw new InfraException("A��o '".PaginaSEI::GET('acao')."' n�o reconhecida.");
+      throw new InfraException("AÃ§Ã£o '".PaginaSEI::GET('acao')."' nÃ£o reconhecida.");
   }
 
   $arrComandos = array();
@@ -210,10 +210,10 @@ try {
     if ($bolCheck) {
        $strResultado .= '<th class="infraTh" style="width: 1%">'.PaginaSEI::getInstance()->getThCheck().'</th>'."\n";
     }
-    $strResultado .= '<th class="infraTh">'.PaginaSEI::getInstance()->getThOrdenacao($objMdAbcProjetoDTO,'Identifica��o','Identificacao',$arrObjMdAbcProjetoDTO).'</th>'."\n";
-    //$strResultado .= '<th class="infraTh">'.PaginaSEI::getInstance()->getThOrdenacao($objMdAbcProjetoDTO,'Descri��o','Descricao',$arrObjMdAbcProjetoDTO).'</th>'."\n";
-    //$strResultado .= '<th class="infraTh">'.PaginaSEI::getInstance()->getThOrdenacao($objMdAbcProjetoDTO,'Data de In�cio','Cadastramento',$arrObjMdAbcProjetoDTO).'</th>'."\n";
-    $strResultado .= '<th class="infraTh">A��es</th>'."\n";
+    $strResultado .= '<th class="infraTh">'.PaginaSEI::getInstance()->getThOrdenacao($objMdAbcProjetoDTO,'IdentificaÃ§Ã£o','Identificacao',$arrObjMdAbcProjetoDTO).'</th>'."\n";
+    //$strResultado .= '<th class="infraTh">'.PaginaSEI::getInstance()->getThOrdenacao($objMdAbcProjetoDTO,'DescriÃ§Ã£o','Descricao',$arrObjMdAbcProjetoDTO).'</th>'."\n";
+    //$strResultado .= '<th class="infraTh">'.PaginaSEI::getInstance()->getThOrdenacao($objMdAbcProjetoDTO,'Data de InÃ­cio','Cadastramento',$arrObjMdAbcProjetoDTO).'</th>'."\n";
+    $strResultado .= '<th class="infraTh">AÃ§Ãµes</th>'."\n";
     $strResultado .= '</tr></thead><tbody>'."\n";
     $strCssTr='';
     for($i = 0;$i < $numRegistros; $i++) {
@@ -302,7 +302,7 @@ function inicializar()
 <?php if ($bolAcaoDesativar??false) { ?>
 function acaoDesativar(id,desc)
 {
-  if (confirm('Confirma desativa��o do Projeto \"' + desc + '\"?')) {
+  if (confirm('Confirma desativaÃ§Ã£o do Projeto \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcProjetoLista').action='<?=$strLinkDesativar??false?>';
     document.getElementById('frmMdAbcProjetoLista').submit();
@@ -315,7 +315,7 @@ function acaoDesativacaoMultipla()
     alert('Nenhum Projeto selecionado.');
     return;
   }
-  if (confirm('Confirma desativa��o dos Projetos selecionados?')) {
+  if (confirm('Confirma desativaÃ§Ã£o dos Projetos selecionados?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcProjetoLista').action='<?=$strLinkDesativar??false?>';
     document.getElementById('frmMdAbcProjetoLista').submit();
@@ -326,7 +326,7 @@ function acaoDesativacaoMultipla()
 <?php if ($bolAcaoReativar??false) { ?>
 function acaoReativar(id,desc)
 {
-  if (confirm('Confirma reativa��o do Projeto \"' + desc + '\"?')) {
+  if (confirm('Confirma reativaÃ§Ã£o do Projeto \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcProjetoLista').action='<?=$strLinkReativar??false?>';
     document.getElementById('frmMdAbcProjetoLista').submit();
@@ -339,7 +339,7 @@ function acaoReativacaoMultipla()
     alert('Nenhum Projeto selecionado.');
     return;
   }
-  if (confirm('Confirma reativa��o dos Projetos selecionados?')) {
+  if (confirm('Confirma reativaÃ§Ã£o dos Projetos selecionados?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcProjetoLista').action='<?=$strLinkReativar??false?>';
     document.getElementById('frmMdAbcProjetoLista').submit();
@@ -350,7 +350,7 @@ function acaoReativacaoMultipla()
 <?php if ($bolAcaoExcluir??false) { ?>
 function acaoExcluir(id,desc)
 {
-  if (confirm('Confirma exclus�o do Projeto \"' + desc + '\"?')) {
+  if (confirm('Confirma exclusÃ£o do Projeto \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcProjetoLista').action='<?=$strLinkExcluir??false?>';
     document.getElementById('frmMdAbcProjetoLista').submit();
@@ -363,7 +363,7 @@ function acaoExclusaoMultipla()
     alert('Nenhum Projeto selecionado.');
     return;
   }
-  if (confirm('Confirma exclus�o dos Projetos selecionados?')) {
+  if (confirm('Confirma exclusÃ£o dos Projetos selecionados?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcProjetoLista').action='<?=$strLinkExcluir??false?>';
     document.getElementById('frmMdAbcProjetoLista').submit();

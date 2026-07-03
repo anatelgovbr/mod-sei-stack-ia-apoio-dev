@@ -2,7 +2,8 @@
 
 Vetores de ataque especificos do SEI/InfraPHP. Cada entrada tem padrao vulneravel e seguro para deteccao e correcao.
 
-**Gates**: `.agents/references/implementation-gates.md`
+**Gates base**: `.agents/references/gates-de-implementacao.md`
+**Checklist operacional**: `.agents/checklists/checklist-seguranca.md`
 **Skills**: `sei-verificacao-pagina`, `sei-verificacao-rn`, `sei-verificacao-banco-dados`, `sei-verificacao-controladores`
 
 ---
@@ -46,7 +47,7 @@ $objRN->excluirControlado($objDTO);
 
 ## V03 — Acao AJAX sem autorizacao por acao (Autorizacao Insuficiente)
 
-**Severidade**: BLOQUEANTE | **Skill**: `sei-verificacao-controladores` A1
+**Severidade**: BLOQUEANTE | **Gate**: G8 | **Skill**: `sei-verificacao-controladores` CI4
 
 O controlador global valida link mas nao impoe permissao por acao do modulo.
 
@@ -67,7 +68,7 @@ case 'md_ri_consultar_cpf':
 
 ## V04 — XSS via saida sem escape
 
-**Severidade**: ALTA | **Gate**: G6 | **Skill**: `sei-verificacao-pagina` P7
+**Severidade**: ALTA | **Gate**: G7 | **Skill**: `sei-verificacao-pagina` P8/P9
 
 InfraPHP nao faz escape automatico. Saida sem `PaginaSEI::tratarHTML()` abre XSS.
 
@@ -83,7 +84,7 @@ echo '<td>' . PaginaSEI::tratarHTML($objDTO->getStrNome()) . '</td>';
 
 ## V05 — SQL Injection via concatenacao
 
-**Severidade**: BLOQUEANTE | **Gate**: G6
+**Severidade**: BLOQUEANTE | **Checklist**: B6
 
 Concatenacao de entrada em SQL customizado dentro de `*BD.php`.
 
@@ -141,19 +142,22 @@ protected function gerarProcedimentoControlado($arr) {
 
 ---
 
-## V08 — Encoding UTF-8 em arquivo PHP
+## V08 — Encoding incompativel com a conversao Latin-1 em arquivo PHP
 
-**Severidade**: BLOQUEANTE | **Gate**: G1 | **Skill**: `sei-verificacao-pagina` P10
+**Severidade**: BLOQUEANTE | **Gate**: G1 | **Skill**: revisao de PHP alterado
 
-SEI opera em ISO-8859-1. UTF-8 causa corrupcao silenciosa de strings com acentos.
+SEI opera com conversao para ISO-8859-1 no blob final. BOM ou caractere fora de Latin-1
+causa corrupcao silenciosa de strings com acentos.
 
-Deteccao: `file -i arquivo.php` deve indicar `charset=iso-8859-1`.
+Deteccao: validar ausencia de BOM e ausencia de caracteres fora de Latin-1 no blob final,
+considerando a conversao definida em `.gitattributes`. Worktree UTF-8, por si so, nao
+caracteriza achado.
 
 ---
 
 ## V09 — Exposicao de stacktrace
 
-**Severidade**: ALTA | **Gate**: G7
+**Severidade**: ALTA
 
 Excecao com `getMessage()` ou stack exibido na resposta HTTP expoe paths, classes e queries.
 
@@ -172,7 +176,7 @@ catch (Exception $e) {
 
 ## V10 — Log com PII ou segredos
 
-**Severidade**: BLOQUEANTE | **Gate**: G8
+**Severidade**: BLOQUEANTE | **Checklist**: L1/L2
 
 PII (CPF, email) ou segredos (tokens, senhas) em logs viola LGPD e cria vetor persistente.
 
@@ -194,5 +198,5 @@ LogSEI::registrarLog(..., 'Operacao realizada. ID: ' . $numIdInterno);
 | V02 Sem validarPermissao | V06 $_REQUEST |
 | V03 AJAX sem autorizacao | V07 Efeito colateral em transacao |
 | V05 SQL Injection | V09 Stacktrace exposto |
-| V08 Encoding UTF-8 | |
+| V08 Encoding incompativel com Latin-1 | |
 | V10 Log com PII/segredos | |

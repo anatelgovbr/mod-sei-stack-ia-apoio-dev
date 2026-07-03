@@ -11,7 +11,11 @@ Consultar esta referência ao criar ou ajustar menus, recursos ou perfis no SIP.
 - Criar recurso para controle de permissão de uma ação.
 - Criar ou ajustar perfil de módulo.
 - Implementar ícone de menu.
-- Configurar menu para usuário externo ou publicações (fora do SIP).
+- Preparar a pagina/acao do modulo consumida por menu de usuario externo ou publicacoes.
+
+Para menu de usuario externo ou publicacoes como ponto de extensao no core, a
+skill principal e `sei-mod-api-eventos`. Esta referencia continua util apenas para
+os recursos SIP, pagina/acao do modulo e impactos de release relacionados.
 
 ---
 
@@ -74,8 +78,9 @@ Nunca duplicar recursos, menus ou perfis já cadastrados nos scripts de release.
 
 ## Menus fora do SIP
 
-Usuário externo e pesquisa de publicações não recebem menus do SIP.
-Para esses casos, usar eventos na `*Integracao.php`:
+Usuario externo e pesquisa de publicacoes nao recebem menus do SIP.
+Para esses casos, usar eventos na `*Integracao.php` com `sei-mod-api-eventos` como
+skill principal:
 
 - `montarMenuUsuarioExterno` — menu do portal do usuário externo.
 - `montarMenuPublicacoes` — menu da pesquisa de publicações.
@@ -100,4 +105,5 @@ Para esses casos, usar eventos na `*Integracao.php`:
 - Gabarito mínimo: `fontes/sei/src/main/php/sei/web/modulos/abc/exemplo/`
 - Gabarito robusto: `fontes/sei/src/main/php/sei/web/modulos/trf4/julgamento/`
 - Fundamentos de permissão: `AGENTS.md`
+- Eventos no core para menu externo/publicacoes: `.agents/skills/sei-mod-api-eventos/`
 - Scripts de release SIP: `.agents/skills/sip-gerador-scripts-release/`

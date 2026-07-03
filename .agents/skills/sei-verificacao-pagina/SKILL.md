@@ -16,7 +16,7 @@ description: >
 
 # sei-verificacao-pagina
 
-## Escopo Canonico
+## Escopo Padrao
 
 - paginas `*_lista.php`, `*_cadastro.php`, `controlador.php`, `index.php`
 - link assinado e permissao em pagina
@@ -27,10 +27,10 @@ description: >
 
 | ID | Regra | Severidade | Base |
 |---|---|---|---|
-| P1 | `validarLink()` presente na entrada da pagina | **Erro** | Manual 3; Manual 4 |
-| P2 | `validarPermissao()` presente na entrada da pagina | **Erro** | Manual 3; Manual 4 |
+| P1 | `validarLink()` presente na entrada da pagina | **Erro** | `references/padroes-seguranca.md` |
+| P2 | `validarPermissao()` presente na entrada da pagina | **Erro** | `references/padroes-seguranca.md` |
 | P3 | arquivo sem BOM e compativel com conversao Latin-1 | **Erro** | `AGENTS.md` + `.gitattributes` |
-| P4 | links de acao em HTML/JS usam `assinarLink()` | **Erro** | Manual 3; Manual 9 |
+| P4 | links de acao em HTML/JS usam `assinarLink()` | **Erro** | `references/padroes-seguranca.md` |
 
 ## Guardrails Locais do Projeto (avisos)
 
@@ -38,16 +38,14 @@ description: >
 |---|---|---|---|
 | P5 | evitar `$_REQUEST` em pagina | **Aviso** | `AGENTS.md` |
 | P6 | `$_GET`/`$_POST` diretos fora de `acao` exigem normalizacao explicita | **Aviso** | guardrail local |
-| P7 | UI condicional usa `verificarPermissao()` quando aplicavel | **Aviso** | Manual 3 |
-| P8 | saida HTML com variavel usa `PaginaSEI::tratarHTML()` quando aplicavel | **Aviso** | Manual 9 |
+| P7 | UI condicional usa `verificarPermissao()` quando aplicavel | **Aviso** | `references/padroes-seguranca.md` |
+| P8 | saida HTML com variavel usa `PaginaSEI::tratarHTML()` quando aplicavel | **Aviso** | `references/padroes-seguranca.md` |
 | P9 | evitar `innerHTML` / `document.write` com resposta ou variavel insegura | **Aviso** | hardening web complementar |
 | P10 | evitar mutacao de estado via GET desprotegido | **Aviso** | hardening complementar alinhado a `assinarLink()` |
 
 ## Referencias Autoritativas
 
-- `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_3_consideracoes_previas.md`
-- `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_4_infraphp.md`
-- `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_9_eventos.md`
+- `references/padroes-seguranca.md` (cobre P1-P10; curado dos cap. 3, 4 e 9 do manual)
 - `AGENTS.md`
 
 ## Exemplo Aderente ao Manual

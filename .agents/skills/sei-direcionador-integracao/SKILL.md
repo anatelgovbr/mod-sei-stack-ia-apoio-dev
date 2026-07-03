@@ -37,9 +37,9 @@ correto antes de encaminhar.
 
 1. **Receber a intencao** do desenvolvedor (textual, informal, em portugues).
 2. **Consultar os tres catalogos padrao** nesta ordem:
-   - `sei-mod-api`: `references/catalogo-api.md`
-   - `sei-mod-eventos`: `references/catalogo-eventos.md`
-   - `sei-mod-operacoes`: `references/catalogo-operacoes.md`
+   - `sei-mod-api-classes`: `.agents/skills/sei-mod-api-classes/references/catalogo-api.md`
+   - `sei-mod-api-eventos`: `.agents/skills/sei-mod-api-eventos/references/catalogo-eventos.md`
+   - `sei-mod-api-operacoes`: `.agents/skills/sei-mod-api-operacoes/references/catalogo-operacoes.md`
 3. **Pesquisar nos catalogos** usando esta prioridade:
    - nome oficial do recurso
    - sinais de dominio
@@ -47,18 +47,22 @@ correto antes de encaminhar.
    - entrada principal
    - saida principal
 4. **Avaliar os resultados**:
-   - Se encontrar correspondência em apenas **1 catalogo**: indicar o caminho e a skill padrao correspondente.
-   - Se encontrar correspondência em **2 ou 3 catalogos**: listar cada opcao com uma frase curta explicando por que se aplica.
-   - Se houver muitas correspondencias no mesmo catalogo: priorizar as que tenham mais sinais de dominio aderentes a intencao textual.
+    - Se encontrar correspondência em apenas **1 catalogo**: indicar o caminho e a skill padrao correspondente.
+    - Se encontrar correspondência em **2 ou 3 catalogos**: listar cada opcao com uma frase curta explicando por que se aplica.
+    - Se houver muitas correspondencias no mesmo catalogo: priorizar as que tenham mais sinais de dominio aderentes a intencao textual.
+    - Se uma correspondencia de API for apenas o **contrato de suporte** de uma
+      operacao ou evento ja identificado, priorizar a operacao/evento como
+      caminho principal e mencionar a API apenas como complemento, nao como
+      opcao concorrente.
 5. **Formular a pergunta objetiva** ao desenvolvedor:
    - Apresentar no maximo 3 opcoes.
    - Cada opcao deve ter: nome do recurso, catalogo de origem, uma linha de contexto e, quando existir, o principal sinal de dominio encontrado.
    - Pergunta deve ser do tipo "qual" ou "voce quer", nunca "deveria".
    - Usar o formato de resposta padrao abaixo.
 6. **Aguardar resposta** do desenvolvedor e **encaminhar** para a skill padrao correta:
-   - Resposta indica API/contrato -> `sei-mod-api`
-   - Resposta indica evento/hook -> `sei-mod-eventos`
-   - Resposta indica operacao/metodo `SeiRN` -> `sei-mod-operacoes`
+   - Resposta indica API/contrato -> `sei-mod-api-classes`
+   - Resposta indica evento/hook -> `sei-mod-api-eventos`
+   - Resposta indica operacao/metodo `SeiRN` -> `sei-mod-api-operacoes`
 7. **Se nenhuma correspondencia** for encontrada em nenhum catalogo:
    - Informar que nenhum contrato oficial foi encontrado no catalogo.
    - Sinalizar que sera necessaria implementacao propria com justificativa de seguranca.
@@ -72,7 +76,7 @@ Quando houver 1 correspondencia forte:
 Encontrei 1 opcao oficial relacionada ao que voce descreveu:
 
 1. <NomeOficial>
-   Catalogo: <sei-mod-api|sei-mod-eventos|sei-mod-operacoes>
+   Catalogo: <sei-mod-api-classes|sei-mod-api-eventos|sei-mod-api-operacoes>
    Contexto: <descricao curta + sinal de dominio>
 
 Voce quer seguir por esse caminho?
@@ -84,11 +88,11 @@ Quando houver 2 ou 3 correspondencias plausiveis:
 Encontrei estas opcoes oficiais relacionadas ao que voce descreveu:
 
 1. <NomeOficial>
-   Catalogo: <sei-mod-api|sei-mod-eventos|sei-mod-operacoes>
+   Catalogo: <sei-mod-api-classes|sei-mod-api-eventos|sei-mod-api-operacoes>
    Contexto: <descricao curta + sinal de dominio>
 
 2. <NomeOficial>
-   Catalogo: <sei-mod-api|sei-mod-eventos|sei-mod-operacoes>
+   Catalogo: <sei-mod-api-classes|sei-mod-api-eventos|sei-mod-api-operacoes>
    Contexto: <descricao curta + sinal de dominio>
 
 Qual destas opcoes corresponde melhor ao seu caso?
@@ -107,6 +111,7 @@ Se a necessidade continuar a mesma, o proximo passo e avaliar implementacao prop
 - [ ] A skill leu os 3 catalogos antes de formular resposta.
 - [ ] Nao implementou nem sugeriu implementacao propria antes de perguntar ao usuario.
 - [ ] A pergunta ao desenvolvedor tem no maximo 3 opcoes.
+- [ ] Contrato API de suporte nao foi apresentado como concorrente de uma operacao/evento ja claramente identificado.
 - [ ] A triagem considerou sinais de dominio antes de concluir que nao havia correspondencia relevante.
 - [ ] O encaminhamento respeita a escolha do desenvolvedor.
 - [ ] Se nenhuma correspondencia foi encontrada, a resposta informa isso claramente.
@@ -114,9 +119,9 @@ Se a necessidade continuar a mesma, o proximo passo e avaliar implementacao prop
 
 ## Referências
 
-- Catalogo `sei-mod-api`: `.agents/skills/sei-mod-api/references/catalogo-api.md`
-- Catalogo `sei-mod-eventos`: `.agents/skills/sei-mod-eventos/references/catalogo-eventos.md`
-- Catalogo `sei-mod-operacoes`: `.agents/skills/sei-mod-operacoes/references/catalogo-operacoes.md`
-- Skill padrao `sei-mod-api`: `.agents/skills/sei-mod-api/SKILL.md`
-- Skill padrao `sei-mod-eventos`: `.agents/skills/sei-mod-eventos/SKILL.md`
-- Skill padrao `sei-mod-operacoes`: `.agents/skills/sei-mod-operacoes/SKILL.md`
+- Catalogo `sei-mod-api-classes`: `.agents/skills/sei-mod-api-classes/references/catalogo-api.md`
+- Catalogo `sei-mod-api-eventos`: `.agents/skills/sei-mod-api-eventos/references/catalogo-eventos.md`
+- Catalogo `sei-mod-api-operacoes`: `.agents/skills/sei-mod-api-operacoes/references/catalogo-operacoes.md`
+- Skill padrao `sei-mod-api-classes`: `.agents/skills/sei-mod-api-classes/SKILL.md`
+- Skill padrao `sei-mod-api-eventos`: `.agents/skills/sei-mod-api-eventos/SKILL.md`
+- Skill padrao `sei-mod-api-operacoes`: `.agents/skills/sei-mod-api-operacoes/SKILL.md`

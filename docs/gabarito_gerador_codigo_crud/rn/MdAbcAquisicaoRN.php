@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4� REGI�O
+ * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
  * 29/03/2026 - criado por abc
  *
- * Vers�o do Gerador de C�digo: 1.46.4
+ * VersÃ£o do Gerador de CÃ³digo: 1.46.4
  **/
 
 
@@ -29,18 +29,18 @@ class MdAbcAquisicaoRN extends InfraRN
   private function validarNumIdMdAbcProjeto(MdAbcAquisicaoDTO $objMdAbcAquisicaoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcAquisicaoDTO->getNumIdMdAbcProjeto())) {
-      $objInfraException->adicionarValidacao('Projeto n�o informado.');
+      $objInfraException->adicionarValidacao('Projeto nÃ£o informado.');
     }
   }
 
   private function validarStrDescricao(MdAbcAquisicaoDTO $objMdAbcAquisicaoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcAquisicaoDTO->getStrDescricao())) {
-      $objInfraException->adicionarValidacao('Descri��o n�o informada.');
+      $objInfraException->adicionarValidacao('DescriÃ§Ã£o nÃ£o informada.');
     } else {
       $objMdAbcAquisicaoDTO->setStrDescricao(trim($objMdAbcAquisicaoDTO->getStrDescricao()));
       if (strlen($objMdAbcAquisicaoDTO->getStrDescricao())>50) {
-        $objInfraException->adicionarValidacao('Descri��o possui tamanho superior a 50 caracteres.');
+        $objInfraException->adicionarValidacao('DescriÃ§Ã£o possui tamanho superior a 50 caracteres.');
       }
     }
   }
@@ -48,7 +48,7 @@ class MdAbcAquisicaoRN extends InfraRN
   private function validarDinCusto(MdAbcAquisicaoDTO $objMdAbcAquisicaoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcAquisicaoDTO->getDinCusto())) {
-      $objInfraException->adicionarValidacao('Custo n�o informado.');
+      $objInfraException->adicionarValidacao('Custo nÃ£o informado.');
     }
   }
 
@@ -75,7 +75,7 @@ class MdAbcAquisicaoRN extends InfraRN
       return $objMdAbcAquisicaoBD->cadastrar($objMdAbcAquisicaoDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro cadastrando Aquisi��o.', $e);
+      throw new InfraException('Erro cadastrando AquisiÃ§Ã£o.', $e);
     }
   }
 
@@ -111,7 +111,7 @@ class MdAbcAquisicaoRN extends InfraRN
       $objMdAbcAquisicaoBD->alterar($objMdAbcAquisicaoDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro alterando Aquisi��o.', $e);
+      throw new InfraException('Erro alterando AquisiÃ§Ã£o.', $e);
     }
   }
 
@@ -136,7 +136,7 @@ class MdAbcAquisicaoRN extends InfraRN
       }
 
     } catch (Exception $e) {
-      throw new InfraException('Erro excluindo Aquisi��o.', $e);
+      throw new InfraException('Erro excluindo AquisiÃ§Ã£o.', $e);
     }
   }
 
@@ -159,7 +159,7 @@ class MdAbcAquisicaoRN extends InfraRN
       return $objMdAbcAquisicaoBD->consultar($objMdAbcAquisicaoDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro consultando Aquisi��o.', $e);
+      throw new InfraException('Erro consultando AquisiÃ§Ã£o.', $e);
     }
   }
 
@@ -182,7 +182,7 @@ class MdAbcAquisicaoRN extends InfraRN
       return $objMdAbcAquisicaoBD->listar($objMdAbcAquisicaoDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro listando Aquisi��es.', $e);
+      throw new InfraException('Erro listando AquisiÃ§Ãµes.', $e);
     }
   }
 
@@ -205,7 +205,7 @@ class MdAbcAquisicaoRN extends InfraRN
       return $objMdAbcAquisicaoBD->contar($objMdAbcAquisicaoDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro contando Aquisi��o.', $e);
+      throw new InfraException('Erro contando AquisiÃ§Ã£o.', $e);
     }
   }
 
@@ -230,7 +230,7 @@ class MdAbcAquisicaoRN extends InfraRN
       }
 
     } catch (Exception $e) {
-      throw new InfraException('Erro desativando Aquisi��o.', $e);
+      throw new InfraException('Erro desativando AquisiÃ§Ã£o.', $e);
     }
   }
  */
@@ -255,7 +255,7 @@ class MdAbcAquisicaoRN extends InfraRN
       }
 
     } catch (Exception $e) {
-      throw new InfraException('Erro reativando Aquisi��o.', $e);
+      throw new InfraException('Erro reativando AquisiÃ§Ã£o.', $e);
     }
   }
  */
@@ -279,7 +279,7 @@ class MdAbcAquisicaoRN extends InfraRN
       return $objMdAbcAquisicaoBD->bloquear($objMdAbcAquisicaoDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro bloqueando Aquisi��o.', $e);
+      throw new InfraException('Erro bloqueando AquisiÃ§Ã£o.', $e);
     }
   } */
 }

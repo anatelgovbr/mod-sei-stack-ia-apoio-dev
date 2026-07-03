@@ -25,10 +25,9 @@ Regra: o gabarito TRF4 serve para comparacao estrutural e validacao de padrao. N
 ## Preflight obrigatorio
 
 Ler as referencias principais antes de definir nomes fisicos ou release:
-- `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_3_consideracoes_previas.md`
-- `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_4_infraphp.md`
 - `references/gabarito-trf4.md`
 - `.agents/references/padrao-modelagem-dados.md`
+- `references/padroes-sei.md`
 
 ## Guard de assets existentes
 
@@ -175,7 +174,7 @@ Apos confirmacao, gerar e inserir nos scripts existentes:
 2. Metodo `instalarv<XYZ>()` no SEI com DDL multi-SGBD: tabela, sequence, FKs e chamada a `atualizarNumeroVersao()`
 3. Metodo `instalarv<XYZ>()` no SIP com `adicionarRecursoPerfil()` por acao e chamada a `atualizarNumeroVersao()`
 4. Sincronizar `getVersao()` na classe `*Integracao.php` do modulo com a mesma versao aplicada nos scripts
-5. Se o modulo ja possuir regra de auditoria no SIP, anexar os novos recursos a ela e replicar a regra ao final da atualizacao
+5. Criar ou atualizar regra de auditoria no SIP: incluir apenas os recursos de escrita (`_cadastrar`, `_alterar`, `_excluir`; adicionar `_desativar`/`_reativar` quando `temSinAtivo == true`). O recurso `_listar` nunca entra na regra. Chamar `replicarRegraAuditoria` ao final. Ver `.agents/references/padrao-auditoria-sip-sei.md`.
 
 Atualizar em ambos os scripts:
 - `$versaoAtualDesteModulo = '<novaVersao>'`
@@ -187,6 +186,14 @@ Atualizar em ambos os scripts:
 |----------------------|-------------------------------------------------------------------------------------------|
 | Sempre               | `_cadastrar`, `_alterar`, `_consultar`, `_listar`, `_excluir`, `_selecionar`              |
 | `temSinAtivo == true`| Adicionar `_desativar`, `_reativar`                                                       |
+
+**Regra de auditoria SIP — recursos incluídos:**
+
+| Condicao             | Entra na regra de auditoria                        |
+|----------------------|----------------------------------------------------|
+| Sempre               | `_cadastrar`, `_alterar`, `_excluir`               |
+| `temSinAtivo == true`| Adicionar `_desativar`, `_reativar`                |
+| Nunca                | `_listar`, `_consultar`, `_selecionar`             |
 
 Perfil `Basico`: nao vincular por padrao. Vincular apenas quando a spec disser explicitamente que a funcionalidade e acessivel a todos os usuarios internos.
 
@@ -381,11 +388,8 @@ Diferencas em relacao ao CRUD simples:
 
 ### Referencias de qualidade (guardrails da IA)
 - `references/gabarito-trf4.md` — dois contratos padrao de referencia estrutural
-- `references/padroes-sei.md` — guardrails SEI obrigatorios
-- `.agents/references/padrao-modelagem-dados.md` — regras de nomenclatura fisica, tipos, chaves e sequencias (fonte primaria; manual 5 abaixo e a origem)
-- `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_3_consideracoes_previas.md` — recursos SIP, permissao e auditoria
-- `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_4_infraphp.md` — estrutura de paginas e camadas
-- `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_5_padrao_modelagem_de_dados.md` — naming fisico padrao (consultar para duvidas nao cobertas pela reference acima)
+- `references/padroes-sei.md` — guardrails SEI: recursos SIP, permissao, auditoria, estrutura de paginas e camadas (cobre cap. 3 e 4 do manual)
+- `.agents/references/padrao-modelagem-dados.md` — regras de nomenclatura fisica, tipos, chaves e sequencias (fonte primaria; cobre integralmente o cap. 5 do manual)
 - `.agents/references/padrao-codificacao-php.md` — convencoes de codificacao
 - `references/mapeamento-tipos-e-widgets.md` — tipos de banco x widgets HTML
 

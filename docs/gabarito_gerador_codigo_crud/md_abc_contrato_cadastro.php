@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4� REGI�O
+ * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
  * 15/04/2026 - criado por rafaelmontedo@hotmail.com
  *
- * Vers�o do Gerador de C�digo: 1.46.4
+ * VersÃ£o do Gerador de CÃ³digo: 1.46.4
  **/
 
 
@@ -75,7 +75,7 @@ try {
         $objMdAbcContratoRN = new MdAbcContratoRN();
         $objMdAbcContratoDTO = $objMdAbcContratoRN->consultar($objMdAbcContratoDTO);
         if ($objMdAbcContratoDTO===null) {
-          throw new InfraException("Registro n�o encontrado.");
+          throw new InfraException("Registro nÃ£o encontrado.");
         }
       } else {
         $objMdAbcContratoDTO->setNumIdMdAbcContrato(Paginaabc::POST('hdnIdMdAbcContrato'));
@@ -110,12 +110,12 @@ try {
       $objMdAbcContratoRN = new MdAbcContratoRN();
       $objMdAbcContratoDTO = $objMdAbcContratoRN->consultar($objMdAbcContratoDTO);
       if ($objMdAbcContratoDTO===null) {
-        throw new InfraException("Registro n�o encontrado.");
+        throw new InfraException("Registro nÃ£o encontrado.");
       }
       break;
 
     default:
-      throw new InfraException("A��o '" . Paginaabc::GET('acao') . "' n�o reconhecida.");
+      throw new InfraException("AÃ§Ã£o '" . Paginaabc::GET('acao') . "' nÃ£o reconhecida.");
   }
 
   $strItensSelMdAbcAquisicao = MdAbcAquisicaoINT::montarSelect???????('null','&nbsp;',$objMdAbcContratoDTO->getNumIdMdAbcAquisicao());
@@ -172,13 +172,13 @@ function inicializar()
 function validarCadastro()
 {
   if (!infraSelectSelecionado('selMdAbcAquisicao')) {
-    alert('Selecione um Aquisi��o.');
+    alert('Selecione um AquisiÃ§Ã£o.');
     document.getElementById('selMdAbcAquisicao').focus();
     return false;
   }
 
   if (infraTrim(document.getElementById('txtNumero').value)=='') {
-    alert('Informe N N�mero.');
+    alert('Informe N NÃºmero.');
     document.getElementById('txtNumero').focus();
     return false;
   }
@@ -219,7 +219,7 @@ Paginaabc::getInstance()->montarBarraComandosSuperior($arrComandos??false);
 //Paginaabc::getInstance()->montarAreaValidacao();
 Paginaabc::getInstance()->abrirAreaDados('5em');
 ?>
-  <label id="lblMdAbcAquisicao" for="selMdAbcAquisicao" accesskey="a" class="infraLabelObrigatorio"><span class="infraTeclaAtalho">A</span>quisi��o:</label>
+  <label id="lblMdAbcAquisicao" for="selMdAbcAquisicao" accesskey="a" class="infraLabelObrigatorio"><span class="infraTeclaAtalho">A</span>quisiÃ§Ã£o:</label>
   <select id="selMdAbcAquisicao" name="selMdAbcAquisicao" class="infraSelect" tabindex="<?=Paginaabc::getInstance()->getProxTabDados()?>">
   <?=$strItensSelMdAbcAquisicao??false?>
   </select>
@@ -227,7 +227,7 @@ Paginaabc::getInstance()->abrirAreaDados('5em');
 Paginaabc::getInstance()->fecharAreaDados();
 Paginaabc::getInstance()->abrirAreaDados('5em');
 ?>
-  <label id="lblNumero" for="txtNumero" accesskey="n" class="infraLabelObrigatorio"><span class="infraTeclaAtalho">N</span>�mero:</label>
+  <label id="lblNumero" for="txtNumero" accesskey="n" class="infraLabelObrigatorio"><span class="infraTeclaAtalho">N</span>Ãºmero:</label>
   <input type="text" id="txtNumero" name="txtNumero" class="infraText" value="<?=Paginaabc::tratarHTML($objMdAbcContratoDTO->getStrNumero())?>" onkeypress="return infraMascaraTexto(this,event,20);" maxlength="20" tabindex="<?=Paginaabc::getInstance()->getProxTabDados()?>" />
 <?php
 Paginaabc::getInstance()->fecharAreaDados();
@@ -246,7 +246,7 @@ Paginaabc::getInstance()->abrirAreaDados('5em');
 Paginaabc::getInstance()->fecharAreaDados();
 Paginaabc::getInstance()->abrirAreaDados('5em');
 ?>
-  <label id="lblObservacao" for="txtObservacao" accesskey="a" class="infraLabelOpcional">Observ<span class="infraTeclaAtalho">a</span>��o:</label>
+  <label id="lblObservacao" for="txtObservacao" accesskey="a" class="infraLabelOpcional">Observ<span class="infraTeclaAtalho">a</span>Ã§Ã£o:</label>
   <input type="text" id="txtObservacao" name="txtObservacao" class="infraText" value="<?=Paginaabc::tratarHTML($objMdAbcContratoDTO->getStrObservacao())?>" onkeypress="return infraMascaraTexto(this,event,500);" maxlength="500" tabindex="<?=Paginaabc::getInstance()->getProxTabDados()?>" />
 <?php
 Paginaabc::getInstance()->fecharAreaDados();

@@ -13,18 +13,35 @@ import os
 import re
 import sys
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 SKILL_NAME = "sei-verificacao-rn"
 
-CRUD_WRITE = ["cadastrar", "alterar", "excluir", "desativar", "reativar", "bloquear"]
+CRUD_WRITE = ["cadastrar", "alterar", "excluir", "desativar", "reativar", "bloquear", "incluir", "remover"]
 CRUD_READ = ["consultar", "listar", "contar"]
 
 RE_CLASS_EXTENDS = re.compile(r"class\s+\w+\s+extends\s+InfraRN")
 RE_INIT_METHOD = re.compile(r"protected\s+function\s+inicializarObjInfraIBanco\s*\(\s*\)(\s*:\s*[\w\\]+)?\s*\{[^}]*return\s+BancoSEI\s*::\s*getInstance\s*\(\s*\)", re.DOTALL)
 RE_METHOD_SUFFIX = re.compile(r"function\s+(\w+)(Controlado|Conectado)\s*\(")
+RE_METHOD_DEF = re.compile(r"function\s+(\w+)\s*\(")
 RE_FECHAR_CONEXAO = re.compile(r"fecharConexao\s*\(|commitTransacao\s*\(|confirmarTransacao\s*\(|cancelarTransacao\s*\(", re.DOTALL)
 RE_THROW_INFRA = re.compile(r"throw\s+new\s+InfraException", re.DOTALL)
 RE_OTHER_BD_CALL = re.compile(r"new\s+(\w+BD)\s*\(", re.DOTALL)
+RE_VALIDA_AUDITAR = re.compile(r"validarAuditarPermissao\s*\(")
+RE_VALIDA_PERMISSAO = re.compile(r"validarPermissao\s*\(")
+
+
+def extract_method_body(content, opening_brace_pos):
+    depth = 0
+    i = opening_brace_pos
+    while i < len(content):
+        if content[i] == '{':
+            depth += 1
+        elif content[i] == '}':
+            depth -= 1
+            if depth == 0:
+                return content[opening_brace_pos:i + 1]
+        i += 1
+    return content[opening_brace_pos:]
 
 
 def build_issue(code, rule, message, content, match=None):
@@ -74,6 +91,50 @@ def validar_t4(content):
     if match:
         return build_issue("T004", "T4", "controle manual de conexao/transacao exige revisao contextual", content, match)
     return None
+
+
+def validar_a1(content):
+    """BLOCK: write method uses validarPermissao without validarAuditarPermissao — audit trail silently lost."""
+    errors = []
+    for match in RE_METHOD_DEF.finditer(content):
+        method_name = match.group(1)
+        lower = method_name.lower()
+        if not any(lower.startswith(kw) for kw in CRUD_WRITE):
+            continue
+        brace_pos = content.find('{', match.end())
+        if brace_pos == -1:
+            continue
+        body = extract_method_body(content, brace_pos)
+        has_auditar = bool(RE_VALIDA_AUDITAR.search(body))
+        has_permissao = bool(RE_VALIDA_PERMISSAO.search(body))
+        if has_permissao and not has_auditar:
+            errors.append(build_issue(
+                "A001", "A1",
+                f"Metodo de escrita '{method_name}' usa validarPermissao sem auditoria — substituir por validarAuditarPermissao",
+                content, match
+            ))
+    return errors or None
+
+
+def validar_a2(content):
+    """WARN: write method has no permission or audit check — may be internal helper, review required."""
+    warnings = []
+    for match in RE_METHOD_DEF.finditer(content):
+        method_name = match.group(1)
+        lower = method_name.lower()
+        if not any(lower.startswith(kw) for kw in CRUD_WRITE):
+            continue
+        brace_pos = content.find('{', match.end())
+        if brace_pos == -1:
+            continue
+        body = extract_method_body(content, brace_pos)
+        if not RE_VALIDA_AUDITAR.search(body) and not RE_VALIDA_PERMISSAO.search(body):
+            warnings.append(build_issue(
+                "A002", "A2",
+                f"Metodo de escrita '{method_name}' sem verificacao de permissao/auditoria — confirmar se e helper interno",
+                content, match
+            ))
+    return warnings or None
 
 
 def validar_t5(content):
@@ -171,7 +232,11 @@ def audit_file(path):
     if t3:
         errors.extend(t3)
 
-    for validator in (validar_t1, validar_t4, validar_t5):
+    a1 = validar_a1(content)
+    if a1:
+        errors.extend(a1)
+
+    for validator in (validar_t1, validar_t4, validar_t5, validar_a2):
         result = validator(content)
         if not result:
             continue

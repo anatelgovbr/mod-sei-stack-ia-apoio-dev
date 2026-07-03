@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4� REGI�O
+ * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
  * 29/03/2026 - criado por abc
  *
- * Vers�o do Gerador de C�digo: 1.46.4
+ * VersÃ£o do Gerador de CÃ³digo: 1.46.4
  **/
 
 
@@ -40,7 +40,7 @@ try {
         }
         $objMdAbcAquisicaoRN = new MdAbcAquisicaoRN();
         $objMdAbcAquisicaoRN->excluir($arrObjMdAbcAquisicaoDTO);
-        PaginaSEI::getInstance()->adicionarMensagem('Opera��o realizada com sucesso.');
+        PaginaSEI::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
       } catch (Exception $e) {
         PaginaSEI::getInstance()->processarExcecao($e);
       } 
@@ -59,7 +59,7 @@ try {
         }
         $objMdAbcAquisicaoRN = new MdAbcAquisicaoRN();
         $objMdAbcAquisicaoRN->desativar($arrObjMdAbcAquisicaoDTO);
-        PaginaSEI::getInstance()->adicionarMensagem('Opera��o realizada com sucesso.');
+        PaginaSEI::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
       } catch (Exception $e) {
         PaginaSEI::getInstance()->processarExcecao($e);
       } 
@@ -67,7 +67,7 @@ try {
       die;
 
     case 'md_abc_aquisicao_reativar':
-      $strTitulo = 'Reativar Aquisi��es';
+      $strTitulo = 'Reativar AquisiÃ§Ãµes';
       if (PaginaSEI::GET('acao_confirmada')!=='sim') {
         break;
       }
@@ -81,7 +81,7 @@ try {
         }
         $objMdAbcAquisicaoRN = new MdAbcAquisicaoRN();
         $objMdAbcAquisicaoRN->reativar($arrObjMdAbcAquisicaoDTO);
-        PaginaSEI::getInstance()->adicionarMensagem('Opera��o realizada com sucesso.');
+        PaginaSEI::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
       } catch (Exception $e) {
         PaginaSEI::getInstance()->processarExcecao($e);
       } 
@@ -91,7 +91,7 @@ try {
     */
 
     case 'md_abc_aquisicao_selecionar':
-      $strTitulo = PaginaSEI::getInstance()->getTituloSelecao('Selecionar Aquisi��o','Selecionar Aquisi��es');
+      $strTitulo = PaginaSEI::getInstance()->getTituloSelecao('Selecionar AquisiÃ§Ã£o','Selecionar AquisiÃ§Ãµes');
 
       //Se cadastrou alguem
       if (PaginaSEI::GET('acao_origem')==='md_abc_aquisicao_cadastrar' && isset($_GET['id_md_abc_aquisicao'])) {
@@ -100,11 +100,11 @@ try {
       break;
 
     case 'md_abc_aquisicao_listar':
-      $strTitulo = 'Aquisi��es';
+      $strTitulo = 'AquisiÃ§Ãµes';
       break;
 
     default:
-      throw new InfraException("A��o '".PaginaSEI::GET('acao')."' n�o reconhecida.");
+      throw new InfraException("AÃ§Ã£o '".PaginaSEI::GET('acao')."' nÃ£o reconhecida.");
   }
 
   $arrComandos = array();
@@ -209,9 +209,9 @@ try {
     $strResultado = '';
 
     /* if (PaginaSEI::GET('acao')!=='md_abc_aquisicao_reativar') { */
-      $strCaptionTabela = 'Aquisi��es';
+      $strCaptionTabela = 'AquisiÃ§Ãµes';
     /* } else {
-      $strCaptionTabela = 'Aquisi��es Inativas';
+      $strCaptionTabela = 'AquisiÃ§Ãµes Inativas';
     } */
 
     $strResultado .= '<table style="width: 99%" class="infraTable">'."\n";
@@ -220,10 +220,10 @@ try {
     if ($bolCheck) {
        $strResultado .= '<th class="infraTh" style="width: 1%">'.PaginaSEI::getInstance()->getThCheck().'</th>'."\n";
     }
-    $strResultado .= '<th class="infraTh">'.PaginaSEI::getInstance()->getThOrdenacao($objMdAbcAquisicaoDTO,'Descri��o','Descricao',$arrObjMdAbcAquisicaoDTO).'</th>'."\n";
+    $strResultado .= '<th class="infraTh">'.PaginaSEI::getInstance()->getThOrdenacao($objMdAbcAquisicaoDTO,'DescriÃ§Ã£o','Descricao',$arrObjMdAbcAquisicaoDTO).'</th>'."\n";
     //$strResultado .= '<th class="infraTh">'.PaginaSEI::getInstance()->getThOrdenacao($objMdAbcAquisicaoDTO,'Custo','Custo',$arrObjMdAbcAquisicaoDTO).'</th>'."\n";
     //$strResultado .= '<th class="infraTh">'.PaginaSEI::getInstance()->getThOrdenacao($objMdAbcAquisicaoDTO,'Projeto','IdentificacaoMdAbcProjeto',$arrObjMdAbcAquisicaoDTO).'</th>'."\n";
-    $strResultado .= '<th class="infraTh">A��es</th>'."\n";
+    $strResultado .= '<th class="infraTh">AÃ§Ãµes</th>'."\n";
     $strResultado .= '</tr></thead><tbody>'."\n";
     $strCssTr='';
     for($i = 0;$i < $numRegistros; $i++) {
@@ -242,11 +242,11 @@ try {
       $strResultado .= PaginaSEI::getInstance()->getAcaoTransportarItem($i,$arrObjMdAbcAquisicaoDTO[$i]->getNumIdMdAbcAquisicao());
 
       if ($bolAcaoConsultar) {
-        $strResultado .= '<a href="'.SessaoSEI::getInstance()->assinarLink('controlador.php?acao=md_abc_aquisicao_consultar&acao_origem='.PaginaSEI::GET('acao').'&acao_retorno='.PaginaSEI::GET('acao').'&id_md_abc_aquisicao='.$arrObjMdAbcAquisicaoDTO[$i]->getNumIdMdAbcAquisicao()).'" tabindex="'.PaginaSEI::getInstance()->getProxTabTabela().'"><img src="'.PaginaSEI::getInstance()->getIconeConsultar().'" title="Consultar Aquisi��o" alt="Consultar Aquisi��o" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.SessaoSEI::getInstance()->assinarLink('controlador.php?acao=md_abc_aquisicao_consultar&acao_origem='.PaginaSEI::GET('acao').'&acao_retorno='.PaginaSEI::GET('acao').'&id_md_abc_aquisicao='.$arrObjMdAbcAquisicaoDTO[$i]->getNumIdMdAbcAquisicao()).'" tabindex="'.PaginaSEI::getInstance()->getProxTabTabela().'"><img src="'.PaginaSEI::getInstance()->getIconeConsultar().'" title="Consultar AquisiÃ§Ã£o" alt="Consultar AquisiÃ§Ã£o" class="infraImg" /></a>&nbsp;';
       }
 
       if ($bolAcaoAlterar) {
-        $strResultado .= '<a href="'.SessaoSEI::getInstance()->assinarLink('controlador.php?acao=md_abc_aquisicao_alterar&acao_origem='.PaginaSEI::GET('acao').'&acao_retorno='.PaginaSEI::GET('acao').'&id_md_abc_aquisicao='.$arrObjMdAbcAquisicaoDTO[$i]->getNumIdMdAbcAquisicao()).'" tabindex="'.PaginaSEI::getInstance()->getProxTabTabela().'"><img src="'.PaginaSEI::getInstance()->getIconeAlterar().'" title="Alterar Aquisi��o" alt="Alterar Aquisi��o" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.SessaoSEI::getInstance()->assinarLink('controlador.php?acao=md_abc_aquisicao_alterar&acao_origem='.PaginaSEI::GET('acao').'&acao_retorno='.PaginaSEI::GET('acao').'&id_md_abc_aquisicao='.$arrObjMdAbcAquisicaoDTO[$i]->getNumIdMdAbcAquisicao()).'" tabindex="'.PaginaSEI::getInstance()->getProxTabTabela().'"><img src="'.PaginaSEI::getInstance()->getIconeAlterar().'" title="Alterar AquisiÃ§Ã£o" alt="Alterar AquisiÃ§Ã£o" class="infraImg" /></a>&nbsp;';
       }
 
       if ($bolAcaoDesativar || $bolAcaoReativar || $bolAcaoExcluir) {
@@ -255,16 +255,16 @@ try {
       }
 /* 
       if ($bolAcaoDesativar) {
-        $strResultado .= '<a href="'.PaginaSEI::getInstance()->montarAncora($strId).'" onclick="acaoDesativar(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.PaginaSEI::getInstance()->getProxTabTabela().'"><img src="'.PaginaSEI::getInstance()->getIconeDesativar().'" title="Desativar Aquisi��o" alt="Desativar Aquisi��o" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.PaginaSEI::getInstance()->montarAncora($strId).'" onclick="acaoDesativar(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.PaginaSEI::getInstance()->getProxTabTabela().'"><img src="'.PaginaSEI::getInstance()->getIconeDesativar().'" title="Desativar AquisiÃ§Ã£o" alt="Desativar AquisiÃ§Ã£o" class="infraImg" /></a>&nbsp;';
       }
 
       if ($bolAcaoReativar) {
-        $strResultado .= '<a href="'.PaginaSEI::getInstance()->montarAncora($strId).'" onclick="acaoReativar(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.PaginaSEI::getInstance()->getProxTabTabela().'"><img src="'.PaginaSEI::getInstance()->getIconeReativar().'" title="Reativar Aquisi��o" alt="Reativar Aquisi��o" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.PaginaSEI::getInstance()->montarAncora($strId).'" onclick="acaoReativar(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.PaginaSEI::getInstance()->getProxTabTabela().'"><img src="'.PaginaSEI::getInstance()->getIconeReativar().'" title="Reativar AquisiÃ§Ã£o" alt="Reativar AquisiÃ§Ã£o" class="infraImg" /></a>&nbsp;';
       }
  */
 
       if ($bolAcaoExcluir) {
-        $strResultado .= '<a href="'.PaginaSEI::getInstance()->montarAncora($strId).'" onclick="acaoExcluir(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.PaginaSEI::getInstance()->getProxTabTabela().'"><img src="'.PaginaSEI::getInstance()->getIconeExcluir().'" title="Excluir Aquisi��o" alt="Excluir Aquisi��o" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.PaginaSEI::getInstance()->montarAncora($strId).'" onclick="acaoExcluir(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.PaginaSEI::getInstance()->getProxTabTabela().'"><img src="'.PaginaSEI::getInstance()->getIconeExcluir().'" title="Excluir AquisiÃ§Ã£o" alt="Excluir AquisiÃ§Ã£o" class="infraImg" /></a>&nbsp;';
       }
 
       $strResultado .= '</td></tr></tbody>'."\n";
@@ -316,7 +316,7 @@ function inicializar()
 <?php /* if ($bolAcaoDesativar??false) { ?>
 function acaoDesativar(id,desc)
 {
-  if (confirm('Confirma desativa��o da Aquisi��o \"' + desc + '\"?')) {
+  if (confirm('Confirma desativaÃ§Ã£o da AquisiÃ§Ã£o \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcAquisicaoLista').action='<?=$strLinkDesativar??false?>';
     document.getElementById('frmMdAbcAquisicaoLista').submit();
@@ -326,10 +326,10 @@ function acaoDesativar(id,desc)
 function acaoDesativacaoMultipla()
 {
   if (document.getElementById('hdnInfraItensSelecionados').value=='') {
-    alert('Nenhuma Aquisi��o selecionada.');
+    alert('Nenhuma AquisiÃ§Ã£o selecionada.');
     return;
   }
-  if (confirm('Confirma desativa��o das Aquisi��es selecionadas?')) {
+  if (confirm('Confirma desativaÃ§Ã£o das AquisiÃ§Ãµes selecionadas?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcAquisicaoLista').action='<?=$strLinkDesativar??false?>';
     document.getElementById('frmMdAbcAquisicaoLista').submit();
@@ -340,7 +340,7 @@ function acaoDesativacaoMultipla()
 <?php if ($bolAcaoReativar??false) { ?>
 function acaoReativar(id,desc)
 {
-  if (confirm('Confirma reativa��o da Aquisi��o \"' + desc + '\"?')) {
+  if (confirm('Confirma reativaÃ§Ã£o da AquisiÃ§Ã£o \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcAquisicaoLista').action='<?=$strLinkReativar??false?>';
     document.getElementById('frmMdAbcAquisicaoLista').submit();
@@ -350,10 +350,10 @@ function acaoReativar(id,desc)
 function acaoReativacaoMultipla()
 {
   if (document.getElementById('hdnInfraItensSelecionados').value=='') {
-    alert('Nenhuma Aquisi��o selecionada.');
+    alert('Nenhuma AquisiÃ§Ã£o selecionada.');
     return;
   }
-  if (confirm('Confirma reativa��o das Aquisi��es selecionadas?')) {
+  if (confirm('Confirma reativaÃ§Ã£o das AquisiÃ§Ãµes selecionadas?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcAquisicaoLista').action='<?=$strLinkReativar??false?>';
     document.getElementById('frmMdAbcAquisicaoLista').submit();
@@ -364,7 +364,7 @@ function acaoReativacaoMultipla()
 <?php if ($bolAcaoExcluir??false) { ?>
 function acaoExcluir(id,desc)
 {
-  if (confirm('Confirma exclus�o da Aquisi��o \"' + desc + '\"?')) {
+  if (confirm('Confirma exclusÃ£o da AquisiÃ§Ã£o \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcAquisicaoLista').action='<?=$strLinkExcluir??false?>';
     document.getElementById('frmMdAbcAquisicaoLista').submit();
@@ -374,10 +374,10 @@ function acaoExcluir(id,desc)
 function acaoExclusaoMultipla()
 {
   if (document.getElementById('hdnInfraItensSelecionados').value=='') {
-    alert('Nenhuma Aquisi��o selecionada.');
+    alert('Nenhuma AquisiÃ§Ã£o selecionada.');
     return;
   }
-  if (confirm('Confirma exclus�o das Aquisi��es selecionadas?')) {
+  if (confirm('Confirma exclusÃ£o das AquisiÃ§Ãµes selecionadas?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcAquisicaoLista').action='<?=$strLinkExcluir??false?>';
     document.getElementById('frmMdAbcAquisicaoLista').submit();

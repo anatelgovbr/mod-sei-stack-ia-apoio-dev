@@ -25,8 +25,8 @@ Nao e gate obrigatorio e nao deve ser acionada por heuristica ampla.
 
 - `AGENTS.md`
 - `.agents/references/padrao-codificacao-php.md`
-- `.agents/references/skill-routing-and-contracts.md`
-- `docs/manual_desenvolvimento_md/` quando a compatibilidade com o core estiver ambigua
+- `.agents/references/roteamento-de-skills.md`
+- `fontes/sei/src/main/php/infra/infra_php/` quando a compatibilidade com o core estiver ambigua — ler o arquivo pai diretamente
 
 ## Quando usar
 

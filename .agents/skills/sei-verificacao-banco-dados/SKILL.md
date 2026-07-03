@@ -30,7 +30,7 @@ Skill autônoma de code review para modelagem de dados SEI/SIP.
 |----|-------|-----|------|
 | R1 | Nome tabela `md_<sigla>_<entidade>` | Erro | §Tabela |
 | R2 | N:N: `md_<sigla>_rel_<a>_<b>` | Erro | §Tabela |
-| R3 | Tamanho ≤ 26 chars | Erro | §Regras Gerais |
+| R3 | Tamanho: tabela/coluna ≤ 26 chars; índice/FK/constraint/sequence ≤ 30 chars | Erro | §Regras Gerais |
 | R4 | PK gerada `id_md_<sigla>_<entidade>` | Erro | §Colunas |
 | R5 | FK `fk_md_<sigla>_<ent>_<ref>` | Erro | §Chave Estrangeira |
 | R6 | `sin_ativo` em exclusão lógica | Erro | §Colunas |
@@ -152,7 +152,7 @@ Skill agnóstica — pode ser chamada por:
 - `sei-gerador-crud` (gate pré-geração opcional)
 - `sei-gerador-scripts-release` (verificacao pre-release SEI)
 - `sip-gerador-scripts-release` (verificacao pre-release SIP, quando houver DDL)
-- `sei-mod-eventos` (validação de modelo)
+- `sei-mod-api-eventos` (validação de modelo)
 - Qualquer prompt ou agente que precise auditar modelagem
 
 ## Modos de auditoria
