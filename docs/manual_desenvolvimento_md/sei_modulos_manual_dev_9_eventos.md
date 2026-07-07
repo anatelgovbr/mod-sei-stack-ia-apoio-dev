@@ -963,7 +963,7 @@ public function montarIconeOrdenarArvore(ProcedimentoAPI $objProcedimentoAPI){
 ```
 
 
-![](../manual_desenvolvimento/imagens/image043.gif)
+![](../manual_desenvolvimento/imagens/image043.png)
 
 
 ## montarIconeProcesso

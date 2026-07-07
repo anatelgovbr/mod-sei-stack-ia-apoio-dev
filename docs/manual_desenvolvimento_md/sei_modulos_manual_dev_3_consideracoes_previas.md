@@ -41,22 +41,22 @@ A seguir são demonstrados os passos para adicionar um item de menu em um novo p
 
 1\) criar o recurso no SIP pelo menu Recursos/Novo, sendo recomendado que recursos de módulos tenham o prefixo ``MD_<instituição/módulo>``:
 
-![](../manual_desenvolvimento/imagens/image004.gif)
+![](../manual_desenvolvimento/imagens/image004.png)
 
 2\) adicionar item de menu associado com o recurso no SIP pelo menu Menus/Montar:
 
 
-![](../manual_desenvolvimento/imagens/image005.gif)
+![](../manual_desenvolvimento/imagens/image005.png)
 
 
-![](../manual_desenvolvimento/imagens/image006.gif)
+![](../manual_desenvolvimento/imagens/image006.png)
 
 Para associar um ícone com o item de menu é necessário implementar no módulo o evento `obterDiretorioIconesMenu`, colocar o arquivo SVG do ícone no diretório correspondente aos ícones de menu do módulo e informar apenas o nome do arquivo SVG no campo `Ícone` na tela de cadastro de item de menu acima.
 
 3\) criar um perfil específico no SIP pelo menu Perfis/Novo, sendo recomendado que perfis de módulos tenham o prefixo ``MD_<instituição/módulo>``:
 
 
-![](../manual_desenvolvimento/imagens/image007.gif)
+![](../manual_desenvolvimento/imagens/image007.png)
 
 4\) Adicionar o recurso e o item de menu no perfil no SIP pelo menu Perfis/Montar:
 
@@ -66,7 +66,7 @@ Para associar um ícone com o item de menu é necessário implementar no módulo
 5\) atribuir permissão no perfil criado no SIP pelo menu Permissão/Nova:
 
 
-![](../manual_desenvolvimento/imagens/image009.gif)
+![](../manual_desenvolvimento/imagens/image009.png)
 
 6\) O item de menu criado deve aparecer no SEI. Alterações na montagem de perfis e na atribuição de permissões no SIP demandam novo login do usuário que já esteja logado no SEI:
 

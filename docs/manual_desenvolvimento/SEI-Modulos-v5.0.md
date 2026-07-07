@@ -411,7 +411,7 @@ c)  adicionar no arquivo de configuração do sistema `ConfiguracaoSEI.php` na c
 d)  verificar se o módulo foi carregado por meio do menu Infra/Módulos do SEI:
 
 
-![](./imagens/image003.gif)
+![](./imagens/image003.png)
 
 # 3. Considerações Prévias
 
@@ -456,22 +456,22 @@ A seguir são demonstrados os passos para adicionar um item de menu em um novo p
 
 1\) criar o recurso no SIP pelo menu Recursos/Novo, sendo recomendado que recursos de módulos tenham o prefixo ``MD_<instituição/módulo>``:
 
-![](./imagens/image004.gif)
+![](./imagens/image004.png)
 
 
 2\) adicionar item de menu associado com o recurso no SIP pelo menu Menus/Montar:
 
-![](./imagens/image005.gif)
+![](./imagens/image005.png)
 
 
-![](./imagens/image006.gif)
+![](./imagens/image006.png)
 
 
 Para associar um ícone com o item de menu é necessário implementar no módulo o evento `obterDiretorioIconesMenu`, colocar o arquivo SVG do ícone no diretório correspondente aos ícones de menu do módulo e informar apenas o nome do arquivo SVG no campo `Ícone` na tela de cadastro de item de menu acima.
 
 3\) criar um perfil específico no SIP pelo menu Perfis/Novo, sendo recomendado que perfis de módulos tenham o prefixo ``MD_<instituição/módulo>``:
 
-![](./imagens/image007.gif)
+![](./imagens/image007.png)
 
 
 4\) Adicionar o recurso e o item de menu no perfil no SIP pelo menu Perfis/Montar:
@@ -481,7 +481,7 @@ Para associar um ícone com o item de menu é necessário implementar no módulo
 
 5\) atribuir permissão no perfil criado no SIP pelo menu Permissão/Nova:
 
-![](./imagens/image009.gif)
+![](./imagens/image009.png)
 
 
 6\) O item de menu criado deve aparecer no SEI. Alterações na montagem de perfis e na atribuição de permissões no SIP demandam novo login do usuário que já esteja logado no SEI:
@@ -2080,17 +2080,17 @@ CREATE INDEX fk_md_abc_projeto_aquisicao ON md_abc_aquisicao (id_md_abc_projeto 
 1\)  processar os comandos SQL preenchendo os campos: Usuário, Módulo Principal (que inclui o `InfraPHP`), Versão do PHP, as classes de `InfraSessao`, `InfraPagina` e `InfraBanco`. Na seção `Permissões na RN`, informar se o código na RN deve prever auditoria das permissões por meio de Regras de Auditoria cadastradas no SIP:
 
 
-![](./imagens/image017.gif)
+![](./imagens/image017.png)
 
 2\)  clique no botão de ação `Cadastrar Campos` da tabela escolhida para a geração do código; neste exemplo será `md_abc_projeto`:
 
 
-![](./imagens/image018.gif)
+![](./imagens/image018.png)
 
 3\)  informar o campo principal, os rótulos dos campos e teclas de atalho:
 
 
-![](./imagens/image019.gif)
+![](./imagens/image019.png)
 
 Campo principal:
 
@@ -2103,7 +2103,7 @@ Campo principal:
 4\)  Ao final o código poderá ser baixado clicando nos botões de ação `Gerar BD`, `Gerar DTO`, `Gerar INT`, `Gerar RN`, `Gerar Tela Cadastro` e `Gerar Tela Listagem`:
 
 
-![](./imagens/image020.gif)
+![](./imagens/image020.png)
 
 # 8. Classes API
 
@@ -4093,7 +4093,7 @@ public function montarIconeOrdenarArvore(ProcedimentoAPI $objProcedimentoAPI){
 ```
 
 
-![](./imagens/image043.gif)
+![](./imagens/image043.png)
 
 
 ## montarIconeProcesso

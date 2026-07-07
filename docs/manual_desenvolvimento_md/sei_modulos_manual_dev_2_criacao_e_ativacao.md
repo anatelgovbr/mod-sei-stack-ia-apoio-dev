@@ -40,4 +40,4 @@ c)  adicionar no arquivo de configuração do sistema `ConfiguracaoSEI.php` na c
 d)  verificar se o módulo foi carregado por meio do menu Infra/Módulos do SEI:
 
 
-![](../manual_desenvolvimento/imagens/image003.gif)
+![](../manual_desenvolvimento/imagens/image003.png)

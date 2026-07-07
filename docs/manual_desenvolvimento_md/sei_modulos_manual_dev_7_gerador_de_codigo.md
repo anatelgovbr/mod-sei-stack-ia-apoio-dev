@@ -39,17 +39,17 @@ CREATE INDEX fk_md_abc_projeto_aquisicao ON md_abc_aquisicao (id_md_abc_projeto 
 1\)  processar os comandos SQL preenchendo os campos: Usuário, Módulo Principal (que inclui o `InfraPHP`), Versão do PHP, as classes de `InfraSessao`, `InfraPagina` e `InfraBanco`. Na seção `Permissões na RN`, informar se o código na RN deve prever auditoria das permissões por meio de Regras de Auditoria cadastradas no SIP:
 
 
-![](../manual_desenvolvimento/imagens/image017.gif)
+![](../manual_desenvolvimento/imagens/image017.png)
 
 2\)  clique no botão de ação `Cadastrar Campos` da tabela escolhida para a geração do código; neste exemplo será `md_abc_projeto`:
 
 
-![](../manual_desenvolvimento/imagens/image018.gif)
+![](../manual_desenvolvimento/imagens/image018.png)
 
 3\)  informar o campo principal, os rótulos dos campos e teclas de atalho:
 
 
-![](../manual_desenvolvimento/imagens/image019.gif)
+![](../manual_desenvolvimento/imagens/image019.png)
 
 Campo principal:
 
@@ -62,4 +62,4 @@ Campo principal:
 4\)  Ao final o código poderá ser baixado clicando nos botões de ação `Gerar BD`, `Gerar DTO`, `Gerar INT`, `Gerar RN`, `Gerar Tela Cadastro` e `Gerar Tela Listagem`:
 
 
-![](../manual_desenvolvimento/imagens/image020.gif)
+![](../manual_desenvolvimento/imagens/image020.png)
