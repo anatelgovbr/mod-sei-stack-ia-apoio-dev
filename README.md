@@ -79,6 +79,7 @@ Neste projeto, os modelos de IA são acessados por meio de ferramentas já integ
 |---|---|
 | GitHub Copilot | Definido pelo plano e pela configuração da conta |
 | OpenCode | Configurável, compatível com múltiplos modelos |
+| Claude Code | Modelo Claude (Anthropic) |
 
 Os modelos evoluem com frequência. O que importa para o uso do dia a dia é a **ferramenta** e o contexto versionado no repositório; o modelo é apenas o motor por baixo.
 
@@ -90,7 +91,7 @@ Um **agente de IA** é um assistente configurado para operar com um conjunto esp
 - Segue **guardrails** (regras que definem o que ele pode e não pode fazer, como quais arquivos pode modificar e quais padrões de código deve seguir)
 - Segue um fluxo estruturado em vez de responder de forma livre
 
-Neste repositório, os agentes são configurados na pasta `.agents/` e integrados às ferramentas via `.github/` (Copilot) e `.opencode/` (OpenCode). Eles não são programas independentes; são instruções que ensinam a ferramenta de IA a agir como um especialista no contexto de desenvolvimento de módulos SEI com esta stack.
+Neste repositório, os agentes são configurados na pasta `.agents/` e integrados às ferramentas via `.github/` (Copilot), `.opencode/` (OpenCode) e `.claude/` (Claude Code). Eles não são programas independentes; são instruções que ensinam a ferramenta de IA a agir como um especialista no contexto de desenvolvimento de módulos SEI com esta stack.
 
 **Na prática:** quando você abre este repositório no VS Code (editor de código da Microsoft) com o Copilot e pede *"revise este código segundo os padrões do projeto"*, o agente carrega automaticamente as regras do `AGENTS.md`, os guardrails de segurança e os padrões de codificação, e entrega uma revisão contextualizada, não genérica.
 
@@ -120,6 +121,8 @@ As **skills** são agentes especializados em tarefas específicas. Cada skill te
 | `sei-testes-validacao` | Centraliza checagens e validações após alterações PHP |
 | `sei-tipagem-phpdoc` | Apoia modernização segura de tipagem PHP e PHPDoc quando solicitada explicitamente |
 | `sei-report-todos` | Gera relatório de pendências `TODO:` em módulos escolhidos explicitamente |
+| `sei-dicionario-dados-core` | Cria e atualiza o dicionário de dados e o changelog estrutural do SEI, SIP ou Julgar |
+| `sei-dicionario-dados-modulo` | Cria e atualiza o dicionário de dados e o changelog estrutural de um módulo customizado |
 | `escrever-adr` | Documenta decisões arquiteturais significativas como ADR |
 | `napkin` | Mantém runbook operacional pessoal em `.agents/memory/runbook.md` |
 | `caveman`, `ponytail`, `grilling` | Modos auxiliares para comunicação compacta, simplificação e stress-test de planos |
@@ -146,6 +149,7 @@ A ferramenta **recomendada** é a extensão do **GitHub Copilot no [VS Code](htt
 |---|---|---|
 | **[GitHub Copilot](https://github.com/features/copilot)** | Instale a extensão "GitHub Copilot" pelo marketplace do VS Code (a loja de extensões do editor, equivalente a uma loja de aplicativos) e faça login com sua conta GitHub | `.github/agents/`, `.github/prompts/` e `.github/copilot-instructions.md` |
 | **[OpenCode](https://opencode.ai)** | Instale via terminal (a interface de texto do computador onde você digita comandos) com `npm install -g opencode-ai` e configure o modelo desejado | `.opencode/`, `.opencode/command/` e `.opencode/opencode.json` |
+| **[Claude Code](https://claude.com/claude-code)** | Instale via terminal com `curl -fsSL https://claude.ai/install.sh \| bash` e faça login com sua conta Claude | `.claude/skills/` (symlink para `.agents/skills/`) e `.claude/commands/` |
 
 > **O que é npm?** É o gerenciador de pacotes do Node.js, uma ferramenta de linha de comando usada para instalar softwares de desenvolvimento. Se você nunca usou, peça ajuda a um desenvolvedor da equipe para instalar o OpenCode.
 
@@ -186,6 +190,7 @@ Os documentos gerados (especificação, plano, tarefas) ficam em `specs/<nome-da
 
 - **No Copilot (VS Code):** abra o painel de chat do Copilot (ícone de balão de conversa na barra lateral esquerda do VS Code), clique no nome do agente atual (geralmente aparece como `@GitHub Copilot` ou `@workspace` acima da caixa de texto) e selecione o agente correspondente, como `speckit.specify`.
 - **No OpenCode (terminal, a interface de texto do computador):** digite o comando diretamente, como `/speckit.specify`.
+- **No Claude Code (terminal ou app):** digite o comando diretamente, como `/speckit.specify`.
 
 #### 2.7.4 Integrações por ferramenta
 
@@ -193,6 +198,7 @@ O fluxo padrão do SpecKit vive em `.agents/skills/speckit/`. As integrações p
 
 - **Copilot**: agentes em `.github/agents/` e prompts em `.github/prompts/`
 - **OpenCode**: comandos em `.opencode/command/`
+- **Claude Code**: comandos em `.claude/commands/`
 
 ### 2.8 Estrutura da stack
 
@@ -204,6 +210,10 @@ O fluxo padrão do SpecKit vive em `.agents/skills/speckit/`. As integrações p
 ├── references/    # Material de referência consultado pelas skills: padrões, roteamento e pontos de verificação
 ├── security/      # Guias e matrizes de revisão de segurança
 └── skills/        # Skills do projeto: agentes especializados por domínio ou tipo de tarefa
+
+.claude/
+├── skills/        # Symlink para .agents/skills/ (convenção de skills do Claude Code)
+└── commands/      # Comandos do Claude Code (adaptadores das skills para uso via slash command)
 
 .github/
 ├── agents/        # Agentes do GitHub Copilot (adaptadores das skills para uso no VS Code)
@@ -273,7 +283,7 @@ Você **não** precisa instalar o SpecKit nem qualquer componente adicional da s
 
 > Esta seção é voltada para quem já trabalha no projeto e precisa manter ou evoluir a stack de IA. Se você está chegando agora, pode pular para a seção [4. Referências](#4-referências) e retornar aqui quando precisar.
 
-Esta seção trata de mudanças nos arquivos da stack de IA dentro do repositório (`.agents/`, `.github/`, `.opencode/`, `.specify/`). Atualizações das ferramentas locais (Copilot, OpenCode) são responsabilidade de cada ferramenta e documentadas por elas mesmas.
+Esta seção trata de mudanças nos arquivos da stack de IA dentro do repositório (`.agents/`, `.claude/`, `.github/`, `.opencode/`, `.specify/`). Atualizações das ferramentas locais (Copilot, OpenCode, Claude Code) são responsabilidade de cada ferramenta e documentadas por elas mesmas.
 
 Sempre crie uma branch dedicada e abra um Pull Request para revisão antes de incorporar qualquer mudança ao repositório principal.
 
@@ -306,9 +316,10 @@ Esses arquivos são o **núcleo operacional do SpecKit neste repositório**. Cad
 .github/agents/speckit.*.agent.md
 .github/prompts/speckit.*.prompt.md
 .opencode/command/speckit.*.md
+.claude/commands/speckit.*.md
 ```
 
-Cada adapter é um arquivo curto que faz três coisas: instrui o agente a carregar a skill correspondente e segui-la, declara os `handoffs` para outras fases (os botões de continuação que a ferramenta exibe ao final de cada fase) e mapeia o nome do comando para a sintaxe da ferramenta. O fluxo completo não é duplicado aqui; fica na skill. Se uma fase mudar de comportamento, a mudança vai na skill, e o adapter permanece intocado.
+Cada adapter é um arquivo curto que faz duas coisas em comum: instrui o agente a carregar a skill correspondente e segui-la, e mapeia o nome do comando para a sintaxe da ferramenta. Copilot e OpenCode também declaram `handoffs` (os botões de continuação que a ferramenta exibe ao final de cada fase); o Claude Code não tem esse conceito de UI, então seu adapter não declara `handoffs`. O fluxo completo não é duplicado em nenhum adapter; fica na skill. Se uma fase mudar de comportamento, a mudança vai na skill, e o adapter permanece intocado.
 
 #### A pasta `.specify/`: papel no setup inicial
 
@@ -343,7 +354,7 @@ Cada desenvolvedor configura esses arquivos na sua máquina conforme a ferrament
 | Grupo de arquivo | Ao atualizar o SpecKit | Ao evoluir a stack deste repositório |
 |---|---|---|
 | Skills `.agents/skills/speckit/` | Merge com atenção, ver 3.3 | Raramente; abrir PR com justificativa clara |
-| Adapters `.github/agents/`, `.github/prompts/`, `.opencode/command/` | Substituição direta | Apenas se mudar `handoffs` ou nomes de fase |
+| Adapters `.github/agents/`, `.github/prompts/`, `.opencode/command/`, `.claude/commands/` | Substituição direta | Apenas se mudar `handoffs` (não aplicável ao Claude Code) ou nomes de fase |
 | Templates `.specify/templates/` | Atualizar como referência para comparação | Não se aplica |
 | `checklist-sei-template.md` | Preserve, é da equipe | Atualizar conforme padrões usados pelas skills evoluem |
 | `.specify/memory/constitution.md` | Manter vazio; não incorporar o template novo | Manter vazio; as regras vivem nas skills de fase |
@@ -391,5 +402,6 @@ Cada desenvolvedor configura esses arquivos na sua máquina conforme a ferrament
 | VS Code | [code.visualstudio.com](https://code.visualstudio.com) |
 | GitHub Copilot | [github.com/features/copilot](https://github.com/features/copilot) |
 | OpenCode | [opencode.ai](https://opencode.ai) |
+| Claude Code | [claude.com/claude-code](https://claude.com/claude-code) |
 | SpecKit | [github.com/github/spec-kit](https://github.com/github/spec-kit) |
 | Padrão AGENTS.md | [agents.md](https://agents.md) |

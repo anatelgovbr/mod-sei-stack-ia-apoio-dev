@@ -1,0 +1,994 @@
+# Changelog do SEI
+
+## [5.0.0]
+
+### Adicionado
+
+- **Tabela `infra_editor_comentario`**
+- **Tabela `usuario_login`**
+- **Tabela `solicitacao_ouvidoria`**
+- **Tabela `lixeira`**
+- **Tabela `codigo_acesso`**
+- **Tabela `protocolo_idx`**
+- **Tabela `publicacao_idx`**
+- **Tabela `base_conhecimento_idx`**
+- **Tabela `usuario_configuracao`**
+- **Tabela `termo_uso`**
+- **Tabela `revisao_avaliacao`**
+
+### Alterado
+
+- **Tabela `infra_erro_php`**
+  - **Colunas**
+    - **Nova `quantidade`**: `tipoNumeroGrande() NULL`.
+- **Tabela `infra_auditoria`**
+  - **Colunas**
+    - **Alterada `recurso`**: para `tipoTextoVariavel(100) NOT NULL`.
+- **Tabela `infra_regra_auditoria_recurso`**
+  - **Colunas**
+    - **Alterada `recurso`**: para `tipoTextoVariavel(100) NOT NULL`.
+- **Tabela `rel_protocolo_assunto`**
+  - **Colunas**
+    - **Alterada `id_protocolo_procedimento`**: de `tipoNumeroGrande() NULL` para `tipoNumeroGrande() NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_rel_prot_assu_prot_proc`**: `id_protocolo_procedimento` → `protocolo.id_protocolo`.
+- **Tabela `bloco`**
+  - **Colunas**
+    - **Alterada `descricao`**: para `tipoTextoVariavel(4000) NULL`.
+    - **Alterada `idx_bloco`**: para `tipoTextoVariavel(4000) NULL`.
+- **Tabela `tipo_procedimento`**
+  - **Colunas**
+    - **Nova `sin_ouvidoria_anonimo`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+- **Tabela `assinatura`**
+  - **Colunas**
+    - **Nova `modulo_origem`**: `tipoTextoVariavel(50) NULL`, quando ausente.
+- **Tabela `arquivo_extensao`**
+  - **Colunas**
+    - **Nova `sin_ouvidoria`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `sin_usuario_externo`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+- **Tabela `usuario`**
+  - **Colunas**
+    - **Nova `sin_gov_br`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `dth_termo_uso`**: `tipoDataHora() NULL`.
+    - **Nova `dth_politica_privacidade`**: `tipoDataHora() NULL`.
+- **Tabela `instalacao_federacao`**
+  - **Colunas**
+    - **Alterada `cnpj`**: de `tipoNumeroGrande() NOT NULL` para `tipoTextoFixo(14) NULL`.
+  - **Índices**
+    - **Alterado `ak_cnpj`**: renomeado de `ak_cnjp`, mantido único sobre `cnpj`.
+- **Tabela `contato`**
+  - **Colunas**
+    - **Alterada `cnpj`**: para `tipoTextoFixo(14) NULL`.
+  - **Índices**
+    - **Alterado `i03_contato`**: recriado sobre `cnpj` após a alteração da coluna.
+
+### Excluído
+
+- **Tabela `infra_captcha_tentativa`**
+- **Tabela `bloco`**
+  - **Índices**
+    - **Excluído `i02_bloco`**
+- **Tabela `procedimento`**
+  - **Colunas**
+    - **Excluída `sta_ouvidoria`**
+- **Tabela `cpad_avaliacao`**
+- **Tabela `cpad_composicao`**
+- **Tabela `cpad_versao`**
+- **Tabela `cpad`**
+
+## [4.1.0]
+
+### Adicionado
+
+- **Tabela `plano_trabalho`**
+- **Tabela `etapa_trabalho`**
+- **Tabela `item_etapa`**
+- **Tabela `rel_item_etapa_unidade`**
+- **Tabela `rel_item_etapa_serie`**
+- **Tabela `rel_item_etapa_documento`**
+- **Tabela `tarefa_plano_trabalho`**
+- **Tabela `andamento_plano_trabalho`**
+- **Tabela `atributo_andam_plano_trab`**
+- **Tabela `rel_serie_plano_trabalho`**
+- **Tabela `infra_erro_php`**
+- **Tabela `infra_captcha`**
+- **Tabela `infra_captcha_tentativa`**
+- **Tabela `aviso`**
+- **Tabela `rel_aviso_orgao`**
+- **Tabela `reabertura_programada`**
+- **Tabela `documento_geracao`**
+- **Tabela `avaliacao_documental`**
+- **Tabela `cpad`**
+- **Tabela `cpad_versao`**
+- **Tabela `cpad_composicao`**
+- **Tabela `cpad_avaliacao`**
+- **Tabela `edital_eliminacao`**
+- **Tabela `edital_eliminacao_conteudo`**
+- **Tabela `edital_eliminacao_erro`**
+- **Tabela `rel_orgao_pesquisa`**
+- **Tabela `tipo_prioridade`**
+- **Tabela `rel_usuario_tipo_prioridade`**
+
+### Alterado
+
+- **Tabela `infra_regra_auditoria_recurso`**
+  - **Índices**
+    - **Novo `fk_inf_reg_aud_rec_inf_reg_aud`**: sobre `id_infra_regra_auditoria` no SQL Server.
+- **Tabela `procedimento`**
+  - **Colunas**
+    - **Alterada `id_tipo_procedimento`**: para `tipoNumero() NOT NULL`.
+    - **Nova `id_plano_trabalho`**: `tipoNumero() NULL`.
+    - **Nova `dta_conclusao`**: `tipoDataHora() NULL`.
+    - **Nova `dta_eliminacao`**: `tipoDataHora() NULL`.
+    - **Nova `id_tipo_prioridade`**: `tipoNumero() NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_procedimento_plano_trabalho`**: `id_plano_trabalho` → `plano_trabalho.id_plano_trabalho`.
+    - **Nova `fk_proced_tipo_prioridade`**: `id_tipo_prioridade` → `tipo_prioridade.id_tipo_prioridade`.
+  - **Índices**
+    - **Novo `i01_procedimento`**: sobre `dta_conclusao`.
+    - **Novo `i02_procedimento`**: sobre `dta_eliminacao`.
+- **Tabela `tipo_procedimento`**
+  - **Colunas**
+    - **Nova `id_plano_trabalho`**: `tipoNumero() NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_tipo_proced_plano_trabalho`**: `id_plano_trabalho` → `plano_trabalho.id_plano_trabalho`.
+- **Tabela `serie`**
+  - **Colunas**
+    - **Nova `sin_valor_monetario`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Alterada `nome`**: para `tipoTextoVariavel(100) NOT NULL`.
+- **Tabela `lembrete`**
+  - **Chaves estrangeiras**
+    - **Nova `fk_lembrete_usuario`**: `id_usuario` → `usuario.id_usuario`.
+- **Tabela `documento`**
+  - **Colunas**
+    - **Nova `sin_versoes`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `din_valor`**: `tipoNumeroDecimal(15, 2) NULL`.
+    - **Nova `sta_editor`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+  - **Índices**
+    - **Novo `i07_documento`**: sobre (`id_documento`, `sin_versoes`).
+- **Tabela `arquivamento`**
+  - **Colunas**
+    - **Nova `sta_eliminacao`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `id_atividade_eliminacao`**: `tipoNumero() NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_arquiv_ativ_eliminacao`**: `id_atividade_eliminacao` → `atividade.id_atividade`.
+- **Tabela `protocolo`**
+  - **Colunas**
+    - **Nova `sin_eliminado`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+  - **Índices**
+    - **Novo `i17_protocolo`**: sobre `sin_eliminado`.
+- **Tabela `localizador`**
+  - **Colunas**
+    - **Nova `sin_ativo`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+- **Tabela `rel_protocolo_assunto`**
+  - **Colunas**
+    - **Nova `id_protocolo_procedimento`**: `tipoNumeroGrande() NULL`.
+- **Tabela `bloco`**
+  - **Índices**
+    - **Novo `i03_bloco`**: sobre (`id_bloco`, `id_unidade`, `sta_tipo`, `sta_estado`).
+    - **Novo `i04_bloco`**: sobre (`id_bloco`, `sta_estado`).
+- **Tabela `rel_bloco_unidade`**
+  - **Índices**
+    - **Novo `i08_rel_bloco_unidade`**: sobre (`id_bloco`, `id_unidade`, `sin_retornado`).
+- **Tabela `acesso_externo`**
+  - **Índices**
+    - **Novo `i06_acesso_externo`**: sobre (`sta_tipo`, `dta_validade`).
+    - **Novo `i07_acesso_externo`**: sobre (`id_documento`, `sta_tipo`, `dta_validade`).
+- **Tabela `andamento_marcador`**
+  - **Colunas**
+    - **Alterada `texto`**: para `tipoTextoVariavel(500) NULL`.
+- **Tabela `email_unidade`**
+  - **Colunas**
+    - **Nova `sequencia`**: adicionada como `tipoNumero() NULL`, preenchida e finalizada como `tipoNumero() NOT NULL`.
+- **Tabela `contato`**
+  - **Colunas**
+    - **Alterada `telefone_celular`**: para `tipoTextoVariavel(50) NULL`.
+    - **Alterada `telefone_comercial`**: para `tipoTextoVariavel(100) NULL`.
+  - **Índices**
+    - **Novo `i02_contato`**: sobre `cpf`.
+    - **Novo `i03_contato`**: sobre `cnpj`.
+- **Tabela `orgao`**
+  - **Colunas**
+    - **Nova `sin_consulta_processual`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+- **Tabela `tarefa`**
+  - **Colunas**
+    - **Nova `sin_consulta_processual`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+
+### Excluído
+
+- **Tabela `velocidade_transferencia`**
+- **Tabela `retorno_programado`**
+  - **Índices**
+    - **Excluído `i04_retorno_programado`**: no MySQL.
+- **Tabela `procedimento`**
+  - **Índices**
+    - **Excluído `fk_procedimento_tipo_procedime`**: no SQL Server.
+- **Tabela `lembrete`**
+  - **Índices**
+    - **Excluído `i01_lembrete`**
+- **Tabela `controle_unidade`**
+  - **Chaves primárias**
+    - **Excluída `pk_controle_unidade`**
+- **Tabela `usuario`**
+  - **Colunas**
+    - **Excluída `sin_acessibilidade`**
+
+## [4.0.0]
+
+### Adicionado
+
+- **Tabela `rel_usuario_marcador`**
+- **Tabela `rel_usuario_grupo_acomp`**
+- **Tabela `rel_usuario_usuario_unidade`**
+- **Tabela `rel_usuario_tipo_proced`**
+- **Tabela `orgao_historico`**
+- **Tabela `unidade_historico`**
+- **Tabela `titulo`**
+- **Tabela `controle_prazo`**
+- **Tabela `comentario`**
+- **Tabela `categoria`**
+- **Tabela `lembrete`**
+- **Tabela `rel_acesso_ext_serie`**
+- **Tabela `grupo_bloco`**
+- **Tabela `rel_usuario_grupo_bloco`**
+- **Tabela `instalacao_federacao`**
+- **Tabela `tarefa_instalacao`**
+- **Tabela `andamento_instalacao`**
+- **Tabela `atributo_instalacao`**
+- **Tabela `orgao_federacao`**
+- **Tabela `unidade_federacao`**
+- **Tabela `usuario_federacao`**
+- **Tabela `protocolo_federacao`**
+- **Tabela `acesso_federacao`**
+- **Tabela `acao_federacao`**
+- **Tabela `parametro_acao_federacao`**
+- **Tabela `grupo_federacao`**
+- **Tabela `rel_grupo_fed_orgao_fed`**
+- **Tabela `sinalizacao_federacao`**
+- **Tabela `replicacao_federacao`**
+- **Tabela `campo_pesquisa`**
+- **Tabela `pesquisa`**
+
+### Alterado
+
+- **Tabela `infra_agendamento_tarefa`**
+  - **Colunas**
+    - **Alterada `periodicidade_complemento`**: para `tipoTextoVariavel(200) NULL`.
+- **Tabela `email_sistema`**
+  - **Índices**
+    - **Alterado `i01_email_sistema`**: finalizado como único sobre `id_email_sistema_modulo` no SQL Server.
+- **Tabela `tarefa`**
+  - **Índices**
+    - **Alterado `i01_tarefa`**: finalizado como único sobre `id_tarefa_modulo` no SQL Server.
+- **Tabela `infra_regra_auditoria_recurso`**
+  - **Índices**
+    - **Novo `fk_inf_reg_aud_rec_inf_reg_aud`**: sobre `id_infra_regra_auditoria` no MySQL e no Oracle.
+- **Tabela `andamento_marcador`**
+  - **Colunas**
+    - **Nova `sta_operacao`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `sin_ativo`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+- **Tabela `acompanhamento`**
+  - **Colunas**
+    - **Nova `id_usuario`**: `tipoNumero() NOT NULL`, substituindo `id_usuario_gerador` após cópia dos dados.
+    - **Nova `dth_alteracao`**: `tipoDataHora() NOT NULL`, substituindo `dth_geracao` após cópia dos dados.
+    - **Alterada `observacao`**: para `tipoTextoVariavel(500) NULL`.
+    - **Nova `idx_acompanhamento`**: `tipoTextoVariavel(4000) NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_acompanhamento_usuario`**: `id_usuario` → `usuario.id_usuario`.
+- **Tabela `marcador`**
+  - **Colunas**
+    - **Alterada `sta_icone`**: de `tipoTextoFixo(1) NOT NULL` para `tipoTextoVariavel(2) NOT NULL`.
+- **Tabela `controle_unidade`**
+  - **Chaves primárias**
+    - **Nova `pk_controle_unidade`**: sobre `id_controle_unidade`.
+- **Tabela `arquivo_extensao`**
+  - **Colunas**
+    - **Nova `sin_interface`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `sin_servico`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+- **Tabela `uf`**
+  - **Colunas**
+    - **Alterada `sigla`**: para `tipoTextoFixo(2) NULL`.
+- **Tabela `arquivamento`**
+  - **Colunas**
+    - **Nova `id_atividade_cancelamento`**: `tipoNumero() NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_arquiv_ativ_canc`**: `id_atividade_cancelamento` → `atividade.id_atividade`.
+- **Tabela `acesso_externo`**
+  - **Colunas**
+    - **Nova `sin_inclusao`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `dth_visualizacao`**: `tipoDataHora() NULL`.
+  - **Índices**
+    - **Novo `i05_acesso_externo`**: sobre (`sta_tipo`, `sin_inclusao`).
+- **Tabela `serie`**
+  - **Colunas**
+    - **Nova `sin_usuario_externo`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+- **Tabela `contato`**
+  - **Colunas**
+    - **Alterada `email`**: para `tipoTextoVariavel(100) NULL`.
+    - **Nova `id_titulo`**: `tipoNumero() NULL`.
+    - **Nova `telefone_comercial`**: `tipoTextoVariavel(50) NULL`, substituindo `telefone_fixo` após cópia dos dados.
+    - **Nova `telefone_residencial`**: `tipoTextoVariavel(50) NULL`.
+    - **Nova `conjuge`**: `tipoTextoVariavel(100) NULL`.
+    - **Nova `funcao`**: `tipoTextoVariavel(100) NULL`.
+    - **Nova `nome_registro_civil`**: `tipoTextoVariavel(250) NULL`.
+    - **Nova `nome_social`**: `tipoTextoVariavel(250) NULL`.
+    - **Nova `id_categoria`**: `tipoNumero() NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_contato_titulo`**: `id_titulo` → `titulo.id_titulo`.
+    - **Nova `fk_contato_categoria`**: `id_categoria` → `categoria.id_categoria`.
+- **Tabela `cargo`**
+  - **Colunas**
+    - **Nova `id_titulo`**: `tipoNumero() NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_cargo_titulo`**: `id_titulo` → `titulo.id_titulo`.
+- **Tabela `usuario`**
+  - **Colunas**
+    - **Nova `nome_registro_civil`**: adicionada como `tipoTextoVariavel(100) NULL`, preenchida e finalizada como `tipoTextoVariavel(100) NOT NULL`.
+    - **Nova `nome_social`**: `tipoTextoVariavel(100) NULL`.
+    - **Nova `id_usuario_federacao`**: `tipoTextoVariavel(26) NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_usuario_usuario_federacao`**: `id_usuario_federacao` → `usuario_federacao.id_usuario_federacao`.
+  - **Índices**
+    - **Novo `i02_usuario`**: sobre (`id_contato`, `sta_tipo`).
+- **Tabela `rel_bloco_protocolo`**
+  - **Colunas**
+    - **Nova `idx_rel_bloco_protocolo`**: `tipoTextoVariavel(4000) NULL`.
+- **Tabela `retorno_programado`**
+  - **Colunas**
+    - **Nova `id_unidade_envio`**: adicionada como `tipoNumero() NULL`, preenchida e finalizada como `tipoNumero() NOT NULL`.
+    - **Nova `id_unidade_retorno`**: adicionada como `tipoNumero() NULL`, preenchida e finalizada como `tipoNumero() NOT NULL`.
+    - **Nova `id_protocolo`**: adicionada como `tipoNumeroGrande() NULL`, preenchida e finalizada como `tipoNumeroGrande() NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_ret_programado_uni_envio`**: `id_unidade_envio` → `unidade.id_unidade`.
+    - **Nova `fk_ret_programado_uni_retorno`**: `id_unidade_retorno` → `unidade.id_unidade`.
+    - **Nova `fk_ret_programado_protocolo`**: `id_protocolo` → `protocolo.id_protocolo`.
+  - **Índices**
+    - **Novo `i07_retorno_programado`**: sobre (`id_unidade_envio`, `id_unidade_retorno`, `id_protocolo`, `id_atividade_retorno`).
+    - **Novo `i08_retorno_programado`**: sobre (`id_unidade_envio`, `id_unidade_retorno`, `dta_programada`).
+    - **Novo `i09_retorno_programado`**: sobre (`id_unidade_envio`, `id_unidade_retorno`, `id_protocolo`).
+- **Tabela `protocolo_modelo`**
+  - **Colunas**
+    - **Alterada `descricao`**: para `tipoTextoVariavel(1000) NULL`.
+    - **Nova `dth_alteracao`**: `tipoDataHora() NOT NULL`, substituindo `dth_geracao` após cópia dos dados.
+    - **Nova `idx_protocolo_modelo`**: `tipoTextoVariavel(4000) NULL`.
+- **Tabela `documento`**
+  - **Colunas**
+    - **Nova `nome_arvore`**: `tipoTextoVariavel(50) NULL`.
+    - **Nova `sin_arquivamento`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+  - **Índices**
+    - **Novo `i06_documento`**: sobre (`id_documento`, `sin_arquivamento`).
+- **Tabela `rel_bloco_unidade`**
+  - **Colunas**
+    - **Nova `id_usuario_atribuicao`**: `tipoNumero() NULL`.
+    - **Nova `id_usuario_revisao`**: `tipoNumero() NULL`.
+    - **Nova `id_usuario_prioridade`**: `tipoNumero() NULL`.
+    - **Nova `id_usuario_comentario`**: `tipoNumero() NULL`.
+    - **Nova `sin_revisao`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `sin_prioridade`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `sin_comentario`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `texto_comentario`**: `tipoTextoVariavel(4000) NULL`.
+    - **Nova `dth_revisao`**: `tipoDataHora() NULL`.
+    - **Nova `dth_prioridade`**: `tipoDataHora() NULL`.
+    - **Nova `dth_comentario`**: `tipoDataHora() NULL`.
+    - **Nova `id_grupo_bloco`**: `tipoNumero() NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_rel_blo_uni_usu_atribuicao`**: `id_usuario_atribuicao` → `usuario.id_usuario`.
+    - **Nova `fk_rel_blo_uni_usu_revisao`**: `id_usuario_revisao` → `usuario.id_usuario`.
+    - **Nova `fk_rel_blo_uni_usu_prioridade`**: `id_usuario_prioridade` → `usuario.id_usuario`.
+    - **Nova `fk_rel_blo_uni_usu_comentario`**: `id_usuario_comentario` → `usuario.id_usuario`.
+    - **Nova `fk_rel_blo_uni_grupo_bloco`**: `id_grupo_bloco` → `grupo_bloco.id_grupo_bloco`.
+  - **Índices**
+    - **Novo `i05_rel_bloco_unidade`**: sobre (`id_bloco`, `id_unidade`, `id_usuario_atribuicao`).
+    - **Novo `i06_rel_bloco_unidade`**: sobre (`id_bloco`, `id_unidade`, `sin_prioridade`, `sin_revisao`, `sin_comentario`).
+    - **Novo `i07_rel_bloco_unidade`**: sobre (`id_bloco`, `id_unidade`, `id_usuario_atribuicao`, `sin_prioridade`, `sin_revisao`, `sin_comentario`).
+- **Tabela `grupo_acompanhamento`**
+  - **Colunas**
+    - **Alterada `nome`**: para `tipoTextoVariavel(100) NOT NULL`.
+- **Tabela `protocolo`**
+  - **Colunas**
+    - **Alterada `protocolo_formatado_pesq_inv`**: de `tipoTextoFixo(50) NOT NULL` para `tipoTextoVariavel(50) NOT NULL`.
+    - **Nova `id_protocolo_federacao`**: `tipoTextoVariavel(26) NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_protocolo_protocolo_fed`**: `id_protocolo_federacao` → `protocolo_federacao.id_protocolo_federacao`.
+  - **Índices**
+    - **Novo `i15_protocolo`**: sobre `protocolo_formatado_pesquisa`.
+    - **Novo `i16_protocolo`**: sobre `protocolo_formatado_pesq_inv`.
+- **Tabela `servico`**
+  - **Colunas**
+    - **Alterada `servidor`**: para `tipoTextoGrande() NULL`, com recriação da coluna no Oracle.
+    - **Nova `sin_chave_acesso`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `sin_servidor`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `crc`**: `tipoTextoFixo(8) NULL`.
+    - **Nova `chave_acesso`**: `tipoTextoFixo(60) NULL`.
+  - **Índices**
+    - **Novo `i02_servico`**: sobre `crc`.
+- **Tabela `assinatura`**
+  - **Colunas**
+    - **Alterada `nome`**: para `tipoTextoVariavel(500) NOT NULL`.
+    - **Alterada `tratamento`**: para `tipoTextoVariavel(200) NOT NULL`.
+  - **Índices**
+    - **Novo `i02_assinatura`**: sobre (`id_documento`, `id_atividade`).
+- **Tabela `orgao`**
+  - **Colunas**
+    - **Nova `sin_federacao_envio`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `sin_federacao_recebimento`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `id_unidade`**: `tipoNumero() NULL`.
+    - **Nova `id_orgao_federacao`**: `tipoTextoVariavel(26) NULL`.
+    - **Alterada `descricao`**: para `tipoTextoVariavel(250) NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_orgao_unidade`**: `id_unidade` → `unidade.id_unidade`.
+    - **Nova `fk_orgao_orgao_federacao`**: `id_orgao_federacao` → `orgao_federacao.id_orgao_federacao`.
+- **Tabela `unidade`**
+  - **Colunas**
+    - **Nova `id_unidade_federacao`**: `tipoTextoVariavel(26) NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_unidade_unidade_federacao`**: `id_unidade_federacao` → `unidade_federacao.id_unidade_federacao`.
+- **Tabela `atividade`**
+  - **Índices**
+    - **Novo `i17_atividade`**: sobre (`id_protocolo`, `id_tarefa`, `id_unidade`, `id_unidade_origem`).
+- **Tabela `assinante`**
+  - **Colunas**
+    - **Alterada `cargo_funcao`**: para `tipoTextoVariavel(200) NOT NULL`.
+    - **Nova `id_orgao`**: adicionada como `tipoNumero() NULL`, preenchida e finalizada como `tipoNumero() NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_assinante_orgao`**: `id_orgao` → `orgao.id_orgao`.
+
+### Excluído
+
+- **Tabela `contexto`**
+- **Tabela `acompanhamento`**
+  - **Colunas**
+    - **Excluída `id_usuario_gerador`**
+    - **Excluída `dth_geracao`**
+  - **Chaves estrangeiras**
+    - **Excluída `fk_acompanhamento_usuario_ger`**
+  - **Índices**
+    - **Excluído `fk_acompanhamento_usuario_ger`**: no SQL Server.
+- **Tabela `contato`**
+  - **Colunas**
+    - **Excluída `telefone_fixo`**
+- **Tabela `retorno_programado`**
+  - **Colunas**
+    - **Excluída `id_unidade`**
+  - **Chaves estrangeiras**
+    - **Excluída `fk_retorno_programado_unidade`**
+  - **Índices**
+    - **Excluído `fk_retorno_programado_unidade`**: no SQL Server.
+    - **Excluído `i04_retorno_programado`**: no SQL Server.
+- **Tabela `protocolo_modelo`**
+  - **Colunas**
+    - **Excluída `dth_geracao`**
+- **Tabela `protocolo`**
+  - **Índices**
+    - **Excluído `ak3_protocolo`**
+    - **Excluído `ak4_protocolo`**
+
+## [3.1.0]
+
+### Alterado
+
+- **Tabela `acompanhamento`**
+  - **Colunas**
+    - **Alterada `tipo_visualizacao`**: para `tipoNumero() NOT NULL` no Oracle.
+- **Tabela `andamento_situacao`**
+  - **Colunas**
+    - **Alterada `sin_ultimo`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+- **Tabela `assinatura`**
+  - **Colunas**
+    - **Alterada `id_tarja_assinatura`**: para `tipoNumero() NOT NULL` no Oracle.
+    - **Nova `agrupador`**: `tipoTextoVariavel(36) NULL`.
+  - **Índices**
+    - **Novo `i01_assinatura`**: sobre `agrupador`.
+- **Tabela `assunto`**
+  - **Colunas**
+    - **Alterada `id_tabela_assuntos`**: para `tipoNumero() NOT NULL` no Oracle.
+- **Tabela `base_conhecimento`**
+  - **Colunas**
+    - **Alterada `sta_documento`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+- **Tabela `contato`**
+  - **Colunas**
+    - **Alterada `sta_natureza`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+    - **Alterada `sin_endereco_associado`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+    - **Alterada `id_contato_associado`**: para `tipoNumero() NOT NULL` no Oracle.
+    - **Alterada `id_tipo_contato`**: para `tipoNumero() NOT NULL` no Oracle.
+    - **Nova `numero_passaporte`**: `tipoTextoVariavel(15) NULL`.
+    - **Nova `id_pais_passaporte`**: `tipoNumero() NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_contato_pais_passaporte`**: `id_pais_passaporte` → `pais.id_pais`.
+- **Tabela `controle_unidade`**
+  - **Colunas**
+    - **Alterada `id_situacao`**: para `tipoNumero() NOT NULL` no Oracle.
+- **Tabela `documento`**
+  - **Colunas**
+    - **Alterada `sta_documento`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+  - **Índices**
+    - **Novo `i04_documento`**: sobre (`numero`, `id_serie`).
+- **Tabela `grupo_contato`**
+  - **Colunas**
+    - **Alterada `sin_ativo`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+    - **Alterada `sta_tipo`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+- **Tabela `infra_log`**
+  - **Colunas**
+    - **Alterada `sta_tipo`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+- **Tabela `infra_navegador`**
+  - **Colunas**
+    - **Alterada `user_agent`**: para `tipoTextoVariavel(4000) NOT NULL` no Oracle.
+- **Tabela `orgao`**
+  - **Colunas**
+    - **Alterada `id_contato`**: para `tipoNumero() NOT NULL` no Oracle.
+- **Tabela `serie`**
+  - **Colunas**
+    - **Alterada `sin_interno`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+- **Tabela `tarja_assinatura`**
+  - **Colunas**
+    - **Alterada `sin_ativo`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+    - **Alterada `sta_tarja_assinatura`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+- **Tabela `tipo_contato`**
+  - **Colunas**
+    - **Alterada `sin_sistema`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+    - **Alterada `sta_acesso`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+- **Tabela `usuario`**
+  - **Colunas**
+    - **Alterada `id_contato`**: para `tipoNumero() NOT NULL` no Oracle.
+    - **Alterada `sin_acessibilidade`**: para `tipoTextoFixo(1) NOT NULL` no Oracle.
+- **Tabela `protocolo`**
+  - **Colunas**
+    - **Nova `protocolo_formatado_pesq_inv`**: adicionada como `tipoTextoVariavel(50) NULL`, preenchida e finalizada como `tipoTextoFixo(50) NOT NULL`.
+    - **Nova `dta_inclusao`**: adicionada como `tipoDataHora() NULL`, preenchida e finalizada como `tipoDataHora() NOT NULL`.
+  - **Índices**
+    - **Novo `ak4_protocolo`**: índice único sobre `protocolo_formatado_pesq_inv`.
+    - **Novo `i07_protocolo`**: sobre (`dta_inclusao`, `sta_protocolo`, `id_unidade_geradora`).
+    - **Novo `i10_protocolo`**: sobre (`protocolo_formatado_pesquisa`, `sta_nivel_acesso_global`, `id_protocolo`).
+    - **Novo `i11_protocolo`**: sobre (`sta_protocolo`, `sta_nivel_acesso_global`, `id_protocolo`).
+    - **Novo `i12_protocolo`**: sobre (`sta_estado`, `sta_protocolo`, `sta_nivel_acesso_global`, `id_protocolo`).
+    - **Novo `i13_protocolo`**: sobre (`id_protocolo`, `sta_protocolo`, `id_usuario_gerador`, `id_unidade_geradora`, `dta_geracao`).
+    - **Novo `i14_protocolo`**: sobre (`id_protocolo`, `id_hipotese_legal`, `id_unidade_geradora`).
+- **Tabela `numeracao`**
+  - **Índices**
+    - **Novo `ak_numeracao`**: índice único sobre (`ano`, `id_serie`, `id_orgao`, `id_unidade`).
+- **Tabela `atributo_andamento`**
+  - **Índices**
+    - **Novo `i02_atributo_andamento`**: sobre (`nome`, `id_origem`).
+    - **Novo `i04_atributo_andamento`**: sobre (`id_atividade`, `id_atributo_andamento`).
+- **Tabela `atividade`**
+  - **Índices**
+    - **Novo `i03_atividade`**: sobre (`id_unidade`, `dth_conclusao`, `sin_inicial`).
+    - **Novo `i10_atividade`**: sobre (`dth_abertura`, `id_tarefa`).
+    - **Novo `i16_atividade`**: sobre (`id_unidade`, `id_protocolo`, `dth_conclusao`, `id_usuario`, `id_atividade`, `id_usuario_atribuicao`).
+- **Tabela `acesso`**
+  - **Índices**
+    - **Novo `i02_acesso`**: sobre (`id_protocolo`, `sta_tipo`).
+    - **Novo `i03_acesso`**: sobre (`id_protocolo`, `id_unidade`, `id_usuario`).
+- **Tabela `andamento_marcador`**
+  - **Índices**
+    - **Novo `i02_andamento_marcador`**: sobre (`id_unidade`, `id_procedimento`, `sin_ultimo`).
+- **Tabela `retorno_programado`**
+  - **Índices**
+    - **Novo `i06_retorno_programado`**: sobre `dta_programada`.
+
+## [3.0.0]
+
+### Adicionado
+
+- **Tabela `documento_conteudo`**
+- **Tabela `tipo_formulario`**
+- **Tabela `monitoramento_servico`**
+- **Tabela `tipo_contato`**
+- **Tabela `rel_unidade_tipo_contato`**
+- **Tabela `marcador`**
+- **Tabela `andamento_marcador`**
+- **Tabela `assunto_proxy`**
+- **Tabela `tabela_assuntos`**
+- **Tabela `mapeamento_assunto`**
+- **Tabela `arquivamento`**
+- **Tabela `serie_restricao`**
+- **Tabela `tipo_proced_restricao`**
+- **Tabela `rel_acesso_ext_protocolo`**
+
+### Alterado
+
+- **Tabela `infra_log`**
+  - **Colunas**
+    - **Nova `sta_tipo`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+  - **Índices**
+    - **Novo `i01_infra_log`**: sobre (`sta_tipo`, `dth_log`).
+- **Tabela `tarefa`**
+  - **Colunas**
+    - **Nova `id_tarefa_modulo`**: `tipoTextoVariavel(50) NULL`.
+  - **Índices**
+    - **Novo `i01_tarefa`**: sobre `id_tarefa_modulo`, único exceto no SQL Server.
+- **Tabela `email_sistema`**
+  - **Colunas**
+    - **Nova `id_email_sistema_modulo`**: `tipoTextoVariavel(50) NULL`.
+  - **Índices**
+    - **Novo `i01_email_sistema`**: sobre `id_email_sistema_modulo`, único exceto no SQL Server.
+- **Tabela `documento`**
+  - **Colunas**
+    - **Nova `id_tipo_formulario`**: `tipoNumero() NULL`.
+    - **Nova `sta_documento`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_documento_tipo_formulario`**: `id_tipo_formulario` → `tipo_formulario.id_tipo_formulario`.
+  - **Índices**
+    - **Novo `i02_documento`**: sobre (`id_documento`, `id_documento_edoc`).
+    - **Novo `i03_documento`**: sobre (`id_documento`, `id_serie`, `id_tipo_formulario`, `sta_documento`).
+- **Tabela `usuario`**
+  - **Colunas**
+    - **Nova `id_origem`**: `tipoTextoVariavel(50) NULL`.
+    - **Alterada `id_contato`**: para `tipoNumero() NOT NULL`.
+  - **Índices**
+    - **Alterado `if1_usuario`**: recriado sobre `id_contato`.
+    - **Alterado `i01_usuario`**: recriado sobre (`id_orgao`, `sta_tipo`, `sigla`, `idx_usuario`, `sin_ativo`).
+- **Tabela `unidade`**
+  - **Colunas**
+    - **Nova `id_origem`**: `tipoTextoVariavel(50) NULL`.
+- **Tabela `acesso`**
+  - **Colunas**
+    - **Nova `id_controle_interno`**: `tipoNumero() NULL`.
+  - **Chaves estrangeiras**
+    - **Alterada `fk_acesso_usuario`**: recriada de `id_usuario` para `usuario.id_usuario`.
+    - **Alterada `fk_acesso_unidade`**: recriada de `id_unidade` para `unidade.id_unidade`.
+    - **Alterada `fk_acesso_protocolo`**: recriada de `id_protocolo` para `protocolo.id_protocolo`.
+    - **Nova `fk_acesso_controle_interno`**: `id_controle_interno` → `controle_interno.id_controle_interno`.
+  - **Índices**
+    - **Alterado `i01_acesso`**: recriado sobre (`id_unidade`, `id_usuario`, `id_protocolo`, `sta_tipo`).
+- **Tabela `infra_auditoria`**
+  - **Colunas**
+    - **Alterada `ip`**: para `tipoTextoVariavel(39) NULL`.
+- **Tabela `serie`**
+  - **Colunas**
+    - **Nova `id_tipo_formulario`**: `tipoNumero() NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_serie_tipo_formulario`**: `id_tipo_formulario` → `tipo_formulario.id_tipo_formulario`.
+- **Tabela `base_conhecimento`**
+  - **Colunas**
+    - **Nova `sta_documento`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+- **Tabela `rel_protocolo_atributo`**
+  - **Colunas**
+    - **Alterada `valor`**: para `tipoTextoVariavel(4000) NULL`.
+  - **Chaves estrangeiras**
+    - **Alterada `fk_rel_prot_atributo_atributo`**: recriada de `id_atributo` para `atributo.id_atributo`.
+- **Tabela `atributo`**
+  - **Colunas**
+    - **Alterada `id_atributo`**: recriada como `tipoNumero() NOT NULL`.
+    - **Alterada `id_tipo_formulario`**: recriada como `tipoNumero() NOT NULL`.
+    - **Alterada `nome`**: recriada como `tipoTextoVariavel(50) NOT NULL`.
+    - **Alterada `rotulo`**: recriada como `tipoTextoVariavel(4000) NOT NULL`.
+    - **Alterada `ordem`**: recriada como `tipoNumero() NOT NULL`.
+    - **Alterada `sta_tipo`**: recriada como `tipoTextoVariavel(20) NOT NULL`.
+    - **Alterada `tamanho`**: recriada como `tipoNumero() NULL`.
+    - **Alterada `linhas`**: recriada como `tipoNumero() NULL`.
+    - **Alterada `decimais`**: recriada como `tipoNumero() NULL`.
+    - **Alterada `mascara`**: recriada como `tipoTextoVariavel(50) NULL`.
+    - **Alterada `valor_minimo`**: recriada como `tipoTextoVariavel(20) NULL`.
+    - **Alterada `valor_maximo`**: recriada como `tipoTextoVariavel(20) NULL`.
+    - **Alterada `valor_padrao`**: recriada como `tipoTextoVariavel(4000) NULL`.
+    - **Alterada `sin_obrigatorio`**: recriada como `tipoTextoFixo(1) NOT NULL`.
+    - **Alterada `sin_ativo`**: recriada como `tipoTextoFixo(1) NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_atributo_tipo_formulario`**: `id_tipo_formulario` → `tipo_formulario.id_tipo_formulario`.
+  - **Chaves primárias**
+    - **Alterada `pk_atributo`**: recriada sobre `id_atributo`.
+- **Tabela `dominio`**
+  - **Colunas**
+    - **Alterada `id_dominio`**: recriada como `tipoNumero() NOT NULL`.
+    - **Alterada `id_atributo`**: recriada como `tipoNumero() NOT NULL`.
+    - **Alterada `valor`**: recriada como `tipoTextoVariavel(50) NOT NULL`.
+    - **Alterada `rotulo`**: recriada como `tipoTextoVariavel(100) NOT NULL`.
+    - **Alterada `ordem`**: recriada como `tipoNumero() NOT NULL`.
+    - **Alterada `sin_padrao`**: recriada como `tipoTextoFixo(1) NOT NULL`.
+    - **Alterada `sin_ativo`**: recriada como `tipoTextoFixo(1) NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Alterada `fk_dominio_atributo`**: recriada de `id_atributo` para `atributo.id_atributo`.
+  - **Chaves primárias**
+    - **Alterada `pk_dominio`**: recriada sobre `id_dominio`.
+- **Tabela `tarja_assinatura`**
+  - **Colunas**
+    - **Nova `sin_ativo`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `sta_tarja_assinatura`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+- **Tabela `assinatura`**
+  - **Colunas**
+    - **Nova `id_tarja_assinatura`**: adicionada como `tipoNumero() NULL`, preenchida e finalizada como `tipoNumero() NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_assinatura_tarja_assinatura`**: `id_tarja_assinatura` → `tarja_assinatura.id_tarja_assinatura`.
+- **Tabela `atributo_andamento`**
+  - **Índices**
+    - **Alterado `i01_atributo_andamento`**: recriado sobre (`id_atividade`, `nome`, `id_origem`).
+- **Tabela `grupo_contato`**
+  - **Colunas**
+    - **Nova `sin_ativo`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `sta_tipo`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Alterada `descricao`**: para `tipoTextoVariavel(250) NULL`.
+- **Tabela `cargo`**
+  - **Colunas**
+    - **Alterada `expressao`**: para `tipoTextoVariavel(100) NOT NULL`.
+    - **Nova `id_tratamento`**: `tipoNumero() NULL`.
+    - **Nova `id_vocativo`**: `tipoNumero() NULL`.
+    - **Nova `sta_genero`**: `tipoTextoFixo(1) NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_cargo_tratamento`**: `id_tratamento` → `tratamento.id_tratamento`.
+    - **Nova `fk_cargo_vocativo`**: `id_vocativo` → `vocativo.id_vocativo`.
+- **Tabela `tratamento`**
+  - **Colunas**
+    - **Alterada `expressao`**: para `tipoTextoVariavel(100) NOT NULL`.
+- **Tabela `vocativo`**
+  - **Colunas**
+    - **Alterada `expressao`**: para `tipoTextoVariavel(100) NOT NULL`.
+- **Tabela `contato`**
+  - **Colunas**
+    - **Alterada `endereco`**: para `tipoTextoVariavel(130) NULL`.
+    - **Nova `complemento`**: `tipoTextoVariavel(130) NULL`.
+    - **Alterada `matricula`**: para `tipoTextoVariavel(10) NULL`.
+    - **Alterada `bairro`**: para `tipoTextoVariavel(70) NULL`.
+    - **Nova `sta_natureza`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `sin_endereco_associado`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Nova `telefone_fixo`**: `tipoTextoVariavel(50) NULL`.
+    - **Nova `telefone_celular`**: `tipoTextoVariavel(25) NULL`.
+    - **Nova `id_cidade`**: `tipoNumero() NULL`.
+    - **Nova `id_uf`**: `tipoNumero() NULL`.
+    - **Nova `id_pais`**: `tipoNumero() NULL`.
+    - **Nova `id_contato_associado`**: adicionada como `tipoNumero() NULL`, preenchida e finalizada como `tipoNumero() NOT NULL`.
+    - **Nova `sta_genero`**: `tipoTextoFixo(1) NULL`.
+    - **Nova `id_tipo_contato`**: adicionada como `tipoNumero() NULL`, preenchida e finalizada como `tipoNumero() NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_contato_cidade`**: `id_cidade` → `cidade.id_cidade`.
+    - **Nova `fk_contato_uf`**: `id_uf` → `uf.id_uf`.
+    - **Nova `fk_contato_pais`**: `id_pais` → `pais.id_pais`.
+    - **Nova `fk_contato_tipo_contato`**: `id_tipo_contato` → `tipo_contato.id_tipo_contato`.
+  - **Índices**
+    - **Novo `i01_contato`**: sobre (`id_tipo_contato`, `sigla`, `nome`, `sin_ativo`).
+- **Tabela `orgao`**
+  - **Colunas**
+    - **Nova `idx_orgao`**: `tipoTextoVariavel(500) NULL`.
+    - **Nova `id_contato`**: adicionada como `tipoNumero() NULL`, preenchida e finalizada como `tipoNumero() NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_orgao_contato`**: `id_contato` → `contato.id_contato`.
+- **Tabela `andamento_situacao`**
+  - **Colunas**
+    - **Nova `id_situacao`**: `tipoNumero() NULL`.
+    - **Nova `sin_ultimo`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida e finalizada como `tipoTextoFixo(1) NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_andam_situacao_situacao`**: `id_situacao` → `situacao.id_situacao`.
+  - **Índices**
+    - **Novo `i01_andamento_situacao`**: sobre (`id_situacao`, `id_procedimento`, `id_unidade`, `sin_ultimo`).
+- **Tabela `controle_unidade`**
+  - **Colunas**
+    - **Nova `id_usuario`**: `tipoNumero() NOT NULL`.
+    - **Nova `dth_execucao`**: `tipoDataHora() NOT NULL`.
+    - **Alterada `id_situacao`**: para `tipoNumero() NOT NULL`.
+- **Tabela `assunto`**
+  - **Colunas**
+    - **Nova `prazo_intermediario`**: `tipoNumero() NULL`.
+    - **Nova `prazo_corrente`**: `tipoNumero() NULL`.
+    - **Nova `sta_destinacao`**: `tipoTextoFixo(1) NULL`.
+    - **Nova `sin_estrutural`**: `tipoTextoFixo(1) NULL`.
+    - **Nova `id_tabela_assuntos`**: adicionada como `tipoNumero() NULL`, preenchida e finalizada como `tipoNumero() NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_assunto_tabela_assuntos`**: `id_tabela_assuntos` → `tabela_assuntos.id_tabela_assuntos`.
+  - **Índices**
+    - **Alterado `i01_assunto`**: recriado sobre (`id_tabela_assuntos`, `codigo_estruturado`, `sin_estrutural`, `sin_ativo`).
+- **Tabela `rel_protocolo_assunto`**
+  - **Colunas**
+    - **Nova `id_assunto_proxy`**: adicionada como `tipoNumero() NULL`, preenchida e finalizada como `tipoNumero() NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_rel_prot_assunto_protocolo`**: `id_protocolo` → `protocolo.id_protocolo`.
+    - **Nova `fk_rel_prot_assunto_assunto`**: `id_assunto_proxy` → `assunto_proxy.id_assunto_proxy`.
+  - **Chaves primárias**
+    - **Alterada `pk_rel_protocolo_assunto`**: recriada sobre (`id_protocolo`, `id_assunto_proxy`).
+- **Tabela `rel_tipo_procedimento_assunto`**
+  - **Colunas**
+    - **Nova `id_assunto_proxy`**: adicionada como `tipoNumero() NULL`, preenchida e finalizada como `tipoNumero() NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk_rel_tipo_proc_assu_tip_proc`**: `id_tipo_procedimento` → `tipo_procedimento.id_tipo_procedimento`.
+    - **Nova `fk_rel_tipo_proc_assu_assunto`**: `id_assunto_proxy` → `assunto_proxy.id_assunto_proxy`.
+  - **Chaves primárias**
+    - **Alterada `pk_rel_tipo_proced_assunto`**: recriada sobre (`id_tipo_procedimento`, `id_assunto_proxy`).
+- **Tabela `rel_serie_assunto`**
+  - **Colunas**
+    - **Nova `id_assunto_proxy`**: adicionada como `tipoNumero() NULL`, preenchida e finalizada como `tipoNumero() NOT NULL`.
+  - **Chaves estrangeiras**
+    - **Alterada `fk_rel_serie_assunto_serie`**: recriada de `id_serie` para `serie.id_serie`.
+    - **Alterada `fk_rel_serie_assunto_assunto`**: recriada de `id_assunto_proxy` para `assunto_proxy.id_assunto_proxy`.
+  - **Chaves primárias**
+    - **Alterada `pk_rel_serie_assunto`**: recriada sobre (`id_serie`, `id_assunto_proxy`).
+- **Tabela `protocolo`**
+  - **Índices**
+    - **Alterado `i03_protocolo`**: recriado sobre (`sta_nivel_acesso_global`, `id_protocolo`, `id_unidade_geradora`, `sta_protocolo`, `sta_estado`).
+- **Tabela `observacao`**
+  - **Colunas**
+    - **Nova `idx_observacao`**: `tipoTextoGrande() NULL`.
+- **Tabela `atividade`**
+  - **Chaves estrangeiras**
+    - **Alterada `fk_atividade_unidade`**: recriada de `id_unidade` para `unidade.id_unidade`.
+    - **Alterada `fk_atividade_usuario`**: recriada de `id_usuario` para `usuario.id_usuario`.
+    - **Alterada `fk_atividade_tarefa`**: recriada de `id_tarefa` para `tarefa.id_tarefa`.
+  - **Índices**
+    - **Alterado `i01_atividade`**: recriado sobre (`id_atividade`, `id_protocolo`, `id_unidade`, `id_usuario`, `dth_conclusao`, `sin_inicial`, `id_usuario_atribuicao`).
+    - **Alterado `i02_atividade`**: recriado sobre (`id_atividade`, `id_protocolo`, `id_unidade`, `id_usuario`, `id_tarefa`).
+- **Tabela `arquivo_extensao`**
+  - **Colunas**
+    - **Nova `tamanho_maximo`**: `tipoNumero() NULL`.
+- **Tabela `texto_padrao_interno`**
+  - **Colunas**
+    - **Alterada `nome`**: para `tipoTextoVariavel(50) NOT NULL`.
+
+### Excluído
+
+- **Tabela `aplicabilidade_atributo`**
+- **Tabela `indexacao_base_conhecimento`**
+- **Tabela `indexacao_protocolo`**
+- **Tabela `indexacao_publicacao`**
+- **Tabela `carreira`**
+- **Tabela `nivel_funcao`**
+- **Tabela `titulo`**
+- **Tabela `tipo_contexto_contato`**
+- **Tabela `rel_unidade_tipo_cont_contato`**
+- **Tabela `rel_proced_situacao_unidade`**
+- **Tabela `atributo_andamento_situacao`**
+- **Tabela `texto_padrao`**
+- **Tabela `documento`**
+  - **Colunas**
+    - **Excluída `conteudo`**
+    - **Excluída `conteudo_assinatura`**
+    - **Excluída `crc_assinatura`**
+    - **Excluída `qr_code_assinatura`**
+    - **Excluída `versao_lock`**
+    - **Excluída `sta_editor`**
+    - **Excluída `sin_formulario`**
+  - **Índices**
+    - **Excluído `i07_documento`**
+    - **Excluído `ie1_documento`**
+    - **Excluído `ie2_documento`**
+    - **Excluído `ie4_documento`**
+- **Tabela `usuario`**
+  - **Colunas**
+    - **Excluída `id_pessoa_rh`**
+    - **Excluída `cpf`**
+  - **Índices**
+    - **Excluído `i02_usuario`**
+    - **Excluído `i03_usuario`**
+    - **Excluído `i04_usuario`**
+- **Tabela `procedimento`**
+  - **Colunas**
+    - **Excluída `versao_lock`**
+- **Tabela `base_conhecimento`**
+  - **Colunas**
+    - **Excluída `sta_editor`**
+- **Tabela `tarja_assinatura`**
+  - **Colunas**
+    - **Excluída `sta_forma_autenticacao`**
+    - **Excluída `descricao`**
+- **Tabela `atributo_andamento`**
+  - **Índices**
+    - **Excluído `ie1_atributo_andamento`**
+- **Tabela `grupo_contato`**
+  - **Colunas**
+    - **Excluída `sin_publico`**
+- **Tabela `contato`**
+  - **Colunas**
+    - **Excluída `palavras_chave`**
+    - **Excluída `sin_contexto`**
+    - **Excluída `id_pessoa_rh`**
+    - **Excluída `sin_endereco_contexto`**
+    - **Excluída `telefone`**
+    - **Excluída `fax`**
+    - **Excluída `id_carreira`**
+    - **Excluída `id_nivel_funcao`**
+    - **Excluída `id_titulo`**
+    - **Excluída `id_tratamento`**
+    - **Excluída `id_vocativo`**
+    - **Excluída `sigla_estado`**
+    - **Excluída `nome_cidade`**
+    - **Excluída `nome_pais`**
+    - **Excluída `id_contexto_contato`**
+    - **Excluída `genero`**
+    - **Excluída `id_tipo_contexto_contato`**
+    - **Excluída `id_orgao`**
+  - **Chaves estrangeiras**
+    - **Excluída `fk_contato_carreia`**
+    - **Excluída `fk_contato_nivel_funcao`**
+    - **Excluída `fk_contato_titulo`**
+    - **Excluída `fk_contato_tratamento`**
+    - **Excluída `fk_contato_vocativo`**
+    - **Excluída `fk_contato_tipo_contexto_conta`**
+    - **Excluída `fk_contato_orgao`**
+  - **Índices**
+    - **Excluído `ie1_contato`**
+    - **Excluído `ie2_contato`**
+    - **Excluído `ie3_contato`**
+    - **Excluído `i04_contato`**
+    - **Excluído `if7_contato`**
+    - **Excluído `if8_contato`**
+- **Tabela `uf`**
+  - **Índices**
+    - **Excluído `ak1_uf`**
+    - **Excluído `ak2_uf`**
+- **Tabela `acesso`**
+  - **Índices**
+    - **Excluído `i02_acesso`**
+    - **Excluído `i03_acesso`**
+    - **Excluído `i04_acesso`**
+- **Tabela `unidade`**
+  - **Colunas**
+    - **Excluída `endereco`**
+    - **Excluída `complemento`**
+    - **Excluída `bairro`**
+    - **Excluída `cep`**
+    - **Excluída `telefone`**
+    - **Excluída `fax`**
+    - **Excluída `sitio_internet`**
+    - **Excluída `observacao`**
+    - **Excluída `id_uf`**
+    - **Excluída `id_cidade`**
+  - **Chaves estrangeiras**
+    - **Excluída `fk_unidade_uf`**
+    - **Excluída `fk_unidade_cidade`**
+- **Tabela `orgao`**
+  - **Colunas**
+    - **Excluída `sin_pagamento_viagens`**
+    - **Excluída `endereco`**
+    - **Excluída `complemento`**
+    - **Excluída `bairro`**
+    - **Excluída `cep`**
+    - **Excluída `telefone`**
+    - **Excluída `fax`**
+    - **Excluída `sitio_internet`**
+    - **Excluída `email`**
+    - **Excluída `id_cidade`**
+  - **Chaves estrangeiras**
+    - **Excluída `fk_orgao_cidade`**
+  - **Índices**
+    - **Excluído `xif1orgao`**
+- **Tabela `assunto`**
+  - **Colunas**
+    - **Excluída `maior_tempo_corrente`**
+    - **Excluída `menor_tempo_corrente`**
+    - **Excluída `sin_elimina_maior_corrente`**
+    - **Excluída `sin_elimina_menor_corrente`**
+    - **Excluída `maior_tempo_intermediario`**
+    - **Excluída `menor_tempo_intermediario`**
+    - **Excluída `sin_elimina_maior_intermed`**
+    - **Excluída `sin_elimina_menor_intermed`**
+    - **Excluída `sin_suficiente`**
+  - **Índices**
+    - **Excluído `ie1_assunto`**
+    - **Excluído `i02_assunto`**
+    - **Excluído `ak1_assunto`**
+    - **Excluído `ak2_assunto`**
+- **Tabela `rel_protocolo_assunto`**
+  - **Colunas**
+    - **Excluída `id_assunto`**
+  - **Chaves estrangeiras**
+    - **Excluída `fk_rel_protocolo_assunto_proto`**
+    - **Excluída `fk_rel_protocolo_assunto_assun`**
+- **Tabela `rel_tipo_procedimento_assunto`**
+  - **Colunas**
+    - **Excluída `id_assunto`**
+  - **Chaves estrangeiras**
+    - **Excluída `fk_rel_tipo_procedimento_assun`**
+    - **Excluída `fk_rel_tipo_proc_assun_assunto`**
+- **Tabela `rel_serie_assunto`**
+  - **Colunas**
+    - **Excluída `id_assunto`**
+- **Tabela `protocolo`**
+  - **Colunas**
+    - **Excluída `id_localizador`**
+    - **Excluída `id_usuario_arquivamento`**
+    - **Excluída `id_unidade_arquivamento`**
+    - **Excluída `dth_arquivamento`**
+    - **Excluída `sta_arquivamento`**
+  - **Chaves estrangeiras**
+    - **Excluída `fk_protocolo_localizador`**
+    - **Excluída `fk_protocolo_usuario_arquivo`**
+    - **Excluída `fk_protocolo_unidade_arquivo`**
+  - **Índices**
+    - **Excluído `if5_protocolo`**
+    - **Excluído `i07_protocolo`**
+    - **Excluído `i01_protocolo`**
+    - **Excluído `i04_protocolo`**
+    - **Excluído `i05_protocolo`**
+    - **Excluído `i08_protocolo`**
+- **Tabela `atividade`**
+  - **Índices**
+    - **Excluído `i03_atividade`**
+    - **Excluído `i05_atividade`**
+    - **Excluído `i08_atividade`**

@@ -19,6 +19,8 @@ Este documento é o registro de auditoria de todas as skills disponíveis no rep
 - [ponytail-help](#ponytail-help)
 - [ponytail-review](#ponytail-review)
 - [sei-code-review-security](#sei-code-review-security)
+- [sei-dicionario-dados-core](#sei-dicionario-dados-core)
+- [sei-dicionario-dados-modulo](#sei-dicionario-dados-modulo)
 - [sei-direcionador-integracao](#sei-direcionador-integracao)
 - [sei-gerador-crud](#sei-gerador-crud)
 - [sei-gerador-scripts-release](#sei-gerador-scripts-release)
@@ -66,6 +68,8 @@ Este documento é o registro de auditoria de todas as skills disponíveis no rep
 | ponytail-help | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
 | ponytail-review | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
 | sei-code-review-security | interna | — | — | — |
+| sei-dicionario-dados-core | interna | — | — | — |
+| sei-dicionario-dados-modulo | interna | — | — | — |
 | sei-direcionador-integracao | interna | — | — | — |
 | sei-gerador-crud | interna | — | — | — |
 | sei-gerador-scripts-release | interna | — | — | — |
@@ -345,6 +349,47 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 - `.agents/checklists/checklist-seguranca.md`
 - `.agents/skills/sei-code-review-security/references/reutilizacao-rn-int-dto.md`
 - `.agents/security/origem-referencias-seguranca.md`
+
+---
+
+## sei-dicionario-dados-core
+
+**Origem:** Skill interna criada em 2026-07 pela divisão de `sei-dicionario-dados` — o alvo SEI/SIP/Julgar tem padrão de fonte (pacote de release externo) e contrato (caminho a confirmar com o desenvolvedor) diferentes o suficiente de módulo customizado para justificar skill própria, evitando contrato condicional e contexto misto entre os dois padrões.
+
+**Composição:**
+- Alvo: SEI, SIP ou Julgar. Exige operação, versão-alvo e caminho do repositório de pacotes de release antes de executar — caminho não é presumido, é informado pelo desenvolvedor ou já indicado na conversa.
+- Fonte estrutural é o script/DDL dentro do pacote (zip ou pasta já extraída), não o banco ao vivo — banco só serve como validação opcional quando houver ambiente disponível.
+- Procedimento de localização (convenção de nome de pasta/arquivo por época, zip vs pasta, SIP com numeração própria, versão trivial, duplicação entre pacotes) em `references/localizacao-fonte-pacotes.md`.
+- Bloqueio específico para Julgar: script também existe neste repositório (mapeado em `mapa-modulos-scripts.md`) além do pacote externo — exige confirmação de qual fonte prevalece.
+- `CHANGELOG.md` é só fato estrutural (sem descrição de negócio); `dicionario.md` exige descrição de negócio via DTO/RN/páginas do alvo.
+- Modo incremental (padrão a partir da segunda rodada): localizar só o delta da versão nova, sem reprocessar histórico já documentado.
+- Formato do dicionário e do changelog, template de coluna e ferramenta de validação são compartilhados com `sei-dicionario-dados-modulo`.
+
+**Fontes:**
+- `AGENTS.md`
+- `.agents/references/dicionario-dados/formato-dicionario-de-dados.md` (compartilhada)
+- `.agents/skills/sei-dicionario-dados-core/references/localizacao-fonte-pacotes.md`
+- `.agents/references/mapa-modulos-scripts.md`
+
+---
+
+## sei-dicionario-dados-modulo
+
+**Origem:** Skill interna criada em 2026-07 pela divisão de `sei-dicionario-dados` — módulo customizado tem fonte já localizável sozinha neste repositório (sem caminho externo a confirmar), contrato mais simples que o de SEI/SIP/Julgar.
+
+**Composição:**
+- Alvo: qualquer módulo customizado. Exige nome do módulo, operação e versão-alvo (`getVersao()`/`VERSAO_MODULO_*`) antes de executar.
+- Fonte estrutural é o script de instalação/atualização do módulo, localizado via `mapa-modulos-scripts.md` — já dentro do repositório, sem confirmação de caminho externo. DTO é conferência obrigatória, nunca substitui o DDL como fonte.
+- Banco ao vivo nunca é usado para módulo, nem como validação.
+- `CHANGELOG.md` é só fato estrutural (sem descrição de negócio); `dicionario.md` exige descrição de negócio via DTO/RN/INT/BD/páginas do módulo, esgotando as 4 camadas de evidência antes de declarar "sem evidência".
+- Modo incremental (padrão a partir da segunda rodada): localizar só o bloco de versão novo no script já existente.
+- Descrição de coluna por template fixo conforme prefixo (`id_`, `sin_`, `sta_`, `dth_`/`dta_`, texto livre); `sta_*` sempre "multi-valorado", nunca invenção de código; descrição de RN gerada por ferramenta pode ser placeholder, não evidência real.
+- Formato do dicionário e do changelog, template de coluna e ferramenta de validação são compartilhados com `sei-dicionario-dados-core`.
+
+**Fontes:**
+- `AGENTS.md`
+- `.agents/references/dicionario-dados/formato-dicionario-de-dados.md` (compartilhada)
+- `.agents/references/mapa-modulos-scripts.md`
 
 ---
 

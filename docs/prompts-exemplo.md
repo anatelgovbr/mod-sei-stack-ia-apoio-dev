@@ -179,6 +179,35 @@ Antes de alterar arquivos:
 - aguarde minha aprovação para implementar
 ```
 
+## Exemplo 9: Dicionário padrão módulo
+
+```text
+Utilize a skill sei-dicionario-dados-modulo.
+
+Módulo: <nome do módulo>
+Operação: <escolha uma:
+  - gerar tudo do zero (dicionario.md e CHANGELOG.md completos, com todo o histórico de versões — módulo ainda não documentado)
+  - atualizar para a versão mais recente (incremental, só o que mudou)
+  - verificar consistência do que já existe
+  - reconstruir só o CHANGELOG.md histórico>
+Versão-alvo: <versão exata, ou "descubra a versão mais recente e confirme comigo">
+```
+
+## Exemplo 10: Dicionário padrão core: SEI/SIP/Julgar
+
+```text
+Utilize a skill sei-dicionario-dados-core.
+
+Alvo: <SEI | SIP | Julgar>
+Operação: <escolha uma:
+  - gerar tudo do zero (dicionario.md e CHANGELOG.md completos, com todo o histórico de versões — alvo ainda não documentado)
+  - atualizar para a versão mais recente (incremental, só o que mudou)
+  - verificar consistência do que já existe
+  - reconstruir só o CHANGELOG.md histórico>
+Versão-alvo: <versão exata>
+Pacote de release: <caminho do repositório de pacotes de release, ou "não sei, me pergunte">
+```
+
 ## Dicas rápidas
 
 - Se você quiser só leitura e análise, diga: `não altere arquivos ainda`.
