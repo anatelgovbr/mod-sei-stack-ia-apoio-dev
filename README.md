@@ -8,27 +8,27 @@ Aqui ficam concentrados os artefatos que dão suporte ao uso de agentes, prompts
 
 ## Sumário
 
-- [1. Para quem é este documento](#1-para-quem-é-este-documento)
-- [2. Stack de IA](#2-stack-de-ia)
-  - [2.1 Introdução](#21-introdução)
-  - [2.2 Filosofia e origem da stack](#22-filosofia-e-origem-da-stack)
-  - [2.3 O que são modelos de IA](#23-o-que-são-modelos-de-ia)
-  - [2.4 O que são agentes de IA](#24-o-que-são-agentes-de-ia)
-  - [2.4.1 Skills: agentes especializados](#241-skills-agentes-especializados)
-  - [2.5 O que é SDD](#25-o-que-é-sdd)
-  - [2.6 Ferramentas de IA suportadas](#26-ferramentas-de-ia-suportadas)
-  - [2.7 O que é o SpecKit](#27-o-que-é-o-speckit)
-  - [2.7.1 Quando usar o SpecKit](#271-quando-usar-o-speckit)
-  - [2.7.2 Fases do SpecKit](#272-fases-do-speckit)
-  - [2.7.3 Como invocar as fases](#273-como-invocar-as-fases)
-  - [2.7.4 Integrações por ferramenta](#274-integrações-por-ferramenta)
-  - [2.8 Estrutura da stack](#28-estrutura-da-stack)
-  - [2.9 Como começar com a stack de IA](#29-como-começar-com-a-stack-de-ia)
-- [3. Atualizações da stack](#3-atualizações-da-stack)
-  - [3.1 Como o SpecKit está organizado neste repositório](#31-como-o-speckit-está-organizado-neste-repositório)
-  - [3.2 Mapa de atualização](#32-mapa-de-atualização)
-  - [3.3 Como atualizar o SpecKit](#33-como-atualizar-o-speckit)
-- [4. Referências](#4-referências)
+- [Para quem é este documento](#para-quem-é-este-documento)
+- [Stack de IA](#stack-de-ia)
+  - [Introdução](#introdução)
+  - [Filosofia e origem da stack](#filosofia-e-origem-da-stack)
+  - [O que são modelos de IA](#o-que-são-modelos-de-ia)
+  - [O que são agentes de IA](#o-que-são-agentes-de-ia)
+    - [Skills: agentes especializados](#skills-agentes-especializados)
+  - [O que é SDD](#o-que-é-sdd)
+  - [Ferramentas de IA suportadas](#ferramentas-de-ia-suportadas)
+  - [O que é o SpecKit](#o-que-é-o-speckit)
+    - [Quando usar o SpecKit](#quando-usar-o-speckit)
+    - [Fases do SpecKit](#fases-do-speckit)
+    - [Como invocar as fases](#como-invocar-as-fases)
+    - [Integrações por ferramenta](#integrações-por-ferramenta)
+  - [Estrutura da stack](#estrutura-da-stack)
+  - [Como começar com a stack de IA](#como-começar-com-a-stack-de-ia)
+- [Atualizações da stack](#atualizações-da-stack)
+  - [Como o SpecKit está organizado neste repositório](#como-o-speckit-está-organizado-neste-repositório)
+  - [Mapa de atualização](#mapa-de-atualização)
+  - [Como atualizar o SpecKit](#como-atualizar-o-speckit)
+- [Referências](#referências)
 
 ---
 
@@ -40,21 +40,20 @@ O foco é exclusivamente a camada de IA. Qualquer menção a módulos SEI aparec
 
 ---
 
-## 2. Stack de IA
+## Stack de IA
 
-### 2.1 Introdução
+### Introdução
 
 Esta seção explica a camada de inteligência artificial integrada ao repositório. Mesmo que você nunca tenha trabalhado com IA antes, a leitura a seguir vai mostrar o que existe, como está organizado e como você pode começar a usar.
 
 Exemplos práticos do que você pode pedir ao assistente:
-
 - *"Analise o módulo `<nome-do-modulo>` e me diga quais são os pontos de risco de segurança."*
 - *"Crie um plano de implementação para adicionar um novo campo no formulário X."*
 - *"Revise o código que acabei de escrever e verifique se segue os padrões do projeto."*
 
 Para ver mais exemplos prontos para usar, consulte [`docs/prompts-exemplo.md`](docs/prompts-exemplo.md).
 
-### 2.2 Filosofia e origem da stack
+### Filosofia e origem da stack
 
 A stack de IA deste repositório foi construída sobre um padrão aberto adotado por comunidades de desenvolvimento ao redor do mundo: o [AGENTS.md](https://agents.md). Esse padrão, hoje mantido pela Agentic AI Foundation sob a Linux Foundation e presente em mais de 60 mil projetos de código aberto (projetos cujo código-fonte é público e pode ser inspecionado por qualquer pessoa), propõe uma separação clara entre o que é escrito para humanos e o que é escrito para agentes de IA:
 
@@ -69,7 +68,7 @@ Ferramentas como GitHub Copilot, OpenCode e outras da comunidade já seguem esse
 
 O arquivo [`CLAUDE.md`](CLAUDE.md) existe apenas como ponteiro de compatibilidade para `AGENTS.md`.
 
-### 2.3 O que são modelos de IA
+### O que são modelos de IA
 
 Um **modelo de IA** é o "cérebro" por trás do assistente: o sistema que entende o que você escreve e gera respostas. Modelos conhecidos incluem Claude, GPT e outros modelos compatíveis com ferramentas de desenvolvimento.
 
@@ -77,13 +76,13 @@ Neste projeto, os modelos de IA são acessados por meio de ferramentas já integ
 
 | Ferramenta | Modelo / Provedor |
 |---|---|
-| GitHub Copilot | Definido pelo plano e pela configuração da conta |
+| GitHub Copilot | GPT-5.6 ou Claude Opus, dependendo do plano da conta |
 | OpenCode | Configurável, compatível com múltiplos modelos |
 | Claude Code | Modelo Claude (Anthropic) |
 
-Os modelos evoluem com frequência. O que importa para o uso do dia a dia é a **ferramenta** e o contexto versionado no repositório; o modelo é apenas o motor por baixo.
+Os modelos evoluem com frequência. O que importa para o uso do dia a dia é a **ferramenta**; o modelo é apenas o motor por baixo.
 
-### 2.4 O que são agentes de IA
+### O que são agentes de IA
 
 Um **agente de IA** é um assistente configurado para operar com um conjunto específico de instruções, contexto e regras. Diferente de um modelo genérico de IA que você acessa pelo navegador, um agente:
 
@@ -91,19 +90,16 @@ Um **agente de IA** é um assistente configurado para operar com um conjunto esp
 - Segue **guardrails** (regras que definem o que ele pode e não pode fazer, como quais arquivos pode modificar e quais padrões de código deve seguir)
 - Segue um fluxo estruturado em vez de responder de forma livre
 
-Neste repositório, os agentes são configurados na pasta `.agents/` e integrados às ferramentas via `.github/` (Copilot), `.opencode/` (OpenCode) e `.claude/` (Claude Code). Eles não são programas independentes; são instruções que ensinam a ferramenta de IA a agir como um especialista no contexto de desenvolvimento de módulos SEI com esta stack.
+Neste repositório, os agentes são configurados na pasta `.agents/` e integrados às ferramentas via `.github/` (Copilot), `.opencode/` (OpenCode) e `.claude/` (Claude Code). Eles não são programas independentes; são instruções que ensinam a ferramenta de IA a agir como um especialista no contexto do SEI.
 
 **Na prática:** quando você abre este repositório no VS Code (editor de código da Microsoft) com o Copilot e pede *"revise este código segundo os padrões do projeto"*, o agente carrega automaticamente as regras do `AGENTS.md`, os guardrails de segurança e os padrões de codificação, e entrega uma revisão contextualizada, não genérica.
 
-#### 2.4.1 Skills: agentes especializados
+#### Skills: agentes especializados
 
 As **skills** são agentes especializados em tarefas específicas. Cada skill tem um escopo bem definido. Para acionar uma skill, mencione o nome dela na conversa com o assistente (no painel de chat da ferramenta de IA, como o chat do Copilot no VS Code). Por exemplo: *"Use a skill `sei-gerador-crud` para criar a entidade X."* O assistente carregará as instruções da skill e executará o processo correspondente.
 
 | Skill | O que faz |
 |---|---|
-| `speckit` | Conduz as fases do fluxo SDD com SpecKit |
-| `sei-code-review-security` | Revisão de segurança e qualidade de um conjunto de alterações ou Pull Request (proposta de mudança de código) |
-| `code-review` | Revisão complementar de código (correção, qualidade, arquitetura, testes e manutenibilidade), sem gate SEI |
 | `sei-gerador-crud` | Gera o CRUD completo de uma entidade (tela de listagem, tela de cadastro, regras de negócio, acesso ao banco) |
 | `sei-guardrails-modulo` | Aplica guardrails obrigatórios para trabalhos em módulos SEI |
 | `sei-direcionador-integracao` | Ajuda a escolher entre API, evento ou operação oficial do SEI quando a intenção ainda está ambígua |
@@ -126,20 +122,22 @@ As **skills** são agentes especializados em tarefas específicas. Cada skill te
 | `escrever-adr` | Documenta decisões arquiteturais significativas como ADR |
 | `napkin` | Mantém runbook operacional pessoal em `.agents/memory/runbook.md` |
 | `caveman`, `ponytail`, `grilling` | Modos auxiliares para comunicação compacta, simplificação e stress-test de planos |
+| `code-review` | Revisão complementar de código (correção, qualidade, arquitetura, testes e manutenibilidade), sem gate SEI |
+| `speckit` | Conduz as fases do fluxo SDD com SpecKit |
 
 > **Glossário rápido:** CRUD = conjunto de operações de criar, ler, atualizar e deletar registros. Script de release = arquivo executado na instalação ou atualização do módulo no servidor.
 
 A tabela acima é apenas uma visão inicial. O catálogo completo das skills, com origem, versão, licença e composição, está em [`.agents/skills/README.md`](.agents/skills/README.md).
 
-### 2.5 O que é SDD
+### O que é SDD
 
 **[SDD](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)** (Specification-Driven Development, ou Desenvolvimento Orientado por Especificação) é uma abordagem de trabalho que coloca a especificação antes da implementação.
 
 A ideia central é simples: antes de escrever código (implementar = traduzir uma necessidade em instruções que o computador executa), você produz uma descrição clara e estruturada do que precisa ser feito, e o agente de IA parte sempre dessa descrição. Isso evita o problema mais comum no uso de IA para código: pedir para implementar algo sem ter definido direito o que é esse "algo". Com SDD, o raciocínio vem antes da implementação.
 
-Neste repositório, o SDD é implementado pelo framework **SpecKit** (veja a seção [2.7](#27-o-que-é-o-speckit)). O fluxo completo vai de `especificar → clarificar → planejar → decompor → implementar`.
+Neste repositório, o SDD é implementado pelo framework **SpecKit** (veja a seção [O que é o SpecKit](#o-que-é-o-speckit)). O fluxo completo vai de `especificar → clarificar → planejar → decompor → implementar`.
 
-### 2.6 Ferramentas de IA suportadas
+### Ferramentas de IA suportadas
 
 Este repositório é **agnóstico de ferramenta**: você pode usar qualquer assistente de IA, desde que ele consiga ler o contexto do repositório (especialmente `.agents/skills/` e `AGENTS.md`).
 
@@ -155,23 +153,23 @@ A ferramenta **recomendada** é a extensão do **GitHub Copilot no [VS Code](htt
 
 Se você optar por uma ferramenta diferente das listadas acima, confirme antes que ela consegue ler `.agents/skills/` e seguir as instruções de `AGENTS.md`.
 
-### 2.7 O que é o SpecKit
+### O que é o SpecKit
 
-> **Não é necessário instalar o SpecKit.** Toda a estrutura do SpecKit já está presente neste repositório. O único requisito é ter uma das ferramentas de IA listadas na seção [2.6](#26-ferramentas-de-ia-suportadas) instalada e configurada. Se você estiver usando o GitHub Copilot ou o OpenCode com este repositório aberto, o SpecKit já está disponível.
+> **Não é necessário instalar o SpecKit.** Toda a estrutura do SpecKit já está presente neste repositório. O único requisito é ter uma das ferramentas de IA listadas na seção [Ferramentas de IA suportadas](#ferramentas-de-ia-suportadas) instalada e configurada. Se você estiver usando o GitHub Copilot ou o OpenCode com este repositório aberto, o SpecKit já está disponível.
 
 **SpecKit** é o framework de especificação que estrutura o fluxo SDD neste repositório. Ele divide o trabalho em fases sequenciais e produz documentos padronizados (especificação, plano técnico e lista de tarefas) que servem de contexto para a implementação.
 
 O SpecKit foi escolhido como ponto de partida do SDD neste projeto por algumas razões práticas: é uma ferramenta de fácil adoção para equipes que estão começando a introduzir especificação no fluxo de desenvolvimento, tem integração direta com o GitHub Copilot (a ferramenta recomendada do projeto) e conta com uma comunidade ativa que mantém o framework atualizado. Isso reduz o risco de depender de algo que ficará sem suporte.
 
-> **Não substitua os arquivos do SpecKit no repositório.** Se houver uma nova versão disponível, a atualização deve ser coordenada pela equipe seguindo o processo descrito na seção [3. Atualizações da stack](#3-atualizações-da-stack). Substituir os arquivos sem revisão pode quebrar o fluxo para todas as ferramentas integradas.
+> **Não substitua os arquivos do SpecKit no repositório.** Se houver uma nova versão disponível, a atualização deve ser coordenada pela equipe seguindo o processo descrito na seção [Atualizações da stack](#atualizações-da-stack). Substituir os arquivos sem revisão pode quebrar o fluxo para todas as ferramentas integradas.
 
 > **Versão do template:** a estrutura do SpecKit neste repositório foi gerada a partir do **Template Version 0.12.4**. Consulte essa versão como referência ao comparar ou atualizar os arquivos em `.specify/`.
 
-#### 2.7.1 Quando usar o SpecKit
+#### Quando usar o SpecKit
 
 Use o SpecKit quando a demanda for **maior, nova ou ambígua**, quando você sente que precisa pensar antes de implementar. Para correções pontuais e pequenas alterações, o fluxo direto (conversa com o agente) é suficiente.
 
-#### 2.7.2 Fases do SpecKit
+#### Fases do SpecKit
 
 | Fase | Comando | O que faz |
 |---|---|---|
@@ -182,17 +180,17 @@ Use o SpecKit quando a demanda for **maior, nova ou ambígua**, quando você sen
 | 5. Análise | `/speckit.analyze` | Analisa riscos, dependências e impactos |
 | 6. Implementação | `/speckit.implement` | Implementa seguindo o plano e as tarefas definidos nas fases anteriores |
 
-Além das fases principais, há três comandos auxiliares: `/speckit.checklist` (gera o checklist de implementação da funcionalidade), `/speckit.taskstoissues` (converte as tarefas em issues no GitHub) e `/speckit.constitution` (manutenção do arquivo `constitution.md`, que neste repositório permanece intencionalmente vazio — veja a seção [3.1](#31-como-o-speckit-está-organizado-neste-repositório)).
+Além das fases principais, há três comandos auxiliares: `/speckit.checklist` (gera o checklist de implementação da funcionalidade), `/speckit.taskstoissues` (converte as tarefas em issues no GitHub) e `/speckit.constitution` (manutenção do arquivo `constitution.md`, que neste repositório permanece intencionalmente vazio — veja a seção [Como o SpecKit está organizado neste repositório](#como-o-speckit-está-organizado-neste-repositório)).
 
 Os documentos gerados (especificação, plano, tarefas) ficam em `specs/<nome-da-funcionalidade>/` na sua máquina local. A pasta `specs/` está no `.gitignore` do repositório: os documentos ficam somente na sua máquina e nunca são enviados ao repositório compartilhado. Isso é intencional; esses arquivos são descartáveis e existem apenas para guiar aquela entrega específica.
 
-#### 2.7.3 Como invocar as fases
+#### Como invocar as fases
 
 - **No Copilot (VS Code):** abra o painel de chat do Copilot (ícone de balão de conversa na barra lateral esquerda do VS Code), clique no nome do agente atual (geralmente aparece como `@GitHub Copilot` ou `@workspace` acima da caixa de texto) e selecione o agente correspondente, como `speckit.specify`.
 - **No OpenCode (terminal, a interface de texto do computador):** digite o comando diretamente, como `/speckit.specify`.
 - **No Claude Code (terminal ou app):** digite o comando diretamente, como `/speckit.specify`.
 
-#### 2.7.4 Integrações por ferramenta
+#### Integrações por ferramenta
 
 O fluxo padrão do SpecKit vive em `.agents/skills/speckit/`. As integrações por ferramenta apenas expõem esse fluxo:
 
@@ -200,7 +198,7 @@ O fluxo padrão do SpecKit vive em `.agents/skills/speckit/`. As integrações p
 - **OpenCode**: comandos em `.opencode/command/`
 - **Claude Code**: comandos em `.claude/commands/`
 
-### 2.8 Estrutura da stack
+### Estrutura da stack
 
 ```text
 .agents/
@@ -222,12 +220,11 @@ O fluxo padrão do SpecKit vive em `.agents/skills/speckit/`. As integrações p
 
 .opencode/
 ├── command/       # Comandos do OpenCode (adaptadores das skills para uso no terminal)
-├── skills/        # Skills locais específicas do OpenCode, quando houver
 └── opencode.json  # Configuração do OpenCode para o repositório
 
 .specify/
 ├── integrations/  # Manifestos de integração do SpecKit por ferramenta (usados no setup inicial)
-├── memory/        # Contém o constitution.md do SpecKit, mantido intencionalmente vazio
+├── memory/        # Contém o constitution.md do SpecKit, mantido intencionalmente vazio (as regras vivem nas skills de fase)
 ├── references/    # Referências internas do SpecKit
 ├── scripts/       # Scripts chamados pelas skills em tempo de execução (ex: criação de branch)
 └── templates/     # Templates de origem do SpecKit (usados uma vez para gerar as skills; mantidos como referência)
@@ -248,7 +245,7 @@ Alguns itens do repositório existem apenas localmente em cada máquina e estão
 | `node_modules/` | Dependências instaladas pelo npm para o OpenCode; nunca devem ser salvas no repositório |
 | `.env*` | Arquivos de configuração com dados sensíveis como senhas e chaves de acesso ao sistema |
 | `.agents/memory/runbook.md` | Runbook pessoal de cada desenvolvedor, mantido localmente pela skill `napkin` |
-| `.specify/init-options.json`, `.specify/integration.json`, `.specify/feature.json` | Configuração local do SpecKit por desenvolvedor (ver seção [3.1](#31-como-o-speckit-está-organizado-neste-repositório)) |
+| `.specify/init-options.json`, `.specify/integration.json`, `.specify/feature.json` | Configuração local do SpecKit por desenvolvedor (ver seção [Como o SpecKit está organizado neste repositório](#como-o-speckit-está-organizado-neste-repositório)) |
 
 Antes de remover qualquer item do `.gitignore`, avalie se a remoção é realmente necessária. Na dúvida, mantenha.
 
@@ -261,33 +258,33 @@ Antes de remover qualquer item do `.gitignore`, avalie se a remoção é realmen
 - `security/`: guias e matrizes de revisão de segurança do código, consultados pela skill `sei-code-review-security`.
 - `skills/`: as skills do projeto. A maioria das pastas corresponde a uma skill com escopo e instruções próprias; algumas, como `speckit/`, agrupam uma suíte de sub-skills relacionadas.
 
-### 2.9 Como começar com a stack de IA
+### Como começar com a stack de IA
 
 **Passo 1: Baixe o repositório.** Faça o clone do repositório (baixe uma cópia local usando Git) e abra a pasta raiz no VS Code.
 
 **Passo 2: Instale uma ferramenta.** A recomendada é a extensão GitHub Copilot no VS Code. Abra o VS Code, clique no ícone de extensões na barra lateral (quatro quadradinhos), pesquise "GitHub Copilot" e clique em instalar. Depois faça login com sua conta GitHub. O Copilot detecta automaticamente os arquivos de configuração do projeto: ao abrir a pasta, ele lê o `AGENTS.md` e as pastas `.github/` e `.agents/`, carregando as regras e os agentes do projeto sem nenhuma ação adicional sua.
 
 **Passo 3: Para uma demanda simples,** abra o chat do Copilot e descreva o que precisa. Exemplo:
-> *"Analise o módulo `<nome-do-modulo>` sem alterar nada. Quero entender como funciona a integração ou o fluxo de negócio."*
+> *"Analise o módulo `ia` sem alterar nada. Quero entender como funciona a integração com o servidor de soluções de IA."*
 
 **Passo 4: Para uma demanda maior ou ambígua,** use o fluxo SpecKit, começando por `/speckit.specify`. Exemplo:
-> *"Preciso adicionar uma nova funcionalidade de exportação de relatórios no módulo `<nome-do-modulo>`."*
+> *"Preciso adicionar uma nova funcionalidade de exportação de relatórios no módulo de utilidades."*
 
 **Passo 5: Consulte os exemplos** em [`docs/prompts-exemplo.md`](docs/prompts-exemplo.md) para ver como formular bons pedidos para diferentes tipos de demanda.
 
-Você **não** precisa instalar o SpecKit nem qualquer componente adicional da stack. Tudo já está configurado no repositório.
+Você **não** precisa instalar o SpecKit nem qualquer componente adicional da stack. Tudo já está configurado no repositório. O único passo é instalar a ferramenta de IA (Passo 1).
 
 ---
 
-## 3. Atualizações da stack
+## Atualizações da stack
 
-> Esta seção é voltada para quem já trabalha no projeto e precisa manter ou evoluir a stack de IA. Se você está chegando agora, pode pular para a seção [4. Referências](#4-referências) e retornar aqui quando precisar.
+> Esta seção é voltada para quem já trabalha no projeto e precisa manter ou evoluir a stack de IA. Se você está chegando agora, pode pular para a seção [Referências](#referências) e retornar aqui quando precisar.
 
 Esta seção trata de mudanças nos arquivos da stack de IA dentro do repositório (`.agents/`, `.claude/`, `.github/`, `.opencode/`, `.specify/`). Atualizações das ferramentas locais (Copilot, OpenCode, Claude Code) são responsabilidade de cada ferramenta e documentadas por elas mesmas.
 
 Sempre crie uma branch dedicada e abra um Pull Request para revisão antes de incorporar qualquer mudança ao repositório principal.
 
-### 3.1 Como o SpecKit está organizado neste repositório
+### Como o SpecKit está organizado neste repositório
 
 Para manter e atualizar o SpecKit com segurança, é preciso entender o papel de cada grupo de arquivos.
 
@@ -349,20 +346,20 @@ Os três arquivos de configuração pessoal estão no `.gitignore` e não são v
 
 Cada desenvolvedor configura esses arquivos na sua máquina conforme a ferramenta que usa. A ausência deles não impede o uso do SpecKit; o fluxo trata a ausência como configuração padrão.
 
-### 3.2 Mapa de atualização
+### Mapa de atualização
 
-| Grupo de arquivo | Ao atualizar o SpecKit | Ao evoluir a stack deste repositório |
+| Grupo de arquivo | Ao atualizar o SpecKit | Ao evoluir o projeto SEI |
 |---|---|---|
-| Skills `.agents/skills/speckit/` | Merge com atenção, ver 3.3 | Raramente; abrir PR com justificativa clara |
-| Adapters `.github/agents/`, `.github/prompts/`, `.opencode/command/`, `.claude/commands/` | Substituição direta | Apenas se mudar `handoffs` (não aplicável ao Claude Code) ou nomes de fase |
+| Skills `.agents/skills/speckit/` | Merge com atenção, ver 6.3 | Raramente; abrir PR com justificativa clara |
+| Adapters `.github/agents/`, `.opencode/command/`, `.claude/commands/` | Substituição direta | Apenas se mudar `handoffs` (não aplicável ao Claude Code) ou nomes de fase |
 | Templates `.specify/templates/` | Atualizar como referência para comparação | Não se aplica |
-| `checklist-sei-template.md` | Preserve, é da equipe | Atualizar conforme padrões usados pelas skills evoluem |
+| `checklist-sei-template.md` | Preserve, é da equipe | Atualizar conforme padrões SEI evoluem |
 | `.specify/memory/constitution.md` | Manter vazio; não incorporar o template novo | Manter vazio; as regras vivem nas skills de fase |
 | `.specify/scripts/`, `.specify/integrations/` | Substituição direta | Não se aplica |
 | `.agents/` (fora de `skills/speckit/`) | Não se aplica | Ciclo normal do projeto |
 | `AGENTS.md`, `.github/copilot-instructions.md` | Não se aplica | Ciclo normal do projeto |
 
-### 3.3 Como atualizar o SpecKit
+### Como atualizar o SpecKit
 
 1. Identifique a nova versão em [github.com/github/spec-kit](https://github.com/github/spec-kit) e leia o changelog para entender o que mudou em cada fase.
 2. Para cada skill em `.agents/skills/speckit/`, compare a skill atual com o template novo da fase correspondente. Aplique merge manualmente, preservando qualquer ajuste que a equipe tenha feito.
@@ -370,30 +367,23 @@ Cada desenvolvedor configura esses arquivos na sua máquina conforme a ferrament
 4. Atualize os templates em `.specify/templates/` para refletir a nova versão: eles servem de base de comparação para a próxima atualização.
 5. Mantenha `.specify/memory/constitution.md` vazio — as regras de governança vivem nas próprias skills de fase. Não incorpore o conteúdo do novo `constitution-template.md`.
 6. Teste o fluxo ponta a ponta (`specify`, `plan`, `tasks`, `implement`) em uma feature de exemplo.
-7. Atualize a versão registrada na nota da seção [2.7](#27-o-que-é-o-speckit) e no catálogo [`.agents/skills/README.md`](.agents/skills/README.md), e abra um Pull Request descrevendo o que mudou.
+7. Atualize a versão registrada na nota da seção [O que é o SpecKit](#o-que-é-o-speckit) e no catálogo [`.agents/skills/README.md`](.agents/skills/README.md), e abra um Pull Request descrevendo o que mudou.
 
 ---
 
-## 4. Referências
+## Referências
 
-**Documentação interna da stack de IA:**
+**Documentação interna do projeto:**
 
 | Documento | O que contém |
 |---|---|
 | [`AGENTS.md`](AGENTS.md) | Regras centrais do projeto para agentes: o que pode ser feito, padrões de código e regras de decisão |
 | [`docs/prompts-exemplo.md`](docs/prompts-exemplo.md) | Exemplos de como conversar com a ferramenta de IA para diferentes tipos de demanda |
+| [`docs/manual_desenvolvimento_md/`](docs/manual_desenvolvimento_md/) | Manual oficial de desenvolvimento de módulos SEI |
+| [`docs/dicionario_dados/`](docs/dicionario_dados/) | Dicionário de dados por módulo (uma pasta por módulo: SEI, SIP, Litigioso, ...) |
 | [`.agents/references/roteamento-de-skills.md`](.agents/references/roteamento-de-skills.md) | Qual skill usar para cada tipo de demanda |
 | [`.agents/references/gates-de-implementacao.md`](.agents/references/gates-de-implementacao.md) | Pontos de verificação obrigatórios que impedem a implementação de avançar com problemas não resolvidos |
 | [`.agents/skills/README.md`](.agents/skills/README.md) | Catálogo de auditoria das skills: origem, versão, licença e composição |
-| [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Instruções curtas específicas da integração com GitHub Copilot |
-
-**Referências de apoio consultadas por skills:**
-
-| Documento | O que contém |
-|---|---|
-| [`docs/manual_desenvolvimento_md/`](docs/manual_desenvolvimento_md/) | Manual de desenvolvimento usado como referência por skills e gates de módulo |
-| [`docs/manual_desenvolvimento/`](docs/manual_desenvolvimento/) | Documentação de apoio usada por skills quando aplicável |
-| [`docs/gabarito_gerador_codigo_crud/`](docs/gabarito_gerador_codigo_crud/) | Gabaritos consultados por fluxos de geração de código |
 
 **Ferramentas e padrões externos:**
 
@@ -403,5 +393,7 @@ Cada desenvolvedor configura esses arquivos na sua máquina conforme a ferrament
 | GitHub Copilot | [github.com/features/copilot](https://github.com/features/copilot) |
 | OpenCode | [opencode.ai](https://opencode.ai) |
 | Claude Code | [claude.com/claude-code](https://claude.com/claude-code) |
+| Git | [git-scm.com](https://git-scm.com) |
+| Docker | [docker.com](https://www.docker.com) |
 | SpecKit | [github.com/github/spec-kit](https://github.com/github/spec-kit) |
 | Padrão AGENTS.md | [agents.md](https://agents.md) |

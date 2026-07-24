@@ -163,7 +163,7 @@ Parametrização sobre os informações básicas do colegiado (primeiro bloco de
 | Coluna | Descrição |
 |---|---|
 | id_colegiado | Número que identifica os registros de colegiados cadastrados |
-| artigo | Status multi-valorado que define o gênero do substantivo do colegiado (por exemplo: "O" Conselho Diretor da Anatel ou "A" Primeira Turma de Julgamento):<br><br><ul><li>O = gênero masculino</li><li>A = gênero feminino</li></ul> |
+| artigo | Status multi-valorado que define o gênero do substantivo do colegiado (por exemplo: "O" Conselho Diretor da Anatel ou "A" Primeira Turma de Julgamento):<br><ul><li>O = gênero masculino</li><li>A = gênero feminino</li></ul> |
 | id_tipo_procedimento | Número que identifica o tipo de processo cadastrado como padrão para o colegiado |
 | id_unidade_responsavel | Número que identifica a unidade responsável pela distribuição de processos ao colegiado |
 | id_usuario_presidente | Número que identifica o usuário cadastrado como presidente do colegiado |
@@ -171,8 +171,8 @@ Parametrização sobre os informações básicas do colegiado (primeiro bloco de
 | nome | Nome atribuído ao colegiado |
 | quorum_minimo | Quórum mínimo para aberta das sessões colegiadas |
 | sigla | Sigla atribuída ao colegiado |
-| sin_ativo | Variável categórica que indica se o registro do colegiado está ativo:<br><br><ul><li>S = Ativo</li><li>N = Inativo</li></ul> |
-| sta_algoritmo_distribuicao | Status multi-valorado que identifica o algoritmo de distribuição de processos utilizado pelo colegiado:<br><br><ul><li>R = Algoritmo de distribuição por rodadas</li><li>T = Algoritmo de distribuição por rodadas por tipo de processo</li><li>M = Algoritmo de distribuição por rodadas por tipo de matéria</li><li>P = Algoritmo de distribuição por peso atribuído ao membro</li></ul> |
+| sin_ativo | Variável categórica que indica se o registro do colegiado está ativo:<br><ul><li>S = Ativo</li><li>N = Inativo</li></ul> |
+| sta_algoritmo_distribuicao | Status multi-valorado que identifica o algoritmo de distribuição de processos utilizado pelo colegiado:<br><ul><li>P = Algoritmo de Distribuição por peso atribuído ao membro</li><li>R = Algoritmo de Distribuição por rodadas</li><li>T = Algoritmo de Distribuição por rodadas por tipo de processo</li><li>M = Algoritmo de Distribuição por rodadas por tipo de matéria</li></ul> |
 
 ## colegiado_composicao
 
@@ -183,13 +183,13 @@ Parametrização sobre os membros que compõem cada colegiado
 | id_colegiado_composicao | Número que identifica os registros de membros do colegiado |
 | id_cargo | Número que identifica o tipo de cargo atribuído ao membro do colegiado |
 | id_colegiado_versao | Número que identifica os registros de versão dos colegiados cadastrados, onde é gerado novo id somente quando tenha sido distribuído processo para a antiga composição do colegiado |
-| id_tipo_membro_colegiado | Status multi-valorado que identifica o tipo de membro do colegiado:<br><br><ul><li>1 = Titular</li><li>2 = Suplente</li><li>3 = Eventual</li></ul> |
+| id_tipo_membro_colegiado | Status multi-valorado que identifica o tipo de membro do colegiado:<br><ul><li>1 = Titular</li><li>2 = Suplente</li><li>3 = Eventual</li></ul> |
 | id_unidade | Número que identifica a unidade atribuída ao membro do colegiado |
 | id_usuario | Número que identifica o usuário cadastrado como membro do colegiado |
 | ordem | Número que identifica a ordem do membro do colegiado (setinhas verdes) |
 | peso | Valor de peso atribuído a cada membro do colegiado |
-| sin_habilitado | Variável categórica que indica se o usuário está habilitado a visualizar os processos da Sessão de Julgamento:<br><br><ul><li>S = Habilitado</li><li>N = Não habilitado</li></ul><br>Membros titulares sempre ficam habilitados. Membros Suplentes ou Eventuais podem estar ou não habilitados |
-| sin_rodada | Variável categórica de domínio S/N.<br><br>**TODO:** Esta coluna é multivalorada e não foi possível arbitrar o significado de negócio de seus valores baseado apenas no código. Necessária revisão humana! |
+| sin_habilitado | Variável categórica que indica se o usuário está habilitado a visualizar os processos da Sessão de Julgamento:<br><ul><li>S = Habilitado</li><li>N = Não habilitado</li></ul>Membros titulares sempre ficam habilitados. Membros Suplentes ou Eventuais podem estar ou não habilitados |
+| sin_rodada | Variável categórica que indica se o membro da composição do colegiado já participou de rodada de distribuição. O sistema marca se o membro já foi sorteado naquela rodada, deixando pelo menos 2 com "N" para poder sortear. Quando fica apenas 1 com "N", volta todos para "N" deixando aptos para a próxima rodada: <br><ul><li>S = Já participou da rodada de distribuição atual</li><li>N = Ainda não participou da rodada de distribuição atual</li></ul> |
 
 ## colegiado_versao
 

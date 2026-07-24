@@ -103,7 +103,7 @@ Armazena os campos de integração disponíveis para uma Funcionalidade, utiliza
 | id_md_lit_campo_integracao | Número ID que identifica o Campo de Integração. |
 | id_md_lit_funcionalidade | Número ID que identifica a Funcionalidade, faz referência à tabela `md_lit_funcionalidade`. |
 | nome_campo | Nome do campo de parametrização da integração. |
-| sta_parametro | Status multi-valorado que identifica o parâmetro de mapeamento do Campo de Integração. Assume os valores `A`, `B` ou `C`.<br><br>**TODO:** Esta coluna é multivalorada e não foi possível arbitrar o significado de negócio de seus valores baseado apenas no código. Necessária revisão humana! |
+| sta_parametro | Status multi-valorado que identifica o parâmetro de mapeamento do Campo de Integração:<br><br><ul><li>E = Entrada</li><li>S = Saída</li> |
 
 ## md_lit_campos_ad
 

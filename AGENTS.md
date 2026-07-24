@@ -20,6 +20,7 @@ Repositório de customizações e módulos do SEI com release versionada e padr�
 - `fontes/sei/src/main/php/sei/web/modulos/**`
 - `fontes/sei/src/main/php/sei/scripts/**`
 - `fontes/sei/src/main/php/sip/scripts/**`
+- `docs/dicionario_dados/**`
 - `specs/**`
 - `.agents/**`
 
@@ -103,6 +104,7 @@ Os padrões abaixo são obrigatórios no SEI/InfraPHP. Não substituir por equiv
 - **roteamento-de-skills.md**: matriz de demanda, skill principal, skills complementares, contratos obrigatórios e gate de bloqueio.
 - **gates-de-implementacao.md**: gates de bloqueio para problemas técnicos críticos.
 - **mapa-modulos-scripts.md**: mapeamento de módulo para scripts SEI/SIP — consultar quando houver impacto de release.
+- **docs/dicionario_dados/<modulo>/dicionario.md**: contexto de schema e semântica de tabela/coluna já modelada — consultar quando a demanda citar tabela/coluna existente ou alterar entidade de módulo mapeado (gatilho detalhado em `roteamento-de-skills.md`, regra de classificação 8).
 - **padrao-*.md**: padrões detalhados de codificação, modelagem de dados e scripts — consultar quando precisar de regra específica.
 
 ## Roteamento
