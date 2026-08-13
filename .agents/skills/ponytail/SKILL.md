@@ -15,6 +15,7 @@ description: >
   summaries, recipes).
 argument-hint: "[lite|full|ultra]"
 license: MIT
+disable-model-invocation: true
 ---
 
 # Ponytail

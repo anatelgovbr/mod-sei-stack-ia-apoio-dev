@@ -5,3 +5,4 @@
 ### Adicionado
 
 - **Tabela `md_apt_etapa_pl_doc_modelo`**
+- **Tabela `seq_md_apt_etapa_pl_doc_modelo`**

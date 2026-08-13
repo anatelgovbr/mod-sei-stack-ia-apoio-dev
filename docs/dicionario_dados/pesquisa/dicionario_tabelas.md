@@ -1,0 +1,5 @@
+# Dicionário de Dados do Módulo SEI Pesquisa Pública - v4.3.3
+
+| Tabela | Descrição |
+|---|---|
+| md_pesq_parametro | Representa os parâmetros de configuração da Pesquisa Pública, com uma linha para cada parâmetro cadastrado. O registro é criado ou passa a integrar o conjunto quando uma opção de configuração é incluída para controlar uma função da Pesquisa Pública. Inclui as opções de captcha, listas e metadados de processos e documentos, preenchimento automático de interessados ou remetentes, menu no acesso externo, proteção de links e data de corte, e exclui configurações que não pertencem à Pesquisa Pública. Mantém o valor cadastrado de cada parâmetro referente ao momento da consulta ou da última alteração. É produzido a partir da configuração administrativa da Pesquisa Pública e utilizado para controlar a pesquisa pública de processos e documentos, o acesso a informações restritas e a geração de links. Não deve ser interpretado ou utilizado como histórico de alterações nem como registro de auditoria. |

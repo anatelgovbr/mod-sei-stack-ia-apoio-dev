@@ -79,7 +79,7 @@ Os padrões abaixo são obrigatórios no SEI/InfraPHP. Não substituir por equiv
 
 - **Ler antes de editar**: sempre ler o arquivo completo antes de qualquer edição — nunca editar com base em suposição sobre o conteúdo atual.
 - **Gate obrigatório**: `php -l <arquivo>` antes de qualquer resposta com PHP alterado. Se falhar, corrigir antes de prosseguir — nunca entregar arquivo com erro de sintaxe.
-- **Encoding**: ISO-8859-1 (Latin-1). O blob final é normalizado por `.gitattributes`; validar compatibilidade com Latin-1, ausência de BOM e ausência de caracteres fora de Latin-1. Não salvar manualmente o blob em ISO-8859-1 quando a worktree estiver em UTF-8 sob controle do Git. **Ferramentas AI**: `Edit` e `Write` corrompem acentos em arquivos ISO-8859-1 (U+FFFD). Para editar PHP com acentos, usar `python3` com `encoding='latin-1'` ou `sed`. Nunca usar `Edit`/`Write` diretamente em arquivos com caracteres fora de ASCII.
+- **Encoding**: ISO-8859-1 (Latin-1) para PHP. O blob final é normalizado por `.gitattributes`; validar compatibilidade com Latin-1, ausência de BOM e ausência de caracteres fora de Latin-1. Não salvar manualmente o blob em ISO-8859-1 quando a worktree estiver em UTF-8 sob controle do Git. **Ferramentas AI**: `Edit` e `Write` corrompem acentos em arquivos ISO-8859-1 (U+FFFD). Para editar PHP com acentos, usar `python3` com `encoding='latin-1'` ou `sed`. Nunca usar `Edit`/`Write` diretamente em arquivos com caracteres fora de ASCII. **Qualquer arquivo `.md` do repositório é sempre UTF-8** (documentação, dicionários de dados, specs, skills, referências) — a regra de ISO-8859-1 acima não se aplica a `.md`; `Edit`/`Write` podem ser usados normalmente neles, sem risco de corromper acentos.
 - **Sanitização**: sem concatenação insegura em HTML, JS, SQL e URLs
 - **PHP moderno**: em código PHP novo ou alterado, usar `[]` em vez de `array()`
 - **Tipagem/PHPDoc**: em código PHP novo ou alterado, preferir type hints seguros e PHPDoc breve nos métodos alterados, preservando compatibilidade com assinaturas herdadas
@@ -94,6 +94,7 @@ Os padrões abaixo são obrigatórios no SEI/InfraPHP. Não substituir por equiv
 - Ao aplicar qualquer regra, citar o arquivo e a seção de origem
 - Nunca inventar padrão não documentado neste repositório
 - Em documentação, prompts e instruções internas, nunca usar a palavra "canonica" ou variantes; usar sempre a palavra "padrao"
+- Em respostas ao usuário, documentação, tabelas e instruções internas geradas pelo agente, nunca usar o caractere travessão ("—"); usar ponto, vírgula ou reescrever a frase
 - Em caso de conflito entre documentos: parar, identificar os dois documentos conflitantes e aguardar decisão do desenvolvedor antes de prosseguir
 - Em caso de ambiguidade de contrato ou requisito: perguntar, nunca inferir
 
@@ -104,7 +105,7 @@ Os padrões abaixo são obrigatórios no SEI/InfraPHP. Não substituir por equiv
 - **roteamento-de-skills.md**: matriz de demanda, skill principal, skills complementares, contratos obrigatórios e gate de bloqueio.
 - **gates-de-implementacao.md**: gates de bloqueio para problemas técnicos críticos.
 - **mapa-modulos-scripts.md**: mapeamento de módulo para scripts SEI/SIP — consultar quando houver impacto de release.
-- **docs/dicionario_dados/<modulo>/dicionario.md**: contexto de schema e semântica de tabela/coluna já modelada — consultar quando a demanda citar tabela/coluna existente ou alterar entidade de módulo mapeado (gatilho detalhado em `roteamento-de-skills.md`, regra de classificação 8).
+- **docs/dicionario_dados/<modulo>/dicionario_tabelas.md e dicionario_colunas.md**: contexto semântico de tabelas e colunas já modeladas — consultar quando a demanda citar tabela/coluna existente ou alterar entidade de módulo mapeado (gatilho detalhado em `roteamento-de-skills.md`, regra de classificação 8).
 - **padrao-*.md**: padrões detalhados de codificação, modelagem de dados e scripts — consultar quando precisar de regra específica.
 
 ## Roteamento

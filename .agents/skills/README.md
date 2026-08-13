@@ -18,9 +18,9 @@ Este documento é o registro de auditoria de todas as skills disponíveis no rep
 - [ponytail-gain](#ponytail-gain)
 - [ponytail-help](#ponytail-help)
 - [ponytail-review](#ponytail-review)
+- [skill-creator](#skill-creator)
 - [sei-code-review-security](#sei-code-review-security)
-- [sei-dicionario-dados-core](#sei-dicionario-dados-core)
-- [sei-dicionario-dados-modulo](#sei-dicionario-dados-modulo)
+- [dicionario-dados-db-scan-codebase-docs](#dicionario-dados-db-scan-codebase-docs)
 - [sei-direcionador-integracao](#sei-direcionador-integracao)
 - [sei-gerador-crud](#sei-gerador-crud)
 - [sei-gerador-scripts-release](#sei-gerador-scripts-release)
@@ -67,9 +67,9 @@ Este documento é o registro de auditoria de todas as skills disponíveis no rep
 | ponytail-gain | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
 | ponytail-help | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
 | ponytail-review | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
+| skill-creator | externa | sem versionamento | Apache-2.0 | github.com/anthropics/skills |
 | sei-code-review-security | interna | — | — | — |
-| sei-dicionario-dados-core | interna | — | — | — |
-| sei-dicionario-dados-modulo | interna | — | — | — |
+| dicionario-dados-db-scan-codebase-docs | interna | — | — | — |
 | sei-direcionador-integracao | interna | — | — | — |
 | sei-gerador-crud | interna | — | — | — |
 | sei-gerador-scripts-release | interna | — | — | — |
@@ -328,6 +328,30 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 
 ---
 
+## skill-creator
+
+> **Skill externa** — mantida por terceiros. Atualizações devem ser rastreadas no repositório de origem.
+
+**Repositório:** https://github.com/anthropics/skills/tree/main/skills/skill-creator — estrutura de arquivos (`agents/`, `assets/`, `eval-viewer/`, `references/`, `scripts/`, `LICENSE.txt`, `SKILL.md`) confere com a instalação local.
+
+**Versão instalada:** sem versionamento formal — o repositório de origem não publica tags nem releases.
+
+**Origem:** Anthropic, PBC (copyright em `LICENSE.txt`).
+
+**Licença:** Apache License 2.0
+
+**Composição:**
+- Fluxo completo para criar, testar e iterar skills: captura de intenção, entrevista, escrita do `SKILL.md`, casos de teste, avaliação qualitativa e quantitativa via `eval-viewer/generate_review.py`, e otimização de descrição via `scripts/run_loop.py`.
+- Progressive disclosure: metadata (nome + descrição, sempre em contexto) → corpo do `SKILL.md` (ao disparar) → recursos em `scripts/`, `references/`, `assets/` (sob demanda).
+- Subagentes dedicados em `agents/`: `grader.md` (avalia asserções), `comparator.md` (comparação cega A/B), `analyzer.md` (analisa por que uma versão venceu).
+- Empacotamento final via `scripts/package_skill.py`, gerando arquivo `.skill` instalável.
+- Instruções alternativas para Claude.ai e Cowork quando subagentes ou navegador não estão disponíveis.
+
+**Fontes:**
+- `LICENSE.txt` (Apache License 2.0, Copyright 2026 Anthropic, PBC)
+
+---
+
 ## sei-code-review-security
 
 **Origem:** Skill interna orquestradora criada para consolidar todos os gates por artefato, segurança, reaproveitamento e qualidade em um único veredito de merge para diffs, PRs e módulos SEI completos.
@@ -352,44 +376,25 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 
 ---
 
-## sei-dicionario-dados-core
+## dicionario-dados-db-scan-codebase-docs
 
-**Origem:** Skill interna criada em 2026-07 pela divisão de `sei-dicionario-dados` — o alvo SEI/SIP/Julgar tem padrão de fonte (pacote de release externo) e contrato (caminho a confirmar com o desenvolvedor) diferentes o suficiente de módulo customizado para justificar skill própria, evitando contrato condicional e contexto misto entre os dois padrões.
+**Origem:** Skill interna para criar, atualizar e verificar documentação de dados a partir de evidências versionadas de uma codebase.
 
 **Composição:**
-- Alvo: SEI, SIP ou Julgar. Exige operação, versão-alvo e caminho do repositório de pacotes de release antes de executar — caminho não é presumido, é informado pelo desenvolvedor ou já indicado na conversa.
-- Fonte estrutural é o script/DDL dentro do pacote (zip ou pasta já extraída), não o banco ao vivo — banco só serve como validação opcional quando houver ambiente disponível.
-- Procedimento de localização (convenção de nome de pasta/arquivo por época, zip vs pasta, SIP com numeração própria, versão trivial, duplicação entre pacotes) em `references/localizacao-fonte-pacotes.md`.
-- Bloqueio específico para Julgar: script também existe neste repositório (mapeado em `mapa-modulos-scripts.md`) além do pacote externo — exige confirmação de qual fonte prevalece.
-- `CHANGELOG.md` é só fato estrutural (sem descrição de negócio); `dicionario.md` exige descrição de negócio via DTO/RN/páginas do alvo.
-- Modo incremental (padrão a partir da segunda rodada): localizar só o delta da versão nova, sem reprocessar histórico já documentado.
-- Formato do dicionário e do changelog, template de coluna e ferramenta de validação são compartilhados com `sei-dicionario-dados-modulo`.
+- Infere o alvo a partir do pedido e da codebase; opera quando há adaptador compatível em `registro-adaptadores.md`, na raiz da skill. Sem adaptador, dispara um protocolo que pede as informações necessárias em vez de presumir convenção.
+- Núcleo genérico (`references/`) trata evidência, confiança, formato e fórmulas obrigatórias de descrição sem depender de linguagem, framework ou estrutura de projeto; todo conhecimento específico do SEI, SIP, Julgar e InfraPHP fica isolado em `adapters/sei/`.
+- Materiais fornecidos pelo desenvolvedor são evidência complementar opcional; nunca substituem a busca e comparação obrigatórias com a codebase.
+- Cria, atualiza ou verifica `dicionario_tabelas.md`, `dicionario_colunas.md`, `CHANGELOG.md` e relatório de atualização em `specs/`, conforme a intenção inferida e limitado ao alcance estrutural comprovado pelo adaptador.
+- Princípios de ISO 8000-1, ISO/IEC 25012, ISO/IEC 25024, ISO/IEC 11179-3 e ISO/IEC 11179-4 convertidos em critérios de aceitação A1 a A10; não é declaração de conformidade.
+- Verificador `scripts/verificar_dicionario.py` com os subcomandos `formato`, `tabelas-colunas`, `changelog` e `diff`, coberto por 61 testes `unittest`.
 
 **Fontes:**
 - `AGENTS.md`
-- `.agents/references/dicionario-dados/formato-dicionario-de-dados.md` (compartilhada)
-- `.agents/skills/sei-dicionario-dados-core/references/localizacao-fonte-pacotes.md`
+- `.agents/skills/dicionario-dados-db-scan-codebase-docs/references/` (núcleo e contrato)
+- `.agents/skills/dicionario-dados-db-scan-codebase-docs/adapters/sei/` (adaptadores InfraPHP e localização dos alvos)
+- `.agents/skills/dicionario-dados-db-scan-codebase-docs/adapters/sei/modulos/` (overlays exclusivos de módulos)
 - `.agents/references/mapa-modulos-scripts.md`
-
----
-
-## sei-dicionario-dados-modulo
-
-**Origem:** Skill interna criada em 2026-07 pela divisão de `sei-dicionario-dados` — módulo customizado tem fonte já localizável sozinha neste repositório (sem caminho externo a confirmar), contrato mais simples que o de SEI/SIP/Julgar.
-
-**Composição:**
-- Alvo: qualquer módulo customizado. Exige nome do módulo, operação e versão-alvo (`getVersao()`/`VERSAO_MODULO_*`) antes de executar.
-- Fonte estrutural é o script de instalação/atualização do módulo, localizado via `mapa-modulos-scripts.md` — já dentro do repositório, sem confirmação de caminho externo. DTO é conferência obrigatória, nunca substitui o DDL como fonte.
-- Banco ao vivo nunca é usado para módulo, nem como validação.
-- `CHANGELOG.md` é só fato estrutural (sem descrição de negócio); `dicionario.md` exige descrição de negócio via DTO/RN/INT/BD/páginas do módulo, esgotando as 4 camadas de evidência antes de declarar "sem evidência".
-- Modo incremental (padrão a partir da segunda rodada): localizar só o bloco de versão novo no script já existente.
-- Descrição de coluna por template fixo conforme prefixo (`id_`, `sin_`, `sta_`, `dth_`/`dta_`, texto livre); `sta_*` sempre "multi-valorado", nunca invenção de código; descrição de RN gerada por ferramenta pode ser placeholder, não evidência real.
-- Formato do dicionário e do changelog, template de coluna e ferramenta de validação são compartilhados com `sei-dicionario-dados-core`.
-
-**Fontes:**
-- `AGENTS.md`
-- `.agents/references/dicionario-dados/formato-dicionario-de-dados.md` (compartilhada)
-- `.agents/references/mapa-modulos-scripts.md`
+- `specs/pesquisa-padrao-mercado-dicionario-de-dados.md` (ressalva sobre ISO/IEC 11179-4)
 
 ---
 
@@ -703,7 +708,7 @@ Framework de geração e gestão de especificações de features com workflows e
 
 Analisa o código existente para informar o planejamento da feature.
 
-**Como invocar:** OpenCode `/speckit.analyze`; Copilot `speckit.analyze`
+**Como invocar:** OpenCode `/speckit.analyze`; Copilot `speckit.analyze`; Claude Code `/speckit.analyze`
 
 ---
 
@@ -715,7 +720,7 @@ Analisa o código existente para informar o planejamento da feature.
 
 Gera ou atualiza o checklist de implementação da feature.
 
-**Como invocar:** OpenCode `/speckit.checklist`; Copilot `speckit.checklist`
+**Como invocar:** OpenCode `/speckit.checklist`; Copilot `speckit.checklist`; Claude Code `/speckit.checklist`
 
 ---
 
@@ -727,7 +732,7 @@ Gera ou atualiza o checklist de implementação da feature.
 
 Resolve ambiguidades e perguntas abertas na spec antes do planejamento.
 
-**Como invocar:** OpenCode `/speckit.clarify`; Copilot `speckit.clarify`
+**Como invocar:** OpenCode `/speckit.clarify`; Copilot `speckit.clarify`; Claude Code `/speckit.clarify`
 
 ---
 
@@ -739,7 +744,7 @@ Resolve ambiguidades e perguntas abertas na spec antes do planejamento.
 
 Ferramenta de manutenção de `constitution.md`. Não governa o fluxo das fases — as regras vivem nas próprias skills de fase.
 
-**Como invocar:** OpenCode `/speckit.constitution`; Copilot `speckit.constitution`
+**Como invocar:** OpenCode `/speckit.constitution`; Copilot `speckit.constitution`; Claude Code `/speckit.constitution`
 
 ---
 
@@ -751,7 +756,7 @@ Ferramenta de manutenção de `constitution.md`. Não governa o fluxo das fases 
 
 Executa a implementação seguindo o plano aprovado.
 
-**Como invocar:** OpenCode `/speckit.implement`; Copilot `speckit.implement`
+**Como invocar:** OpenCode `/speckit.implement`; Copilot `speckit.implement`; Claude Code `/speckit.implement`
 
 ---
 
@@ -763,7 +768,7 @@ Executa a implementação seguindo o plano aprovado.
 
 Gera o plano de implementação a partir da spec aprovada.
 
-**Como invocar:** OpenCode `/speckit.plan`; Copilot `speckit.plan`
+**Como invocar:** OpenCode `/speckit.plan`; Copilot `speckit.plan`; Claude Code `/speckit.plan`
 
 ---
 
@@ -775,7 +780,7 @@ Gera o plano de implementação a partir da spec aprovada.
 
 Cria ou atualiza a spec a partir de descrição em linguagem natural. Inicializa o workspace da feature (diretório, branch, arquivo de spec).
 
-**Como invocar:** OpenCode `/speckit.specify`; Copilot `speckit.specify`
+**Como invocar:** OpenCode `/speckit.specify`; Copilot `speckit.specify`; Claude Code `/speckit.specify`
 
 ---
 
@@ -787,7 +792,7 @@ Cria ou atualiza a spec a partir de descrição em linguagem natural. Inicializa
 
 Cria e gerencia tarefas derivadas do plano.
 
-**Como invocar:** OpenCode `/speckit.tasks`; Copilot `speckit.tasks`
+**Como invocar:** OpenCode `/speckit.tasks`; Copilot `speckit.tasks`; Claude Code `/speckit.tasks`
 
 ---
 
@@ -799,4 +804,4 @@ Cria e gerencia tarefas derivadas do plano.
 
 Converte tarefas do plano em issues no rastreador.
 
-**Como invocar:** OpenCode `/speckit.taskstoissues`; Copilot `speckit.taskstoissues`
+**Como invocar:** OpenCode `/speckit.taskstoissues`; Copilot `speckit.taskstoissues`; Claude Code `/speckit.taskstoissues`

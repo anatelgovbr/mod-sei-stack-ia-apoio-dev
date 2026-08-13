@@ -117,8 +117,7 @@ As **skills** são agentes especializados em tarefas específicas. Cada skill te
 | `sei-testes-validacao` | Centraliza checagens e validações após alterações PHP |
 | `sei-tipagem-phpdoc` | Apoia modernização segura de tipagem PHP e PHPDoc quando solicitada explicitamente |
 | `sei-report-todos` | Gera relatório de pendências `TODO:` em módulos escolhidos explicitamente |
-| `sei-dicionario-dados-core` | Cria e atualiza o dicionário de dados e o changelog estrutural do SEI, SIP ou Julgar |
-| `sei-dicionario-dados-modulo` | Cria e atualiza o dicionário de dados e o changelog estrutural de um módulo customizado |
+| `dicionario-dados-db-scan-codebase-docs` | Cria, atualiza e verifica dicionários de dados e changelogs estruturais a partir de artefatos versionados da codebase |
 | `escrever-adr` | Documenta decisões arquiteturais significativas como ADR |
 | `napkin` | Mantém runbook operacional pessoal em `.agents/memory/runbook.md` |
 | `caveman`, `ponytail`, `grilling` | Modos auxiliares para comunicação compacta, simplificação e stress-test de planos |

@@ -199,10 +199,10 @@
 - **Tabela `velocidade_transferencia`**
 - **Tabela `retorno_programado`**
   - **Índices**
-    - **Excluído `i04_retorno_programado`**: no MySQL.
+    - **Excluído `i04_retorno_programado`**: removido no MySQL.
 - **Tabela `procedimento`**
   - **Índices**
-    - **Excluído `fk_procedimento_tipo_procedime`**: no SQL Server.
+    - **Excluído `fk_procedimento_tipo_procedime`**: removido no SQL Server.
 - **Tabela `lembrete`**
   - **Índices**
     - **Excluído `i01_lembrete`**
@@ -441,9 +441,9 @@
     - **Excluída `id_usuario_gerador`**
     - **Excluída `dth_geracao`**
   - **Chaves estrangeiras**
-    - **Excluída `fk_acompanhamento_usuario_ger`**
+    - **Excluída `fk_acompanhamento_usuario_ger`**: removida.
   - **Índices**
-    - **Excluído `fk_acompanhamento_usuario_ger`**: no SQL Server.
+    - **Excluído `fk_acompanhamento_usuario_ger`**: removido no SQL Server.
 - **Tabela `contato`**
   - **Colunas**
     - **Excluída `telefone_fixo`**
@@ -451,10 +451,10 @@
   - **Colunas**
     - **Excluída `id_unidade`**
   - **Chaves estrangeiras**
-    - **Excluída `fk_retorno_programado_unidade`**
+    - **Excluída `fk_retorno_programado_unidade`**: removida.
   - **Índices**
-    - **Excluído `fk_retorno_programado_unidade`**: no SQL Server.
-    - **Excluído `i04_retorno_programado`**: no SQL Server.
+    - **Excluído `fk_retorno_programado_unidade`**: removido no SQL Server.
+    - **Excluído `i04_retorno_programado`**: removido no SQL Server.
 - **Tabela `protocolo_modelo`**
   - **Colunas**
     - **Excluída `dth_geracao`**

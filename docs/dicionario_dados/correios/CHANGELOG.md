@@ -7,8 +7,8 @@
 - **Tabela `md_cor_adm_parametro_ar`**
   - **Colunas**
     - **Nova `sin_niv_ace_doc_princ_ar`**: texto variável de 1 caractere, `DEFAULT 'S'`, `NOT NULL`.
-    - **Nova `nivel_acesso_ar`**: texto fixo de 1 caractere, nula.
-    - **Nova `id_hipotese_legal_ar`**: numérica, nula.
+    - **Nova `nivel_acesso_ar`**: texto fixo de 1 caractere, `NULL`.
+    - **Nova `id_hipotese_legal_ar`**: numérica, `NULL`.
   - **Chaves estrangeiras**
     - **Nova `md_cor_p_ar_hip_leg_fk`**: `id_hipotese_legal_ar` referencia `hipotese_legal.id_hipotese_legal`.
 
@@ -34,7 +34,7 @@
     - **Alterada `numero_cartao_postagem`**: de texto fixo de 50 caracteres para texto variável de até 50 caracteres; manteve `NOT NULL`.
 - **Tabela `md_cor_expedicao_solicitad`**
   - **Colunas**
-    - **Nova `id_pre_postagem`**: texto variável de até 100 caracteres, nula.
+    - **Nova `id_pre_postagem`**: texto variável de até 100 caracteres, `NULL`.
 
 ### Excluído
 
@@ -61,14 +61,14 @@
 
 - **Tabela `md_cor_adm_parametro_ar`**
   - **Colunas**
-    - **Nova `dias_exp_ret_ar`**: texto variável de até 6 caracteres.
+    - **Nova `dias_exp_ret_ar`**: texto variável de até 6 caracteres, `NULL`.
 - **Tabela `md_cor_expedicao_solicitad`**
   - **Colunas**
     - **Nova `sin_devolvido`**: texto fixo de 1 caractere, nula; registros existentes preenchidos com `N`.
-    - **Nova `justificativa_devolucao`**: texto variável de até 250 caracteres, nula.
+    - **Nova `justificativa_devolucao`**: texto variável de até 250 caracteres, `NULL`.
 - **Tabela `md_cor_lista_status`**
   - **Colunas**
-    - **Nova `sta_rastreio_modulo`**: texto variável de 1 caractere, nula.
+    - **Nova `sta_rastreio_modulo`**: texto variável de 1 caractere, `NULL`.
 
 ### Excluído
 

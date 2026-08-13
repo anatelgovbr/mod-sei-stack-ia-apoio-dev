@@ -6,13 +6,15 @@
 
 - **Tabela `voto_parte`**
   - **Colunas**
-    - **Nova `id_usuario_lancamento`**: adicionada como número, aceitando valor nulo.
-    - **Nova `sin_ativo`**: adicionada como texto fixo de 1 caractere, preenchida com `S` e finalizada como `NOT NULL`.
+    - **Nova `id_usuario_lancamento`**: adicionada como `tipoNumero() NULL`.
+    - **Nova `sin_ativo`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida com `S` e finalizada como `tipoTextoFixo(1) NOT NULL`.
   - **Chaves estrangeiras**
-    - **Nova `fk_usuario_lancam_voto_parte`**
+    - **Nova `fk_usuario_lancam_voto_parte`**: `id_usuario_lancamento` → `usuario.id_usuario`.
+  - **Índices**
+    - **Novo `fk_usuario_lancam_voto_parte`**: criado sobre `id_usuario_lancamento`.
 - **Tabela `sessao_julgamento`**
   - **Colunas**
-    - **Nova `sta_modalidade_virtual`**: adicionada como texto fixo de 1 caractere, preenchida e finalizada como `NOT NULL`.
+    - **Nova `sta_modalidade_virtual`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida com `N` ou `D` conforme o tipo de sessão e finalizada como `tipoTextoFixo(1) NOT NULL`.
 
 ## [2.1.0]
 
@@ -20,17 +22,17 @@
 
 - **Tabela `presenca_sessao`**
   - **Colunas**
-    - **Nova `sta_modalidade`**: adicionada como texto fixo de 1 caractere, preenchida com `N` e finalizada como `NOT NULL`.
+    - **Nova `sta_modalidade`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida com `N` e finalizada como `tipoTextoFixo(1) NOT NULL`.
 - **Tabela `bloqueio_item_sess_unidade`**
   - **Colunas**
-    - **Alterada `id_unidade`**: `NOT NULL` para `NULL`.
+    - **Alterada `id_unidade`**: `tipoNumero() NOT NULL` para `tipoNumero() NULL`.
 - **Tabela `sessao_julgamento`**
   - **Colunas**
-    - **Nova `link_reuniao`**: adicionada como texto variável de 1000 caracteres, aceitando valor nulo.
-    - **Nova `obs_link`**: adicionada como texto variável de 4000 caracteres, aceitando valor nulo.
+    - **Nova `link_reuniao`**: adicionada como `tipoTextoVariavel(1000) NULL`.
+    - **Nova `obs_link`**: adicionada como `tipoTextoVariavel(4000) NULL`.
 - **Tabela `voto_parte`**
   - **Colunas**
-    - **Alterada `ressalva`**: texto variável de 1000 caracteres, aceitando valor nulo, para texto grande, aceitando valor nulo.
+    - **Alterada `ressalva`**: `tipoTextoVariavel(1000) NULL` para `tipoTextoGrande() NULL`.
 
 ## [2.0.0]
 
@@ -47,12 +49,14 @@
 
 - **Tabela `sessao_julgamento`**
   - **Colunas**
-    - **Nova `id_tipo_sessao`**: adicionada como número, aceitando valor nulo.
+    - **Nova `id_tipo_sessao`**: adicionada como `tipoNumero() NULL` e preenchida conforme `sta_tipo`.
   - **Chaves estrangeiras**
-    - **Nova `fk_sessao_julg_tipo_sessao`**
+    - **Nova `fk_sessao_julg_tipo_sessao`**: `id_tipo_sessao` → `tipo_sessao.id_tipo_sessao`.
+  - **Índices**
+    - **Novo `fk_sessao_julg_tipo_sessao`**: criado sobre `id_tipo_sessao`.
 - **Tabela `item_sessao_julgamento`**
   - **Colunas**
-    - **Nova `id_sessao_bloco`**: adicionada como número, aceitando valor nulo, preenchida na carga e finalizada como `NOT NULL`.
+    - **Nova `id_sessao_bloco`**: adicionada como `tipoNumero() NULL`, preenchida na carga e finalizada como `tipoNumero() NOT NULL`.
 
 ### Excluído
 
@@ -81,18 +85,20 @@
 
 - **Tabela `autuacao`**
   - **Colunas**
-    - **Nova `idx_autuacao`**: adicionada como texto variável de 4000 caracteres, aceitando valor nulo.
+    - **Nova `idx_autuacao`**: adicionada como `tipoTextoVariavel(4000) NULL`.
 - **Tabela `sessao_julgamento`**
   - **Colunas**
-    - **Nova `id_documento_pauta`**: adicionada como número grande, aceitando valor nulo.
+    - **Nova `id_documento_pauta`**: adicionada como `tipoNumeroGrande() NULL`.
   - **Chaves estrangeiras**
-    - **Nova `fk_sessao_julgamento_doc_pauta`**
+    - **Nova `fk_sessao_julgamento_doc_pauta`**: `id_documento_pauta` → `documento.id_documento`.
+  - **Índices**
+    - **Novo `fk_sessao_julgamento_doc_pauta`**: criado sobre `id_documento_pauta`.
 - **Tabela `atributo_andamento_sessao`**
   - **Colunas**
-    - **Alterada `valor`**: texto variável de 250 caracteres, aceitando valor nulo, para texto variável de 4000 caracteres, aceitando valor nulo.
+    - **Alterada `valor`**: `tipoTextoVariavel(250) NULL` para `tipoTextoVariavel(4000) NULL`.
 - **Tabela `provimento`**
   - **Colunas**
-    - **Nova `sin_ativo`**: adicionada como texto fixo de 1 caractere, preenchida com `S` e finalizada como `NOT NULL`.
+    - **Nova `sin_ativo`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida com `S` e finalizada como `tipoTextoFixo(1) NOT NULL`.
 
 ## [1.3.0]
 
@@ -107,13 +113,22 @@
 
 - **Tabela `colegiado`**
   - **Colunas**
-    - **Nova `artigo`**: adicionada como texto fixo de 1 caractere, aceitando valor nulo.
+    - **Nova `artigo`**: adicionada como `tipoTextoFixo(1) NULL`.
 - **Tabela `destaque`**
   - **Colunas**
-    - **Alterada `descricao`**: texto variável de 4000 caracteres, aceitando valor nulo, para texto grande, aceitando valor nulo.
+    - **Alterada `descricao`**: `tipoTextoVariavel(4000) NOT NULL` para `tipoTextoGrande() NULL`.
 - **Tabela `andamento_sessao`**
   - **Colunas**
-    - **Alterada `id_unidade`**: `NULL` para `NOT NULL`.
+    - **Alterada `id_unidade`**: `tipoNumero() NULL` para `tipoNumero() NOT NULL`.
+  - **Índices**
+    - **Novo `fk_andamento_sessao_unidade`**: recriado sobre `id_unidade` nos SGBDs aplicáveis.
+
+### Excluído
+
+- **Tabela `andamento_sessao`**
+  - **Índices**
+    - **Excluído `fk_andamento_sessao_unidade`**: removido antes da alteração da coluna, quando encontrado.
+    - **Excluído `if_andamento_sessao_unidade`**: removido antes da alteração da coluna, quando encontrado.
 
 ## [1.2.0]
 
@@ -125,14 +140,14 @@
 
 - **Tabela `colegiado_composicao`**
   - **Colunas**
-    - **Nova `sin_habilitado`**: adicionada como texto fixo de 1 caractere, preenchida na carga e finalizada como `NOT NULL`.
+    - **Nova `sin_habilitado`**: adicionada como `char(1) NULL`, preenchida com `N` ou `S` e finalizada como `char(1) NOT NULL`.
 - **Tabela `julgamento_parte`**
   - **Colunas**
-    - **Nova `ordem`**: adicionada como número, aceitando valor nulo, preenchida na carga e finalizada como `NOT NULL`.
-    - **Alterada `descricao`**: texto variável de 100 caracteres, `NOT NULL`, para texto variável de 4000 caracteres, `NOT NULL`.
+    - **Nova `ordem`**: adicionada como `int NULL`, preenchida na carga e finalizada como `int NOT NULL`.
+    - **Alterada `descricao`**: `tipoTextoVariavel(100) NOT NULL` para `tipoTextoVariavel(4000) NOT NULL`.
 - **Tabela `autuacao`**
   - **Colunas**
-    - **Alterada `descricao`**: texto variável de 1000 caracteres, aceitando valor nulo, para texto variável de 2000 caracteres, aceitando valor nulo.
+    - **Alterada `descricao`**: `tipoTextoVariavel(1000) NULL` para `tipoTextoVariavel(2000) NULL`.
 
 ### Excluído
 
@@ -155,9 +170,9 @@
 
 - **Tabela `destaque`**
   - **Colunas**
-    - **Nova `sta_acesso`**: adicionada como texto fixo de 1 caractere, preenchida a partir de `sta_tipo` e finalizada como `NOT NULL`.
-    - **Alterada `descricao`**: `NOT NULL` para `NULL`.
-    - **Alterada `sta_tipo`**: `NOT NULL` para `NULL`.
+    - **Nova `sta_acesso`**: adicionada como `tipoTextoFixo(1) NULL`, preenchida a partir de `sta_tipo` e finalizada como `tipoTextoFixo(1) NOT NULL`.
+    - **Alterada `descricao`**: `tipoTextoVariavel(4000) NOT NULL` para `tipoTextoVariavel(4000) NULL`.
+    - **Alterada `sta_tipo`**: `tipoTextoFixo(1) NOT NULL` para `tipoTextoFixo(1) NULL`.
 
 ### Excluído
 
@@ -236,3 +251,9 @@
 - **Tabela `seq_tarefa_sessao`**
 - **Tabela `seq_tipo_materia`**
 - **Tabela `seq_voto_parte`**
+
+### Alterado
+
+- **Tabela `seq_tarefa`**
+  - **Propriedades da tabela**
+    - **Alterada `sequência nativa`**: recriada no MySQL com valor inicial calculado a partir do maior identificador de tarefa; quando não há tarefa, inicia em `1`, quando o maior identificador é até `1000`, inicia em `1001`, e nos demais casos inicia no maior identificador acrescido de `1`.

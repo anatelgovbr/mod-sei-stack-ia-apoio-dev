@@ -36,7 +36,9 @@ phpinfo.php
 
 # Extensoes e Pastas de IDEs de Programacao
 *.code-workspace
-/**/.vscode/
+/**/.vscode/*
+!/.vscode/
+!/.vscode/settings.json
 /**/.sonarlint/
 /fontes/sei/src/main/php/nbproject/**
 /.idea

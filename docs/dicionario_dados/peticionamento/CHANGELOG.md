@@ -180,7 +180,7 @@
   - **Chaves estrangeiras**
     - **Excluída `fk3_md_pet_int_rel_dest`**: sobre `id_acesso_externo` no MySQL, SQL Server e Oracle.
   - **Índices**
-    - **Excluído `fk3_md_pet_int_rel_dest`**: no MySQL e SQL Server.
+    - **Excluído `fk3_md_pet_int_rel_dest`**: sobre o índice `fk3_md_pet_int_rel_dest` no MySQL e SQL Server.
 
 ## [2.0.2]
 
@@ -254,7 +254,7 @@
 
 - **Tabela `md_pet_rel_tp_ctx_contato`**
   - **Colunas**
-    - **Excluída `id_tipo_contexto_contato`**: após a cópia dos dados, na mesma migração condicional.
+    - **Excluída `id_tipo_contexto_contato`**: removida após a cópia dos dados, na mesma migração condicional.
 
 ## [1.0.0]
 

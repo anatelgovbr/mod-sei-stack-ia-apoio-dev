@@ -15,16 +15,19 @@ Documentação técnica do repositório, escrita para ser lida tanto por pessoas
 
 ## 1. Dicionários de dados
 
-A pasta [`dicionario_dados/`](dicionario_dados/) guarda o dicionário de dados (schema e semântica de tabelas e colunas) e o histórico de versões de cada módulo, do SEI ou do SIP. Cada módulo, ou o núcleo SEI/SIP, tem sua própria pasta em `dicionario_dados/<modulo>/`, com dois arquivos:
+A pasta [`dicionario_dados/`](dicionario_dados/) guarda a semântica de tabelas e colunas e o histórico estrutural de cada alvo. Cada módulo, ou o núcleo SEI/SIP, tem sua própria pasta em `dicionario_dados/<modulo>/`.
 
 | Arquivo | O que contém |
 |---|---|
-| `dicionario.md` | Schema e semântica das tabelas e colunas na versão atual |
-| `CHANGELOG.md` | Histórico de versões do dicionário, entrada por entrada |
+| `dicionario_tabelas.md` | Nome e descrição semântica das tabelas na versão atual |
+| `dicionario_colunas.md` | Descrição das tabelas e de suas colunas na versão atual |
+| `CHANGELOG.md` | Histórico de alterações estruturais |
+
+Proveniência, confiança, conflitos e lacunas das descrições são reportados ao desenvolvedor durante a execução da skill (relatório de varredura ou relatório final de `verificar`), sem arquivo dedicado.
 
 **Módulos/alvos documentados hoje:** `apoio-plano-trabalho`, `centraliza-modulos`, `controle-de-demandas`, `correios`, `ia`, `julgar`, `litigioso`, `pen`, `peticionamento`, `sei`, `sip`.
 
-Formato, fluxo de criação/atualização e geração de changelog são definidos pela referência compartilhada [`formato-dicionario-de-dados.md`](../.agents/references/dicionario-dados/formato-dicionario-de-dados.md), consumida por duas skills conforme o alvo: [`sei-dicionario-dados-core`](../.agents/skills/sei-dicionario-dados-core/SKILL.md) para SEI, SIP e Julgar; [`sei-dicionario-dados-modulo`](../.agents/skills/sei-dicionario-dados-modulo/SKILL.md) para módulo customizado. Siga esse formato ao editar os arquivos manualmente; a referência garante consistência de estilo entre dicionários.
+Formato, fluxo de criação/atualização e geração de changelog são definidos pela skill [`dicionario-dados-db-scan-codebase-docs`](../.agents/skills/dicionario-dados-db-scan-codebase-docs/SKILL.md). Os dois dicionários são mantidos juntos e descrevem o mesmo conjunto de tabelas na mesma versão. O formato fica em [`formato-dicionario-de-dados.md`](../.agents/skills/dicionario-dados-db-scan-codebase-docs/references/formato-dicionario-de-dados.md).
 
 ---
 

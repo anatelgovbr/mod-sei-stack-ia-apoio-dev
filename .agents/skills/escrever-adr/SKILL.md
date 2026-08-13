@@ -1,6 +1,7 @@
 ---
 name: escrever-adr
 description: Documentar uma decisão arquitetural significativa como ADR (Architecture Decision Record) em .agents/decisions/. Use quando o usuário discutir escolhas de tecnologia, padrões, estrutura, ou quando uma decisão for difícil de reverter e precisar ser explicada para o time.
+disable-model-invocation: true
 ---
 
 # Write ADR
