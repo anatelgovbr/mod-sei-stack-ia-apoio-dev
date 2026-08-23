@@ -1,0 +1,82 @@
+[
+  {
+    "query": "Faça code review das mudanças commitadas desde 6a34259e99bc5fed4f8fe5da61c273dad14edf67. Não existe spec para esta entrega.",
+    "should_trigger": true
+  },
+  {
+    "query": "Revise a branch atual desde main. Existe uma spec, mas nesta versão faça somente Standards.",
+    "should_trigger": true
+  },
+  {
+    "query": "Quero um code review do PR 218 contra a tag v4.2.0. Rode somente Standards e não avalie requisitos.",
+    "should_trigger": true
+  },
+  {
+    "query": "Revise os commits desta feature desde origin/develop contra os padrões do repositório.",
+    "should_trigger": true
+  },
+  {
+    "query": "Use code-review desde o commit 9db74d1. A demanda não tem especificação formal, então execute só o que estiver disponível.",
+    "should_trigger": true
+  },
+  {
+    "query": "A branch feature/permissoes já está toda commitada. Revise os padrões SEI desde release/4.3.",
+    "should_trigger": true
+  },
+  {
+    "query": "Faça revisão dos commits entre a base fixa v3.9.0 e o HEAD atual; trate a ausência de spec como normal.",
+    "should_trigger": true
+  },
+  {
+    "query": "Code review técnico da entrega desde 2f81c50, sem alterar refs.",
+    "should_trigger": true
+  },
+  {
+    "query": "Revise o delta commitado do PR desde a branch base hotfix/4.1.7. Quero o relatório Standards mesmo se nenhuma spec local for encontrada.",
+    "should_trigger": true
+  },
+  {
+    "query": "Os commits da US31 estão no HEAD. Use a tag sei-4.0.12 como ponto fixo e revise os padrões documentados.",
+    "should_trigger": true
+  },
+  {
+    "query": "Use sei-code-review-security nas mudanças ainda não commitadas da worktree do módulo litigioso, sem criar snapshot ou commit.",
+    "should_trigger": false
+  },
+  {
+    "query": "Use sei-revisao-codigo-seguranca neste diff e não compare com requisito ou spec.",
+    "should_trigger": false
+  },
+  {
+    "query": "Execute sei-revisao-pr no módulo pesquisa inteiro quanto a gates, permissões e transações, sem depender do histórico Git.",
+    "should_trigger": false
+  },
+  {
+    "query": "Use sei-security-review apenas em MdAbcDocumentoRN.php para conferir efeitos externos após commit.",
+    "should_trigger": false
+  },
+  {
+    "query": "Valide DB01-DB15 no DDL de instalação do módulo correios antes do release.",
+    "should_trigger": false
+  },
+  {
+    "query": "Confira validarLink, validarPermissao e assinarLink nesta página cadastro.php, sem revisar o restante da mudança.",
+    "should_trigger": false
+  },
+  {
+    "query": "Implemente as correções pedidas no PR 77 e atualize os testes que falharem.",
+    "should_trigger": false
+  },
+  {
+    "query": "Explique o que mudou no último commit, mas não faça revisão nem compare com padrões ou requisitos.",
+    "should_trigger": false
+  },
+  {
+    "query": "O formulário atual atende ao requisito de permitir anexos PDF? Analise só o arquivo aberto, sem uma referência Git para o delta.",
+    "should_trigger": false
+  },
+  {
+    "query": "Faça uma auditoria exclusiva de segurança no controller Ajax desta integração e gere um parecer técnico em somente leitura.",
+    "should_trigger": false
+  }
+]

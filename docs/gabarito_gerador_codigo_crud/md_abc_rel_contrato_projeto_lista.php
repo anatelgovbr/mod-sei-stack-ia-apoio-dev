@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
+ * TRIBUNAL REGIONAL FEDERAL DA 4ª REGIÃO
  * 15/04/2026 - criado por rafaelmontedo@hotmail.com
  *
- * VersÃ£o do Gerador de CÃ³digo: 1.46.4
+ * Versão do Gerador de Código: 1.46.4
  **/
 
 
@@ -42,7 +42,7 @@ try {
         }
         $objMdAbcRelContratoProjetoRN = new MdAbcRelContratoProjetoRN();
         $objMdAbcRelContratoProjetoRN->excluir($arrObjMdAbcRelContratoProjetoDTO);
-        Paginaabc::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
+        Paginaabc::getInstance()->adicionarMensagem('Operação realizada com sucesso.');
       } catch (Exception $e) {
         Paginaabc::getInstance()->processarExcecao($e);
       } 
@@ -63,7 +63,7 @@ try {
         }
         $objMdAbcRelContratoProjetoRN = new MdAbcRelContratoProjetoRN();
         $objMdAbcRelContratoProjetoRN->desativar($arrObjMdAbcRelContratoProjetoDTO);
-        Paginaabc::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
+        Paginaabc::getInstance()->adicionarMensagem('Operação realizada com sucesso.');
       } catch (Exception $e) {
         Paginaabc::getInstance()->processarExcecao($e);
       } 
@@ -71,7 +71,7 @@ try {
       die;
 
     case 'md_abc_rel_contrato_projeto_reativar':
-      $strTitulo = 'Reativar AssociaÃ§Ãµes';
+      $strTitulo = 'Reativar Associações';
       if (Paginaabc::GET('acao_confirmada')!=='sim') {
         break;
       }
@@ -87,7 +87,7 @@ try {
         }
         $objMdAbcRelContratoProjetoRN = new MdAbcRelContratoProjetoRN();
         $objMdAbcRelContratoProjetoRN->reativar($arrObjMdAbcRelContratoProjetoDTO);
-        Paginaabc::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
+        Paginaabc::getInstance()->adicionarMensagem('Operação realizada com sucesso.');
       } catch (Exception $e) {
         Paginaabc::getInstance()->processarExcecao($e);
       } 
@@ -97,7 +97,7 @@ try {
     */
 
     case 'md_abc_rel_contrato_projeto_selecionar':
-      $strTitulo = Paginaabc::getInstance()->getTituloSelecao('Selecionar AssociaÃ§Ã£o','Selecionar AssociaÃ§Ãµes');
+      $strTitulo = Paginaabc::getInstance()->getTituloSelecao('Selecionar Associação','Selecionar Associações');
 
       //Se cadastrou alguem
       if (Paginaabc::GET('acao_origem')==='md_abc_rel_contrato_projeto_cadastrar' && isset($_GET['id_md_abc_contrato'], $_GET['id_md_abc_projeto'])) {
@@ -106,11 +106,11 @@ try {
       break;
 
     case 'md_abc_rel_contrato_projeto_listar':
-      $strTitulo = 'AssociaÃ§Ãµes';
+      $strTitulo = 'Associações';
       break;
 
     default:
-      throw new InfraException("AÃ§Ã£o '".Paginaabc::GET('acao')."' nÃ£o reconhecida.");
+      throw new InfraException("Ação '".Paginaabc::GET('acao')."' não reconhecida.");
   }
 
   $arrComandos = array();
@@ -220,9 +220,9 @@ try {
     $strResultado = '';
 
     /* if (Paginaabc::GET('acao')!=='md_abc_rel_contrato_projeto_reativar') { */
-      $strCaptionTabela = 'AssociaÃ§Ãµes';
+      $strCaptionTabela = 'Associações';
     /* } else {
-      $strCaptionTabela = 'AssociaÃ§Ãµes Inativas';
+      $strCaptionTabela = 'Associações Inativas';
     } */
 
     $strResultado .= '<table style="width: 99%" class="infraTable">'."\n";
@@ -231,9 +231,9 @@ try {
     if ($bolCheck) {
        $strResultado .= '<th class="infraTh" style="width: 1%">'.Paginaabc::getInstance()->getThCheck().'</th>'."\n";
     }
-    //$strResultado .= '<th class="infraTh">'.Paginaabc::getInstance()->getThOrdenacao($objMdAbcRelContratoProjetoDTO,'Data de AssociaÃ§Ã£o','Associacao',$arrObjMdAbcRelContratoProjetoDTO).'</th>'."\n";
+    //$strResultado .= '<th class="infraTh">'.Paginaabc::getInstance()->getThOrdenacao($objMdAbcRelContratoProjetoDTO,'Data de Associação','Associacao',$arrObjMdAbcRelContratoProjetoDTO).'</th>'."\n";
     //$strResultado .= '<th class="infraTh">'.Paginaabc::getInstance()->getThOrdenacao($objMdAbcRelContratoProjetoDTO,'Contrato','IdMdAbcContratoMdAbcContrato',$arrObjMdAbcRelContratoProjetoDTO).'</th>'."\n";
-    $strResultado .= '<th class="infraTh">AÃ§Ãµes</th>'."\n";
+    $strResultado .= '<th class="infraTh">Ações</th>'."\n";
     $strResultado .= '</tr></thead><tbody>'."\n";
     $strCssTr='';
     for($i = 0;$i < $numRegistros; $i++) {
@@ -251,11 +251,11 @@ try {
       $strResultado .= Paginaabc::getInstance()->getAcaoTransportarItem($i,$arrObjMdAbcRelContratoProjetoDTO[$i]->getNumIdMdAbcContrato().'-'.$arrObjMdAbcRelContratoProjetoDTO[$i]->getNumIdMdAbcProjeto());
 
       if ($bolAcaoConsultar) {
-        $strResultado .= '<a href="'.Sessaoabc::getInstance()->assinarLink('controlador.php?acao=md_abc_rel_contrato_projeto_consultar&acao_origem='.Paginaabc::GET('acao').'&acao_retorno='.Paginaabc::GET('acao').'&id_md_abc_contrato='.$arrObjMdAbcRelContratoProjetoDTO[$i]->getNumIdMdAbcContrato().'&id_md_abc_projeto='.$arrObjMdAbcRelContratoProjetoDTO[$i]->getNumIdMdAbcProjeto()).'" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeConsultar().'" title="Consultar AssociaÃ§Ã£o" alt="Consultar AssociaÃ§Ã£o" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.Sessaoabc::getInstance()->assinarLink('controlador.php?acao=md_abc_rel_contrato_projeto_consultar&acao_origem='.Paginaabc::GET('acao').'&acao_retorno='.Paginaabc::GET('acao').'&id_md_abc_contrato='.$arrObjMdAbcRelContratoProjetoDTO[$i]->getNumIdMdAbcContrato().'&id_md_abc_projeto='.$arrObjMdAbcRelContratoProjetoDTO[$i]->getNumIdMdAbcProjeto()).'" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeConsultar().'" title="Consultar Associação" alt="Consultar Associação" class="infraImg" /></a>&nbsp;';
       }
 
       if ($bolAcaoAlterar) {
-        $strResultado .= '<a href="'.Sessaoabc::getInstance()->assinarLink('controlador.php?acao=md_abc_rel_contrato_projeto_alterar&acao_origem='.Paginaabc::GET('acao').'&acao_retorno='.Paginaabc::GET('acao').'&id_md_abc_contrato='.$arrObjMdAbcRelContratoProjetoDTO[$i]->getNumIdMdAbcContrato().'&id_md_abc_projeto='.$arrObjMdAbcRelContratoProjetoDTO[$i]->getNumIdMdAbcProjeto()).'" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeAlterar().'" title="Alterar AssociaÃ§Ã£o" alt="Alterar AssociaÃ§Ã£o" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.Sessaoabc::getInstance()->assinarLink('controlador.php?acao=md_abc_rel_contrato_projeto_alterar&acao_origem='.Paginaabc::GET('acao').'&acao_retorno='.Paginaabc::GET('acao').'&id_md_abc_contrato='.$arrObjMdAbcRelContratoProjetoDTO[$i]->getNumIdMdAbcContrato().'&id_md_abc_projeto='.$arrObjMdAbcRelContratoProjetoDTO[$i]->getNumIdMdAbcProjeto()).'" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeAlterar().'" title="Alterar Associação" alt="Alterar Associação" class="infraImg" /></a>&nbsp;';
       }
 
       if ($bolAcaoDesativar || $bolAcaoReativar || $bolAcaoExcluir) {
@@ -264,16 +264,16 @@ try {
       }
 /* 
       if ($bolAcaoDesativar) {
-        $strResultado .= '<a href="'.Paginaabc::getInstance()->montarAncora($strId).'" onclick="acaoDesativar(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeDesativar().'" title="Desativar AssociaÃ§Ã£o" alt="Desativar AssociaÃ§Ã£o" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.Paginaabc::getInstance()->montarAncora($strId).'" onclick="acaoDesativar(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeDesativar().'" title="Desativar Associação" alt="Desativar Associação" class="infraImg" /></a>&nbsp;';
       }
 
       if ($bolAcaoReativar) {
-        $strResultado .= '<a href="'.Paginaabc::getInstance()->montarAncora($strId).'" onclick="acaoReativar(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeReativar().'" title="Reativar AssociaÃ§Ã£o" alt="Reativar AssociaÃ§Ã£o" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.Paginaabc::getInstance()->montarAncora($strId).'" onclick="acaoReativar(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeReativar().'" title="Reativar Associação" alt="Reativar Associação" class="infraImg" /></a>&nbsp;';
       }
  */
 
       if ($bolAcaoExcluir) {
-        $strResultado .= '<a href="'.Paginaabc::getInstance()->montarAncora($strId).'" onclick="acaoExcluir(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeExcluir().'" title="Excluir AssociaÃ§Ã£o" alt="Excluir AssociaÃ§Ã£o" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.Paginaabc::getInstance()->montarAncora($strId).'" onclick="acaoExcluir(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeExcluir().'" title="Excluir Associação" alt="Excluir Associação" class="infraImg" /></a>&nbsp;';
       }
 
       $strResultado .= '</td></tr></tbody>'."\n";
@@ -329,7 +329,7 @@ function inicializar()
 <?php /* if ($bolAcaoDesativar??false) { ?>
 function acaoDesativar(id,desc)
 {
-  if (confirm('Confirma desativaÃ§Ã£o da AssociaÃ§Ã£o \"' + desc + '\"?')) {
+  if (confirm('Confirma desativação da Associação \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcRelContratoProjetoLista').action='<?=$strLinkDesativar??false?>';
     document.getElementById('frmMdAbcRelContratoProjetoLista').submit();
@@ -339,10 +339,10 @@ function acaoDesativar(id,desc)
 function acaoDesativacaoMultipla()
 {
   if (document.getElementById('hdnInfraItensSelecionados').value=='') {
-    alert('Nenhuma AssociaÃ§Ã£o selecionada.');
+    alert('Nenhuma Associação selecionada.');
     return;
   }
-  if (confirm('Confirma desativaÃ§Ã£o das AssociaÃ§Ãµes selecionadas?')) {
+  if (confirm('Confirma desativação das Associações selecionadas?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcRelContratoProjetoLista').action='<?=$strLinkDesativar??false?>';
     document.getElementById('frmMdAbcRelContratoProjetoLista').submit();
@@ -353,7 +353,7 @@ function acaoDesativacaoMultipla()
 <?php if ($bolAcaoReativar??false) { ?>
 function acaoReativar(id,desc)
 {
-  if (confirm('Confirma reativaÃ§Ã£o da AssociaÃ§Ã£o \"' + desc + '\"?')) {
+  if (confirm('Confirma reativação da Associação \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcRelContratoProjetoLista').action='<?=$strLinkReativar??false?>';
     document.getElementById('frmMdAbcRelContratoProjetoLista').submit();
@@ -363,10 +363,10 @@ function acaoReativar(id,desc)
 function acaoReativacaoMultipla()
 {
   if (document.getElementById('hdnInfraItensSelecionados').value=='') {
-    alert('Nenhuma AssociaÃ§Ã£o selecionada.');
+    alert('Nenhuma Associação selecionada.');
     return;
   }
-  if (confirm('Confirma reativaÃ§Ã£o das AssociaÃ§Ãµes selecionadas?')) {
+  if (confirm('Confirma reativação das Associações selecionadas?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcRelContratoProjetoLista').action='<?=$strLinkReativar??false?>';
     document.getElementById('frmMdAbcRelContratoProjetoLista').submit();
@@ -377,7 +377,7 @@ function acaoReativacaoMultipla()
 <?php if ($bolAcaoExcluir??false) { ?>
 function acaoExcluir(id,desc)
 {
-  if (confirm('Confirma exclusÃ£o da AssociaÃ§Ã£o \"' + desc + '\"?')) {
+  if (confirm('Confirma exclusão da Associação \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcRelContratoProjetoLista').action='<?=$strLinkExcluir??false?>';
     document.getElementById('frmMdAbcRelContratoProjetoLista').submit();
@@ -387,10 +387,10 @@ function acaoExcluir(id,desc)
 function acaoExclusaoMultipla()
 {
   if (document.getElementById('hdnInfraItensSelecionados').value=='') {
-    alert('Nenhuma AssociaÃ§Ã£o selecionada.');
+    alert('Nenhuma Associação selecionada.');
     return;
   }
-  if (confirm('Confirma exclusÃ£o das AssociaÃ§Ãµes selecionadas?')) {
+  if (confirm('Confirma exclusão das Associações selecionadas?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcRelContratoProjetoLista').action='<?=$strLinkExcluir??false?>';
     document.getElementById('frmMdAbcRelContratoProjetoLista').submit();

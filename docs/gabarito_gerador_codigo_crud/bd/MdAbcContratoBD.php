@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
+ * TRIBUNAL REGIONAL FEDERAL DA 4ª REGIÃO
  * 15/04/2026 - criado por rafaelmontedo@hotmail.com
  *
- * VersÃ£o do Gerador de CÃ³digo: 1.46.4
+ * Versão do Gerador de Código: 1.46.4
  **/
 
 

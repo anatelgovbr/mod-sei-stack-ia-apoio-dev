@@ -1,0 +1,82 @@
+[
+  {
+    "query": "Use sei-code-review-security para revisar tecnicamente o módulo litigioso em somente leitura, sem avaliar regra de negócio.",
+    "should_trigger": true
+  },
+  {
+    "query": "Execute sei-revisao-codigo-seguranca no módulo ia sem alterar arquivos nem abrir issues. Inclua permissões, integrações e release.",
+    "should_trigger": true
+  },
+  {
+    "query": "Use sei-revisao-pr neste diff SEI e classifique problemas técnicos introduzidos e preexistentes.",
+    "should_trigger": true
+  },
+  {
+    "query": "Execute sei-security-review no PR 184, com gates SEI e segunda passada, sem comparar com a demanda.",
+    "should_trigger": true
+  },
+  {
+    "query": "Faça security review no diretório fontes/sei/src/main/php/sei/web/modulos/pesquisa e verifique vulnerabilidades concretas.",
+    "should_trigger": true
+  },
+  {
+    "query": "Revise somente a dimensão Transação de MdAbcProcessoRN.php, incluindo T1-T6, A1-A3 e efeitos externos após o commit.",
+    "should_trigger": true
+  },
+  {
+    "query": "Tenho mudanças ainda não commitadas na worktree do módulo utilidades. Faça a revisão técnica do diff atual sem criar commit.",
+    "should_trigger": true
+  },
+  {
+    "query": "Audite a conformidade técnica e os gates aplicáveis destes três arquivos: pedido_lista.php, PedidoRN.php e PedidoBD.php. Não existe spec.",
+    "should_trigger": true
+  },
+  {
+    "query": "Analise o passivo técnico do módulo correios e gere somente candidatos a tarefas no relatório, sem persistir nada.",
+    "should_trigger": true
+  },
+  {
+    "query": "Faça uma security review técnica do diff anexado, rastreando entrada HTTP até SQL, HTML, logs e chamadas externas.",
+    "should_trigger": true
+  },
+  {
+    "query": "Faça code review dos commits desde release/4.1 e compare a implementação com specs/exportacao-relatorios.md nos eixos Standards e Spec.",
+    "should_trigger": false
+  },
+  {
+    "query": "Revise a branch feature/menu desde a tag v4.0.0. Não há spec, mas quero o fluxo de code review do delta commitado.",
+    "should_trigger": false
+  },
+  {
+    "query": "Compare os commits desde 8f3a2c1 com os critérios de aceite da US12 e diga quais requisitos ficaram faltando.",
+    "should_trigger": false
+  },
+  {
+    "query": "Corrija as falhas de autorização encontradas no módulo pesquisa e já aplique os patches necessários.",
+    "should_trigger": false
+  },
+  {
+    "query": "Valide somente a modelagem DB01-DB15 do arquivo dto/MdRiRestauranteDTO.php.",
+    "should_trigger": false
+  },
+  {
+    "query": "Cheque se esta página *_cadastro.php chama validarLink, validarPermissao e assinarLink corretamente.",
+    "should_trigger": false
+  },
+  {
+    "query": "Implemente um novo item de menu SIP e a página correspondente no módulo utilidades.",
+    "should_trigger": false
+  },
+  {
+    "query": "Não sei se devo usar evento, API ou operação SeiRN para interceptar a assinatura de um documento. Qual caminho oficial serve?",
+    "should_trigger": false
+  },
+  {
+    "query": "Faça review deste serviço Node.js e sugira melhorias gerais de legibilidade e testes; ele não pertence ao SEI.",
+    "should_trigger": false
+  },
+  {
+    "query": "Confira se o comportamento atual atende ao requisito de bloquear pedidos duplicados; quero apenas validação funcional.",
+    "should_trigger": false
+  }
+]

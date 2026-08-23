@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
+ * TRIBUNAL REGIONAL FEDERAL DA 4ª REGIÃO
  * 15/04/2026 - criado por rafaelmontedo@hotmail.com
  *
- * VersÃ£o do Gerador de CÃ³digo: 1.46.4
+ * Versão do Gerador de Código: 1.46.4
  **/
 
 
@@ -40,7 +40,7 @@ try {
         }
         $objMdAbcContratoRN = new MdAbcContratoRN();
         $objMdAbcContratoRN->excluir($arrObjMdAbcContratoDTO);
-        Paginaabc::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
+        Paginaabc::getInstance()->adicionarMensagem('Operação realizada com sucesso.');
       } catch (Exception $e) {
         Paginaabc::getInstance()->processarExcecao($e);
       } 
@@ -59,7 +59,7 @@ try {
         }
         $objMdAbcContratoRN = new MdAbcContratoRN();
         $objMdAbcContratoRN->desativar($arrObjMdAbcContratoDTO);
-        Paginaabc::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
+        Paginaabc::getInstance()->adicionarMensagem('Operação realizada com sucesso.');
       } catch (Exception $e) {
         Paginaabc::getInstance()->processarExcecao($e);
       } 
@@ -81,7 +81,7 @@ try {
         }
         $objMdAbcContratoRN = new MdAbcContratoRN();
         $objMdAbcContratoRN->reativar($arrObjMdAbcContratoDTO);
-        Paginaabc::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
+        Paginaabc::getInstance()->adicionarMensagem('Operação realizada com sucesso.');
       } catch (Exception $e) {
         Paginaabc::getInstance()->processarExcecao($e);
       } 
@@ -104,7 +104,7 @@ try {
       break;
 
     default:
-      throw new InfraException("AÃ§Ã£o '".Paginaabc::GET('acao')."' nÃ£o reconhecida.");
+      throw new InfraException("Ação '".Paginaabc::GET('acao')."' não reconhecida.");
   }
 
   $arrComandos = array();
@@ -221,11 +221,11 @@ try {
     if ($bolCheck) {
        $strResultado .= '<th class="infraTh" style="width: 1%">'.Paginaabc::getInstance()->getThCheck().'</th>'."\n";
     }
-    //$strResultado .= '<th class="infraTh">'.Paginaabc::getInstance()->getThOrdenacao($objMdAbcContratoDTO,'NÃºmero','Numero',$arrObjMdAbcContratoDTO).'</th>'."\n";
+    //$strResultado .= '<th class="infraTh">'.Paginaabc::getInstance()->getThOrdenacao($objMdAbcContratoDTO,'Número','Numero',$arrObjMdAbcContratoDTO).'</th>'."\n";
     //$strResultado .= '<th class="infraTh">'.Paginaabc::getInstance()->getThOrdenacao($objMdAbcContratoDTO,'Data de Assinatura','Assinatura',$arrObjMdAbcContratoDTO).'</th>'."\n";
     //$strResultado .= '<th class="infraTh">'.Paginaabc::getInstance()->getThOrdenacao($objMdAbcContratoDTO,'Valor','Valor',$arrObjMdAbcContratoDTO).'</th>'."\n";
-    //$strResultado .= '<th class="infraTh">'.Paginaabc::getInstance()->getThOrdenacao($objMdAbcContratoDTO,'ObservaÃ§Ã£o','Observacao',$arrObjMdAbcContratoDTO).'</th>'."\n";
-    $strResultado .= '<th class="infraTh">AÃ§Ãµes</th>'."\n";
+    //$strResultado .= '<th class="infraTh">'.Paginaabc::getInstance()->getThOrdenacao($objMdAbcContratoDTO,'Observação','Observacao',$arrObjMdAbcContratoDTO).'</th>'."\n";
+    $strResultado .= '<th class="infraTh">Ações</th>'."\n";
     $strResultado .= '</tr></thead><tbody>'."\n";
     $strCssTr='';
     for($i = 0;$i < $numRegistros; $i++) {
@@ -319,7 +319,7 @@ function inicializar()
 <?php /* if ($bolAcaoDesativar??false) { ?>
 function acaoDesativar(id,desc)
 {
-  if (confirm('Confirma desativaÃ§Ã£o do Contrato \"' + desc + '\"?')) {
+  if (confirm('Confirma desativação do Contrato \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcContratoLista').action='<?=$strLinkDesativar??false?>';
     document.getElementById('frmMdAbcContratoLista').submit();
@@ -332,7 +332,7 @@ function acaoDesativacaoMultipla()
     alert('Nenhum Contrato selecionado.');
     return;
   }
-  if (confirm('Confirma desativaÃ§Ã£o dos Contratos selecionados?')) {
+  if (confirm('Confirma desativação dos Contratos selecionados?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcContratoLista').action='<?=$strLinkDesativar??false?>';
     document.getElementById('frmMdAbcContratoLista').submit();
@@ -343,7 +343,7 @@ function acaoDesativacaoMultipla()
 <?php if ($bolAcaoReativar??false) { ?>
 function acaoReativar(id,desc)
 {
-  if (confirm('Confirma reativaÃ§Ã£o do Contrato \"' + desc + '\"?')) {
+  if (confirm('Confirma reativação do Contrato \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcContratoLista').action='<?=$strLinkReativar??false?>';
     document.getElementById('frmMdAbcContratoLista').submit();
@@ -356,7 +356,7 @@ function acaoReativacaoMultipla()
     alert('Nenhum Contrato selecionado.');
     return;
   }
-  if (confirm('Confirma reativaÃ§Ã£o dos Contratos selecionados?')) {
+  if (confirm('Confirma reativação dos Contratos selecionados?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcContratoLista').action='<?=$strLinkReativar??false?>';
     document.getElementById('frmMdAbcContratoLista').submit();
@@ -367,7 +367,7 @@ function acaoReativacaoMultipla()
 <?php if ($bolAcaoExcluir??false) { ?>
 function acaoExcluir(id,desc)
 {
-  if (confirm('Confirma exclusÃ£o do Contrato \"' + desc + '\"?')) {
+  if (confirm('Confirma exclusão do Contrato \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcContratoLista').action='<?=$strLinkExcluir??false?>';
     document.getElementById('frmMdAbcContratoLista').submit();
@@ -380,7 +380,7 @@ function acaoExclusaoMultipla()
     alert('Nenhum Contrato selecionado.');
     return;
   }
-  if (confirm('Confirma exclusÃ£o dos Contratos selecionados?')) {
+  if (confirm('Confirma exclusão dos Contratos selecionados?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcContratoLista').action='<?=$strLinkExcluir??false?>';
     document.getElementById('frmMdAbcContratoLista').submit();
@@ -399,7 +399,7 @@ Paginaabc::getInstance()->abrirBody($strTitulo??false, 'onload="inicializar();"'
   Paginaabc::getInstance()->montarBarraComandosSuperior($arrComandos??false);
   Paginaabc::getInstance()->abrirAreaDados('5em');
   ?>
-  <label id="lblMdAbcAquisicao" for="selMdAbcAquisicao" accesskey="a" class="infraLabelOpcional"><span class="infraTeclaAtalho">A</span>quisiÃ§Ã£o:</label>
+  <label id="lblMdAbcAquisicao" for="selMdAbcAquisicao" accesskey="a" class="infraLabelOpcional"><span class="infraTeclaAtalho">A</span>quisição:</label>
   <select id="selMdAbcAquisicao" name="selMdAbcAquisicao" onchange="this.form.submit();" class="infraSelect" tabindex="<?=Paginaabc::getInstance()->getProxTabDados()?>" >
   <?=$strItensSelMdAbcAquisicao??false?>
   </select>

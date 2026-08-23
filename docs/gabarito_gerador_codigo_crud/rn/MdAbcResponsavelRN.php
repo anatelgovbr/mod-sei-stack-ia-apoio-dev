@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
+ * TRIBUNAL REGIONAL FEDERAL DA 4ª REGIÃO
  * 15/04/2026 - criado por rafaelmontedo@hotmail.com
  *
- * VersÃ£o do Gerador de CÃ³digo: 1.46.4
+ * Versão do Gerador de Código: 1.46.4
  **/
 
 
@@ -29,14 +29,14 @@ class MdAbcResponsavelRN extends InfraRN
   private function validarNumIdMdAbcContrato(MdAbcResponsavelDTO $objMdAbcResponsavelDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcResponsavelDTO->getNumIdMdAbcContrato())) {
-      $objInfraException->adicionarValidacao('Contrato nÃ£o informadC.');
+      $objInfraException->adicionarValidacao('Contrato não informadC.');
     }
   }
 
   private function validarStrNome(MdAbcResponsavelDTO $objMdAbcResponsavelDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcResponsavelDTO->getStrNome())) {
-      $objInfraException->adicionarValidacao('Nome nÃ£o informadN.');
+      $objInfraException->adicionarValidacao('Nome não informadN.');
     } else {
       $objMdAbcResponsavelDTO->setStrNome(trim($objMdAbcResponsavelDTO->getStrNome()));
       if (strlen($objMdAbcResponsavelDTO->getStrNome())>100) {
@@ -48,7 +48,7 @@ class MdAbcResponsavelRN extends InfraRN
   private function validarStrCargo(MdAbcResponsavelDTO $objMdAbcResponsavelDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcResponsavelDTO->getStrCargo())) {
-      $objInfraException->adicionarValidacao('Cargo nÃ£o informadG.');
+      $objInfraException->adicionarValidacao('Cargo não informadG.');
     } else {
       $objMdAbcResponsavelDTO->setStrCargo(trim($objMdAbcResponsavelDTO->getStrCargo()));
       if (strlen($objMdAbcResponsavelDTO->getStrCargo())>50) {
@@ -93,7 +93,7 @@ class MdAbcResponsavelRN extends InfraRN
       return $objMdAbcResponsavelBD->cadastrar($objMdAbcResponsavelDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro cadastrando ResponsÃ¡vel.', $e);
+      throw new InfraException('Erro cadastrando Responsável.', $e);
     }
   }
 
@@ -133,7 +133,7 @@ class MdAbcResponsavelRN extends InfraRN
       $objMdAbcResponsavelBD->alterar($objMdAbcResponsavelDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro alterando ResponsÃ¡vel.', $e);
+      throw new InfraException('Erro alterando Responsável.', $e);
     }
   }
 
@@ -158,7 +158,7 @@ class MdAbcResponsavelRN extends InfraRN
       }
 
     } catch (Exception $e) {
-      throw new InfraException('Erro excluindo ResponsÃ¡vel.', $e);
+      throw new InfraException('Erro excluindo Responsável.', $e);
     }
   }
 
@@ -181,7 +181,7 @@ class MdAbcResponsavelRN extends InfraRN
       return $objMdAbcResponsavelBD->consultar($objMdAbcResponsavelDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro consultando ResponsÃ¡vel.', $e);
+      throw new InfraException('Erro consultando Responsável.', $e);
     }
   }
 
@@ -204,7 +204,7 @@ class MdAbcResponsavelRN extends InfraRN
       return $objMdAbcResponsavelBD->listar($objMdAbcResponsavelDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro listando ResponsÃ¡veis.', $e);
+      throw new InfraException('Erro listando Responsáveis.', $e);
     }
   }
 
@@ -227,7 +227,7 @@ class MdAbcResponsavelRN extends InfraRN
       return $objMdAbcResponsavelBD->contar($objMdAbcResponsavelDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro contando ResponsÃ¡vel.', $e);
+      throw new InfraException('Erro contando Responsável.', $e);
     }
   }
 
@@ -252,7 +252,7 @@ class MdAbcResponsavelRN extends InfraRN
       }
 
     } catch (Exception $e) {
-      throw new InfraException('Erro desativando ResponsÃ¡vel.', $e);
+      throw new InfraException('Erro desativando Responsável.', $e);
     }
   }
  */
@@ -277,7 +277,7 @@ class MdAbcResponsavelRN extends InfraRN
       }
 
     } catch (Exception $e) {
-      throw new InfraException('Erro reativando ResponsÃ¡vel.', $e);
+      throw new InfraException('Erro reativando Responsável.', $e);
     }
   }
  */
@@ -301,7 +301,7 @@ class MdAbcResponsavelRN extends InfraRN
       return $objMdAbcResponsavelBD->bloquear($objMdAbcResponsavelDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro bloqueando ResponsÃ¡vel.', $e);
+      throw new InfraException('Erro bloqueando Responsável.', $e);
     }
   } */
 }

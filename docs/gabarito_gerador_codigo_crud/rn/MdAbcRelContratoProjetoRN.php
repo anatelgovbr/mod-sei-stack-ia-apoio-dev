@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
+ * TRIBUNAL REGIONAL FEDERAL DA 4ª REGIÃO
  * 15/04/2026 - criado por rafaelmontedo@hotmail.com
  *
- * VersÃ£o do Gerador de CÃ³digo: 1.46.4
+ * Versão do Gerador de Código: 1.46.4
  **/
 
 
@@ -29,23 +29,23 @@ class MdAbcRelContratoProjetoRN extends InfraRN
   private function validarNumIdMdAbcContrato(MdAbcRelContratoProjetoDTO $objMdAbcRelContratoProjetoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcRelContratoProjetoDTO->getNumIdMdAbcContrato())) {
-      $objInfraException->adicionarValidacao('Contrato nÃ£o informadC.');
+      $objInfraException->adicionarValidacao('Contrato não informadC.');
     }
   }
 
   private function validarNumIdMdAbcProjeto(MdAbcRelContratoProjetoDTO $objMdAbcRelContratoProjetoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcRelContratoProjetoDTO->getNumIdMdAbcProjeto())) {
-      $objInfraException->adicionarValidacao('Projeto nÃ£o informadP.');
+      $objInfraException->adicionarValidacao('Projeto não informadP.');
     }
   }
 
   private function validarDtaAssociacao(MdAbcRelContratoProjetoDTO $objMdAbcRelContratoProjetoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcRelContratoProjetoDTO->getDtaAssociacao())) {
-      $objInfraException->adicionarValidacao('Data de AssociaÃ§Ã£o nÃ£o informadD.');
+      $objInfraException->adicionarValidacao('Data de Associação não informadD.');
     } elseif (!InfraData::validarData($objMdAbcRelContratoProjetoDTO->getDtaAssociacao())) {
-      $objInfraException->adicionarValidacao('Data de AssociaÃ§Ã£o invÃ¡lidD.');
+      $objInfraException->adicionarValidacao('Data de Associação inválidD.');
     }
   }
 
@@ -72,7 +72,7 @@ class MdAbcRelContratoProjetoRN extends InfraRN
       return $objMdAbcRelContratoProjetoBD->cadastrar($objMdAbcRelContratoProjetoDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro cadastrando AssociaÃ§Ã£o.', $e);
+      throw new InfraException('Erro cadastrando Associação.', $e);
     }
   }
 
@@ -108,7 +108,7 @@ class MdAbcRelContratoProjetoRN extends InfraRN
       $objMdAbcRelContratoProjetoBD->alterar($objMdAbcRelContratoProjetoDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro alterando AssociaÃ§Ã£o.', $e);
+      throw new InfraException('Erro alterando Associação.', $e);
     }
   }
 
@@ -133,7 +133,7 @@ class MdAbcRelContratoProjetoRN extends InfraRN
       }
 
     } catch (Exception $e) {
-      throw new InfraException('Erro excluindo AssociaÃ§Ã£o.', $e);
+      throw new InfraException('Erro excluindo Associação.', $e);
     }
   }
 
@@ -156,7 +156,7 @@ class MdAbcRelContratoProjetoRN extends InfraRN
       return $objMdAbcRelContratoProjetoBD->consultar($objMdAbcRelContratoProjetoDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro consultando AssociaÃ§Ã£o.', $e);
+      throw new InfraException('Erro consultando Associação.', $e);
     }
   }
 
@@ -179,7 +179,7 @@ class MdAbcRelContratoProjetoRN extends InfraRN
       return $objMdAbcRelContratoProjetoBD->listar($objMdAbcRelContratoProjetoDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro listando AssociaÃ§Ãµes.', $e);
+      throw new InfraException('Erro listando Associações.', $e);
     }
   }
 
@@ -202,7 +202,7 @@ class MdAbcRelContratoProjetoRN extends InfraRN
       return $objMdAbcRelContratoProjetoBD->contar($objMdAbcRelContratoProjetoDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro contando AssociaÃ§Ã£o.', $e);
+      throw new InfraException('Erro contando Associação.', $e);
     }
   }
 
@@ -227,7 +227,7 @@ class MdAbcRelContratoProjetoRN extends InfraRN
       }
 
     } catch (Exception $e) {
-      throw new InfraException('Erro desativando AssociaÃ§Ã£o.', $e);
+      throw new InfraException('Erro desativando Associação.', $e);
     }
   }
  */
@@ -252,7 +252,7 @@ class MdAbcRelContratoProjetoRN extends InfraRN
       }
 
     } catch (Exception $e) {
-      throw new InfraException('Erro reativando AssociaÃ§Ã£o.', $e);
+      throw new InfraException('Erro reativando Associação.', $e);
     }
   }
  */
@@ -276,7 +276,7 @@ class MdAbcRelContratoProjetoRN extends InfraRN
       return $objMdAbcRelContratoProjetoBD->bloquear($objMdAbcRelContratoProjetoDTO);
 
     } catch (Exception $e) {
-      throw new InfraException('Erro bloqueando AssociaÃ§Ã£o.', $e);
+      throw new InfraException('Erro bloqueando Associação.', $e);
     }
   } */
 }

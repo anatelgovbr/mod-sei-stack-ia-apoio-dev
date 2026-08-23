@@ -1,31 +1,31 @@
-# Padrões de IDs de Tarefa — Manual TRF4
+# Padrões de IDs de Tarefa, Manual TRF4
 
-Baseado em `sei_modulos_manual_dev_3_consideracoes_previas.md` —
+Baseado em `sei_modulos_manual_dev_3_consideracoes_previas.md`,
 Seção "Atribuição de Tarefa (andamento)".
 
 ---
 
-## K1 — ID >= 1000
+## K1 - ID >= 1000
 
 **Severidade:** Erro
 **Base:** Manual SEI MD §Considerações Prévias / Tarefa Módulo
 
-IDs de tarefa de módulo (`id_tarefa_modulo`) devem ser **>= 1000**.
-Valores menores são reservados para tarefas core do SEI.
+O identificador numérico `id_tarefa` deve ser maior ou igual a 1000. Valores
+menores são reservados para tarefas do core do SEI, exceto 65.
 
 **Conforme:**
 ```php
-'id_tarefa_modulo' => 1001,
+'id_tarefa' => 1001,
 ```
 
 **Não conforme:**
 ```php
-'id_tarefa_modulo' => 999,  // ERRO — reservado para SEI
+'id_tarefa' => 999,  // ERRO: reservado para SEI
 ```
 
 ---
 
-## K2 — ID < 1000 reservado
+## K2 - ID < 1000 reservado
 
 **Severidade:** Erro
 **Base:** Manual SEI MD §Considerações Prévias
@@ -41,115 +41,93 @@ como erro (exceto o caso especial do ID=65).
 
 ---
 
-## K3 — Prefixo MD_<INST/PROJ> em maiúsculas
+## K3 - Prefixo de `id_tarefa_modulo`
 
 **Severidade:** Erro
 **Base:** Manual SEI MD §Considerações Prévias / nomenclatura de recursos
 
-O nome da tarefa deve usar prefixo `MD_<INST/PROJ>_` em **maiúsculas**,
-seguido do nome descritivo em maiúsculas separado por `_`.
+O identificador textual `id_tarefa_modulo` deve usar o prefixo
+`MD_<SIGLA>_` em maiúsculas, seguido do nome descritivo.
 
 **Conforme:**
 ```php
-'nome' => 'MD_RI_RESTAURANTE_CADASTRAR',
+'id_tarefa_modulo' => 'MD_RI_RESTAURANTE_CADASTRAR',
 ```
 
 **Não conforme:**
 ```php
-'nome' => 'Md_Ri_Restaurante_Cadastrar',  // minúsculas
-'nome' => 'md_ri_restaurante_cadastrar',   // tudo minúsculas
+'id_tarefa_modulo' => 'Md_Ri_Restaurante_Cadastrar',
+'id_tarefa_modulo' => 'md_ri_restaurante_cadastrar',
 ```
 
 ---
 
-## K4 — Máximo 50 caracteres
+## K4 - Máximo 50 caracteres
 
 **Severidade:** Erro
 **Base:** Manual SEI MD §Considerações Prévias
 
-O atributo `nome` da tarefa (`id_tarefa_modulo`) tem limite de **50 caracteres**.
+O valor textual de `id_tarefa_modulo` tem limite de **50 caracteres**.
 
 **Conforme:**
 ```php
-'nome' => 'MD_RI_RESTAURANTE_CADASTRAR',  // 26 chars
+'id_tarefa_modulo' => 'MD_RI_RESTAURANTE_CADASTRAR',
 ```
 
 **Não conforme:**
 ```php
-'nome' => 'MD_RI_RESTaurante_CADASTRAR_ALGO_MUITOMAIOR',  // > 50 chars
+'id_tarefa_modulo' => 'MD_RI_RESTAURANTE_CADASTRAR_ALGO_MUITO_MAIOR_QUE_LIMITE',
 ```
 
 ---
 
-## K5 — Tabela de tarefas com definição
-
-**Severidade:** Aviso
-**Base:** Manual SEI MD §Considerações Prévias
-
-Cada tarefa de módulo deve estar definida em uma tabela de controle
-`md_<sigla>_tarefa` com os campos `id_tarefa_modulo`, `nome` e `descricao`.
-
-**Estrutura esperada:**
-```sql
-CREATE TABLE md_ri_tarefa (
-    id_tarefa_modulo INTEGER PRIMARY KEY,
-    nome VARCHAR(50) NOT NULL,
-    descricao VARCHAR(200)
-);
-```
-
----
-
-## K6 — ID não conflita no módulo
-
-**Severidade:** Aviso
-**Base:** Manual SEI MD §Considerações Prévias
-
-IDs de tarefa devem ser únicos dentro do módulo. Duplicidade causa
-sobreposição de comportamento.
-
-**Conforme:**
-```php
-// IDs únicos
-1001 => 'MD_RI_RESTAURANTE_CADASTRAR',
-1002 => 'MD_RI_RESTAURANTE_ALTERAR',
-```
-
-**Não conforme:**
-```php
-// ID duplicado
-1001 => 'MD_RI_RESTAURANTE_CADASTRAR',
-1001 => 'MD_RI_RESTAURANTE_ALTERAR',  // CONFLITO
-```
-
----
-
-## K7 — ID=65 com atributo DESCRICAO
+## K6 - Identificadores únicos no módulo
 
 **Severidade:** Erro
-**Base:** Manual SEI MD §Considerações Prévias — Exceção de ID
+**Base:** Manual SEI MD §Considerações Prévias
 
-O ID=65 é a **única exceção** ao rule K1 (ID < 1000) e serve para
+`id_tarefa` e `id_tarefa_modulo` devem ser únicos em suas respectivas
+dimensões. Duplicidade causa sobreposição de comportamento.
+
+**Conforme:**
+```php
+['id_tarefa' => 1001, 'id_tarefa_modulo' => 'MD_RI_RESTAURANTE_CADASTRAR'],
+['id_tarefa' => 1002, 'id_tarefa_modulo' => 'MD_RI_RESTAURANTE_ALTERAR'],
+```
+
+**Não conforme:**
+```php
+['id_tarefa' => 1001, 'id_tarefa_modulo' => 'MD_RI_RESTAURANTE_CADASTRAR'],
+['id_tarefa' => 1001, 'id_tarefa_modulo' => 'MD_RI_RESTAURANTE_ALTERAR'],
+```
+
+---
+
+## K7 - ID=65 com atributo DESCRICAO
+
+**Severidade:** Erro
+**Base:** Manual SEI MD §Considerações Prévias, Exceção de ID
+
+O ID=65 é a **única exceção** à regra K1 (ID < 1000) e serve para
 andamentos de texto livre. Deve ser usado **exclusivamente** com
-um atributo `descricao` que explique seu propósito.
+o atributo `DESCRICAO` que explica seu propósito.
 
 **Conforme:**
 ```php
-65 => array(
-    'id_tarefa_modulo' => 65,
-    'nome' => 'MD_RI_ANDAMENTO_LIVRE',
-    'descricao' => 'Andamentos livres para observacoes diversas'
-),
+[
+    'id_tarefa' => 65,
+    'id_tarefa_modulo' => 'MD_RI_ANDAMENTO_LIVRE',
+    'atributos' => ['DESCRICAO' => 'Andamentos livres para observacoes diversas']
+],
 ```
 
 **Não conforme:**
 ```php
 // ID=65 para andamento especifico (nao livre)
-65 => array(
-    'id_tarefa_modulo' => 65,
-    'nome' => 'MD_RI_CONFIRMAR_RECEBIMENTO',
-    // falta descricao de livre
-),
+[
+    'id_tarefa' => 65,
+    'id_tarefa_modulo' => 'MD_RI_CONFIRMAR_RECEBIMENTO'
+],
 ```
 
 ---
@@ -158,10 +136,9 @@ um atributo `descricao` que explique seu propósito.
 
 | ID | Regra | Sev |
 |----|-------|-----|
-| K1 | ID >= 1000 | **Erro** |
-| K2 | ID < 1000 reservado | **Erro** |
-| K3 | Prefixo MD_ em maiúsculas | **Erro** |
-| K4 | Máximo 50 caracteres | **Erro** |
-| K5 | Tabela de tarefas com definição | **Aviso** |
-| K6 | ID único no módulo | **Aviso** |
+| K1 | `id_tarefa` >= 1000 | **Erro** |
+| K2 | `id_tarefa` < 1000 reservado | **Erro** |
+| K3 | Prefixo de `id_tarefa_modulo` | **Erro** |
+| K4 | `id_tarefa_modulo` com até 50 caracteres | **Erro** |
+| K6 | Unicidade dos dois identificadores | **Erro** |
 | K7 | ID=65 com DESCRICAO | **Erro** |

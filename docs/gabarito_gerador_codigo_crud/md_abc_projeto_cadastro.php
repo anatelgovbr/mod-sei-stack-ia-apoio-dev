@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
+ * TRIBUNAL REGIONAL FEDERAL DA 4ª REGIÃO
  * 29/03/2026 - criado por abc
  *
- * VersÃ£o do Gerador de CÃ³digo: 1.46.4
+ * Versão do Gerador de Código: 1.46.4
  **/
 
 
@@ -66,7 +66,7 @@ try {
         $objMdAbcProjetoRN = new MdAbcProjetoRN();
         $objMdAbcProjetoDTO = $objMdAbcProjetoRN->consultar($objMdAbcProjetoDTO);
         if ($objMdAbcProjetoDTO===null) {
-          throw new InfraException("Registro nÃ£o encontrado.");
+          throw new InfraException("Registro não encontrado.");
         }
       } else {
         $objMdAbcProjetoDTO->setNumIdMdAbcProjeto(PaginaSEI::POST('hdnIdMdAbcProjeto'));
@@ -100,12 +100,12 @@ try {
       $objMdAbcProjetoRN = new MdAbcProjetoRN();
       $objMdAbcProjetoDTO = $objMdAbcProjetoRN->consultar($objMdAbcProjetoDTO);
       if ($objMdAbcProjetoDTO===null) {
-        throw new InfraException("Registro nÃ£o encontrado.");
+        throw new InfraException("Registro não encontrado.");
       }
       break;
 
     default:
-      throw new InfraException("AÃ§Ã£o '" . PaginaSEI::GET('acao') . "' nÃ£o reconhecida.");
+      throw new InfraException("Ação '" . PaginaSEI::GET('acao') . "' não reconhecida.");
   }
 
 
@@ -155,13 +155,13 @@ function inicializar()
 function validarCadastro()
 {
   if (infraTrim(document.getElementById('txtIdentificacao').value)=='') {
-    alert('Informe a IdentificaÃ§Ã£o.');
+    alert('Informe a Identificação.');
     document.getElementById('txtIdentificacao').focus();
     return false;
   }
 
   if (infraTrim(document.getElementById('txtCadastramento').value)=='') {
-    alert('Informe a Data de InÃ­cio.');
+    alert('Informe a Data de Início.');
     document.getElementById('txtCadastramento').focus();
     return false;
   }
@@ -190,21 +190,21 @@ PaginaSEI::getInstance()->montarBarraComandosSuperior($arrComandos??false);
 //PaginaSEI::getInstance()->montarAreaValidacao();
 PaginaSEI::getInstance()->abrirAreaDados('5em');
 ?>
-  <label id="lblIdentificacao" for="txtIdentificacao" accesskey="I" class="infraLabelObrigatorio"><span class="infraTeclaAtalho">I</span>dentificaÃ§Ã£o:</label>
+  <label id="lblIdentificacao" for="txtIdentificacao" accesskey="I" class="infraLabelObrigatorio"><span class="infraTeclaAtalho">I</span>dentificação:</label>
   <input type="text" id="txtIdentificacao" name="txtIdentificacao" class="infraText" value="<?=PaginaSEI::tratarHTML($objMdAbcProjetoDTO->getStrIdentificacao())?>" onkeypress="return infraMascaraTexto(this,event,50);" maxlength="50" tabindex="<?=PaginaSEI::getInstance()->getProxTabDados()?>" />
 <?php
 PaginaSEI::getInstance()->fecharAreaDados();
 PaginaSEI::getInstance()->abrirAreaDados('5em');
 ?>
-  <label id="lblDescricao" for="txtDescricao" accesskey="D" class="infraLabelOpcional"><span class="infraTeclaAtalho">D</span>escriÃ§Ã£o:</label>
+  <label id="lblDescricao" for="txtDescricao" accesskey="D" class="infraLabelOpcional"><span class="infraTeclaAtalho">D</span>escrição:</label>
   <input type="text" id="txtDescricao" name="txtDescricao" class="infraText" value="<?=PaginaSEI::tratarHTML($objMdAbcProjetoDTO->getStrDescricao())?>" onkeypress="return infraMascaraTexto(this,event);" tabindex="<?=PaginaSEI::getInstance()->getProxTabDados()?>" />
 <?php
 PaginaSEI::getInstance()->fecharAreaDados();
 PaginaSEI::getInstance()->abrirAreaDados('5em');
 ?>
-  <label id="lblCadastramento" for="txtCadastramento" accesskey="A" class="infraLabelObrigatorio">D<span class="infraTeclaAtalho">a</span>ta de InÃ­cio:</label>
+  <label id="lblCadastramento" for="txtCadastramento" accesskey="A" class="infraLabelObrigatorio">D<span class="infraTeclaAtalho">a</span>ta de Início:</label>
   <input type="text" id="txtCadastramento" name="txtCadastramento" onkeypress="return infraMascaraData(this, event)" class="infraText" value="<?=PaginaSEI::tratarHTML($objMdAbcProjetoDTO->getDtaCadastramento())?>" tabindex="<?=PaginaSEI::getInstance()->getProxTabDados()?>" />
-  <img id="imgCalCadastramento" title="Selecionar Data de InÃ­cio" alt="Selecionar Data de InÃ­cio" src="<?=PaginaSEI::getInstance()->getIconeCalendario()?>" class="infraImg" onclick="infraCalendario('txtCadastramento',this);" />
+  <img id="imgCalCadastramento" title="Selecionar Data de Início" alt="Selecionar Data de Início" src="<?=PaginaSEI::getInstance()->getIconeCalendario()?>" class="infraImg" onclick="infraCalendario('txtCadastramento',this);" />
 <?php
 PaginaSEI::getInstance()->fecharAreaDados();
 ?>

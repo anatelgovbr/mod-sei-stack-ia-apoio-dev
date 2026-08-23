@@ -27,6 +27,15 @@ description: >
 | CI4 | cada acao/servico sensivel valida permissao/autorizacao especifica antes de executar | **Erro** | `.agents/security/matriz-vulnerabilidades-sei.md` V03 |
 | CI5 | evitar payload sensivel em retorno de controlador | **Aviso** | hardening do projeto |
 
+Cada regra e avaliada somente no metodo correspondente. CI1 nao aceita um
+`preg_match` de outro metodo, CI2 nao aceita um `switch` fora do controlador de
+WebServices e CI3 valida separadamente cada `processarControladorAjax*()`.
+
+CI4 exige autorizacao no proprio `case` ou bloco compartilhado antes da
+execucao. O recurso literal deve ser plausivel para o modulo, mas nao precisa
+ser igual ao label do `case`. CI5 apenas sinaliza payload potencialmente
+sensivel e nao substitui a autorizacao de CI4.
+
 ## Referencias Autoritativas
 
 - `references/padroes-controladores.md` (cobre CI1-CI5; curado das secoes 1363, 1442 e 1648 do cap. 9 do manual)
@@ -40,6 +49,6 @@ description: >
 
 | Code | Significado |
 |---|---|
-| 0 | PASS |
+| 0 | PASS, com ao menos um metodo controlador analisado |
 | 1 | WARN |
-| 2 | BLOCK |
+| 2 | BLOCK, inclusive entrada inexistente, incompatível, vazia ou sem extracao |

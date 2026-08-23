@@ -36,11 +36,9 @@ do repositorio.
 - exigencia de recomendacao objetiva e minima para cada achado relevante
 
 **Onde isso entrou aqui**:
-- `.agents/skills/sei-code-review-security/SKILL.md`
-  - analise curta de fluxo de dados
-  - consolidacao de achados com recomendacao objetiva
-- `.agents/skills/sei-code-review-security/SKILL.md`
-  - secao `Fluxo de dados e superficie de ataque`
+- `.agents/skills/sei-revisao-tecnica/SKILL.md`
+  - secao `Procedimento obrigatorio`, com analise de fluxo de dados
+  - secao `Formato do relatorio`, com consolidacao e ajuste objetivo
 - `.agents/checklists/checklist-seguranca.md`
   - itens `C1`, `C2`, `C8`, `C9`, `C10`
 
@@ -70,10 +68,10 @@ do repositorio.
 - postura explicita de nao inventar achado nem esconder incerteza
 
 **Onde isso entrou aqui**:
-- `.agents/skills/sei-code-review-security/SKILL.md`
+- `.agents/skills/sei-revisao-tecnica/SKILL.md`
   - segunda passada obrigatoria
   - criterio de evidencia e ambiguidade
-- `.agents/skills/sei-code-review-security/SKILL.md`
+- `.agents/skills/sei-revisao-tecnica/SKILL.md`
   - secao `Segunda passada obrigatoria`
   - orientacao para separar fato, hipotese e risco residual
 
@@ -108,8 +106,8 @@ do repositorio.
 - `.agents/checklists/checklist-seguranca.md`
   - itens `C3`, `C4`, `C5`, `C6`, `C7`, `C8`
   - notas anti-falso-positivo dos itens `C1-C10`
-- `.agents/skills/sei-code-review-security/SKILL.md`
-  - secao `Seguranca transversal`
+- `.agents/skills/sei-revisao-tecnica/SKILL.md`
+  - secao `Dimensoes tecnicas`
 
 **O que nao foi adotado**:
 - checkpoints de stacks fora de PHP/SEI

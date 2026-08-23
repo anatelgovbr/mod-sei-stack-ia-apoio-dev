@@ -1,9 +1,9 @@
 ---
 name: sei-verificacao-tarefa
 description: |
-  Audita IDs de tarefa de modulo SEI/SIP (id_tarefa_modulo) quanto a
-  padroes do manual: range maior ou igual a 1000 (exceto 65), prefixo MD_sigla_modulo,
-  max 50 caracteres, e unicidade. Gate para qualquer script de tarefa
+  Audita os identificadores de tarefa de modulo SEI/SIP: `id_tarefa` numerico
+  e `id_tarefa_modulo` textual. Valida range, excecao 65, prefixo, tamanho e
+  unicidade. Gate para qualquer script de tarefa
   (*_tarefa.php) ou definicao de tarefas no modulo.
 
   Use quando:
@@ -17,16 +17,15 @@ description: |
 
 Skill de gate para validar IDs de tarefa de modulo SEI/SIP.
 
-## 7 Regras de auditoria
+## Regras de auditoria
 
 | ID | Regra | Severidade | O que verifica |
 |----|-------|------------|----------------|
-| K1 | ID >= 1000 | **Erro** | Valor numerico >= 1000, exceto ID=65 com atributo DESCRICAO |
-| K2 | ID < 1000 reservado | **Erro** | Alerta se encontrar ID < 1000 que nao seja 65 |
-| K3 | Prefixo MD_sigla_modulo em maiusculas | **Erro** | Nome segue padrao: MD_RI_RESTAURANTE_CADASTRAR |
-| K4 | Maximo 50 caracteres no nome | **Erro** | strlen(nome) <= 50 |
-| K5 | Tabela de tarefas existe com definicao | **Aviso** | Tarefa registrada na tabela md_<sigla>_tarefa |
-| K6 | ID nao conflita com mesma tarefa no modulo | **Aviso** | Duplicidade de ID no modulo |
+| K1 | `id_tarefa` >= 1000 | **Erro** | Valor numerico >= 1000, exceto ID=65 com atributo `DESCRICAO` |
+| K2 | `id_tarefa` < 1000 reservado | **Erro** | Bloqueia valor menor que 1000 que nao seja 65 |
+| K3 | Prefixo de `id_tarefa_modulo` | **Erro** | Texto segue `MD_<SIGLA>_<NOME>` em maiusculas |
+| K4 | Maximo 50 caracteres | **Erro** | `id_tarefa_modulo` tem ate 50 caracteres |
+| K6 | Unicidade nas duas dimensoes | **Erro** | Nao repete `id_tarefa` nem `id_tarefa_modulo` no modulo |
 | K7 | ID=65 usado apenas com atributo DESCRICAO | **Erro** | Tarefa 65 e free-text andamentos, nao usar para outro fim |
 
 ## Ranges de ID
@@ -41,9 +40,9 @@ Skill de gate para validar IDs de tarefa de modulo SEI/SIP.
 
 | Code | Significado |
 |------|-------------|
-| 0 | PASS — todas as regras conformes |
-| 1 | WARN — avisos presentes, zero erros |
-| 2 | BLOCK — erros presentes |
+| 0 | PASS, com ao menos uma definicao analisada |
+| 1 | WARN, avisos presentes e zero erros |
+| 2 | BLOCK, inclusive entrada inexistente, incompatível, vazia ou sem extracao |
 
 ## Uso
 
@@ -67,11 +66,11 @@ python3 audit.py --input web/modulos/relacionamento-institucional/scripts --form
   "file": "md_ri_tarefa.php",
   "tarefas": [
     {"id": 1001, "nome": "MD_RI_RESTAURANTE_CADASTRAR", "status": "OK"},
-    {"id": 65, "nome": "MD_RI_ANDAMENTO_LIVRE", "descr": "Andamentos livres", "status": "OK (65 + DESCRICAO)"},
+    {"id": 65, "nome": "MD_RI_ANDAMENTO_LIVRE", "descr": true, "status": "OK (65 + DESCRICAO)"},
     {"id": 999, "nome": "MD_RI_TESTE", "status": "ERRO (ID < 1000)"}
   ],
   "erros": [
-    {"codigo": "K001", "regra": "K1", "id": 999, "mensagem": "ID 999 < 1000 — reservado para SEI core"}
+    {"codigo": "K001", "regra": "K1", "id": 999, "mensagem": "ID 999 < 1000, reservado para SEI core"}
   ],
   "verdict": "BLOCK"
 }
@@ -80,8 +79,11 @@ python3 audit.py --input web/modulos/relacionamento-institucional/scripts --form
 ## Parser patterns
 
 ```python
-# Extrai definicoes de tarefa do arquivo PHP
-re.findall(r"['\"]?(\d+)['\"]?\s*=>\s*['\"](MD_\w+)['\"]", content)
-re.findall(r"['\"]?(\d+)['\"]?\s*,\s*['\"]([^'\"]+)['\"]", content)
-re.findall(r"(\d+)\s*=>\s*array\s*\(\s*['\"]id_tarefa['\"]\s*=>\s*(\d+)", content)
+# Formatos reconhecidos
+'id_tarefa' => 1001
+'id_tarefa_modulo' => 'MD_RI_RESTAURANTE_CADASTRAR'
+$objTarefaDTO->setNumIdTarefa(1001)
+$objTarefaDTO->setStrIdTarefaModulo('MD_RI_RESTAURANTE_CADASTRAR')
 ```
+
+O parser reconhece `array()` e `[]`.

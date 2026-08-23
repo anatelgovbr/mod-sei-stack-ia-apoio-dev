@@ -16,8 +16,23 @@
         "speckit.tasks": true,
         "speckit.implement": true
     },
-    "chat.tools.terminal.autoApprove": {
-        ".specify/scripts/bash/": true,
-        ".specify/scripts/powershell/": true
+    "files.eol": "auto",
+    "[php]": {
+        "files.encoding": "iso88591"
+    },
+    "[markdown]": {
+        "files.encoding": "utf8"
+    },
+    "[shellscript]": {
+        "files.eol": "\n"
+    },
+    "[makefile]": {
+        "files.eol": "\n"
+    },
+    "[dockerfile]": {
+        "files.eol": "\n"
+    },
+    "[yaml]": {
+        "files.eol": "\n"
     }
 }

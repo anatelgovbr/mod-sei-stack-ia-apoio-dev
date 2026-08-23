@@ -32,16 +32,23 @@ description: >
 | P3 | arquivo sem BOM e compativel com conversao Latin-1 | **Erro** | `AGENTS.md` + `.gitattributes` |
 | P4 | links de acao em HTML/JS usam `assinarLink()` | **Erro** | `references/padroes-seguranca.md` |
 
-## Guardrails Locais do Projeto (avisos)
+## Guardrails Locais do Projeto
 
 | ID | Regra | Severidade | Base |
 |---|---|---|---|
-| P5 | evitar `$_REQUEST` em pagina | **Aviso** | `AGENTS.md` |
-| P6 | `$_GET`/`$_POST` diretos fora de `acao` exigem normalizacao explicita | **Aviso** | guardrail local |
+| P5 | uso confirmado de `$_REQUEST` em pagina | **Erro** | `AGENTS.md` + G5 |
+| P6 | `$_GET`/`$_POST` diretos exigem normalizacao explicita | **Erro** | `AGENTS.md` + G5 |
 | P7 | UI condicional usa `verificarPermissao()` quando aplicavel | **Aviso** | `references/padroes-seguranca.md` |
-| P8 | saida HTML com variavel usa `PaginaSEI::tratarHTML()` quando aplicavel | **Aviso** | `references/padroes-seguranca.md` |
-| P9 | evitar `innerHTML` / `document.write` com resposta ou variavel insegura | **Aviso** | hardening web complementar |
-| P10 | evitar mutacao de estado via GET desprotegido | **Aviso** | hardening complementar alinhado a `assinarLink()` |
+| P8 | saida HTML dinamica usa `PaginaSEI::tratarHTML()` ou tratamento documentado | **Erro** | `references/padroes-seguranca.md` + G7 |
+| P9 | fonte dinamica alcanca `innerHTML` / `document.write` sem tratamento | **Erro** | hardening web complementar + G7 |
+| P10 | mutacao de estado confirmada via GET | **Erro** | hardening complementar + G9 |
+
+P1 e P2 devem cobrir cada acao e ocorrer nessa ordem. Uma validacao global antes
+do `switch` cobre todas as acoes; quando ela nao existe, o auditor verifica cada
+`case` que puder extrair. P4 examina todos os links de acao encontrados.
+
+P7 permanece contextual. Em P9, um sink sem fluxo dinamico confirmado gera
+`WARN`; fonte dinamica ligada ao sink gera `BLOCK`.
 
 ## Referencias Autoritativas
 
@@ -53,7 +60,8 @@ description: >
 ```php
 try {
     SessaoSEI::getInstance()->validarLink();
-    SessaoSEI::getInstance()->validarPermissao($_GET['acao']);
+    $strAcao = PaginaSEI::GET('acao');
+    SessaoSEI::getInstance()->validarPermissao($strAcao);
 
     if (SessaoSEI::getInstance()->verificarPermissao('md_abc_acao')) {
         $strLink = SessaoSEI::getInstance()->assinarLink('controlador.php?acao=md_abc_acao');
@@ -67,6 +75,6 @@ try {
 
 | Code | Significado |
 |---|---|
-| 0 | PASS |
+| 0 | PASS, com ao menos uma pagina analisada |
 | 1 | WARN |
-| 2 | BLOCK |
+| 2 | BLOCK, inclusive entrada inexistente, incompatível, vazia ou sem extracao |

@@ -47,4 +47,6 @@ A pasta [`gabarito_gerador_codigo_crud/`](gabarito_gerador_codigo_crud/) traz um
 
 ## 4. Prompts de exemplo
 
-[`prompts-exemplo.md`](prompts-exemplo.md) reúne exemplos prontos de prompts para desenvolvedores conversarem com a ferramenta de IA, organizados por tipo de demanda (análise, bug, menu/página, CRUD, release, API/WebService, revisão, pedido de plano).
+[`prompts-exemplo.md`](prompts-exemplo.md) reúne prompts prontos para uso real, amarrados às skills do repositório: correção de bug (com variações Playwright e Selenium), fluxo Speckit para funcionalidade nova, ajustes pontuais em menu, entidade e API/WebService, revisão técnica e segurança, e dicionário de dados.
+
+Cada prompt já traz objetivo, fatos verificados versus hipóteses não confirmadas, critério de aceite e protocolo de execução, prontos para adaptar e enviar.

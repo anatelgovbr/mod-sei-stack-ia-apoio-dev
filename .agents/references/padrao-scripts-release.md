@@ -10,20 +10,26 @@ para identificar padrões já em uso (nomes de variáveis, estilo de log, etc.).
 
 ## Guards obrigatórios
 
-### Guard 1 — Não criar scripts novos se já existem
+### Guard 1: Não criar scripts novos se já existem
 
 Consultar `.agents/references/mapa-modulos-scripts.md` antes de qualquer trabalho no módulo.
 
-- Se o módulo constar no mapa: **nunca criar novos arquivos de script**. Apenas atualizar os scripts mapeados.
+- Se o lado SEI ou SIP do módulo tiver script no mapa: **nunca criar outro arquivo para esse lado**. Apenas atualizar o script mapeado.
+- Se um dos lados estiver marcado como não localizado: verificar fisicamente o diretório correspondente antes de criar o primeiro script desse lado.
 - Se o módulo **não** constar no mapa: verificar fisicamente em `sei/scripts/` e `sip/scripts/` antes de concluir que não existem. Nomes podem divergir do padrão convencional (ex.: `md_cgu_eouv_atualizar_modulo.php`).
 
-### Guard 2 — Qualquer arquivo novo exige atualização de script
+### Guard 2: Atualizar scripts somente quando houver impacto de release
 
-Qualquer novo arquivo `.php` adicionado a `modulos/<nome>/` em módulo com scripts mapeados **exige** atualização dos scripts de instalação nesta mesma entrega.
+No lado SEI, a atualização de release é obrigatória quando a mudança introduzir
+novo DTO, nova tabela, nova entidade CRUD base ou colunas em DTO existente.
 
-Exceções aceitas:
-- Edição de arquivo existente sem criação de nova tabela ou recurso SIP.
-- Arquivos de asset (`.css`, `.js`) sem ação nova vinculada.
+No lado SIP, a atualização é obrigatória somente quando houver impacto real em
+recursos, perfis, menus, parâmetros ou versionamento. Atualizar apenas
+o lado afetado e sincronizar `getVersao()` em `*Integracao.php` quando aplicável.
+
+Um arquivo PHP novo, por si só, não dispara release. RN, BD, página, integração,
+tarefa ou outro PHP sem impacto estrutural ou SIP confirmado não exige alteração
+de script.
 
 ---
 
@@ -45,7 +51,7 @@ O método `atualizarNumeroVersao` **sempre** é a última chamada.
 
 ---
 
-## Script SEI — padrões de DDL
+## Script SEI: padrões de DDL
 
 ### Objeto obrigatório
 
@@ -149,7 +155,7 @@ $objInfraMetaBD->adicionarColuna('md_xx_entidade', 'num_campo',
 
 ---
 
-## Script SIP — padrões de recursos e perfis
+## Script SIP: padrões de recursos e perfis
 
 ### Boilerplate obrigatório no início do método
 
@@ -207,7 +213,7 @@ $objRecursoDTO = $this->adicionarRecursoPerfil($numIdSistemaSei, $numIdPerfilSei
 $objRecursoDTO = $this->adicionarRecursoPerfil($numIdSistemaSei, $numIdPerfilSeiAdministrador, 'md_xx_entidade_reativar');
 ```
 
-**Tabelas N:N não têm `desativar`/`reativar`** — registrar apenas os 6 recursos base.
+**Tabelas N:N não têm `desativar`/`reativar`**. Registrar apenas os 6 recursos base.
 
 ### Perfil Básico nao e default
 
@@ -242,7 +248,7 @@ case '<versaoAnterior>':
     break;  // break migra do case anterior para este
 ```
 
-O `break` fica **no último case** — todos os anteriores usam fallthrough intencional.
+O `break` fica **no último case**. Todos os anteriores usam fallthrough intencional.
 
 ### Campos de versão (ambos os scripts)
 

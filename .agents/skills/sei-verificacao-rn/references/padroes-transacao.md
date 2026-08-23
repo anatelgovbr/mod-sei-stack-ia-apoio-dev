@@ -1,6 +1,6 @@
-# Padrões de Transação em InfraRN — Manual TRF4
+# Padrões de Transação em InfraRN, Manual TRF4
 
-Baseado em `sei_modulos_manual_dev_4_infraphp.md` — Seção "InfraRN (2ª Camada)".
+Baseado em `sei_modulos_manual_dev_4_infraphp.md`, Seção "InfraRN (2ª Camada)".
 
 ---
 
@@ -151,44 +151,53 @@ protected function cadastrarControlado($objDTO) {
 
 ---
 
-## T6 - Split `*Controlado` / `*Interno` quando ha efeitos colaterais
+## T6 - Efeitos externos somente apos o retorno transacional
 
 **Severidade:** Erro
-**Base:** AGENTS.md — Padrao Transacional Obrigatorio
+**Base:** AGENTS.md, secao Padrao Transacional Obrigatorio
 
-Quando um metodo `*Controlado` precisa disparar efeitos colaterais (indexacao Solr,
-e-mail, integracao externa), a persistencia em banco deve ficar em um metodo `*Interno`
-separado. O `*Controlado` orquestra: chama o `*Interno` (dentro da transacao) e dispara
-os efeitos somente apos o commit.
+Um metodo `*Controlado` contem somente persistencia em banco. E-mail, Solr,
+indexacao e integracoes externas ficam em um wrapper publico, depois do retorno
+da operacao transacional. O retorno marca o ponto em que a `InfraRN` ja concluiu
+o commit.
 
 Motivo: efeito colateral que falha dentro da transacao pode acionar `cancelarTransacao()`
 e desfazer silenciosamente a persistencia critica.
 
 **Conforme:**
 ```php
-protected function gerarProcedimentoControlado($arrParametros)
+public function gerarProcedimentoComEfeitos(MdAbcProcedimentoDTO $objDTO)
 {
-    FeedSEIProtocolos::getInstance()->setBolAcumularFeeds(true);
-    $retorno = $this->gerarProcedimentoInterno($arrParametros);
-
-    FeedSEIProtocolos::getInstance()->setBolAcumularFeeds(false);
+    $retorno = $this->gerarProcedimento($objDTO);
     FeedSEIProtocolos::getInstance()->indexarFeeds();
-
-    try {
-        $rn = new MdAbcEmailNotificacaoRN();
-        $rn->notificar($retorno['parametrosEmail']);
-    } catch (Exception $e) {}
-
-    return $retorno['parametrosRecibo'];
+    return $retorno;
 }
 
-protected function gerarProcedimentoInterno($arrParametros)
+protected function gerarProcedimentoControlado(MdAbcProcedimentoDTO $objDTO)
 {
-    // Apenas persistencia em banco; executado dentro da transacao.
+    $objBD = new MdAbcProcedimentoBD($this->getObjInfraIBanco());
+    return $objBD->cadastrar($objDTO);
 }
 ```
 
-**Nao conforme (T006 — BLOCK):**
+`gerarProcedimento()` e a operacao publica resolvida pela `InfraRN` para
+`gerarProcedimentoControlado()`. O wrapper nao chama o metodo protegido
+diretamente.
+
+**Nao conforme, chamada direta ao método protegido:**
+```php
+public function gerarProcedimentoComEfeitos(MdAbcProcedimentoDTO $objDTO)
+{
+    $retorno = $this->gerarProcedimentoControlado($objDTO);
+    FeedSEIProtocolos::getInstance()->indexarFeeds();
+    return $retorno;
+}
+```
+
+A chamada direta nao passa pelo fluxo publico da `InfraRN`, portanto o efeito
+nao possui evidencia de que ocorreu depois do commit.
+
+**Nao conforme (T006, BLOCK):**
 ```php
 protected function gerarProcedimentoControlado($arrParametros)
 {
@@ -206,7 +215,7 @@ protected function gerarProcedimentoControlado($arrParametros)
 **Base:** padrao observado em todos os modulos SEI com trilha de auditoria ativa
 
 Metodos de escrita (`cadastrar`, `alterar`, `excluir` e variantes) devem chamar
-`SessaoSEI::getInstance()->validarAuditarPermissao(...)` — nunca `validarPermissao`
+`SessaoSEI::getInstance()->validarAuditarPermissao(...)`, nunca `validarPermissao`
 puro. O `validarPermissao` valida o acesso mas nao grava trilha; a omissao da
 auditoria e silenciosa e so descoberta em auditoria forense posterior.
 
@@ -225,7 +234,7 @@ protected function cadastrarControlado(MdAptEtapaPlDocModeloDTO $objDTO): MdAptE
 }
 ```
 
-**Nao conforme (A001 — BLOCK):**
+**Nao conforme (A001, BLOCK):**
 ```php
 protected function cadastrarControlado(MdAptEtapaPlDocModeloDTO $objDTO): MdAptEtapaPlDocModeloDTO
 {
@@ -238,19 +247,19 @@ protected function cadastrarControlado(MdAptEtapaPlDocModeloDTO $objDTO): MdAptE
 ## A2 - Metodo de escrita sem verificacao de permissao
 
 **Severidade:** Aviso
-**Base:** guardrail local — confirmar intencionalidade
+**Base:** guardrail local, confirmar intencionalidade
 
 Metodo de escrita sem nenhuma chamada de permissao ou auditoria. Pode ser
 intencional quando o metodo e um helper chamado exclusivamente de contexto
 interno (hook de evento, tarefa agendada) onde nao ha sessao de usuario ativa.
-Nao bloqueia — exige revisao para confirmar que o caminho de chamada nunca
+Nao bloqueia. Exige revisao para confirmar que o caminho de chamada nunca
 vem de requisicao HTTP direta.
 
 **Conforme (helper de hook):**
 ```php
 protected function substituirConteudoDocumentoControlado(array $arrParametros): void
 {
-    // chamado apenas pelo hook md_apt_substituir_documento — sem sessao de usuario
+    // chamado apenas pelo hook md_apt_substituir_documento, sem sessao de usuario
     try {
         // logica interna...
     } catch (Exception $e) {
@@ -259,13 +268,36 @@ protected function substituirConteudoDocumentoControlado(array $arrParametros): 
 }
 ```
 
-**Revisar (A002 — WARN):**
+**Revisar (A002, WARN):**
 ```php
 protected function excluirControlado(array $arrObjDTO): void
 {
     // sem validarAuditarPermissao e sem validarPermissao
     $objBD = new MdAptEtapaPlDocModeloBD($this->getObjInfraIBanco());
     // ...
+}
+```
+
+---
+
+## A3 - Leitura publica usa o recurso `_listar`
+
+**Severidade:** Erro
+**Base:** AGENTS.md, secao Guardrails Universais
+
+Operacoes publicas de leitura `consultar`, `listar` e `contar` devem usar
+`validarAuditarPermissao` com o recurso `_listar`. Helpers internos e caminhos
+de hook ou evento sem usuario nao recebem verificacao de sessao artificial.
+
+**Conforme:**
+```php
+protected function consultarConectado(MdAbcItemDTO $objDTO)
+{
+    SessaoSEI::getInstance()->validarAuditarPermissao(
+        'md_abc_item_listar',
+        __METHOD__,
+        $objDTO
+    );
 }
 ```
 
@@ -280,6 +312,7 @@ protected function excluirControlado(array $arrObjDTO): void
 | T3 | RN nao chama BD de outra classe | **Erro** |
 | T4 | Controle manual de conexao/transacao merece revisao | **Aviso** |
 | T5 | try/catch com `InfraException` e encadeamento de erro | **Aviso** |
-| T6 | Split `*Controlado`/`*Interno` quando ha efeitos colaterais | **Erro** |
+| T6 | Efeitos externos somente apos retorno transacional | **Erro** |
 | A1 | Escrita com validarPermissao sem auditoria | **Erro** |
 | A2 | Escrita sem verificacao de permissao/auditoria | **Aviso** |
+| A3 | Leitura publica sem recurso `_listar` | **Erro** |

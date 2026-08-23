@@ -32,7 +32,7 @@ Aqui ficam concentrados os artefatos que dão suporte ao uso de agentes, prompts
 
 ---
 
-## 1. Para quem é este documento
+## Para quem é este documento
 
 Este README é para quem precisa usar, adaptar ou manter este skeleton da stack de IA. Ele explica como os agentes, prompts, skills, adapters e o fluxo SDD com SpecKit estão organizados neste repositório.
 
@@ -121,10 +121,15 @@ As **skills** são agentes especializados em tarefas específicas. Cada skill te
 | `escrever-adr` | Documenta decisões arquiteturais significativas como ADR |
 | `napkin` | Mantém runbook operacional pessoal em `.agents/memory/runbook.md` |
 | `caveman`, `ponytail`, `grilling` | Modos auxiliares para comunicação compacta, simplificação e stress-test de planos |
-| `code-review` | Revisão complementar de código (correção, qualidade, arquitetura, testes e manutenibilidade), sem gate SEI |
+| `sei-revisao-tecnica` | Revisa diretamente segurança, conformidade, gates e qualidade técnica de diffs, arquivos ou módulos SEI, sem exigir spec |
+| `code-review` | Revisa Standards de um delta commitado desde um ponto fixo, delegando a análise técnica para `sei-revisao-tecnica` |
 | `speckit` | Conduz as fases do fluxo SDD com SpecKit |
 
 > **Glossário rápido:** CRUD = conjunto de operações de criar, ler, atualizar e deletar registros. Script de release = arquivo executado na instalação ou atualização do módulo no servidor.
+
+Use `sei-revisao-tecnica` diretamente para revisão técnica, security review, compliance, gates ou módulo SEI, inclusive sobre worktree ou diff fornecido. Os aliases históricos são resolvidos textualmente conforme a matriz de roteamento.
+
+Use `code-review` para mudanças commitadas de branch ou PR, informando o commit, branch ou tag que fixa o início do delta. Nesta versão, a skill executa somente Standards e não avalia spec ou requisito. Para worktree sem commit, use revisão técnica direta ou forneça um diff.
 
 A tabela acima é apenas uma visão inicial. O catálogo completo das skills, com origem, versão, licença e composição, está em [`.agents/skills/README.md`](.agents/skills/README.md).
 
@@ -250,11 +255,11 @@ Antes de remover qualquer item do `.gitignore`, avalie se a remoção é realmen
 
 **O que cada pasta faz na prática:**
 
-- `checklists/`: checklists modulares de validação técnica por camada (BD, DTO, RN, permissões, segurança). Consultados pela skill `sei-code-review-security` e usados manualmente antes do merge.
+- `checklists/`: checklists modulares de validação técnica por camada (BD, DTO, RN, permissões, segurança). Consultados pela skill `sei-revisao-tecnica` e usados manualmente antes do merge.
 - `decisions/`: registra o porquê de decisões técnicas importantes, como "por que escolhemos o SpecKit" ou "por que essa tabela foi modelada assim". Consulte antes de propor mudanças arquiteturais.
 - `memory/`: guarda contexto operacional reutilizável entre sessões de trabalho, como guias rápidos e runbooks (documentos de procedimentos). O `runbook.md` dessa pasta é pessoal de cada desenvolvedor e não é versionado.
 - `references/`: material base consultado pelas skills: padrões de codificação, roteamento de demandas e pontos de verificação obrigatórios.
-- `security/`: guias e matrizes de revisão de segurança do código, consultados pela skill `sei-code-review-security`.
+- `security/`: guias e matrizes de revisão de segurança do código, consultados pela skill `sei-revisao-tecnica`.
 - `skills/`: as skills do projeto. A maioria das pastas corresponde a uma skill com escopo e instruções próprias; algumas, como `speckit/`, agrupam uma suíte de sub-skills relacionadas.
 
 ### Como começar com a stack de IA
