@@ -98,7 +98,7 @@ class {{CLASS_NAME}}RN extends InfraRN
   protected function consultarConectado({{CLASS_NAME}}DTO $obj{{CLASS_NAME}}DTO): ?{{CLASS_NAME}}DTO
   {
     try {
-      SessaoSEI::getInstance()->validarAuditarPermissao('{{TABLE_NAME}}_consultar', __METHOD__, $obj{{CLASS_NAME}}DTO);
+      SessaoSEI::getInstance()->validarAuditarPermissao('{{TABLE_NAME}}_listar', __METHOD__, $obj{{CLASS_NAME}}DTO);
 
       $obj{{CLASS_NAME}}BD = new {{CLASS_NAME}}BD($this->getObjInfraIBanco());
       return $obj{{CLASS_NAME}}BD->consultar($obj{{CLASS_NAME}}DTO);
@@ -146,6 +146,6 @@ class {{CLASS_NAME}}RN extends InfraRN
 
   // Render desativarControlado(), reativarControlado(), and bloquearConectado()
   // here. Keep them active when sin_ativo exists and commented when it does not;
-  // md_abc_aquisicao is the canonical fixture for this commented form.
+  // md_abc_aquisicao is the reference fixture for this commented form.
 {{LOGICAL_DELETE_METHODS_BLOCK}}
 }

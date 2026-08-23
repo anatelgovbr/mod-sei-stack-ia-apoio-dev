@@ -571,6 +571,7 @@ A descrição deve distinguir:
 * instante de integração;
 * data informada pelo usuário;
 * data calculada;
+* data de exclusão lógica ou desativação;
 * fuso horário e precisão relevantes.
 
 ### Valores monetários
@@ -694,9 +695,9 @@ Diferenciar:
 
 > Instante em que o cancelamento do pedido foi confirmado pelo processo comercial. O valor nulo indica que nenhum cancelamento confirmado foi registrado. Não representa o instante da solicitação inicial de cancelamento.
 
-### Coluna `id_cliente_contratante`
+### Coluna `id_empresa`
 
-> Identificador do cliente que assumiu a contratação comercial do pedido. Relaciona o pedido ao cadastro corporativo de clientes. Não identifica necessariamente o destinatário da entrega ou o responsável pelo pagamento.
+> Identificador da empresa emissora responsável pelo pedido, que compõe a granularidade da tabela em conjunto com `id_pedido`. Relaciona o pedido ao cadastro de empresas emissoras. Não identifica o cliente que efetuou a contratação nem o destinatário da entrega.
 
 
 ---

@@ -1,168 +1,141 @@
 ---
 name: code-review
-description: >
-  Realizar code review complementar focado em correção funcional, qualidade,
-  manutenibilidade e testes, sem executar gates SEI. Use para review genérico
-  ou como complemento de `sei-code-review-security`; para diff, PR ou módulo
-  SEI use `sei-code-review-security`.
+description: Review committed changes since a fixed point (commit, branch, tag, or merge-base) against this repository's documented standards. Delegates the Standards review to sei-revisao-tecnica. Use when the user wants to review a committed branch, a PR, or asks to "review since X". The upstream Spec axis is disabled in the current version.
 ---
 
-# Code Review
+Standards review of the diff between `HEAD` and a fixed point the user supplies:
 
-Realize um code review crítico e construtivo de **correção funcional, qualidade,
-manutenibilidade e testes**. **Não faça alterações de código** — apenas analise
-e documente problemas e sugestões.
+- **Standards**: does the code conform to this repo's documented coding standards?
 
-Esta skill é complementar. Em diff, PR, branch ou módulo SEI, use
-`sei-code-review-security` para gates, segurança, impacto SEI e veredito de
-merge; use `code-review` apenas para a dimensão de qualidade/manutenibilidade.
+The Standards axis runs in an independent sub-agent so it does not pollute the
+coordinator's context. In this repository, it delegates the complete review to
+`sei-revisao-tecnica`.
 
-## Antes de Revisar
+The upstream **Spec** axis is intentionally disabled in the current version. Do
+not search for a spec, issue or requirement, and do not evaluate functional
+adherence. If the request includes that intent, run Standards only and state
+that Spec was not evaluated.
 
-1. Delimite o escopo: objetivo da alteração, arquivos modificados, camada
-   afetada e comportamento esperado.
-2. Se o escopo for diff, PR, branch ou módulo SEI, encaminhe para
-   `sei-code-review-security`; não emita veredito de merge por esta skill.
-3. Consulte o contexto necessário antes de comentar:
-   - `AGENTS.md` — guardrails técnicos e convenções operacionais
-   - documentação funcional existente no repositório e contexto do desenvolvedor
-   - `.agents/decisions/` — ADRs relevantes para entender decisões existentes
-4. Leia o diff completo primeiro; depois leia o contexto do arquivo ou método
-   quando necessário para confirmar ou derrubar um achado.
-5. Classifique cada achado como `[introduzido]`, `[pre-existente]` ou `[incerto]`.
-   Achado preexistente não deve bloquear a mudança atual, mas pode entrar como
-   risco residual.
+If a file named `spec.md` or another requirements document is itself part of the
+Git diff, Standards may inspect its changed lines only as a changed repository
+artifact. Do not load it as the functional source of truth, derive requirements
+from it, or compare the implementation against it.
 
-## Limites
+Do not remove such files from the Standards diff. Standards reviews every
+changed file for applicable repository standards, including documentation
+quality, secrets and unsafe instructions, while remaining neutral about whether
+the implementation satisfies the document.
 
-- Não recrie a matriz V01-V10 nem os gates SEI.
-- Segurança SEI, gates por artefato, impacto de release e veredito final são
-  responsabilidade de `sei-code-review-security`.
-- Se encontrar evidência clara de vulnerabilidade enquanto revisa qualidade,
-  registre o local e recomende acionar `sei-code-review-security`; não faça uma
-  análise V01-V10 paralela nesta skill.
-- A ausência de ferramenta externa, cobertura perfeita ou automação não é achado
-  por si só; reporte apenas lacunas com risco concreto para a mudança.
+## Process
 
-## Dimensões de Revisão
+### 1. Pin the fixed point
 
-Avalie cada dimensão. Use os níveis de severidade para classificar achados.
+Whatever the user said is the fixed point: a commit SHA, branch name, tag,
+`main`, `HEAD~5`, etc. If they did not specify one, ask for it.
 
-### 1. Correção Funcional
+Capture the diff command once: `git diff <fixed-point>...HEAD` (three-dot, so
+the comparison is against the merge-base). Also note the list of commits via
+`git log <fixed-point>..HEAD --oneline`.
 
-- O código faz o que deveria fazer?
-- Há casos de borda não tratados?
-- A lógica está correta?
-- Há regressão provável em fluxo existente?
-- Há tratamento adequado para entradas vazias, nulas, inválidas ou limites?
+Before going further, confirm the fixed point resolves
+(`git rev-parse <fixed-point>`) and the diff is non-empty. A bad ref or empty
+diff should fail here, not inside the Standards sub-agent.
 
-### 2. Qualidade de Código
+Never replace an invalid fixed point with the empty tree, its parent, `HEAD`, a
+default branch, or any other fallback. Report the invalid reference and stop.
 
-- Legibilidade e clareza dos nomes — variáveis, métodos e classes autoexplicativos e consistentes com o projeto?
-- Coesão alta e acoplamento baixo — responsabilidade única (SRP), sem responsabilidades misturadas?
-- Complexidade sob controle — ciclomática, aninhamento profundo, métodos longos demais?
-- Tratamento de erro consistente — sem engolir exceção (`catch` vazio), com contexto útil e sem mascarar falhas relevantes?
-- Código morto, branches/condições inalcançáveis ou redundantes, comentários enganosos ou desatualizados?
-- Duplicação de lógica que deveria ser extraída por reutilização real, não por preferência estética?
+Operate read-only. Do not checkout, fetch, commit, push or mutate refs.
 
-### 3. Arquitetura e Padrões
+### 2. Identify the standards sources
 
-- Respeitando as camadas definidas no projeto e na documentação existente?
-- Dependências fluem na direção correta?
-- Sem acoplamento indevido entre módulos?
-- A mudança cria abstração prematura, helper desnecessário ou compatibilidade sem requisito concreto?
-- A solução é a menor mudança objetiva que resolve o problema?
+Anything in the repo that documents how code should be written, such as
+`AGENTS.md`, `CODING_STANDARDS.md` or `CONTRIBUTING.md`.
 
-### 4. Testes
+For SEI, `sei-revisao-tecnica` owns the repository-specific standards, artifact
+gates, security controls, coverage rules, second pass and technical verdict. Do
+not reproduce those rules in this skill.
 
-- Novos comportamentos cobertos por testes?
-- Testes testam comportamento (não implementação)?
-- Edge cases mais importantes cobertos?
-- Se não houver teste automatizado viável, há evidência manual suficiente ou lacuna explicitada?
+On top of whatever the repo documents, the Standards axis always carries the
+**smell baseline** below, a fixed set of Fowler code smells (_Refactoring_,
+ch.3) that applies even when a repo documents nothing. Two rules bind it:
 
-### 5. Manutenibilidade e Performance
+- **The repo overrides.** A documented repo standard always wins; where it
+  endorses something the baseline would flag, suppress the smell.
+- **Always a judgement call.** Each smell is a labelled heuristic ("possible
+  Feature Envy"), never a hard violation, and, like any standard here, skip
+  anything tooling already enforces.
 
-- Fácil de entender para alguém novo?
-- Performance aceitável (sem N+1, sem alocações desnecessárias)?
-- Queries N+1 em loops de `listar()` — verificar se o `*BD.php` carrega coleções filhas dentro de um `foreach`, em vez de um join ou consulta em bloco via DTO.
-- Consulta sem critério, sem limite ou com retorno superdimensionado (`retObj*`) para o uso real?
-- Logging adequado para debugging em produção, sem ruído excessivo?
+Each smell reads *what it is* followed by *how to fix*; match it against the
+diff:
 
-## Severidade
+- **Mysterious Name**: a function, variable, or type whose name does not reveal
+  what it does or holds. Rename it; if no honest name comes, the design is murky.
+- **Duplicated Code**: the same logic shape appears in more than one hunk or
+  file in the change. Extract the shared shape, call it from both.
+- **Feature Envy**: a method that reaches into another object's data more than
+  its own. Move the method onto the data it envies.
+- **Data Clumps**: the same few fields or params keep travelling together, a
+  type wanting to be born. Bundle them into one type, pass that.
+- **Primitive Obsession**: a primitive or string standing in for a domain
+  concept that deserves its own type. Give the concept its own small type.
+- **Repeated Switches**: the same `switch` or `if` cascade on the same type
+  recurs across the change. Replace with polymorphism, or one map both sites
+  share.
+- **Shotgun Surgery**: one logical change forces scattered edits across many
+  files in the diff. Gather what changes together into one module.
+- **Divergent Change**: one file or module is edited for several unrelated
+  reasons. Split so each module changes for one reason.
+- **Speculative Generality**: abstraction, parameters, or hooks added for needs
+  that are not current. Delete it; inline back until a real need shows.
+- **Message Chains**: long `a.b().c().d()` navigation the caller should not
+  depend on. Hide the walk behind one method on the first object.
+- **Middle Man**: a class or function that mostly just delegates onward. Cut it,
+  call the real target direct.
+- **Refused Bequest**: a subclass or implementer that ignores or overrides most
+  of what it inherits. Drop the inheritance, use composition.
 
-- **Crítico** — bloqueia a qualidade da mudança: bug grave, regressão provável,
-  perda/corrupção de dados, comportamento central quebrado ou risco claro que
-  exige revisão especializada.
-- **Alto** — deve ser corrigido antes de considerar a mudança pronta: caso de
-  borda importante quebrado, erro de integração, falta de teste em comportamento
-  arriscado ou violação forte de padrão do projeto.
-- **Médio** — atenção: complexidade desnecessária, responsabilidade misturada,
-  duplicação relevante, nome confuso ou lacuna de teste de menor risco.
-- **Sugestão** — opcional: melhoria pequena de legibilidade, simplificação local
-  ou observação sem impacto direto na entrega.
+### 3. Spawn the Standards sub-agent
 
-Use **Crítico** ou **Alto** somente com evidência `arquivo:linha` e explicação de
-impacto. Se a evidência for insuficiente, marque como `[incerto]` e faça uma
-pergunta objetiva.
+The Standards sub-agent prompt includes:
 
-## Segunda Passada Obrigatória
+- The full diff command and commit list.
+- The list of standards-source files found in step 2, plus the smell baseline
+  from step 2 pasted in full. The sub-agent has no other access to it.
+- The instruction to load and execute `sei-revisao-tecnica` over the supplied
+  diff, preserving its technical coverage, second pass and verdict.
+- The brief: "Report, per file or hunk where relevant, every place the diff
+  violates a documented standard with the source file and rule, plus any
+  baseline smell with its name and quoted hunk. Distinguish hard violations from
+  judgement calls. Repository standards override the baseline. Skip anything
+  tooling enforces."
 
-Antes de finalizar:
+The sub-agent must actually load and follow `sei-revisao-tecnica`; naming it is
+not enough. Do not substitute a generic quality review, omit SEI gates, or use a
+legacy reviewer. The Standards result is invalid unless it contains the coverage,
+dimensions, second pass and technical verdict required by
+`sei-revisao-tecnica`.
 
-1. Tente derrubar cada achado com contexto adicional do arquivo, método ou fluxo.
-2. Remova achados que sejam preferência pessoal, hipótese fraca ou falso positivo.
-3. Rebaixe ou marque como `[incerto]` quando faltar evidência concreta.
-4. Preserve achados Críticos/Altos apenas quando houver impacto plausível e local
-   verificável.
+### 4. Report
 
-## Formato do Output
-
-Priorize achados. Se não houver achados relevantes, diga explicitamente.
-
-Use este formato:
+Present the Standards report verbatim or lightly cleaned under this heading:
 
 ```text
-## Achados
-- [Crítico|Alto|Médio|Sugestão][introduzido|pre-existente|incerto] <arquivo:linha> - <descrição objetiva do problema e impacto>. Sugestão: <menor ajuste que resolve>.
-
-## Perguntas / Assunções
-- <pergunta objetiva somente se bloquear a conclusão ou explicar achado incerto>
-
-## Testes
-- <lacunas de teste ou evidência revisada>
-
-## Segurança / Gates SEI
-- <não avaliados por esta skill; usar `sei-code-review-security` quando aplicável, ou registrar vulnerabilidade clara encontrada por evidência>
-
-## Parecer de Qualidade
-**sem achados relevantes | ajustes recomendados | risco alto | precisa de análise humana**
+## Standards
+<complete sei-revisao-tecnica report>
 ```
 
-Para cada achado:
-- **Local**: arquivo + linha (se possível)
-- **Descrição**: o que está errado e por quê
-- **Sugestão**: como corrigir
-- **Origem**: regra de qualidade, teste, arquitetura ou documentação consultada
+End with one line containing the total findings and the worst Standards issue,
+if any. Preserve the technical verdict emitted by `sei-revisao-tecnica`.
 
-### Critério de Aprovação
+Do not add a `Spec` section. If the user requested functional comparison, add
+only this plain note after the Standards summary, with no heading:
 
-A dimensão de qualidade está apta quando:
+`Spec was not evaluated because that axis is disabled in the current version.`
 
-- zero achados **Crítico** em aberto
-- zero achados **Alto** sem justificativa registrada
-- achados `[incerto]` relevantes foram convertidos em pergunta objetiva ou
-  encaminhados para análise humana
+## Origin and Local Adaptation
 
-Este critério não substitui o veredito de merge de `sei-code-review-security`
-quando a mudança estiver no escopo SEI.
+Based on `mattpocock/skills`, `skills/engineering/code-review/SKILL.md`, commit
+`6a34259e99bc5fed4f8fe5da61c273dad14edf67`, under the MIT license.
 
-## Regras
-
-- Priorize bugs, regressões e riscos com evidência antes de sugestões cosméticas
-- Não reescreva grandes trechos por preferência pessoal
-- Proponha a simplificação objetiva mínima — sugira o menor ajuste que resolve; não reescreva o que já está claro
-- Diferencie achados introduzidos pela mudança de problemas preexistentes
-- Não bloqueie a mudança atual por problema preexistente sem evidência de agravamento
-- Achados Críticos/Altos exigem evidência `arquivo:linha`
-- Se a mudança tiver impacto arquitetural, recomende consultar um especialista em arquitetura antes de prosseguir.
-- Se identificar uma decisão significativa implícita no código, recomende usar a skill `escrever-adr`
+Local adaptation is limited to delegating Standards to `sei-revisao-tecnica`,
+disabling the upstream Spec axis, and requiring read-only operation.

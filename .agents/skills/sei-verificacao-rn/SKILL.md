@@ -19,7 +19,7 @@ description: >
 
 Skill de gate para validar padroes de transacao em classes RN do SEI.
 
-## 7 Regras de auditoria
+## Regras de auditoria
 
 | ID | Regra | Severidade | O que verifica |
 |----|-------|------------|----------------|
@@ -28,13 +28,25 @@ Skill de gate para validar padroes de transacao em classes RN do SEI.
 | T3 | RN nao chama BD de outra classe | **Erro** | Cada RN acessa apenas sua propria BD |
 | T4 | Controle manual de conexao/transacao merece revisao | **Aviso** | `fecharConexao()`, `commitTransacao()` e similares exigem contexto claro |
 | T5 | try/catch com `InfraException` e encadeamento de erro e recomendavel | **Aviso** | padrao recorrente nos exemplos do manual |
-| A1 | Metodo de escrita usa `validarAuditarPermissao` | **Erro** | cadastrar/alterar/excluir com `validarPermissao` puro perde trilha de auditoria silenciosamente |
-| A2 | Metodo de escrita sem verificacao de permissao | **Aviso** | ausencia total de check pode ser helper interno — revisar intencionalidade |
+| T6 | `*Controlado` contem somente persistencia | **Erro** | e-mail, Solr, indexacao e integracao externa devem ocorrer em wrapper publico depois de todos os acessos de persistencia |
+| A1 | Metodo de escrita usa recurso auditado compatível | **Erro** | o recurso inicia com `md_` e termina com o sufixo da operação de escrita |
+| A2 | Wrapper publico de escrita sem verificacao | **Aviso** | revisar intencionalidade sem exigir sessao em helper `*Interno`, hook ou evento sem usuario |
+| A3 | Leitura publica usa recurso `_listar` coerente | **Erro** | consultar/listar/contar usam recurso iniciado por `md_` e terminado em `_listar` |
 
 ## Observacao sobre sufixos
 
 Aplicar T1 apenas a metodos CRUD padronizados. Nao inferir sufixo de qualquer
 metodo legado por heuristica lexical ampla.
+
+## Efeitos apos commit
+
+O metodo `*Controlado` persiste e retorna. Um wrapper publico chama a operacao
+transacional e somente depois de seu retorno envia e-mail, indexa no Solr ou
+aciona integracao externa. Consulte `references/padroes-transacao.md` para o
+exemplo completo.
+
+O wrapper chama o nome público resolvido pela `InfraRN`. Chamar
+`$this->algumaOperacaoControlado()` diretamente não comprova commit e bloqueia T6.
 
 ## Inicializacao correta
 
@@ -51,9 +63,9 @@ class MdRiRestauranteRN extends InfraRN {
 
 | Code | Significado |
 |------|-------------|
-| 0 | PASS — todas as regras conformes |
-| 1 | WARN — avisos presentes, zero erros |
-| 2 | BLOCK — erros presentes |
+| 0 | PASS, com ao menos uma RN analisada |
+| 1 | WARN, avisos presentes e zero erros |
+| 2 | BLOCK, inclusive entrada inexistente, incompatível, vazia ou sem extracao |
 
 ## Uso
 
@@ -99,7 +111,7 @@ CRUD_READ  = ['consultar', 'listar', 'contar']
 | Tipo | Chamada obrigatoria | Recurso SIP esperado |
 |------|--------------------|-----------------------|
 | Escrita (cadastrar/alterar/excluir) | `validarAuditarPermissao('md_xxx_<acao>', __METHOD__, $dto)` | registrado na regra de auditoria do SIP |
-| Leitura (consultar/listar/contar) | `validarAuditarPermissao('md_xxx_listar', __METHOD__, $dto)` | recurso `listar` — nao entra na regra de auditoria |
-| Helper interno (hook/evento) | nenhuma — sem sessao de usuario | nao aplicavel |
+| Leitura (consultar/listar/contar) | `validarAuditarPermissao('md_xxx_listar', __METHOD__, $dto)` | recurso `listar`, nao entra na regra de auditoria |
+| Helper interno (hook/evento) | nenhuma, sem sessao de usuario | nao aplicavel |
 
 Ver `.agents/references/padrao-auditoria-sip-sei.md` para o padrao completo incluindo o script SIP.

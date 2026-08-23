@@ -24,7 +24,7 @@ SKILL_NAME = "sei-verificacao-banco-dados"
 
 
 # ═══════════════════════════════════════════════════════════════
-# REGEX PATTERNS — PHP (InfraPHP DTO/BD)
+# REGEX PATTERNS: PHP (InfraPHP DTO/BD)
 # ═══════════════════════════════════════════════════════════════
 
 RE_TABELA = re.compile(
@@ -65,7 +65,6 @@ RE_META_INDEX_CALL = re.compile(
     r"criarIndice\s*\(\s*['\"]([^'\"]+)['\"]\s*,\s*['\"]([^'\"]+)['\"]\s*,\s*\[([^\]]*)\]",
     re.IGNORECASE,
 )
-
 RE_SIN_ATIVO_COLUNA = re.compile(r"['\"]sin_ativo['\"]", re.IGNORECASE)
 RE_FK_CONSTRAINT = re.compile(r"fk_md_\w+_\w+_\w+")
 RE_PK_CONSTRAINT = re.compile(r"pk_md_\w+_\w+")
@@ -92,7 +91,7 @@ RE_SEQ_TABLE = re.compile(r"^seq_")
 
 
 # ═══════════════════════════════════════════════════════════════
-# REGEX PATTERNS — SQL/DDL
+# REGEX PATTERNS: SQL/DDL
 # ═══════════════════════════════════════════════════════════════
 
 RE_CREATE_TABLE = re.compile(
@@ -122,6 +121,8 @@ RE_SEQ_SQLSERVER = re.compile(
     r'identity\s*\(\s*1\s*,\s*1\s*\)',
     re.IGNORECASE
 )
+RE_GENERATED_IDENTITY = re.compile(r'\bGENERATED\s+(?:ALWAYS|BY\s+DEFAULT)\s+AS\s+IDENTITY\b', re.IGNORECASE)
+RE_TEXT_TYPE = re.compile(r'^TEXT\b', re.IGNORECASE)
 RE_AUTOINCREMENT = re.compile(r'AUTO_INCREMENT\s*=\s*(\d+)', re.IGNORECASE)
 RE_BIGINT = re.compile(r'\bbigint\b', re.IGNORECASE)
 RE_BLOB2 = re.compile(r'\bblob\b', re.IGNORECASE)
@@ -143,102 +144,96 @@ RE_VARCHAR_COL = re.compile(
 
 
 # ═══════════════════════════════════════════════════════════════
-# REGRAS — definicao e validadores
+# REGRAS: definicao e validadores
 # ═══════════════════════════════════════════════════════════════
 
 REGRAS = [
     {
-        "id": "R1",
+        "id": "DB01",
         "nome": "Nome tabela md_<sigla>_<entidade>",
         "severidade": "erro",
         "base": "Manual SEI MD §Tabela",
     },
     {
-        "id": "R2",
+        "id": "DB02",
         "nome": "Relacionamento N:N",
         "severidade": "erro",
         "base": "Manual SEI MD §Tabela",
     },
     {
-        "id": "R3",
+        "id": "DB03",
         "nome": "Limite de 26 caracteres",
         "severidade": "erro",
         "base": "Manual SEI MD §Regras Gerais",
     },
     {
-        "id": "R3b",
-        "nome": "Tabela funcional sem folga para seq_ (Oracle 30)",
-        "severidade": "erro",
-        "base": "Manual SEI MD §Regras Gerais / Sequências",
-    },
-    {
-        "id": "R4",
+        "id": "DB04",
         "nome": "PK sequencial",
         "severidade": "erro",
         "base": "Manual SEI MD §Colunas",
     },
     {
-        "id": "R5",
+        "id": "DB05",
         "nome": "FK constraint naming",
         "severidade": "erro",
         "base": "Manual SEI MD §Chave Estrangeira",
     },
     {
-        "id": "R6",
+        "id": "DB06",
         "nome": "sin_ativo em exclusao logica",
         "severidade": "erro",
         "base": "Manual SEI MD §Colunas",
     },
     {
-        "id": "R7",
+        "id": "DB07",
         "nome": "PK constraint naming",
         "severidade": "erro",
         "base": "Manual SEI MD §Chave Primária",
     },
     {
-        "id": "R8",
+        "id": "DB08",
         "nome": "Tipos SQL-99",
         "severidade": "erro",
         "base": "Manual SEI MD §Tipos de Dados",
     },
     {
-        "id": "R9",
+        "id": "DB09",
         "nome": "Indice em FK",
         "severidade": "aviso",
         "base": "Manual SEI MD §Índices",
     },
     {
-        "id": "R10",
+        "id": "DB10",
         "nome": "Sequence naming",
         "severidade": "aviso",
         "base": "Manual SEI MD §Sequências",
     },
     {
-        "id": "R11",
+        "id": "DB11",
         "nome": "AK constraint naming",
         "severidade": "aviso",
         "base": "Manual SEI MD §Chave Alternativa",
     },
     {
-        "id": "R12",
+        "id": "DB12",
         "nome": "Comentarios/Docblock",
         "severidade": "aviso",
         "base": "Manual SEI MD §Regras Gerais",
     },
     {
-        "id": "R13",
+        "id": "DB13",
         "nome": "Sem verbos no nome",
         "severidade": "aviso",
         "base": "Manual SEI MD §Tabela",
     },
     {
-        "id": "R14",
+        "id": "DB14",
         "nome": "Singular",
         "severidade": "aviso",
         "base": "Manual SEI MD §Regras Gerais",
     },
     {
-        "id": "R15",
+        "id": "DB15",
         "nome": "Formato do nome",
         "severidade": "aviso",
         "base": "Manual SEI MD §Regras Gerais",
@@ -247,7 +242,7 @@ REGRAS = [
 
 
 # ═══════════════════════════════════════════════════════════════
-# ENTITIES — estruturas extraidas de PHP/DDL
+# ENTITIES: estruturas extraidas de PHP/DDL
 # ═══════════════════════════════════════════════════════════════
 
 class Entity:
@@ -257,7 +252,11 @@ class Entity:
         self.colunas = []
         self.pk_coluna = None
         self.pk_tipo = None
+        self.pk_colunas = []
+        self.pk_tipos = {}
         self.fks = []
+        self.fk_constraints = []
+        self.colunas_relacionadas = []
         self.tem_exclusao_logica = False
         self.campo_exclusao_logica = None
         self.tem_docblock = False
@@ -273,11 +272,31 @@ class Entity:
         self.tem_bigint = False
         self.tem_blob = False
         self.tem_text = False
+        self.tem_geracao_automatica = False
+        self.evidencias = {}
 
-    def adicionar_coluna(self, nome: str, tipo: str = None):
+    def registrar_evidencia(self, tipo: str, arquivo: str, linha: int, objeto: str = None):
+        evidencia = {"arquivo": arquivo, "linha": linha}
+        chaves = [tipo]
+        if objeto:
+            chaves.insert(0, f"{tipo}:{objeto.lower()}")
+        for chave in chaves:
+            if evidencia not in self.evidencias.setdefault(chave, []):
+                self.evidencias[chave].append(evidencia)
+
+    def obter_evidencia(self, tipo: str = "tabela", objeto: str = None) -> dict:
+        chave = f"{tipo}:{objeto.lower()}" if objeto else tipo
+        candidatas = self.evidencias.get(chave) or self.evidencias.get(tipo) or self.evidencias.get("tabela")
+        if candidatas:
+            return candidatas[0].copy()
+        return {"arquivo": self.arquivos[0] if self.arquivos else "", "linha": 1}
+
+    def adicionar_coluna(self, nome: str, tipo: str = None, arquivo: str = None, linha: int = None):
         self.colunas.append({"nome": nome, "tipo": tipo})
+        if arquivo and linha:
+            self.registrar_evidencia("coluna", arquivo, linha, nome)
 
-    def adicionar_fk(self, coluna: str, tabela_ref: str, coluna_ref: str):
+    def adicionar_fk(self, coluna: str, tabela_ref: str, coluna_ref: str, arquivo: str = None, linha: int = None):
         self.fks.append({
             "coluna": coluna,
             "coluna_sql": coluna,
@@ -286,10 +305,125 @@ class Entity:
             "coluna_ref": coluna_ref,
             "coluna_ref_base": normalize_column_ref(coluna_ref),
         })
+        if arquivo and linha:
+            self.registrar_evidencia("fk", arquivo, linha, coluna)
 
 
 def parse_php_array_items(raw: str) -> list[str]:
     return [match.group(1).strip() for match in re.finditer(r"['\"]([^'\"]+)['\"]", raw)]
+
+
+def split_php_args(raw: str) -> list[str]:
+    args = []
+    start = 0
+    depth = 0
+    quote = None
+    for index, char in enumerate(raw):
+        if quote:
+            if char == quote and (index == 0 or raw[index - 1] != "\\"):
+                quote = None
+        elif char in "'\"":
+            quote = char
+        elif char in "([":
+            depth += 1
+        elif char in ")]":
+            depth -= 1
+        elif char == "," and depth == 0:
+            args.append(raw[start:index].strip())
+            start = index + 1
+    args.append(raw[start:].strip())
+    return args
+
+
+def extract_php_calls(content: str, function_name: str):
+    pattern = re.compile(rf"\b{re.escape(function_name)}\s*\(", re.IGNORECASE)
+    for match in pattern.finditer(content):
+        opening = content.find("(", match.start(), match.end())
+        depth = 0
+        quote = None
+        for index in range(opening, len(content)):
+            char = content[index]
+            if quote:
+                if char == quote and content[index - 1] != "\\":
+                    quote = None
+            elif char in "'\"":
+                quote = char
+            elif char == "(":
+                depth += 1
+            elif char == ")":
+                depth -= 1
+                if depth == 0:
+                    yield split_php_args(content[opening + 1:index]), match.start()
+                    break
+
+
+def php_literal(raw: str) -> str:
+    value = raw.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
+        return value[1:-1]
+    return value
+
+
+def get_entity(entities: dict[str, Entity], table_name: str, path: str) -> Entity:
+    entity = entities.get(table_name)
+    if entity is None:
+        entity = Entity(table_name, [path])
+        entity.tem_docblock = True
+        entities[table_name] = entity
+    elif path not in entity.arquivos:
+        entity.arquivos.append(path)
+    return entity
+
+
+def apply_php_metadata(path: str, content: str, entities: dict[str, Entity]):
+    for args, position in extract_php_calls(content, "adicionarColuna"):
+        if len(args) >= 2:
+            entity = get_entity(entities, php_literal(args[0]), path)
+            entity.adicionar_coluna(php_literal(args[1]), args[2] if len(args) > 2 else "", path, content[:position].count("\n") + 1)
+
+    for args, position in extract_php_calls(content, "adicionarChavePrimaria"):
+        if len(args) >= 3:
+            entity = get_entity(entities, php_literal(args[0]), path)
+            entity.constraint_pk = php_literal(args[1])
+            columns = parse_php_array_items(args[2])
+            if columns:
+                entity.pk_coluna = columns[0]
+                entity.pk_colunas = columns
+                entity.pk_tipo = "informado"
+                entity.pk_tipos = {column: entity.pk_tipo for column in columns}
+                for column in columns:
+                    entity.registrar_evidencia("pk", path, content[:position].count("\n") + 1, column)
+
+    for args, position in extract_php_calls(content, "adicionarChaveEstrangeira"):
+        if len(args) >= 5:
+            constraint = php_literal(args[0])
+            entity = get_entity(entities, php_literal(args[1]), path)
+            columns = parse_php_array_items(args[2])
+            ref_columns = parse_php_array_items(args[4])
+            entity.constraints_fk.append(constraint)
+            entity.fk_constraints.append({"nome": constraint, "colunas": columns, "tabela_ref": php_literal(args[3])})
+            entity.supplemental_constraints_fk.append(constraint)
+            entity.registrar_evidencia("constraint", path, content[:position].count("\n") + 1, constraint)
+            if columns:
+                entity.adicionar_fk(columns[0], php_literal(args[3]), ref_columns[0] if ref_columns else "", path, content[:position].count("\n") + 1)
+
+    for args, position in extract_php_calls(content, "criarIndice"):
+        if len(args) >= 3:
+            entity = get_entity(entities, php_literal(args[0]), path)
+            name = php_literal(args[1])
+            columns = parse_php_array_items(args[2])
+            entity.constraints_index.append(name)
+            entity.indices.append({"nome": name, "colunas": columns})
+            entity.registrar_evidencia("indice", path, content[:position].count("\n") + 1, name)
+
+    for args, position in extract_php_calls(content, "criarSequencialNativa"):
+        if args:
+            sequence = php_literal(args[0])
+            table_name = sequence[4:] if sequence.startswith("seq_") else sequence
+            entity = get_entity(entities, table_name, path)
+            entity.tem_sequence = True
+            entity.sequencias_encontradas.append(sequence)
+            entity.registrar_evidencia("sequence", path, content[:position].count("\n") + 1, sequence)
 
 
 def normalize_table_ref(tabela_ref: str) -> str:
@@ -298,6 +432,21 @@ def normalize_table_ref(tabela_ref: str) -> str:
 
 def normalize_column_ref(coluna_ref: str) -> str:
     return coluna_ref.strip().split('.')[-1]
+
+
+def identifier_mentions_table(identifier: str, table_name: str) -> bool:
+    identifier_tokens = identifier.lower().split("_")
+    table_tokens = table_name.lower().split("_")
+    if table_tokens[:1] == ["md"] and len(table_tokens) > 2:
+        table_tokens = table_tokens[2:]
+    meaningful = [token for token in table_tokens if token not in {"rel", "adm", "tipo"}]
+    return bool(meaningful) and any(
+        len(identifier_token) >= 3
+        and len(table_token) >= 3
+        and (identifier_token.startswith(table_token[:3]) or table_token.startswith(identifier_token[:3]))
+        for identifier_token in identifier_tokens
+        for table_token in meaningful
+    )
 
 
 def merge_entity(base: Entity, extra: Entity):
@@ -311,6 +460,11 @@ def merge_entity(base: Entity, extra: Entity):
     if extra.pk_tipo and not base.pk_tipo:
         base.pk_tipo = extra.pk_tipo
 
+    for coluna in extra.pk_colunas:
+        if coluna not in base.pk_colunas:
+            base.pk_colunas.append(coluna)
+    base.pk_tipos.update(extra.pk_tipos)
+
     if extra.constraint_pk and not base.constraint_pk:
         base.constraint_pk = extra.constraint_pk
 
@@ -320,6 +474,17 @@ def merge_entity(base: Entity, extra: Entity):
     for seq in extra.sequencias_encontradas:
         if seq not in base.sequencias_encontradas:
             base.sequencias_encontradas.append(seq)
+
+    existing_columns = {(column["nome"], column.get("tipo")) for column in base.colunas}
+    for column in extra.colunas:
+        key = (column["nome"], column.get("tipo"))
+        if key not in existing_columns:
+            base.colunas.append(column)
+            existing_columns.add(key)
+
+    for related in extra.colunas_relacionadas:
+        if related not in base.colunas_relacionadas:
+            base.colunas_relacionadas.append(related)
 
     existing_fk_keys = {
         (
@@ -345,6 +510,10 @@ def merge_entity(base: Entity, extra: Entity):
         if valor not in base.supplemental_constraints_fk:
             base.supplemental_constraints_fk.append(valor)
 
+    for relation in extra.fk_constraints:
+        if relation not in base.fk_constraints:
+            base.fk_constraints.append(relation)
+
     for nome_lista in ("constraints_ak", "constraints_index"):
         base_lista = getattr(base, nome_lista)
         for valor in getattr(extra, nome_lista):
@@ -361,6 +530,20 @@ def merge_entity(base: Entity, extra: Entity):
             base.indices.append(indice)
             existing_indices.add(key)
 
+    base.tem_exclusao_logica = base.tem_exclusao_logica or extra.tem_exclusao_logica
+    base.campo_exclusao_logica = base.campo_exclusao_logica or extra.campo_exclusao_logica
+    base.tem_docblock = base.tem_docblock or extra.tem_docblock
+    base.tem_bigint = base.tem_bigint or extra.tem_bigint
+    base.tem_blob = base.tem_blob or extra.tem_blob
+    base.tem_text = base.tem_text or extra.tem_text
+    base.tem_geracao_automatica = base.tem_geracao_automatica or extra.tem_geracao_automatica
+    for invalid_type in extra.tipos_invalidos:
+        if invalid_type not in base.tipos_invalidos:
+            base.tipos_invalidos.append(invalid_type)
+    for tipo, evidencias in extra.evidencias.items():
+        for evidencia in evidencias:
+            base.registrar_evidencia(tipo, evidencia["arquivo"], evidencia["linha"])
+
 
 # ═══════════════════════════════════════════════════════════════
 # PARSERS
@@ -372,6 +555,8 @@ def parse_php_dto(caminho: str, conteudo: str) -> Optional[Entity]:
     pk_coluna = None
     pk_coluna_sql = None
     pk_tipo = None
+    pk_colunas = []
+    pk_tipos = {}
     fks = []
     tem_exclusao_logica = False
     campo_exclusao_logica = None
@@ -406,6 +591,8 @@ def parse_php_dto(caminho: str, conteudo: str) -> Optional[Entity]:
                     break
         if pk_coluna_sql is None:
             pk_coluna_sql = pk_coluna_dto
+        pk_colunas.append(pk_coluna_sql)
+        pk_tipos[pk_coluna_sql] = pk_tipo
 
     for match_fk in RE_FK.finditer(conteudo):
         attr = match_fk.group(1).strip()
@@ -423,6 +610,7 @@ def parse_php_dto(caminho: str, conteudo: str) -> Optional[Entity]:
             "tabela_ref_base": normalize_table_ref(tabela_ref),
             "coluna_ref": campo_ref,
             "coluna_ref_base": normalize_column_ref(campo_ref),
+            "linha": conteudo[:match_fk.start()].count("\n") + 1,
         })
 
     for match_exc in RE_EXC_LOGICA.finditer(conteudo):
@@ -432,260 +620,269 @@ def parse_php_dto(caminho: str, conteudo: str) -> Optional[Entity]:
     if RE_DOCBLOCK_TABLE.search(conteudo):
         tem_docblock = True
 
-    for match_col_rel in RE_COLUNA_RELACIONADA.finditer(conteudo):
-        pass
-
     entity = Entity(nome_tabela, [caminho])
     entity.colunas = colunas
     entity.pk_coluna = pk_coluna_sql
     entity.pk_tipo = pk_tipo
+    entity.pk_colunas = pk_colunas
+    entity.pk_tipos = pk_tipos
     entity.fks = fks
     entity.tem_exclusao_logica = tem_exclusao_logica
     entity.campo_exclusao_logica = campo_exclusao_logica
     entity.tem_docblock = tem_docblock
+    entity.registrar_evidencia("tabela", caminho, conteudo[:match.start()].count("\n") + 1, nome_tabela)
+    for match_col in RE_COLUNA_DTO.finditer(conteudo):
+        column = match_col.group(3).strip().strip("'\"").rstrip("'\"")
+        entity.registrar_evidencia("coluna", caminho, conteudo[:match_col.start()].count("\n") + 1, column)
+    for match_pk in RE_PK.finditer(conteudo):
+        attribute = match_pk.group(1).strip()
+        column = next((item["nome"] for item in colunas if item.get("nome_attr") == attribute), attribute)
+        entity.registrar_evidencia("pk", caminho, conteudo[:match_pk.start()].count("\n") + 1, column)
+    for fk in fks:
+        entity.registrar_evidencia("fk", caminho, fk.pop("linha"), fk.get("coluna_sql") or fk["coluna"])
+    for match_col_rel in RE_COLUNA_RELACIONADA.finditer(conteudo):
+        column = php_literal(match_col_rel.group(3))
+        entity.colunas_relacionadas.append(column)
+        entity.registrar_evidencia("related", caminho, conteudo[:match_col_rel.start()].count("\n") + 1, column)
 
     return entity
 
 
 def parse_php_bd(caminho: str, conteudo: str, entities: dict):
+    class_match = re.search(r"class\s+(\w+)BD\s+extends\s+InfraBD", conteudo)
+    inferred_table = re.sub(r"(?<!^)(?=[A-Z])", "_", class_match.group(1)).lower() if class_match else None
+    if inferred_table and inferred_table not in entities:
+        entities[inferred_table] = Entity(inferred_table, [caminho])
+    elif inferred_table in entities and caminho not in entities[inferred_table].arquivos:
+        entities[inferred_table].arquivos.append(caminho)
+
+    apply_php_metadata(caminho, conteudo, entities)
     has_sequence = RE_INFRA_SEQUENCIA.search(conteudo) is not None
-
-    for nome_tabela, entity in entities.items():
-        if has_sequence:
+    patterns = {
+        "fk": re.compile(r"\bfk\d*_md_[a-z0-9_]+", re.IGNORECASE),
+        "pk": re.compile(r"\bpk\d*_md_[a-z0-9_]+", re.IGNORECASE),
+        "ak": re.compile(r"\bak\d*_md_[a-z0-9_]+", re.IGNORECASE),
+        "index": re.compile(r"\bi\d+_[a-z0-9_]+", re.IGNORECASE),
+    }
+    for table_name, entity in entities.items():
+        if has_sequence and (table_name == inferred_table or (inferred_table is None and len(entities) == 1)):
             entity.tem_sequence = True
-
-    fk_pattern = re.compile(r'fk_md_\w+')
-    pk_pattern = re.compile(r'pk_md_\w+')
-    ak_pattern = re.compile(r'ak_md_\w+(?:_\w+)*')
-    index_pattern = re.compile(r'(?:fk_md_\w+|i\d+_\w+)')
-
-    for fk_match in fk_pattern.finditer(conteudo):
-        constraint_nome = fk_match.group(0)
-        if constraint_nome not in entities[nome_tabela].constraints_fk:
-            entities[nome_tabela].constraints_fk.append(constraint_nome)
-
-    for pk_match in pk_pattern.finditer(conteudo):
-        constraint_nome = pk_match.group(0)
-        pk_val = entities[nome_tabela].constraint_pk
-        if pk_val is None or pk_val == "" or pk_val == "pk_md_" + nome_tabela.split("_")[-1]:
-            entities[nome_tabela].constraint_pk = constraint_nome
-
-    for ak_match in ak_pattern.finditer(conteudo):
-        constraint_nome = ak_match.group(0)
-        if constraint_nome not in entities[nome_tabela].constraints_ak:
-            entities[nome_tabela].constraints_ak.append(constraint_nome)
-
-    for idx_match in index_pattern.finditer(conteudo):
-        constraint_nome = idx_match.group(0)
-        if constraint_nome not in entities[nome_tabela].constraints_index:
-            entities[nome_tabela].constraints_index.append(constraint_nome)
+        for kind, pattern in patterns.items():
+            for match in pattern.finditer(conteudo):
+                name = match.group(0)
+                owners = [candidate for candidate in entities if candidate in name.lower()]
+                owner = max(owners, key=len) if owners else None
+                if len(entities) > 1 and owner != table_name:
+                    continue
+                if kind == "fk" and name not in entity.constraints_fk:
+                    entity.constraints_fk.append(name)
+                    entity.registrar_evidencia("constraint", caminho, conteudo[:match.start()].count("\n") + 1, name)
+                elif kind == "pk" and not entity.constraint_pk:
+                    entity.constraint_pk = name
+                    entity.registrar_evidencia("constraint", caminho, conteudo[:match.start()].count("\n") + 1, name)
+                elif kind == "ak" and name not in entity.constraints_ak:
+                    entity.constraints_ak.append(name)
+                    entity.registrar_evidencia("constraint", caminho, conteudo[:match.start()].count("\n") + 1, name)
+                elif kind == "index" and name not in entity.constraints_index:
+                    entity.constraints_index.append(name)
+                    entity.registrar_evidencia("indice", caminho, conteudo[:match.start()].count("\n") + 1, name)
 
 
 def parse_php_release_script(caminho: str, conteudo: str) -> list[Entity]:
-    if "CREATE TABLE" not in conteudo.upper():
-        return []
-
-    entities_by_name = {}
-    create_pattern = re.compile(
-        r'CREATE\s+TABLE\s+(\w+)\s*\((.+?)\)\s*[\'"]',
-        re.DOTALL | re.IGNORECASE
-    )
-    for match in create_pattern.finditer(conteudo):
-        nome_tabela = match.group(1).strip()
-
-        if nome_tabela.lower() in {"sei_teste", "sip_teste"}:
-            continue
-
-        is_sequence_table = nome_tabela.startswith("seq_")
-
-        entity = entities_by_name.get(nome_tabela)
-        if entity is None:
-            entity = Entity(nome_tabela, [caminho])
-            entities_by_name[nome_tabela] = entity
-        # Release scripts are not DTOs, so docblock checks do not apply.
-        entity.tem_docblock = True
-
-        if is_sequence_table:
-            entity.tem_sequence = True
-            entity.sequencias_encontradas.append(nome_tabela[4:])
-            seq_pat = re.compile(r'seq_(\w+)', re.IGNORECASE)
-            for sm in seq_pat.finditer(nome_tabela):
-                if sm.group(1) not in entity.sequencias_encontradas:
-                    entity.sequencias_encontradas.append(sm.group(1))
-            continue
-
-        pk_match = RE_PRIMARY_KEY.search(match.group(2))
-        if pk_match:
-            pk_cols = pk_match.group(1).strip()
-            entity.pk_coluna = pk_cols.strip('"').strip("'")
-            entity.pk_tipo = "sequencial"
-
-        fk_pattern = re.compile(
-            r'FOREIGN\s+KEY\s*\(([^)]+)\)\s*REFERENCES\s+(\w+)\s*\(([^)]+)\)',
-            re.IGNORECASE
-        )
-        for fk_m in fk_pattern.finditer(match.group(2)):
-            col = fk_m.group(1).strip().strip('"').strip("'")
-            ref_tbl = fk_m.group(2).strip()
-            ref_col = fk_m.group(3).strip().strip('"').strip("'")
-            entity.adicionar_fk(col, ref_tbl, ref_col)
-            entity.constraints_fk.append(f"fk_{nome_tabela}_{ref_tbl}")
-
-        if RE_BIGINT.search(match.group(2)):
-            entity.tem_bigint = True
-        if RE_BLOB2.search(match.group(2)):
-            entity.tem_blob = True
-        if RE_TEXT2.search(match.group(2)):
-            entity.tem_text = True
-        if RE_SERIAL2.search(match.group(2)):
-            entity.tipos_invalidos.append("serial")
-        if RE_MONEY2.search(match.group(2)):
-            entity.tipos_invalidos.append("money")
-
-        col_pat = re.compile(
-            r'^\s*(\w+)\s+\'\s*\.',
-            re.MULTILINE
-        )
-        for cm in col_pat.finditer(match.group(2)):
-            entity.adicionar_coluna(cm.group(1).strip(), "")
-
-    for match_pk in RE_META_PK_CALL.finditer(conteudo):
-        tabela = match_pk.group(1).strip()
-        nome_constraint = match_pk.group(2).strip()
-        colunas = parse_php_array_items(match_pk.group(3))
-        entity = entities_by_name.get(tabela)
-        if entity is None:
-            continue
-        entity.constraint_pk = nome_constraint
-        if colunas and not entity.pk_coluna:
-            entity.pk_coluna = colunas[0]
-            entity.pk_tipo = "sequencial"
-
-    for match_fk in RE_META_FK_CALL.finditer(conteudo):
-        nome_constraint = match_fk.group(1).strip()
-        tabela = match_fk.group(2).strip()
-        colunas = parse_php_array_items(match_fk.group(3))
-        tabela_ref = match_fk.group(4).strip()
-        colunas_ref = parse_php_array_items(match_fk.group(5))
-        entity = entities_by_name.get(tabela)
-        if entity is None:
-            continue
-        if nome_constraint not in entity.constraints_fk:
-            entity.constraints_fk.append(nome_constraint)
-        if nome_constraint not in entity.supplemental_constraints_fk:
-            entity.supplemental_constraints_fk.append(nome_constraint)
-        if colunas:
-            entity.adicionar_fk(colunas[0], tabela_ref, colunas_ref[0] if colunas_ref else "")
-
-    for match_idx in RE_META_INDEX_CALL.finditer(conteudo):
-        tabela = match_idx.group(1).strip()
-        nome_indice = match_idx.group(2).strip()
-        colunas = parse_php_array_items(match_idx.group(3))
-        entity = entities_by_name.get(tabela)
-        if entity is None:
-            continue
-        if nome_indice not in entity.constraints_index:
-            entity.constraints_index.append(nome_indice)
-        entity.indices.append({"nome": nome_indice, "colunas": colunas})
-
-    for match_seq in RE_SEQ_NATIVE.finditer(conteudo):
-        tabela = match_seq.group(1).strip()
-        entity = entities_by_name.get(tabela)
-        if entity is None:
-            continue
-        entity.tem_sequence = True
-        if tabela not in entity.sequencias_encontradas:
-            entity.sequencias_encontradas.append(tabela)
-
+    entities_by_name = {entity.nome_tabela: entity for entity in parse_ddl(caminho, conteudo)}
+    apply_php_metadata(caminho, conteudo, entities_by_name)
     return list(entities_by_name.values())
 
 
 def parse_ddl(caminho: str, conteudo: str) -> list[Entity]:
     entities_by_name = {}
+    temporary_tables = set()
+    create_pattern = re.compile(
+        r"CREATE\s+((?:GLOBAL\s+)?TEMPORARY\s+|TEMP\s+)?TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([A-Za-z_][\w$#]*)\s*\(",
+        re.IGNORECASE,
+    )
+    for match_tbl in create_pattern.finditer(conteudo):
+        nome_tabela = match_tbl.group(2).strip()
+        if match_tbl.group(1) or nome_tabela.lower() in {"sei_teste", "sip_teste"}:
+            temporary_tables.add(nome_tabela)
+            continue
+        opening = conteudo.find("(", match_tbl.start(), match_tbl.end())
+        depth = 0
+        quote = None
+        closing = None
+        for index in range(opening, len(conteudo)):
+            char = conteudo[index]
+            if quote:
+                if char == quote and conteudo[index - 1] != "\\":
+                    quote = None
+            elif char in "'\"":
+                quote = char
+            elif char == "(":
+                depth += 1
+            elif char == ")":
+                depth -= 1
+                if depth == 0:
+                    closing = index
+                    break
+        if closing is None:
+            continue
 
-    for match_tbl in RE_CREATE_TABLE.finditer(conteudo):
-        nome_tabela = match_tbl.group(1).strip()
-        corpo = match_tbl.group(2)
-
-        if nome_tabela not in entities_by_name:
-            entities_by_name[nome_tabela] = Entity(nome_tabela, [caminho])
-
-        entity = entities_by_name[nome_tabela]
-
-        pk_match = RE_PRIMARY_KEY.search(corpo)
-        if pk_match:
-            pk_cols = pk_match.group(1).strip()
-            entity.pk_coluna = pk_cols.strip('"').strip("'")
-            entity.pk_tipo = "sequencial"
-
-        fk_pattern = re.compile(r'FOREIGN\s+KEY\s*\(([^)]+)\)\s*REFERENCES\s+(\w+)\s*\(([^)]+)\)', re.IGNORECASE)
-        for fk_match in fk_pattern.finditer(corpo):
-            fk_coluna = fk_match.group(1).strip().strip('"').strip("'")
-            fk_tabela = fk_match.group(2).strip()
-            fk_col_ref = fk_match.group(3).strip().strip('"').strip("'")
-            entity.adicionar_fk(fk_coluna, fk_tabela, fk_col_ref)
-            entity.constraints_fk.append(f"fk_{nome_tabela}_{fk_tabela}")
-
-        unique_pattern = re.compile(r'UNIQUE\s+(?:KEY\s+)?(\w+)?\s*\(([^)]+)\)', re.IGNORECASE)
-        for unique_match in unique_pattern.finditer(corpo):
-            ak_name = unique_match.group(1) or f"ak_{nome_tabela}"
-            ak_cols = unique_match.group(2).strip().strip('"').strip("'")
-            entity.constraints_ak.append(f"{ak_name}_{ak_cols}")
-
-        for fk_match in RE_FOREIGN_KEY_SQL.finditer(corpo):
-            fk_coluna = fk_match.group(1).strip().strip('"').strip("'")
-            fk_tabela = fk_match.group(2).strip()
-            fk_col_ref = fk_match.group(3).strip().strip('"').strip("'")
-            entity.adicionar_fk(fk_coluna, fk_tabela, fk_col_ref)
-            if f"fk_{nome_tabela}_{fk_tabela}" not in entity.constraints_fk:
-                entity.constraints_fk.append(f"fk_{nome_tabela}_{fk_tabela}")
+        corpo = conteudo[opening + 1:closing]
+        entity = get_entity(entities_by_name, nome_tabela, caminho)
+        entity.registrar_evidencia("tabela", caminho, conteudo[:match_tbl.start()].count("\n") + 1, nome_tabela)
+        for definition in split_php_args(corpo):
+            definition = definition.strip()
+            definition_line = conteudo[:opening].count("\n") + corpo[:corpo.find(definition)].count("\n") + 1
+            constraint_match = re.search(r"\bCONSTRAINT\s+([A-Za-z_][\w$#]*)", definition, re.IGNORECASE)
+            constraint_name = constraint_match.group(1) if constraint_match else None
+            pk_match = RE_PRIMARY_KEY.search(definition)
+            if pk_match:
+                columns = [column.strip().strip('"').strip("'") for column in pk_match.group(1).split(",")]
+                entity.pk_coluna = columns[0]
+                entity.pk_colunas = columns
+                entity.pk_tipo = "informado"
+                entity.pk_tipos = {column: entity.pk_tipo for column in columns}
+                for column in columns:
+                    entity.registrar_evidencia("pk", caminho, definition_line, column)
+                if constraint_name:
+                    entity.constraint_pk = constraint_name
+                    entity.registrar_evidencia("constraint", caminho, definition_line, constraint_name)
+                continue
+            fk_match = RE_FOREIGN_KEY_SQL.search(definition)
+            if fk_match:
+                entity.adicionar_fk(
+                    fk_match.group(1).strip().strip('"').strip("'"),
+                    fk_match.group(2).strip(),
+                    fk_match.group(3).strip().strip('"').strip("'"),
+                    caminho,
+                    definition_line,
+                )
+                if constraint_name:
+                    entity.constraints_fk.append(constraint_name)
+                    entity.fk_constraints.append({
+                        "nome": constraint_name,
+                        "colunas": [fk_match.group(1).strip().strip('"').strip("'")],
+                        "tabela_ref": fk_match.group(2).strip(),
+                    })
+                    entity.registrar_evidencia("constraint", caminho, definition_line, constraint_name)
+                continue
+            unique_match = RE_UNIQUE_SQL.search(definition)
+            if unique_match:
+                if constraint_name:
+                    entity.constraints_ak.append(constraint_name)
+                    entity.registrar_evidencia("constraint", caminho, definition_line, constraint_name)
+                continue
+            column_match = re.match(r"[\"`]?([A-Za-z_][\w$#]*)[\"`]?\s+(.+)", definition, re.DOTALL)
+            if column_match and column_match.group(1).upper() not in {"PRIMARY", "FOREIGN", "UNIQUE", "CONSTRAINT", "CHECK"}:
+                column_type = column_match.group(2).strip()
+                entity.adicionar_coluna(
+                    column_match.group(1),
+                    column_type,
+                    caminho,
+                    definition_line,
+                )
+                if RE_TEXT_TYPE.match(column_type):
+                    entity.tem_text = True
+                    if "text" not in entity.tipos_invalidos:
+                        entity.tipos_invalidos.append("text")
+                    entity.registrar_evidencia("type", caminho, definition_line, "text")
+                if RE_SEQ_SQLSERVER.search(column_type) or RE_GENERATED_IDENTITY.search(column_type):
+                    entity.tem_geracao_automatica = True
+                    if "identity" not in entity.tipos_invalidos:
+                        entity.tipos_invalidos.append("identity")
+                    entity.registrar_evidencia("type", caminho, definition_line, "identity")
+                elif re.search(r"\bAUTO_INCREMENT\b", column_type, re.IGNORECASE):
+                    entity.tem_geracao_automatica = True
 
         if RE_BIGINT.search(corpo):
             entity.tem_bigint = True
         if RE_BLOB2.search(corpo):
             entity.tem_blob = True
-        if RE_TEXT2.search(corpo):
-            entity.tem_text = True
         if RE_SERIAL2.search(corpo):
             entity.tipos_invalidos.append("serial")
+            entity.registrar_evidencia("type", caminho, conteudo[:opening].count("\n") + corpo[:RE_SERIAL2.search(corpo).start()].count("\n") + 1, "serial")
         if RE_MONEY2.search(corpo):
             entity.tipos_invalidos.append("money")
+            entity.registrar_evidencia("type", caminho, conteudo[:opening].count("\n") + corpo[:RE_MONEY2.search(corpo).start()].count("\n") + 1, "money")
 
-        col_pattern = re.compile(
-            r'(\w+)\s+(?:varchar\s*\(\s*\d+\s*\)|var?char\s*\(\s*\d+\s*\)|'
-            r'numeric\s*\(\s*\d+\s*(?:,\s*\d+)?\s*\)|'
-            r'(?:big|small|tiny)?\s*int(?:eger)?\s*(?:\(\s*\d+\s*\))?|'
-            r'date|timestamp|datetime|boolean|clob|blob|text|'
-            r'money|decimal\s*\(\s*\d+\s*(?:,\s*\d+)?\s*\))',
-            re.IGNORECASE
-        )
-        for col_match in col_pattern.finditer(corpo):
-            col_nome = col_match.group(1).strip()
-            col_tipo = col_match.group(2).strip() if col_match.lastindex else ""
-            entity.adicionar_coluna(col_nome, col_tipo)
-
-    seq_pattern = re.compile(r'seq_(\w+)', re.IGNORECASE)
-    for seq_match in seq_pattern.finditer(conteudo):
-        seq_nome = seq_match.group(1).strip()
-        if seq_nome not in entity.sequencias_encontradas:
-            entity.sequencias_encontradas.append(seq_nome)
-        entity.tem_sequence = True
+    alter_pattern = re.compile(
+        r"ALTER\s+TABLE\s+([A-Za-z_][\w$#]*)\s+ADD\s+(.+?)(?=;|['\"]\s*\)|$)",
+        re.IGNORECASE | re.DOTALL,
+    )
+    for match in alter_pattern.finditer(conteudo):
+        table_name = match.group(1)
+        if table_name in temporary_tables:
+            continue
+        entity = get_entity(entities_by_name, table_name, caminho)
+        entity.registrar_evidencia("tabela", caminho, conteudo[:match.start()].count("\n") + 1, table_name)
+        definition = match.group(2).strip()
+        constraint_match = re.search(r"\bCONSTRAINT\s+([A-Za-z_][\w$#]*)", definition, re.IGNORECASE)
+        constraint_name = constraint_match.group(1) if constraint_match else None
+        fk_match = RE_FOREIGN_KEY_SQL.search(definition)
+        if fk_match:
+            entity.adicionar_fk(fk_match.group(1).strip(), fk_match.group(2), fk_match.group(3).strip(), caminho, conteudo[:match.start()].count("\n") + 1)
+            if constraint_name:
+                entity.constraints_fk.append(constraint_name)
+                entity.fk_constraints.append({
+                    "nome": constraint_name,
+                    "colunas": [fk_match.group(1).strip()],
+                    "tabela_ref": fk_match.group(2),
+                })
+                entity.registrar_evidencia("constraint", caminho, conteudo[:match.start()].count("\n") + 1, constraint_name)
+        elif RE_PRIMARY_KEY.search(definition):
+            pk_match = RE_PRIMARY_KEY.search(definition)
+            columns = [column.strip().strip('"').strip("'") for column in pk_match.group(1).split(",")]
+            entity.pk_coluna = columns[0]
+            entity.pk_colunas = columns
+            entity.pk_tipo = "informado"
+            entity.pk_tipos = {column: entity.pk_tipo for column in columns}
+            entity.constraint_pk = constraint_name
+            for column in columns:
+                entity.registrar_evidencia("pk", caminho, conteudo[:match.start()].count("\n") + 1, column)
+            if constraint_name:
+                entity.registrar_evidencia("constraint", caminho, conteudo[:match.start()].count("\n") + 1, constraint_name)
+        elif RE_UNIQUE_SQL.search(definition):
+            if constraint_name:
+                entity.constraints_ak.append(constraint_name)
+                entity.registrar_evidencia("constraint", caminho, conteudo[:match.start()].count("\n") + 1, constraint_name)
+        else:
+            column_match = re.match(r"[\"`]?([A-Za-z_][\w$#]*)[\"`]?\s+(.+)", definition, re.DOTALL)
+            if column_match:
+                column_type = column_match.group(2).strip()
+                line = conteudo[:match.start()].count("\n") + 1
+                entity.adicionar_coluna(column_match.group(1), column_type, caminho, line)
+                if RE_TEXT_TYPE.match(column_type):
+                    entity.tem_text = True
+                    if "text" not in entity.tipos_invalidos:
+                        entity.tipos_invalidos.append("text")
+                    entity.registrar_evidencia("type", caminho, line, "text")
+                if RE_SEQ_SQLSERVER.search(column_type) or RE_GENERATED_IDENTITY.search(column_type):
+                    entity.tem_geracao_automatica = True
+                    if "identity" not in entity.tipos_invalidos:
+                        entity.tipos_invalidos.append("identity")
+                    entity.registrar_evidencia("type", caminho, line, "identity")
+                elif re.search(r"\bAUTO_INCREMENT\b", column_type, re.IGNORECASE):
+                    entity.tem_geracao_automatica = True
 
     for idx_match in RE_CREATE_INDEX_SQL.finditer(conteudo):
         idx_nome = idx_match.group(1) or ""
-        tbl_idx = idx_match.group(2).strip()
-        cols_idx = idx_match.group(3).strip()
-        if tbl_idx in entities_by_name:
-            entidades_afetadas = [entities_by_name[tbl_idx]]
-        else:
-            entidades_afetadas = list(entities_by_name.values())
-        for ent in entidades_afetadas:
-            if idx_nome and idx_nome not in ent.constraints_index:
-                ent.constraints_index.append(idx_nome)
-            ent.indices.append({
-                "nome": idx_nome,
-                "colunas": [col.strip().strip('"').strip("'") for col in cols_idx.split(',')],
-            })
+        table_name = idx_match.group(2).strip()
+        if table_name in temporary_tables:
+            continue
+        entity = get_entity(entities_by_name, table_name, caminho)
+        columns = [column.strip().strip('"').strip("'") for column in idx_match.group(3).split(',')]
+        if idx_nome:
+            entity.constraints_index.append(idx_nome)
+        entity.indices.append({"nome": idx_nome, "colunas": columns})
+        entity.registrar_evidencia("indice", caminho, conteudo[:idx_match.start()].count("\n") + 1, idx_nome)
+
+    for match in re.finditer(r"CREATE\s+SEQUENCE\s+([A-Za-z_][\w$#]*)", conteudo, re.IGNORECASE):
+        sequence = match.group(1)
+        table_name = sequence[4:] if sequence.lower().startswith("seq_") else sequence
+        entity = get_entity(entities_by_name, table_name, caminho)
+        entity.tem_sequence = True
+        entity.sequencias_encontradas.append(sequence)
+        entity.registrar_evidencia("sequence", caminho, conteudo[:match.start()].count("\n") + 1, sequence)
 
     return list(entities_by_name.values())
 
@@ -717,7 +914,7 @@ def enrich_entities_with_release_scripts(entities: dict[str, Entity]):
 
 
 # ═══════════════════════════════════════════════════════════════
-# VALIDATORS — aplicam as 15 regras
+# VALIDATORS: aplicam as 15 regras
 # ═══════════════════════════════════════════════════════════════
 
 def validar_entity(entity: Entity) -> tuple[list, list]:
@@ -729,89 +926,121 @@ def validar_entity(entity: Entity) -> tuple[list, list]:
 
     if not is_sequence_table and not re.match(r'^md_[a-z]+_[a-z_][a-z0-9_]*$', tbl):
         erros.append({
-            "codigo": "E001", "regra": 1,
+            "codigo": "E001", "regra": "DB01",
             "mensagem": f"Nome de tabela '{tbl}' nao segue padrao md_<sigla>_<entidade>",
             "remedio": "Usar formato: md_<sigla>_<entidade> (ex: md_ri_restaurante)",
             "base": "Manual SEI MD §Tabela"
         })
 
-    # R2 — N:N com _rel_
-    # N:N real: 2+ FKs E PK composta por múltiplas colunas FK
+    # DB02: N:N com _rel_. A evidencia estrutural e PK composta apenas por FKs.
     fks = entity.fks
+    pk_columns = entity.pk_colunas or ([entity.pk_coluna] if entity.pk_coluna else [])
+    fk_columns = {
+        normalize_column_ref(fk.get("coluna_sql") or fk["coluna"]).lower()
+        for fk in fks
+        if fk.get("coluna_sql") or fk.get("coluna")
+    }
     pk_e_fk_composta = (
-        len(fks) >= 2 and
-        len(entity.colunas) > 0 and
-        len(entity.colunas) <= 4 and
-        entity.pk_coluna and
-        any(fk["coluna"].lower().replace("_", "").isalpha() for fk in fks)
+        len(pk_columns) >= 2
+        and len(fk_columns) >= 2
+        and {normalize_column_ref(column).lower() for column in pk_columns}.issubset(fk_columns)
     )
     if pk_e_fk_composta and '_rel_' not in tbl:
         erros.append({
-            "codigo": "E002", "regra": 2,
+            "codigo": "E002", "regra": "DB02",
             "mensagem": f"Tabela '{tbl}' tem 2+ FKs mas nome nao usa _rel_ (possivel N:N sem padrao)",
             "remedio": "Renomear para md_<sigla>_rel_<a>_<b>",
             "base": "Manual SEI MD §Tabela"
         })
 
-    # R3 — limite 26 chars (para seq_* e funcional)
+    # DB03: limite 26 chars para tabela e coluna
     # seq_* table > 26: apenas aviso (W008), pois a restricao Oracle (30) e para a seq em si
     if len(tbl) > 26:
         if is_sequence_table:
-            avisos.append({
-                "codigo": "W008", "regra": 3,
-                "mensagem": f"Sequence table '{tbl}' tem {len(tbl)} chars (max 30 Oracle). "
-                            f"Nao bloqueia, mas indica que a tabela funcional relacionada "
-                            f"esta com nome longo demais.",
-                "remedio": "Considerar encurtar a tabela funcional para <= 26 chars para folga ao seq_",
-                "base": "Manual SEI MD §Regras Gerais"
+            target = erros if len(tbl) > 30 else avisos
+            target.append({
+                "codigo": "E003" if len(tbl) > 30 else "W008", "regra": "DB03",
+                "mensagem": f"Sequence table '{tbl}' tem {len(tbl)} chars (max 30 Oracle).",
+                "remedio": "Encurtar a tabela funcional para que seq_<nome> tenha no maximo 30 caracteres",
+                "base": "Manual SEI MD §Regras Gerais",
             })
         else:
             erros.append({
-                "codigo": "E003", "regra": 3,
+                "codigo": "E003", "regra": "DB03",
                 "mensagem": f"Tabela '{tbl}' excede 26 caracteres ({len(tbl)}). "
                             f"Regra: tabela funcional deve ter <= 26 para acomodar prefixo seq_ (max 30 no Oracle).",
                 "remedio": "Encurtar nome (ex: md_ri_tp_ctrl_demanda)",
                 "base": "Manual SEI MD §Regras Gerais"
             })
 
-    # R3b — folga para seq_ (tabela funcional com exatamente 26 chars = no room for seq_)
-    if not is_sequence_table and len(tbl) == 26:
-        avisos.append({
-            "codigo": "W009", "regra": "3b",
-            "mensagem": f"Tabela '{tbl}' tem 26 chars (maximo). Nao ha folga para prefixo seq_ "
-                        f"(seq_+'{tbl}' = 30 = limite Oracle). Funciona, mas nao aceita crescimento.",
-            "remedio": "Se possivel, encurtar para < 26 chars para folga futura.",
-            "base": "Manual SEI MD §Regras Gerais / Sequências"
-        })
+    names_with_limits = []
+    names_with_limits.extend(("coluna", column["nome"], 26) for column in entity.colunas)
+    names_with_limits.extend(("indice", index.get("nome", ""), 30) for index in entity.indices)
+    names_with_limits.extend(("indice", name, 30) for name in entity.constraints_index)
+    names_with_limits.extend(("constraint FK", name, 30) for name in entity.constraints_fk)
+    names_with_limits.extend(("constraint AK", name, 30) for name in entity.constraints_ak)
+    if entity.constraint_pk:
+        names_with_limits.append(("constraint PK", entity.constraint_pk, 30))
+    names_with_limits.extend(("sequence", name, 30) for name in entity.sequencias_encontradas)
+    seen_limited_names = set()
+    for kind, name, limit in names_with_limits:
+        key = (kind, name)
+        if not name or key in seen_limited_names:
+            continue
+        seen_limited_names.add(key)
+        if len(name) > limit:
+            issue = {
+                "codigo": "E003", "regra": "DB03",
+                "mensagem": f"Nome de {kind} '{name}' excede {limit} caracteres ({len(name)})",
+                "remedio": f"Encurtar o nome de {kind} para no maximo {limit} caracteres",
+                "base": "Manual SEI MD §Regras Gerais",
+            }
+            evidence_type = "constraint" if kind.startswith("constraint") else kind
+            issue.update(entity.obter_evidencia(evidence_type, name))
+            erros.append(issue)
 
-    # R4 — PK sequencial id_md_<sigla>_<entidade>
-    if entity.pk_tipo == "sequencial" and entity.pk_coluna:
-        if not re.match(r'^id_md_\w+_\w+$', entity.pk_coluna):
-            erros.append({
-                "codigo": "E004", "regra": 4,
-                "mensagem": f"PK '{entity.pk_coluna}' nao segue padrao id_md_<sigla>_<entidade>",
-                "remedio": f"Renomear para id_{tbl}",
-                "base": "Manual SEI MD §Colunas"
-            })
+    # DB04: somente PK simples com evidencia de geracao automatica exige nome exato.
+    if len(pk_columns) == 1 and (entity.pk_tipo == "sequencial" or entity.tem_sequence or entity.tem_geracao_automatica) and entity.pk_coluna != f"id_{tbl}":
+        issue = {
+            "codigo": "E004", "regra": "DB04",
+            "mensagem": f"PK '{entity.pk_coluna}' nao corresponde exatamente a 'id_{tbl}'",
+            "remedio": f"Renomear para id_{tbl}",
+            "base": "Manual SEI MD §Colunas"
+        }
+        issue.update(entity.obter_evidencia("pk", entity.pk_coluna))
+        erros.append(issue)
+    # DB05: a constraint identifica a tabela proprietaria e a referencia.
+    for constraint in dict.fromkeys(entity.constraints_fk):
+        if not re.fullmatch(r'fk_md_[a-z0-9]+(?:_[a-z0-9]+)*', constraint):
+            issue = {
+                "codigo": "E005", "regra": "DB05",
+                "mensagem": f"FK constraint '{constraint}' nao usa snake_case com prefixo fk_md_",
+                "remedio": "Renomear a constraint para fk_md_<sigla>_<entidade>_<referencia>",
+                "base": "Manual SEI MD §Chave Estrangeira"
+            }
+            issue.update(entity.obter_evidencia("constraint", constraint))
+            erros.append(issue)
+        else:
+            relations = [relation for relation in entity.fk_constraints if relation["nome"] == constraint]
+            referenced_tables = [relation["tabela_ref"] for relation in relations]
+            if not referenced_tables:
+                referenced_tables = [fk["tabela_ref_base"] for fk in entity.fks]
+            compatible = identifier_mentions_table(constraint, tbl) and any(
+                identifier_mentions_table(constraint, table_ref)
+                for table_ref in referenced_tables
+            )
+            if compatible or not referenced_tables:
+                continue
+            issue = {
+                "codigo": "E005", "regra": "DB05",
+                "mensagem": f"FK constraint '{constraint}' nao identifica a entidade proprietaria e a referencia",
+                "remedio": "Incluir abreviacoes reconheciveis da tabela proprietaria e da tabela referenciada",
+                "base": "Manual SEI MD §Chave Estrangeira"
+            }
+            issue.update(entity.obter_evidencia("constraint", constraint))
+            erros.append(issue)
 
-    # R5 — FK constraint naming
-    for fk in entity.fks:
-        fk_nome_esperado = f"fk_{tbl}_{fk['tabela_ref']}"
-        fk_nome_encontrado = None
-        for cfk in entity.constraints_fk:
-            if fk['coluna'].lower() in cfk.lower() or fk['tabela_ref'].lower() in cfk.lower():
-                fk_nome_encontrado = cfk
-                break
-        if fk_nome_encontrado and not re.match(r'^fk_md_\w+_\w+_\w+$', fk_nome_encontrado):
-            if fk_nome_encontrado not in entity.supplemental_constraints_fk:
-                erros.append({
-                    "codigo": "E005", "regra": 5,
-                    "mensagem": f"FK constraint '{fk_nome_encontrado}' nao segue padrao fk_md_<sigla>_<ent>_<ref>",
-                    "remedio": f"Renomear para fk_{tbl}_{fk['tabela_ref_base']}",
-                    "base": "Manual SEI MD §Chave Estrangeira"
-                })
-
-    # R6 — sin_ativo em exclusao logica
+    # DB06: sin_ativo em exclusao logica
     if entity.tem_exclusao_logica:
         tem_sin_ativo = any(
             col['nome'].lower() == 'sin_ativo'
@@ -819,41 +1048,61 @@ def validar_entity(entity: Entity) -> tuple[list, list]:
         )
         if not tem_sin_ativo:
             erros.append({
-                "codigo": "E006", "regra": 6,
+                "codigo": "E006", "regra": "DB06",
                 "mensagem": f"Entidade tem configurarExclusaoLogica() mas sem coluna 'sin_ativo'",
                 "remedio": "Adicionar coluna sin_ativo char(1) default 'S'",
                 "base": "Manual SEI MD §Colunas"
             })
 
-    # R7 — PK constraint pk_<nome>
+    # DB07: constraint PK pk_<nome>
     if entity.constraint_pk and not re.match(r'^pk_md_\w+_\w+$', entity.constraint_pk):
-        erros.append({
-            "codigo": "E007", "regra": 7,
+        issue = {
+            "codigo": "E007", "regra": "DB07",
             "mensagem": f"PK constraint '{entity.constraint_pk}' nao segue padrao pk_<nome>",
             "remedio": "Usar formato: pk_md_<sigla>_<entidade>",
             "base": "Manual SEI MD §Chave Primária"
-        })
+        }
+        issue.update(entity.obter_evidencia("constraint", entity.constraint_pk))
+        erros.append(issue)
 
-    # R8 — tipos SQL-99 + bigint em contextos nao apropriados
-    for tipo in entity.tipos_invalidos:
-        erros.append({
-            "codigo": "E008", "regra": 8,
-            "mensagem": f"Tipo '{tipo}' nao e permitido em modulo SEI (serial, money, text)",
+    # DB08: tipos SQL-99 e bigint em contextos nao apropriados
+    invalid_types = list(entity.tipos_invalidos)
+    if entity.tem_text and "text" not in invalid_types:
+        invalid_types.append("text")
+    for tipo in invalid_types:
+        issue = {
+            "codigo": "E008", "regra": "DB08",
+            "mensagem": f"Tipo ou estrategia '{tipo}' nao e permitido em modulo SEI (serial, identity, money, text)",
             "remedio": "Usar tipo portavel: integer, numeric, varchar, char",
             "base": "Manual SEI MD §Tipos de Dados"
-        })
+        }
+        issue.update(entity.obter_evidencia("type", tipo))
+        erros.append(issue)
+
+    for related_column in entity.colunas_relacionadas:
+        if not re.fullmatch(r'[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)?', related_column):
+            issue = {
+                "codigo": "E008", "regra": "DB08",
+                "mensagem": f"Coluna SQL relacionada '{related_column}' nao usa snake_case literal",
+                "remedio": "Usar coluna literal em snake_case, opcionalmente qualificada por alias",
+                "base": "Manual SEI MD §Tipos de Dados"
+            }
+            issue.update(entity.obter_evidencia("related", related_column))
+            erros.append(issue)
 
     if entity.tem_bigint and entity.pk_tipo == "sequencial":
         pk_name = entity.pk_coluna or ""
         if pk_name and "bigint" not in pk_name.lower() and entity.pk_tipo != "informado":
-            erros.append({
-                "codigo": "E008b", "regra": 8,
+            issue = {
+                "codigo": "E008b", "regra": "DB08",
                 "mensagem": f"Coluna PK '{pk_name}' usa bigint com tipo sequencial, verificar se e intencional",
                 "remedio": "Para PK sequencial usar tipoNumero() (integer), nao tipoNumeroGrande() (bigint)",
                 "base": "InfraMetaBD.php tipoNumero() / tipoNumeroGrande()"
-            })
+            }
+            issue.update(entity.obter_evidencia("pk", pk_name))
+            erros.append(issue)
 
-    # R9 — indice em FK
+    # DB09: indice em FK
     for fk in entity.fks:
         fk_coluna_sql = fk.get("coluna_sql")
         if fk_coluna_sql is None:
@@ -870,14 +1119,16 @@ def validar_entity(entity: Entity) -> tuple[list, list]:
                 for idx in entity.constraints_index
             )
         if not tem_indice:
-            avisos.append({
-                "codigo": "W001", "regra": 9,
+            issue = {
+                "codigo": "W001", "regra": "DB09",
                 "mensagem": f"FK '{fk_coluna_sql}' sem indice explicito",
                 "remedio": "Criar indice para FK (i01_ ou mesmo nome da FK)",
                 "base": "Manual SEI MD §Índices"
-            })
+            }
+            issue.update(entity.obter_evidencia("fk", fk_coluna_sql))
+            avisos.append(issue)
 
-    # R10 — sequence naming
+    # DB10: nome de sequence
     if entity.tem_sequence:
         nomes_seq = list(entity.sequencias_encontradas)
         if entity.constraint_pk:
@@ -885,67 +1136,85 @@ def validar_entity(entity: Entity) -> tuple[list, list]:
         tem_seq_naming = any(re.match(r'^md_\w+$', s) or re.match(r'^seq_\w+$', s) for s in nomes_seq if s)
         if not tem_seq_naming:
             avisos.append({
-                "codigo": "W002", "regra": 10,
+                "codigo": "W002", "regra": "DB10",
                 "mensagem": "Sequence detectada mas nome pode nao seguir padrao seq_<nome>",
                 "remedio": "Usar formato: seq_<nome> (sem prefixo md_)",
                 "base": "Manual SEI MD §Sequências"
             })
 
-    # R11 — AK constraint
+    # DB11: constraint AK
     for ak in entity.constraints_ak:
         if not re.match(r'^ak_md_\w+', ak):
-            avisos.append({
-                "codigo": "W003", "regra": 11,
+            issue = {
+                "codigo": "W003", "regra": "DB11",
                 "mensagem": f"AK/Unique constraint '{ak}' pode nao seguir padrao ak_<nome>_<campos>",
                 "remedio": "Usar formato: ak_md_<sigla>_<entidade>_<campos>",
                 "base": "Manual SEI MD §Chave Alternativa"
-            })
+            }
+            issue.update(entity.obter_evidencia("constraint", ak))
+            avisos.append(issue)
 
-    # R12 — comentarios/docblock
+    # DB12: comentarios/docblock
     if not entity.tem_docblock and not entity.arquivos[0].endswith('.sql'):
         avisos.append({
-            "codigo": "W004", "regra": 12,
+            "codigo": "W004", "regra": "DB12",
             "mensagem": f"DTO sem docblock com @table/@column descritivos",
             "remedio": "Adicionar docblock com @table e @column no DTO",
             "base": "Manual SEI MD §Regras Gerais"
         })
 
-    # R13 — sem verbos
+    # DB13: sem verbos
     verbos = ['criar', 'gerar', 'adicionar', 'inserir', 'remover', 'excluir', 'atualizar', 'alterar', 'processar', 'executar', 'realizar', 'efetuar']
     for v in verbos:
         if tbl.startswith(f'md_') and v in tbl.split('_'):
             avisos.append({
-                "codigo": "W005", "regra": 13,
+                "codigo": "W005", "regra": "DB13",
                 "mensagem": f"Nome de tabela '{tbl}' contem verbo '{v}'",
                 "remedio": "Usar substantivo no nome da tabela",
                 "base": "Manual SEI MD §Tabela"
             })
 
-    # R14 — singular
+    # DB14: singular
     partes = tbl.split('_')
     if partes[-1] and partes[-1][-1] == 's' and partes[-1] not in ['sin', 'sta', 'dth', 'dta', 'din']:
         avisos.append({
-            "codigo": "W006", "regra": 14,
+            "codigo": "W006", "regra": "DB14",
             "mensagem": f"Nome de tabela '{tbl}' esta no plural",
             "remedio": "Usar singular: {partes[-1][:-1]}",
             "base": "Manual SEI MD §Regras Gerais"
         })
 
-    # R15 — formato min + sublinhado
-    if not re.match(r'^md_[a-z]+_[a-z_]+$', tbl):
+    # DB15: formato min + sublinhado
+    if not is_sequence_table and not re.match(r'^md_[a-z]+_[a-z_]+$', tbl):
         if not any(e['codigo'] == 'E001' for e in erros):
             avisos.append({
-                "codigo": "W007", "regra": 15,
+                "codigo": "W007", "regra": "DB15",
                 "mensagem": f"Nome '{tbl}' pode nao seguir formato: minusculas + sublinhado + sem preposicoes",
                 "remedio": "Usar apenas minusculas, _ para separar, sem preposicoes",
                 "base": "Manual SEI MD §Regras Gerais"
             })
 
+    evidence_by_rule = {
+        "DB02": "pk",
+        "DB03": "coluna",
+        "DB04": "pk",
+        "DB05": "constraint",
+        "DB06": "coluna",
+        "DB07": "constraint",
+        "DB08": "related" if entity.colunas_relacionadas else "type",
+        "DB09": "fk",
+        "DB10": "sequence",
+        "DB11": "constraint",
+    }
+    for issue in erros + avisos:
+        if "arquivo" not in issue:
+            issue.update(entity.obter_evidencia(evidence_by_rule.get(issue["regra"], "tabela")))
+
     return erros, avisos
 
 
 # ═══════════════════════════════════════════════════════════════
-# FORMATTERS — output
+# FORMATTERS: output
 # ═══════════════════════════════════════════════════════════════
 
 def formatar_markdown(results: list, stats: dict, verdict: str) -> str:
@@ -965,7 +1234,7 @@ def formatar_markdown(results: list, stats: dict, verdict: str) -> str:
     if all_errors:
         linhas.append("\n BLOQUEIOS")
         for e in all_errors:
-            linhas.append(f"  ✗ {e['entidade']}: {e['codigo']} — {e['mensagem']}")
+            linhas.append(f"  ✗ {e['entidade']}: {e['codigo']} - {e['mensagem']}")
         linhas.append(sep)
 
     for r in results:
@@ -977,14 +1246,14 @@ def formatar_markdown(results: list, stats: dict, verdict: str) -> str:
             linhas.append(f"   Arquivos: {', '.join(r['arquivos'])}")
 
         for e in r["erros"]:
-            linhas.append(f"\n   ✗ {e['codigo']} — R{e['regra']}")
-            linhas.append(f"     {e['mensagem']}")
+            linhas.append(f"\n   ✗ {e['codigo']} - {e['regra']}")
+            linhas.append(f"     {e['mensagem']} [{e.get('arquivo', '?')}:{e.get('linha', '?')}]")
             linhas.append(f"     Remedio: {e['remedio']}")
             linhas.append(f"     Base: {e['base']}")
 
         for a in r["avisos"]:
-            linhas.append(f"\n   ⚠ {a['codigo']} — R{a['regra']}")
-            linhas.append(f"     {a['mensagem']}")
+            linhas.append(f"\n   ⚠ {a['codigo']} - {a['regra']}")
+            linhas.append(f"     {a['mensagem']} [{a.get('arquivo', '?')}:{a.get('linha', '?')}]")
             linhas.append(f"     Remedio: {a['remedio']}")
 
         if not r["erros"] and not r["avisos"]:
@@ -992,9 +1261,9 @@ def formatar_markdown(results: list, stats: dict, verdict: str) -> str:
 
         linhas.append(sep)
 
-    labels = {"BLOCK": "BLOCK — Corrija erros antes de prosseguir",
-              "WARN": "WARN — Avisos presentes, erros zero",
-              "PASS": "PASS — Conformidade total"}
+    labels = {"BLOCK": "BLOCK, corrija erros antes de prosseguir",
+              "WARN": "WARN, avisos presentes, erros zero",
+              "PASS": "PASS, conformidade total"}
 
     linhas.append(f"\nRESUMO")
     linhas.append(f"  Entidades auditadas: {stats['entidades']}")
@@ -1037,6 +1306,8 @@ def calcular_stats(results: list) -> dict:
 
 
 def determinar_verdict(results: list) -> str:
+    if not results:
+        return "BLOCK"
     tem_erro = any(r["erros"] for r in results)
     tem_aviso = any(r["avisos"] for r in results)
 
@@ -1057,6 +1328,11 @@ def audit_file(caminho: str) -> list[Entity]:
         entity = parse_php_dto(caminho, conteudo)
         if entity:
             return [entity]
+        if os.path.basename(caminho).endswith("BD.php"):
+            entities = {}
+            parse_php_bd(caminho, conteudo, entities)
+            if entities:
+                return list(entities.values())
         ddl_entities = parse_php_release_script(caminho, conteudo)
         if ddl_entities:
             return ddl_entities
@@ -1069,8 +1345,10 @@ def audit_file(caminho: str) -> list[Entity]:
 def audit_content(content: str, source_type: str = "raw") -> list[Entity]:
     if source_type == "php":
         entity = parse_php_dto("input", content)
-        return [entity] if entity else []
-    elif source_type == "sql":
+        if entity:
+            return [entity]
+        return parse_php_release_script("input", content)
+    elif source_type in ("sql", "ddl"):
         return parse_ddl("input", content)
     return []
 
@@ -1079,11 +1357,22 @@ def run_audit(input_path: str, input_type: str = None, mode: str = "adhoc") -> t
     input_info = {"type": input_type or "unknown", "path": input_path, "mode": mode}
     entities = {}
 
+    def store(entity):
+        if not entity.nome_tabela:
+            return
+        if entity.nome_tabela in entities:
+            merge_entity(entities[entity.nome_tabela], entity)
+        else:
+            entities[entity.nome_tabela] = entity
+
     if os.path.isfile(input_path):
-        found = audit_file(input_path)
+        if input_type:
+            with open(input_path, "r", encoding="utf-8", errors="replace") as handle:
+                found = audit_content(handle.read(), input_type)
+        else:
+            found = audit_file(input_path)
         for e in found:
-            if e.nome_tabela:
-                entities[e.nome_tabela] = e
+            store(e)
 
     elif os.path.isdir(input_path):
         dto_dir = os.path.join(input_path, "dto")
@@ -1102,11 +1391,7 @@ def run_audit(input_path: str, input_type: str = None, mode: str = "adhoc") -> t
                 if f.endswith(".php") and os.path.isfile(fpath):
                     found = audit_file(fpath)
                     for e in found:
-                        if e.nome_tabela:
-                            if e.nome_tabela in entities:
-                                entities[e.nome_tabela].arquivos.extend(e.arquivos)
-                            else:
-                                entities[e.nome_tabela] = e
+                        store(e)
 
         if bd_dir and os.path.isdir(bd_dir):
             for f in os.listdir(bd_dir):
@@ -1124,15 +1409,13 @@ def run_audit(input_path: str, input_type: str = None, mode: str = "adhoc") -> t
             if os.path.exists(p):
                 found = audit_file(p)
                 for e in found:
-                    if e.nome_tabela:
-                        entities[e.nome_tabela] = e
+                    store(e)
 
     else:
-        if input_type in ("php", "sql"):
+        if input_type in ("php", "sql", "ddl"):
             found = audit_content(input_path, input_type)
             for e in found:
-                if e.nome_tabela:
-                    entities[e.nome_tabela] = e
+                store(e)
 
     results = []
     for nome, entity in entities.items():

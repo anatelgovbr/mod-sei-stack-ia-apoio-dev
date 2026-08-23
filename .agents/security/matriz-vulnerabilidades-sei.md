@@ -1,6 +1,12 @@
-# Matriz de Vulnerabilidades — Ecossistema SEI
+# Matriz de Vulnerabilidades do Ecossistema SEI
 
 Vetores de ataque especificos do SEI/InfraPHP. Cada entrada tem padrao vulneravel e seguro para deteccao e correcao.
+
+Severidade do risco e estado do gate sao dimensoes independentes. `BLOQUEANTE`,
+`ALTA`, `MEDIA` e `BAIXA` qualificam impacto. `PASS`, `WARN` e `BLOCK` registram
+o resultado da verificacao. Toda violacao confirmada de gate bloqueante retorna
+`BLOCK`, ainda que a severidade indicada seja `ALTA`; heuristica inconclusiva
+permanece `WARN`.
 
 **Gates base**: `.agents/references/gates-de-implementacao.md`
 **Checklist operacional**: `.agents/checklists/checklist-seguranca.md`
@@ -8,11 +14,11 @@ Vetores de ataque especificos do SEI/InfraPHP. Cada entrada tem padrao vulnerave
 
 ---
 
-## V01 — Acao PHP sem validarLink (CSRF)
+## V01: Acao PHP sem validarLink (CSRF)
 
-**Severidade**: BLOQUEANTE | **Gate**: G3 | **Skill**: `sei-verificacao-pagina` P1
+**Severidade**: BLOQUEANTE | **Estado confirmado**: `BLOCK` | **Gate**: G3 | **Skill**: `sei-verificacao-pagina` P1
 
-Arquivo PHP de acao sem `validarLink()` no inicio — permite URLs forjadas no contexto do usuario.
+Arquivo PHP de acao sem `validarLink()` no inicio permite URLs forjadas no contexto do usuario.
 
 ```php
 // VULNERAVEL
@@ -26,11 +32,11 @@ $objDTO->setNumId(PaginaSEI::GET('id', 'int'));
 
 ---
 
-## V02 — Acao PHP sem validarPermissao (Escalada de Privilegio)
+## V02: Acao PHP sem validarPermissao (Escalada de Privilegio)
 
-**Severidade**: BLOQUEANTE | **Gate**: G3 | **Skill**: `sei-verificacao-pagina` P2
+**Severidade**: BLOQUEANTE | **Estado confirmado**: `BLOCK` | **Gate**: G3 | **Skill**: `sei-verificacao-pagina` P2
 
-`validarLink()` sem `validarPermissao()` — link valido, qualquer usuario executa.
+`validarLink()` sem `validarPermissao()` deixa o link valido executavel por qualquer usuario.
 
 ```php
 // VULNERAVEL
@@ -45,9 +51,9 @@ $objRN->excluirControlado($objDTO);
 
 ---
 
-## V03 — Acao AJAX sem autorizacao por acao (Autorizacao Insuficiente)
+## V03: Acao AJAX sem autorizacao por acao (Autorizacao Insuficiente)
 
-**Severidade**: BLOQUEANTE | **Gate**: G8 | **Skill**: `sei-verificacao-controladores` CI4
+**Severidade**: BLOQUEANTE | **Estado confirmado**: `BLOCK` | **Gate**: G8 | **Skill**: `sei-verificacao-controladores` CI4
 
 O controlador global valida link mas nao impoe permissao por acao do modulo.
 
@@ -66,11 +72,14 @@ case 'md_ri_consultar_cpf':
 
 ---
 
-## V04 — XSS via saida sem escape
+## V04: XSS via saida sem escape
 
-**Severidade**: ALTA | **Gate**: G7 | **Skill**: `sei-verificacao-pagina` P8/P9
+**Severidade**: ALTA | **Estado confirmado**: `BLOCK` | **Gate**: G7 | **Skill**: `sei-verificacao-pagina` P8/P9
 
 InfraPHP nao faz escape automatico. Saida sem `PaginaSEI::tratarHTML()` abre XSS.
+P8 retorna `BLOCK` quando a saida dinamica sem tratamento for confirmada. P9
+retorna `BLOCK` somente quando fonte dinamica e sink inseguro forem confirmados;
+heuristica inconclusiva retorna `WARN`.
 
 ```php
 // VULNERAVEL
@@ -82,9 +91,9 @@ echo '<td>' . PaginaSEI::tratarHTML($objDTO->getStrNome()) . '</td>';
 
 ---
 
-## V05 — SQL Injection via concatenacao
+## V05: SQL Injection via concatenacao
 
-**Severidade**: BLOQUEANTE | **Checklist**: B6
+**Severidade**: BLOQUEANTE | **Estado confirmado**: `BLOCK` | **Checklist**: B6
 
 Concatenacao de entrada em SQL customizado dentro de `*BD.php`.
 
@@ -92,18 +101,20 @@ Concatenacao de entrada em SQL customizado dentro de `*BD.php`.
 // VULNERAVEL
 $strSQL = "SELECT * FROM md_ri_cadastro WHERE str_nome LIKE '%" . $strBusca . "%'";
 
-// SEGURO — normalizar e limitar antes de usar como criterio
+// SEGURO: normalizar e limitar antes de usar como criterio
 $strNome = substr(trim(PaginaSEI::GET('str_nome', 'string')), 0, 100);
 $objDTO->adicionarCriterio(array('StrNome'), array(InfraDTO::$OPER_IGUAL), array($strNome));
 ```
 
 ---
 
-## V06 — Uso de $_REQUEST
+## V06: Uso de $_REQUEST
 
-**Severidade**: ALTA | **Gate**: G5
+**Severidade**: ALTA | **Estado confirmado**: `BLOCK` | **Gate**: G5 | **Skill**: `sei-verificacao-pagina` P5/P6
 
-`$_REQUEST` mescla GET/POST/COOKIE sem distinguir origem. Usar `PaginaSEI::GET/POST` com tipo.
+`$_REQUEST` mescla GET/POST/COOKIE sem distinguir origem. O mesmo gate cobre
+`$_GET` e `$_POST` diretos sem normalizacao explicita. Usar
+`PaginaSEI::GET/POST` com tipo.
 
 ```php
 // VULNERAVEL
@@ -115,14 +126,17 @@ $numId = PaginaSEI::GET('id', 'int');
 
 ---
 
-## V07 — Efeito colateral dentro de transacao
+## V07: Efeito colateral dentro de transacao
 
-**Severidade**: ALTA | **Skill**: `sei-verificacao-rn`
+**Severidade**: ALTA | **Estado confirmado**: `BLOCK` | **Gate RN**: T6 | **Skill**: `sei-verificacao-rn`
 
-Efeitos colaterais (email, Solr, API externa) dentro do bloco transacional — se falharem, desfazem toda a persistencia.
+Efeitos colaterais (email, Solr, API externa) dentro do bloco transacional podem
+desfazer toda a persistencia. O metodo `*Controlado` deve conter apenas
+persistencia. Efeitos externos ocorrem no wrapper publico somente depois do
+retorno de `*Controlado`.
 
 ```php
-// VULNERAVEL — email dentro da transacao
+// VULNERAVEL: email dentro da transacao
 protected function gerarProcedimentoControlado($arr) {
     $retorno = $this->gerarProcedimentoInterno($arr);
     $rn = new MdRiEmailRN();
@@ -130,21 +144,25 @@ protected function gerarProcedimentoControlado($arr) {
     return $retorno;
 }
 
-// SEGURO — efeito colateral apos persistencia
-protected function gerarProcedimentoControlado($arr) {
-    $retorno = $this->gerarProcedimentoInterno($arr);
+// SEGURO: wrapper publico executa o efeito apos o retorno de *Controlado
+public function gerarProcedimento($arr) {
+    $retorno = $this->gerarProcedimentoControlado($arr);
     try {
         (new MdRiEmailRN())->notificar($retorno['email']);
-    } catch (Exception $e) { /* nao desfaz processo */ }
+    } catch (Exception $e) { /* registrar falha sem desfazer a persistencia */ }
     return $retorno['recibo'];
+}
+
+protected function gerarProcedimentoControlado($arr) {
+    return $this->gerarProcedimentoInterno($arr);
 }
 ```
 
 ---
 
-## V08 — Encoding incompativel com a conversao Latin-1 em arquivo PHP
+## V08: Encoding incompativel com a conversao Latin-1 em arquivo PHP
 
-**Severidade**: BLOQUEANTE | **Gate**: G1 | **Skill**: revisao de PHP alterado
+**Severidade**: BLOQUEANTE | **Estado confirmado**: `BLOCK` | **Gate**: G1 | **Skill**: revisao de PHP alterado
 
 SEI opera com conversao para ISO-8859-1 no blob final. BOM ou caractere fora de Latin-1
 causa corrupcao silenciosa de strings com acentos.
@@ -155,9 +173,9 @@ caracteriza achado.
 
 ---
 
-## V09 — Exposicao de stacktrace
+## V09: Exposicao de stacktrace
 
-**Severidade**: ALTA
+**Severidade**: ALTA | **Estado sem gate bloqueante especifico**: `WARN`
 
 Excecao com `getMessage()` ou stack exibido na resposta HTTP expoe paths, classes e queries.
 
@@ -174,9 +192,9 @@ catch (Exception $e) {
 
 ---
 
-## V10 — Log com PII ou segredos
+## V10: Log com PII ou segredos
 
-**Severidade**: BLOQUEANTE | **Checklist**: L1/L2
+**Severidade**: BLOQUEANTE para segredos; ALTA para PII | **Estado**: `BLOCK` para segredo confirmado; `WARN` para PII isolada | **Checklist**: L1/L2
 
 PII (CPF, email) ou segredos (tokens, senhas) em logs viola LGPD e cria vetor persistente.
 

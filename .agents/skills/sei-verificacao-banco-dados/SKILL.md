@@ -3,7 +3,7 @@ name: sei-verificacao-banco-dados
 description: >
   Audita modelagem de dados de módulos SEI/SIP contra os padrões dos manuais
   TRF4. Aceita código PHP existente (DTOs, BDs), DDLs SQL ou diretórios de módulo
-  inteiros como entrada. Não depende de contratos JSON — analiza artefatos brutos.
+  inteiros como entrada. Não depende de contratos JSON; analiza artefatos brutos.
   Pode ser chamada por qualquer skill, prompt ou agente.
 
   Use quando:
@@ -28,21 +28,21 @@ Skill autônoma de code review para modelagem de dados SEI/SIP.
 
 | ID | Regra | Sev | Base |
 |----|-------|-----|------|
-| R1 | Nome tabela `md_<sigla>_<entidade>` | Erro | §Tabela |
-| R2 | N:N: `md_<sigla>_rel_<a>_<b>` | Erro | §Tabela |
-| R3 | Tamanho: tabela/coluna ≤ 26 chars; índice/FK/constraint/sequence ≤ 30 chars | Erro | §Regras Gerais |
-| R4 | PK gerada `id_md_<sigla>_<entidade>` | Erro | §Colunas |
-| R5 | FK `fk_md_<sigla>_<ent>_<ref>` | Erro | §Chave Estrangeira |
-| R6 | `sin_ativo` em exclusão lógica | Erro | §Colunas |
-| R7 | PK constraint `pk_<nome>` | Erro | §Chave Primária |
-| R8 | Tipos SQL-99 (sem money/text) | Erro | §Tipos de Dados |
-| R9 | Índice em FK | Aviso | §Índices |
-| R10 | Sequence `seq_<nome>` | Aviso | §Sequências |
-| R11 | AK constraint `ak_<nome>_<campos>` | Aviso | §Chave Alternativa |
-| R12 | COMMENT ON / docblock | Aviso | §Regras Gerais |
-| R13 | Sem verbos | Aviso | §Tabela |
-| R14 | Singular | Aviso | §Regras Gerais |
-| R15 | Formato minúsculas + sublinhado | Aviso | §Regras Gerais |
+| DB01 | Nome tabela `md_<sigla>_<entidade>` | Erro | §Tabela |
+| DB02 | N:N: `md_<sigla>_rel_<a>_<b>` | Erro | §Tabela |
+| DB03 | Tamanho: tabela/coluna ≤ 26 chars; índice/FK/constraint/sequence ≤ 30 chars | Erro | §Regras Gerais |
+| DB04 | PK simples com geração automática usa exatamente `id_<tabela>` | Erro | §Colunas |
+| DB05 | Constraint FK em snake_case identifica proprietária e referência | Erro | §Chave Estrangeira |
+| DB06 | `sin_ativo` em exclusão lógica | Erro | §Colunas |
+| DB07 | PK constraint `pk_<nome>` | Erro | §Chave Primária |
+| DB08 | Tipos SQL-99 e nomes SQL relacionados em snake_case | Erro | §Tipos de Dados |
+| DB09 | Índice em FK | Aviso | §Índices |
+| DB10 | Sequence `seq_<nome>` | Aviso | §Sequências |
+| DB11 | AK constraint `ak_<nome>_<campos>` | Aviso | §Chave Alternativa |
+| DB12 | COMMENT ON / docblock | Aviso | §Regras Gerais |
+| DB13 | Sem verbos | Aviso | §Tabela |
+| DB14 | Singular | Aviso | §Regras Gerais |
+| DB15 | Formato minúsculas + sublinhado | Aviso | §Regras Gerais |
 
 **Erro** = bloqueante (impede conformidade)
 **Aviso** = informativo (não bloqueia mas indica desvio)
@@ -58,6 +58,12 @@ Aceita os seguintes formatos:
 
 Para forçar tipo: `--type php` ou `--type sql`
 
+Scripts incrementais sem `CREATE TABLE` são elegíveis quando contêm
+`ALTER TABLE`, `adicionarColuna`, chaves, índices ou sequences. Helpers com
+`array()` e `[]` são equivalentes. Tabelas temporárias declaradas no próprio
+script são ignoradas. Um arquivo `*BD.php` isolado também é aceito.
+Quando DTO e BD descrevem a mesma tabela, as evidências são mescladas antes da validação.
+
 ## Output
 
 ### Markdown (human-readable)
@@ -67,11 +73,11 @@ Para forçar tipo: `--type php` ou `--type sql`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📋 md_ri_restaurante
-   ✗ E006 — R6
+   ✗ E006 - DB06
      Exclusao logica sem coluna sin_ativo.
      Remedio: adicionar sin_ativo char(1) default 'S'
 
-   ⚠ W004 — R12
+   ⚠ W004 - DB12
      DTO sem docblock com @table/@column descritivos.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -80,7 +86,7 @@ RESUMO
   Entidades auditadas: 4
   Erros (bloqueantes): 1  |  Avisos: 3
   Nota de conformidade: 82/100
-  Veredito: BLOCK — Corrija erros antes de prosseguir.
+  Veredito: BLOCK, corrija erros antes de prosseguir.
 ```
 
 ### JSON (máquina)
@@ -95,7 +101,7 @@ RESUMO
     {
       "entidade": "md_ri_restaurante",
       "arquivos": ["MdRiRestauranteDTO.php"],
-      "erros": [{"codigo": "E006", "regra": 6, "mensagem": "...", "remedio": "..."}],
+      "erros": [{"codigo": "E006", "regra": "DB06", "mensagem": "...", "remedio": "...", "arquivo": "MdRiRestauranteDTO.php", "linha": 20}],
       "avisos": [],
       "status": "BLOCK"
     }
@@ -109,9 +115,9 @@ RESUMO
 
 | Code | Significado |
 |------|-------------|
-| 0 | PASS — sem erros e sem avisos |
-| 1 | WARN — avisos presentes, zero erros |
-| 2 | BLOCK — erros presentes |
+| 0 | PASS, com ao menos uma entidade analisada |
+| 1 | WARN, avisos presentes e zero erros |
+| 2 | BLOCK, inclusive entrada inexistente, incompatível, vazia ou sem extracao |
 
 ## Uso
 
@@ -139,6 +145,8 @@ O parser extrai de DTOs:
 - `configurarExclusaoLogica($attr, $valor)` → presença de sin_ativo
 - `adicionarAtributoTabelaRelacionada(...)` → colunas de join
 
+Todo erro ou aviso estrutural inclui `arquivo` e `linha` da evidência analisada.
+
 O parser extrai de BDs:
 - `fk_md_...` → constraints de FK
 - `pk_md_...` → constraint de PK
@@ -147,8 +155,8 @@ O parser extrai de BDs:
 
 ## Integration
 
-Skill agnóstica — pode ser chamada por:
-- `code-review` (auditoria de código existente)
+Skill agnóstica, pode ser chamada por:
+- `sei-revisao-tecnica` (gate de modelagem em revisoes tecnicas)
 - `sei-gerador-crud` (gate pré-geração opcional)
 - `sei-gerador-scripts-release` (verificacao pre-release SEI)
 - `sip-gerador-scripts-release` (verificacao pre-release SIP, quando houver DDL)
@@ -159,9 +167,12 @@ Skill agnóstica — pode ser chamada por:
 
 | Modo | Uso |
 |------|-----|
-| `adhoc` | Default — qualquer verificação pontual |
+| `adhoc` | Default, qualquer verificação pontual |
 | `pre_generate` | Antes de gerar CRUD (validar контракт) |
 | `audit` | Auditoria de módulo existente |
-| `release_check` | Verificação pre-release de scripts |
+| `release_check` | Verificação somente da modelagem presente nos scripts de release |
 
 Use `--mode <modo>` para selecionar.
+
+`release_check` não valida versão, sincronismo SEI/SIP ou `*Integracao.php`.
+Essas dimensões pertencem à coordenação de release.

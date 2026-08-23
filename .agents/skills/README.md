@@ -19,7 +19,7 @@ Este documento é o registro de auditoria de todas as skills disponíveis no rep
 - [ponytail-help](#ponytail-help)
 - [ponytail-review](#ponytail-review)
 - [skill-creator](#skill-creator)
-- [sei-code-review-security](#sei-code-review-security)
+- [sei-revisao-tecnica](#sei-revisao-tecnica)
 - [dicionario-dados-db-scan-codebase-docs](#dicionario-dados-db-scan-codebase-docs)
 - [sei-direcionador-integracao](#sei-direcionador-integracao)
 - [sei-gerador-crud](#sei-gerador-crud)
@@ -56,7 +56,7 @@ Este documento é o registro de auditoria de todas as skills disponíveis no rep
 | Skill | Tipo | Versão | Licença | Repositório |
 |---|---|---|---|---|
 | caveman | externa | v1.9.0 | MIT | github.com/JuliusBrussee/caveman |
-| code-review | interna | — | — | — |
+| code-review | externa | commit `6a34259e99bc5fed4f8fe5da61c273dad14edf67` | MIT | github.com/mattpocock/skills |
 | escrever-adr | interna | — | — | — |
 | grill-me | externa | v1.0.1 | MIT | github.com/mattpocock/skills |
 | grilling | externa | v1.0.1 | MIT | github.com/mattpocock/skills |
@@ -68,7 +68,7 @@ Este documento é o registro de auditoria de todas as skills disponíveis no rep
 | ponytail-help | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
 | ponytail-review | externa | v4.8.4 | MIT | github.com/DietrichGebert/ponytail |
 | skill-creator | externa | sem versionamento | Apache-2.0 | github.com/anthropics/skills |
-| sei-code-review-security | interna | — | — | — |
+| sei-revisao-tecnica | interna | N/A | N/A | N/A |
 | dicionario-dados-db-scan-codebase-docs | interna | — | — | — |
 | sei-direcionador-integracao | interna | — | — | — |
 | sei-gerador-crud | interna | — | — | — |
@@ -126,14 +126,22 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 
 ## code-review
 
-**Origem:** Skill interna composta para o projeto, focada em dimensões de qualidade e manutenibilidade sem gate SEI.
+> **Skill externa** mantida por terceiros, com adaptações locais para o fluxo SEI.
+
+**Repositório:** https://github.com/mattpocock/skills/tree/main/skills/engineering/code-review
+
+**Commit instalado:** `6a34259e99bc5fed4f8fe5da61c273dad14edf67`
+
+**Licença:** MIT
+
+**Alterações locais:** Standards executa `sei-revisao-tecnica`. A avaliação de Spec foi desabilitada nesta versão. Toda a coordenação opera somente em leitura.
 
 **Composição:**
-- Complementar a `sei-code-review-security`: não emite veredito de merge para diffs SEI.
-- Cinco dimensões: correção funcional, qualidade de código, arquitetura e padrões, testes, manutenibilidade e performance.
-- Classifica achados como `[introduzido]`, `[pre-existente]` ou `[incerto]`.
-- Segunda passada obrigatória para derrubar falso positivo.
-- Quatro severidades: Crítico, Alto, Médio, Sugestão.
+- Revisa mudanças commitadas de branch ou PR desde um ponto fixo Git fornecido pelo desenvolvedor.
+- Mantém somente Standards, executado por `sei-revisao-tecnica`.
+- Não busca nem avalia spec, requisito ou issue nesta versão.
+- Worktree sem commit usa revisão técnica direta ou um diff fornecido, fora deste fluxo.
+- Preserva integralmente o parecer técnico emitido por `sei-revisao-tecnica`.
 
 ---
 
@@ -322,7 +330,7 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 - Tags: `delete:`, `stdlib:`, `native:`, `yagni:`, `shrink:`.
 - Um achado por linha: `L<n>: <tag> <o que cortar>. <substituto>.`
 - Fecha com `net: -<N> lines possible.` ou `Lean already. Ship.`
-- Complementa `code-review` e `sei-code-review-security` sem sobreposição de escopo.
+- Complementa `code-review` e `sei-revisao-tecnica` sem sobreposição de escopo.
 
 **Como invocar:** `/ponytail-review`
 
@@ -352,26 +360,27 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 
 ---
 
-## sei-code-review-security
+## sei-revisao-tecnica
 
-**Origem:** Skill interna orquestradora criada para consolidar todos os gates por artefato, segurança, reaproveitamento e qualidade em um único veredito de merge para diffs, PRs e módulos SEI completos.
+**Origem:** Skill interna orquestradora de revisão técnica, security review e conformidade SEI, distinta da comparação funcional executada por `code-review`.
 
 **Composição:**
-- Classifica a mudança usando a matriz de roteamento.
-- Aciona gates por artefato: `sei-verificacao-pagina` (P1-P10), `sei-verificacao-rn` (T1-T5/A1-A2), `sei-verificacao-banco-dados` (R1-R15), `sei-verificacao-controladores` (CI1-CI5), `sei-verificacao-tarefa` (K1-K7).
-- Aplica matriz de vulnerabilidades V01-V10 e checklist de segurança C1-C10.
-- Análise de fluxo de dados: entrada → SQL, HTML/JS, arquivo, desserialização, redirect, chamada externa.
-- Checklist de reaproveitamento U1-U10 para RN/INT/DTO novos ou alterados.
-- Segunda passada obrigatória para derrubar falso positivo.
-- Veredito exclusivo desta skill: `aprovado`, `aprovado com ajustes`, `bloquear merge`, `precisa de análise humana`.
+- Aceita diff, PR, branch, commit, tag, arquivos, dimensão técnica ou módulo SEI completo sem exigir spec.
+- Aciona gates por artefato: `sei-verificacao-pagina` (P1-P10), `sei-verificacao-rn` (T1-T6/A1-A3), `sei-verificacao-banco-dados` (DB01-DB15), `sei-verificacao-controladores` (CI1-CI5), `sei-verificacao-tarefa` (K1-K4/K6-K7) e `sei-testes-validacao` quando aplicável.
+- Aplica matriz de vulnerabilidades V01-V10, checklist de segurança C1-C10 e rastreabilidade OWASP quando houver relação aplicável.
+- Avalia doze dimensões técnicas, classifica achados como `introduzido`, `ampliado`, `preexistente` ou `incerto` e exige cobertura positiva para `PASS`.
+- Executa segunda passada para reduzir falsos positivos e produz candidatos a tarefas sem persistir relatório, tarefa ou issue.
+- Emite somente parecer técnico: `apto tecnicamente`, `apto com ajustes`, `bloquear tecnicamente` ou `analise humana`.
+- Não avalia requisito, especificação, regra de negócio ou produto e nunca chama `code-review`.
 
 **Fontes:**
 - `AGENTS.md`
 - `.agents/references/roteamento-de-skills.md`
 - `.agents/references/gates-de-implementacao.md`
 - `.agents/security/matriz-vulnerabilidades-sei.md`
+- `.agents/security/mapeamento-owasp-sei.md`
 - `.agents/checklists/checklist-seguranca.md`
-- `.agents/skills/sei-code-review-security/references/reutilizacao-rn-int-dto.md`
+- `.agents/skills/sei-revisao-tecnica/references/reutilizacao-rn-int-dto.md`
 - `.agents/security/origem-referencias-seguranca.md`
 
 ---
@@ -583,7 +592,7 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 **Origem:** Gate criado a partir do capítulo 5 do manual oficial SEI/SIP (padrão de modelagem de dados) e seções do capítulo 4 (InfraPHP).
 
 **Composição:**
-- 15 regras (R1-R15): nomenclatura de tabela, N:N, limites Oracle (26/30 chars), PK, FK, exclusão lógica, constraint PK, tipos SQL-99, índice em FK, sequence, AK, COMMENT/docblock, verbos, singular, formato.
+- 15 regras (DB01-DB15): nomenclatura de tabela, N:N, limites Oracle (26/30 chars), PK, FK, exclusão lógica, constraint PK, tipos SQL-99, índice em FK, sequence, AK, COMMENT/docblock, verbos, singular, formato.
 - Aceita PHP (DTO/BD), DDL SQL, arquivo ou diretório de módulo.
 - 4 modos: `adhoc`, `pre_generate`, `audit`, `release_check`.
 - Script `audit.py` com exit codes 0/1/2 (PASS/WARN/BLOCK).
@@ -599,8 +608,7 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 **Origem:** Gate criado a partir das seções 1363, 1442 e 1648 do capítulo 9 do manual oficial SEI.
 
 **Composição:**
-- 4 regras bloqueantes (CI1-CI4): `tratarLinkSemAssinatura` com `preg_match` restritivo, dispatch explícito por serviço em WS, dispatch explícito por ação em AJAX, validação de permissão por ação/serviço sensível.
-- 1 aviso (CI5): payload sensível em retorno de controlador.
+- 5 controles (CI1-CI5): CI1 a CI4 cobrem link sem assinatura, dispatch WS/Ajax e autorização específica; CI5 alerta sobre payload sensível em retorno de controlador.
 - Script `audit.py` com exit codes 0/1/2 (PASS/WARN/BLOCK).
 
 **Fontes:**
@@ -615,8 +623,8 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 **Origem:** Gate criado a partir dos capítulos 3, 4 e 9 do manual oficial SEI.
 
 **Composição:**
-- 4 regras bloqueantes (P1-P4): `validarLink`, `validarPermissao`, encoding Latin-1 sem BOM, `assinarLink`.
-- 6 guardrails locais (P5-P10): proibição de `$_REQUEST`, normalização de entrada HTTP, `verificarPermissao` em UI condicional, `PaginaSEI::tratarHTML`, hardening JS, mutação de estado via GET.
+- 10 controles (P1-P10): P1-P6 e P8-P10 são erros quando confirmados; P7 é aviso contextual, e P9 sem fluxo dinâmico confirmado permanece aviso.
+- Os controles cobrem link, permissão, encoding Latin-1, entrada HTTP, UI condicional, saída HTML, hardening JS e mutação via GET.
 - Script `audit.py` com exit codes 0/1/2 (PASS/WARN/BLOCK).
 
 **Fontes:**
@@ -630,8 +638,8 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 **Origem:** Gate criado a partir dos padrões de transação e separação de camadas do manual SEI.
 
 **Composição:**
-- 5 regras de transação (T1-T5): sufixo CRUD coerente, `inicializarObjInfraIBanco()`, isolamento de BD, controle manual de transação, `try/catch` com `InfraException`.
-- 2 regras de auditoria (A1-A2): `validarAuditarPermissao` em métodos de escrita, ausência de check de permissão.
+- 6 regras de transação (T1-T6): sufixo CRUD coerente, `inicializarObjInfraIBanco()`, isolamento de BD, controle manual de transação, `try/catch` com `InfraException` e efeitos externos somente após o commit.
+- 3 regras de auditoria (A1-A3): recurso auditado em escrita, aviso para wrapper público de escrita sem verificação e recurso `_listar` em leitura pública, sem exigir sessão em helpers internos chamados por hook ou evento.
 - Script `audit.py` com exit codes 0/1/2 (PASS/WARN/BLOCK).
 
 **Fontes:**
@@ -646,7 +654,7 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 **Origem:** Gate criado a partir das regras de `id_tarefa_modulo` do manual SEI.
 
 **Composição:**
-- 7 regras (K1-K7): ID >= 1000, range reservado, prefixo `MD_sigla_modulo` maiúsculas, máx. 50 chars, tabela de tarefas, unicidade de ID, uso correto do ID 65 (free-text com `DESCRICAO`).
+- 6 controles (K1-K4/K6-K7): ID numérico >= 1000 ou exceção 65, prefixo e tamanho de `id_tarefa_modulo`, unicidade nas duas dimensões e `DESCRICAO` obrigatória para o ID 65.
 - Script `audit.py` com exit codes 0/1/2 (PASS/WARN/BLOCK).
 
 **Fontes:**

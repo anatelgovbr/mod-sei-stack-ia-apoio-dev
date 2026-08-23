@@ -1,0 +1,9 @@
+diff --git a/fontes/sei/src/main/php/sei/web/modulos/abc/exemplo/usuario_externo_exemplo.php b/fontes/sei/src/main/php/sei/web/modulos/abc/exemplo/usuario_externo_exemplo.php
+index 111111111..222222222 100644
+--- a/fontes/sei/src/main/php/sei/web/modulos/abc/exemplo/usuario_externo_exemplo.php
++++ b/fontes/sei/src/main/php/sei/web/modulos/abc/exemplo/usuario_externo_exemplo.php
+@@ -14,3 +14,3 @@ try {
+   SessaoSEIExterna::getInstance()->validarLink();
+-
++  // Exemplo didatico do modulo ABC.
+   switch($_GET['acao']){

@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
+ * TRIBUNAL REGIONAL FEDERAL DA 4ª REGIÃO
  * 15/04/2026 - criado por rafaelmontedo@hotmail.com
  *
- * VersÃ£o do Gerador de CÃ³digo: 1.46.4
+ * Versão do Gerador de Código: 1.46.4
  **/
 
 
@@ -34,7 +34,7 @@ try {
   
   switch ($_GET['acao']) {
     case 'md_abc_rel_contrato_projeto_cadastrar':
-      $strTitulo = 'Nova AssociaÃ§Ã£o';
+      $strTitulo = 'Nova Associação';
       $arrComandos[] = '<button type="submit" accesskey="S" name="sbmCadastrarMdAbcRelContratoProjeto" value="Salvar" class="infraButton"><span class="infraTeclaAtalho">S</span>alvar</button>';
       $arrComandos[] = '<button type="button" accesskey="C" name="btnCancelar" id="btnCancelar" value="Cancelar" onclick="location.href=\''.Sessaoabc::getInstance()->assinarLink('controlador.php?acao='.Paginaabc::getInstance()->getAcaoRetorno().'&acao_origem='.$_GET['acao']).'\';" class="infraButton"><span class="infraTeclaAtalho">C</span>ancelar</button>';
 
@@ -58,7 +58,7 @@ try {
         try {
           $objMdAbcRelContratoProjetoRN = new MdAbcRelContratoProjetoRN();
           $objMdAbcRelContratoProjetoDTO = $objMdAbcRelContratoProjetoRN->cadastrar($objMdAbcRelContratoProjetoDTO);
-          Paginaabc::getInstance()->adicionarMensagem('AssociaÃ§Ã£o "'.$objMdAbcRelContratoProjetoDTO->getNumIdMdAbcContrato().'" cadastrada com sucesso.');
+          Paginaabc::getInstance()->adicionarMensagem('Associação "'.$objMdAbcRelContratoProjetoDTO->getNumIdMdAbcContrato().'" cadastrada com sucesso.');
           header('Location: '.Sessaoabc::getInstance()->assinarLink('controlador.php?acao='.Paginaabc::getInstance()->getAcaoRetorno().'&acao_origem='.Paginaabc::GET('acao').'&id_md_abc_contrato='.$objMdAbcRelContratoProjetoDTO->getNumIdMdAbcContrato().'&id_md_abc_projeto='.$objMdAbcRelContratoProjetoDTO->getNumIdMdAbcProjeto().Paginaabc::getInstance()->montarAncora($objMdAbcRelContratoProjetoDTO->getNumIdMdAbcContrato().'-'.$objMdAbcRelContratoProjetoDTO->getNumIdMdAbcProjeto())));
           die;
         } catch (Exception $e) {
@@ -68,7 +68,7 @@ try {
       break;
 
     case 'md_abc_rel_contrato_projeto_alterar':
-      $strTitulo = 'Alterar AssociaÃ§Ã£o';
+      $strTitulo = 'Alterar Associação';
       $arrComandos[] = '<button type="submit" accesskey="S" name="sbmAlterarMdAbcRelContratoProjeto" value="Salvar" class="infraButton"><span class="infraTeclaAtalho">S</span>alvar</button>';
       $strDesabilitar = 'disabled="disabled"';
 
@@ -79,7 +79,7 @@ try {
         $objMdAbcRelContratoProjetoRN = new MdAbcRelContratoProjetoRN();
         $objMdAbcRelContratoProjetoDTO = $objMdAbcRelContratoProjetoRN->consultar($objMdAbcRelContratoProjetoDTO);
         if ($objMdAbcRelContratoProjetoDTO===null) {
-          throw new InfraException("Registro nÃ£o encontrado.");
+          throw new InfraException("Registro não encontrado.");
         }
       } else {
         $objMdAbcRelContratoProjetoDTO->setNumIdMdAbcContrato(Paginaabc::POST('hdnIdMdAbcContrato'));
@@ -93,7 +93,7 @@ try {
         try {
           $objMdAbcRelContratoProjetoRN = new MdAbcRelContratoProjetoRN();
           $objMdAbcRelContratoProjetoRN->alterar($objMdAbcRelContratoProjetoDTO);
-          Paginaabc::getInstance()->adicionarMensagem('AssociaÃ§Ã£o "'.$objMdAbcRelContratoProjetoDTO->getNumIdMdAbcContrato().'" alterada com sucesso.');
+          Paginaabc::getInstance()->adicionarMensagem('Associação "'.$objMdAbcRelContratoProjetoDTO->getNumIdMdAbcContrato().'" alterada com sucesso.');
           header('Location: '.Sessaoabc::getInstance()->assinarLink('controlador.php?acao='.Paginaabc::getInstance()->getAcaoRetorno().'&acao_origem='.Paginaabc::GET('acao').Paginaabc::getInstance()->montarAncora($objMdAbcRelContratoProjetoDTO->getNumIdMdAbcContrato().'-'.$objMdAbcRelContratoProjetoDTO->getNumIdMdAbcProjeto())));
           die;
         } catch (Exception $e) {
@@ -103,7 +103,7 @@ try {
       break;
 
     case 'md_abc_rel_contrato_projeto_consultar':
-      $strTitulo = 'Consultar AssociaÃ§Ã£o';
+      $strTitulo = 'Consultar Associação';
       $arrComandos[] = '<button type="button" accesskey="F" name="btnFechar" value="Fechar" onclick="location.href=\''.Sessaoabc::getInstance()->assinarLink('controlador.php?acao='.Paginaabc::getInstance()->getAcaoRetorno().'&acao_origem='.Paginaabc::GET('acao').Paginaabc::getInstance()->montarAncora(Paginaabc::GET('id_md_abc_contrato').'-'.Paginaabc::GET('id_md_abc_projeto'))).'\';" class="infraButton"><span class="infraTeclaAtalho">F</span>echar</button>';
       $objMdAbcRelContratoProjetoDTO->setNumIdMdAbcContrato(Paginaabc::GET('id_md_abc_contrato'));
       $objMdAbcRelContratoProjetoDTO->setNumIdMdAbcProjeto(Paginaabc::GET('id_md_abc_projeto'));
@@ -112,12 +112,12 @@ try {
       $objMdAbcRelContratoProjetoRN = new MdAbcRelContratoProjetoRN();
       $objMdAbcRelContratoProjetoDTO = $objMdAbcRelContratoProjetoRN->consultar($objMdAbcRelContratoProjetoDTO);
       if ($objMdAbcRelContratoProjetoDTO===null) {
-        throw new InfraException("Registro nÃ£o encontrado.");
+        throw new InfraException("Registro não encontrado.");
       }
       break;
 
     default:
-      throw new InfraException("AÃ§Ã£o '" . Paginaabc::GET('acao') . "' nÃ£o reconhecida.");
+      throw new InfraException("Ação '" . Paginaabc::GET('acao') . "' não reconhecida.");
   }
 
   $strItensSelMdAbcContrato = MdAbcContratoINT::montarSelectIdMdAbcContrato('null','&nbsp;',$objMdAbcRelContratoProjetoDTO->getNumIdMdAbcContrato());
@@ -181,7 +181,7 @@ function validarCadastro()
   }
 
   if (infraTrim(document.getElementById('txtAssociacao').value)=='') {
-    alert('Informe D Data de AssociaÃ§Ã£o.');
+    alert('Informe D Data de Associação.');
     document.getElementById('txtAssociacao').focus();
     return false;
   }
@@ -226,9 +226,9 @@ Paginaabc::getInstance()->abrirAreaDados('5em');
 Paginaabc::getInstance()->fecharAreaDados();
 Paginaabc::getInstance()->abrirAreaDados('5em');
 ?>
-  <label id="lblAssociacao" for="txtAssociacao" accesskey="a" class="infraLabelObrigatorio">D<span class="infraTeclaAtalho">a</span>ta de AssociaÃ§Ã£o:</label>
+  <label id="lblAssociacao" for="txtAssociacao" accesskey="a" class="infraLabelObrigatorio">D<span class="infraTeclaAtalho">a</span>ta de Associação:</label>
   <input type="text" id="txtAssociacao" name="txtAssociacao" onkeypress="return infraMascaraData(this, event)" class="infraText" value="<?=Paginaabc::tratarHTML($objMdAbcRelContratoProjetoDTO->getDtaAssociacao())?>" tabindex="<?=Paginaabc::getInstance()->getProxTabDados()?>" />
-  <img id="imgCalAssociacao" title="Selecionar Data de AssociaÃ§Ã£o" alt="Selecionar Data de AssociaÃ§Ã£o" src="<?=Paginaabc::getInstance()->getIconeCalendario()?>" class="infraImg" onclick="infraCalendario('txtAssociacao',this);" />
+  <img id="imgCalAssociacao" title="Selecionar Data de Associação" alt="Selecionar Data de Associação" src="<?=Paginaabc::getInstance()->getIconeCalendario()?>" class="infraImg" onclick="infraCalendario('txtAssociacao',this);" />
 <?php
 Paginaabc::getInstance()->fecharAreaDados();
 ?>

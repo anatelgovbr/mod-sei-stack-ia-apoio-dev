@@ -31,6 +31,12 @@ Executar na seguinte ordem quando os artefatos existirem:
 | Scripts de tarefa | `python3 .agents/skills/sei-verificacao-tarefa/audit.py --input <path> --exit-code` | 0=PASS, 1=WARN, 2=BLOCK |
 | Controladores | `python3 .agents/skills/sei-verificacao-controladores/audit.py --input <path> --exit-code` | 0=PASS, 1=WARN, 2=BLOCK |
 
+Acione cada auditor somente quando o artefato correspondente existir no
+escopo. Todos falham de forma fechada: entrada inexistente, tipo incompatível,
+diretório sem artefato elegível ou parser sem extração retornam `BLOCK` e exit
+code 2. `PASS` exige ao menos um artefato analisado; não existe opção para
+aceitar cobertura vazia.
+
 ## Recomendações (quando disponíveis no módulo)
 
 ```bash
@@ -44,11 +50,11 @@ composer stan      # phpstan
 
 Cenários mínimos a testar:
 
-1. **Cenário principal** — fluxo happy path funciona
-2. **Sem permissão** — usuário sem recurso recebe erro de autorização
-3. **Link inválido** — hash adulterado retorna "Link Inválido"
-4. **Parâmetros inválidos** — tipo/tamanho errado não causa crash
-5. **Sessão expirada** — redireciona para login
+1. **Cenário principal**: fluxo happy path funciona
+2. **Sem permissão**: usuário sem recurso recebe erro de autorização
+3. **Link inválido**: hash adulterado retorna "Link Inválido"
+4. **Parâmetros inválidos**: tipo/tamanho errado não causa crash
+5. **Sessão expirada**: redireciona para login
 
 ## PHP 8 e InfraErroPHP (diagnóstico)
 

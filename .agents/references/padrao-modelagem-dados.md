@@ -205,5 +205,5 @@ $objInfraMetaBD = new InfraMetaBD(BancoSEI::getInstance());
 > Para padrões completos de código dos métodos `instalarv*` (DDL, FKs, boilerplate SIP),
 > consultar: `.agents/references/padrao-scripts-release.md`
 
-> Para regras de auditoria de modelagem (R1-R15) com verificação automatizada,
+> Para regras de auditoria de modelagem (DB01-DB15) com verificação automatizada,
 > consultar: `.agents/skills/sei-verificacao-banco-dados/references/padroes-manual-md.md`

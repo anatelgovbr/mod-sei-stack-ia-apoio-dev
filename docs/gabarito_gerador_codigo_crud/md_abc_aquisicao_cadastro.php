@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
+ * TRIBUNAL REGIONAL FEDERAL DA 4ª REGIÃO
  * 29/03/2026 - criado por abc
  *
- * VersÃ£o do Gerador de CÃ³digo: 1.46.4
+ * Versão do Gerador de Código: 1.46.4
  **/
 
 
@@ -34,7 +34,7 @@ try {
   
   switch ($_GET['acao']) {
     case 'md_abc_aquisicao_cadastrar':
-      $strTitulo = 'Nova AquisiÃ§Ã£o';
+      $strTitulo = 'Nova Aquisição';
       $arrComandos[] = '<button type="submit" accesskey="S" name="sbmCadastrarMdAbcAquisicao" value="Salvar" class="infraButton"><span class="infraTeclaAtalho">S</span>alvar</button>';
       $arrComandos[] = '<button type="button" accesskey="C" name="btnCancelar" id="btnCancelar" value="Cancelar" onclick="location.href=\''.SessaoSEI::getInstance()->assinarLink('controlador.php?acao='.PaginaSEI::getInstance()->getAcaoRetorno().'&acao_origem='.$_GET['acao']).'\';" class="infraButton"><span class="infraTeclaAtalho">C</span>ancelar</button>';
 
@@ -53,7 +53,7 @@ try {
         try {
           $objMdAbcAquisicaoRN = new MdAbcAquisicaoRN();
           $objMdAbcAquisicaoDTO = $objMdAbcAquisicaoRN->cadastrar($objMdAbcAquisicaoDTO);
-          PaginaSEI::getInstance()->adicionarMensagem('AquisiÃ§Ã£o "'.$objMdAbcAquisicaoDTO->getStrDescricao().'" cadastrada com sucesso.');
+          PaginaSEI::getInstance()->adicionarMensagem('Aquisição "'.$objMdAbcAquisicaoDTO->getStrDescricao().'" cadastrada com sucesso.');
           header('Location: '.SessaoSEI::getInstance()->assinarLink('controlador.php?acao='.PaginaSEI::getInstance()->getAcaoRetorno().'&acao_origem='.PaginaSEI::GET('acao').'&id_md_abc_aquisicao='.$objMdAbcAquisicaoDTO->getNumIdMdAbcAquisicao().PaginaSEI::getInstance()->montarAncora($objMdAbcAquisicaoDTO->getNumIdMdAbcAquisicao())));
           die;
         } catch (Exception $e) {
@@ -63,7 +63,7 @@ try {
       break;
 
     case 'md_abc_aquisicao_alterar':
-      $strTitulo = 'Alterar AquisiÃ§Ã£o';
+      $strTitulo = 'Alterar Aquisição';
       $arrComandos[] = '<button type="submit" accesskey="S" name="sbmAlterarMdAbcAquisicao" value="Salvar" class="infraButton"><span class="infraTeclaAtalho">S</span>alvar</button>';
       $strDesabilitar = 'disabled="disabled"';
 
@@ -73,7 +73,7 @@ try {
         $objMdAbcAquisicaoRN = new MdAbcAquisicaoRN();
         $objMdAbcAquisicaoDTO = $objMdAbcAquisicaoRN->consultar($objMdAbcAquisicaoDTO);
         if ($objMdAbcAquisicaoDTO===null) {
-          throw new InfraException("Registro nÃ£o encontrado.");
+          throw new InfraException("Registro não encontrado.");
         }
       } else {
         $objMdAbcAquisicaoDTO->setNumIdMdAbcAquisicao(PaginaSEI::POST('hdnIdMdAbcAquisicao'));
@@ -88,7 +88,7 @@ try {
         try {
           $objMdAbcAquisicaoRN = new MdAbcAquisicaoRN();
           $objMdAbcAquisicaoRN->alterar($objMdAbcAquisicaoDTO);
-          PaginaSEI::getInstance()->adicionarMensagem('AquisiÃ§Ã£o "'.$objMdAbcAquisicaoDTO->getStrDescricao().'" alterada com sucesso.');
+          PaginaSEI::getInstance()->adicionarMensagem('Aquisição "'.$objMdAbcAquisicaoDTO->getStrDescricao().'" alterada com sucesso.');
           header('Location: '.SessaoSEI::getInstance()->assinarLink('controlador.php?acao='.PaginaSEI::getInstance()->getAcaoRetorno().'&acao_origem='.PaginaSEI::GET('acao').PaginaSEI::getInstance()->montarAncora($objMdAbcAquisicaoDTO->getNumIdMdAbcAquisicao())));
           die;
         } catch (Exception $e) {
@@ -98,7 +98,7 @@ try {
       break;
 
     case 'md_abc_aquisicao_consultar':
-      $strTitulo = 'Consultar AquisiÃ§Ã£o';
+      $strTitulo = 'Consultar Aquisição';
       $arrComandos[] = '<button type="button" accesskey="F" name="btnFechar" value="Fechar" onclick="location.href=\''.SessaoSEI::getInstance()->assinarLink('controlador.php?acao='.PaginaSEI::getInstance()->getAcaoRetorno().'&acao_origem='.PaginaSEI::GET('acao').PaginaSEI::getInstance()->montarAncora(PaginaSEI::GET('id_md_abc_aquisicao'))).'\';" class="infraButton"><span class="infraTeclaAtalho">F</span>echar</button>';
       $objMdAbcAquisicaoDTO->setNumIdMdAbcAquisicao(PaginaSEI::GET('id_md_abc_aquisicao'));
       $objMdAbcAquisicaoDTO->setBolExclusaoLogica(false);
@@ -106,12 +106,12 @@ try {
       $objMdAbcAquisicaoRN = new MdAbcAquisicaoRN();
       $objMdAbcAquisicaoDTO = $objMdAbcAquisicaoRN->consultar($objMdAbcAquisicaoDTO);
       if ($objMdAbcAquisicaoDTO===null) {
-        throw new InfraException("Registro nÃ£o encontrado.");
+        throw new InfraException("Registro não encontrado.");
       }
       break;
 
     default:
-      throw new InfraException("AÃ§Ã£o '" . PaginaSEI::GET('acao') . "' nÃ£o reconhecida.");
+      throw new InfraException("Ação '" . PaginaSEI::GET('acao') . "' não reconhecida.");
   }
 
   $strItensSelMdAbcProjeto = MdAbcProjetoINT::montarSelectIdentificacao('null','&nbsp;',$objMdAbcAquisicaoDTO->getNumIdMdAbcProjeto());
@@ -167,7 +167,7 @@ function validarCadastro()
   }
 
   if (infraTrim(document.getElementById('txtDescricao').value)=='') {
-    alert('Informe a DescriÃ§Ã£o.');
+    alert('Informe a Descrição.');
     document.getElementById('txtDescricao').focus();
     return false;
   }
@@ -206,7 +206,7 @@ PaginaSEI::getInstance()->abrirAreaDados('5em');
 PaginaSEI::getInstance()->fecharAreaDados();
 PaginaSEI::getInstance()->abrirAreaDados('5em');
 ?>
-  <label id="lblDescricao" for="txtDescricao" accesskey="D" class="infraLabelObrigatorio"><span class="infraTeclaAtalho">D</span>escriÃ§Ã£o:</label>
+  <label id="lblDescricao" for="txtDescricao" accesskey="D" class="infraLabelObrigatorio"><span class="infraTeclaAtalho">D</span>escrição:</label>
   <input type="text" id="txtDescricao" name="txtDescricao" class="infraText" value="<?=PaginaSEI::tratarHTML($objMdAbcAquisicaoDTO->getStrDescricao())?>" onkeypress="return infraMascaraTexto(this,event,50);" maxlength="50" tabindex="<?=PaginaSEI::getInstance()->getProxTabDados()?>" />
 <?php
 PaginaSEI::getInstance()->fecharAreaDados();

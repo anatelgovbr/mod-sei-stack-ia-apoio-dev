@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
+ * TRIBUNAL REGIONAL FEDERAL DA 4ª REGIÃO
  * 15/04/2026 - criado por rafaelmontedo@hotmail.com
  *
- * VersÃ£o do Gerador de CÃ³digo: 1.46.4
+ * Versão do Gerador de Código: 1.46.4
  **/
 
 
@@ -40,7 +40,7 @@ try {
         }
         $objMdAbcResponsavelRN = new MdAbcResponsavelRN();
         $objMdAbcResponsavelRN->excluir($arrObjMdAbcResponsavelDTO);
-        Paginaabc::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
+        Paginaabc::getInstance()->adicionarMensagem('Operação realizada com sucesso.');
       } catch (Exception $e) {
         Paginaabc::getInstance()->processarExcecao($e);
       } 
@@ -59,7 +59,7 @@ try {
         }
         $objMdAbcResponsavelRN = new MdAbcResponsavelRN();
         $objMdAbcResponsavelRN->desativar($arrObjMdAbcResponsavelDTO);
-        Paginaabc::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
+        Paginaabc::getInstance()->adicionarMensagem('Operação realizada com sucesso.');
       } catch (Exception $e) {
         Paginaabc::getInstance()->processarExcecao($e);
       } 
@@ -67,7 +67,7 @@ try {
       die;
 
     case 'md_abc_responsavel_reativar':
-      $strTitulo = 'Reativar ResponsÃ¡veis';
+      $strTitulo = 'Reativar Responsáveis';
       if (Paginaabc::GET('acao_confirmada')!=='sim') {
         break;
       }
@@ -81,7 +81,7 @@ try {
         }
         $objMdAbcResponsavelRN = new MdAbcResponsavelRN();
         $objMdAbcResponsavelRN->reativar($arrObjMdAbcResponsavelDTO);
-        Paginaabc::getInstance()->adicionarMensagem('OperaÃ§Ã£o realizada com sucesso.');
+        Paginaabc::getInstance()->adicionarMensagem('Operação realizada com sucesso.');
       } catch (Exception $e) {
         Paginaabc::getInstance()->processarExcecao($e);
       } 
@@ -91,7 +91,7 @@ try {
     */
 
     case 'md_abc_responsavel_selecionar':
-      $strTitulo = Paginaabc::getInstance()->getTituloSelecao('Selecionar ResponsÃ¡vel','Selecionar ResponsÃ¡veis');
+      $strTitulo = Paginaabc::getInstance()->getTituloSelecao('Selecionar Responsável','Selecionar Responsáveis');
 
       //Se cadastrou alguem
       if (Paginaabc::GET('acao_origem')==='md_abc_responsavel_cadastrar' && isset($_GET['id_md_abc_responsavel'])) {
@@ -100,11 +100,11 @@ try {
       break;
 
     case 'md_abc_responsavel_listar':
-      $strTitulo = 'ResponsÃ¡veis';
+      $strTitulo = 'Responsáveis';
       break;
 
     default:
-      throw new InfraException("AÃ§Ã£o '".Paginaabc::GET('acao')."' nÃ£o reconhecida.");
+      throw new InfraException("Ação '".Paginaabc::GET('acao')."' não reconhecida.");
   }
 
   $arrComandos = array();
@@ -210,9 +210,9 @@ try {
     $strResultado = '';
 
     /* if (Paginaabc::GET('acao')!=='md_abc_responsavel_reativar') { */
-      $strCaptionTabela = 'ResponsÃ¡veis';
+      $strCaptionTabela = 'Responsáveis';
     /* } else {
-      $strCaptionTabela = 'ResponsÃ¡veis Inativos';
+      $strCaptionTabela = 'Responsáveis Inativos';
     } */
 
     $strResultado .= '<table style="width: 99%" class="infraTable">'."\n";
@@ -225,7 +225,7 @@ try {
     //$strResultado .= '<th class="infraTh">'.Paginaabc::getInstance()->getThOrdenacao($objMdAbcResponsavelDTO,'Cargo','Cargo',$arrObjMdAbcResponsavelDTO).'</th>'."\n";
     //$strResultado .= '<th class="infraTh">'.Paginaabc::getInstance()->getThOrdenacao($objMdAbcResponsavelDTO,'E-mail','Email',$arrObjMdAbcResponsavelDTO).'</th>'."\n";
     //$strResultado .= '<th class="infraTh">'.Paginaabc::getInstance()->getThOrdenacao($objMdAbcResponsavelDTO,'Contrato','IdMdAbcContratoMdAbcContrato',$arrObjMdAbcResponsavelDTO).'</th>'."\n";
-    $strResultado .= '<th class="infraTh">AÃ§Ãµes</th>'."\n";
+    $strResultado .= '<th class="infraTh">Ações</th>'."\n";
     $strResultado .= '</tr></thead><tbody>'."\n";
     $strCssTr='';
     for($i = 0;$i < $numRegistros; $i++) {
@@ -245,11 +245,11 @@ try {
       $strResultado .= Paginaabc::getInstance()->getAcaoTransportarItem($i,$arrObjMdAbcResponsavelDTO[$i]->getNumIdMdAbcResponsavel());
 
       if ($bolAcaoConsultar) {
-        $strResultado .= '<a href="'.Sessaoabc::getInstance()->assinarLink('controlador.php?acao=md_abc_responsavel_consultar&acao_origem='.Paginaabc::GET('acao').'&acao_retorno='.Paginaabc::GET('acao').'&id_md_abc_responsavel='.$arrObjMdAbcResponsavelDTO[$i]->getNumIdMdAbcResponsavel()).'" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeConsultar().'" title="Consultar ResponsÃ¡vel" alt="Consultar ResponsÃ¡vel" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.Sessaoabc::getInstance()->assinarLink('controlador.php?acao=md_abc_responsavel_consultar&acao_origem='.Paginaabc::GET('acao').'&acao_retorno='.Paginaabc::GET('acao').'&id_md_abc_responsavel='.$arrObjMdAbcResponsavelDTO[$i]->getNumIdMdAbcResponsavel()).'" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeConsultar().'" title="Consultar Responsável" alt="Consultar Responsável" class="infraImg" /></a>&nbsp;';
       }
 
       if ($bolAcaoAlterar) {
-        $strResultado .= '<a href="'.Sessaoabc::getInstance()->assinarLink('controlador.php?acao=md_abc_responsavel_alterar&acao_origem='.Paginaabc::GET('acao').'&acao_retorno='.Paginaabc::GET('acao').'&id_md_abc_responsavel='.$arrObjMdAbcResponsavelDTO[$i]->getNumIdMdAbcResponsavel()).'" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeAlterar().'" title="Alterar ResponsÃ¡vel" alt="Alterar ResponsÃ¡vel" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.Sessaoabc::getInstance()->assinarLink('controlador.php?acao=md_abc_responsavel_alterar&acao_origem='.Paginaabc::GET('acao').'&acao_retorno='.Paginaabc::GET('acao').'&id_md_abc_responsavel='.$arrObjMdAbcResponsavelDTO[$i]->getNumIdMdAbcResponsavel()).'" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeAlterar().'" title="Alterar Responsável" alt="Alterar Responsável" class="infraImg" /></a>&nbsp;';
       }
 
       if ($bolAcaoDesativar || $bolAcaoReativar || $bolAcaoExcluir) {
@@ -258,16 +258,16 @@ try {
       }
 /* 
       if ($bolAcaoDesativar) {
-        $strResultado .= '<a href="'.Paginaabc::getInstance()->montarAncora($strId).'" onclick="acaoDesativar(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeDesativar().'" title="Desativar ResponsÃ¡vel" alt="Desativar ResponsÃ¡vel" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.Paginaabc::getInstance()->montarAncora($strId).'" onclick="acaoDesativar(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeDesativar().'" title="Desativar Responsável" alt="Desativar Responsável" class="infraImg" /></a>&nbsp;';
       }
 
       if ($bolAcaoReativar) {
-        $strResultado .= '<a href="'.Paginaabc::getInstance()->montarAncora($strId).'" onclick="acaoReativar(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeReativar().'" title="Reativar ResponsÃ¡vel" alt="Reativar ResponsÃ¡vel" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.Paginaabc::getInstance()->montarAncora($strId).'" onclick="acaoReativar(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeReativar().'" title="Reativar Responsável" alt="Reativar Responsável" class="infraImg" /></a>&nbsp;';
       }
  */
 
       if ($bolAcaoExcluir) {
-        $strResultado .= '<a href="'.Paginaabc::getInstance()->montarAncora($strId).'" onclick="acaoExcluir(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeExcluir().'" title="Excluir ResponsÃ¡vel" alt="Excluir ResponsÃ¡vel" class="infraImg" /></a>&nbsp;';
+        $strResultado .= '<a href="'.Paginaabc::getInstance()->montarAncora($strId).'" onclick="acaoExcluir(\''.$strId.'\',\''.$strDescricao.'\');" tabindex="'.Paginaabc::getInstance()->getProxTabTabela().'"><img src="'.Paginaabc::getInstance()->getIconeExcluir().'" title="Excluir Responsável" alt="Excluir Responsável" class="infraImg" /></a>&nbsp;';
       }
 
       $strResultado .= '</td></tr></tbody>'."\n";
@@ -319,7 +319,7 @@ function inicializar()
 <?php /* if ($bolAcaoDesativar??false) { ?>
 function acaoDesativar(id,desc)
 {
-  if (confirm('Confirma desativaÃ§Ã£o do ResponsÃ¡vel \"' + desc + '\"?')) {
+  if (confirm('Confirma desativação do Responsável \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcResponsavelLista').action='<?=$strLinkDesativar??false?>';
     document.getElementById('frmMdAbcResponsavelLista').submit();
@@ -329,10 +329,10 @@ function acaoDesativar(id,desc)
 function acaoDesativacaoMultipla()
 {
   if (document.getElementById('hdnInfraItensSelecionados').value=='') {
-    alert('Nenhum ResponsÃ¡vel selecionado.');
+    alert('Nenhum Responsável selecionado.');
     return;
   }
-  if (confirm('Confirma desativaÃ§Ã£o dos ResponsÃ¡veis selecionados?')) {
+  if (confirm('Confirma desativação dos Responsáveis selecionados?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcResponsavelLista').action='<?=$strLinkDesativar??false?>';
     document.getElementById('frmMdAbcResponsavelLista').submit();
@@ -343,7 +343,7 @@ function acaoDesativacaoMultipla()
 <?php if ($bolAcaoReativar??false) { ?>
 function acaoReativar(id,desc)
 {
-  if (confirm('Confirma reativaÃ§Ã£o do ResponsÃ¡vel \"' + desc + '\"?')) {
+  if (confirm('Confirma reativação do Responsável \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcResponsavelLista').action='<?=$strLinkReativar??false?>';
     document.getElementById('frmMdAbcResponsavelLista').submit();
@@ -353,10 +353,10 @@ function acaoReativar(id,desc)
 function acaoReativacaoMultipla()
 {
   if (document.getElementById('hdnInfraItensSelecionados').value=='') {
-    alert('Nenhum ResponsÃ¡vel selecionado.');
+    alert('Nenhum Responsável selecionado.');
     return;
   }
-  if (confirm('Confirma reativaÃ§Ã£o dos ResponsÃ¡veis selecionados?')) {
+  if (confirm('Confirma reativação dos Responsáveis selecionados?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcResponsavelLista').action='<?=$strLinkReativar??false?>';
     document.getElementById('frmMdAbcResponsavelLista').submit();
@@ -367,7 +367,7 @@ function acaoReativacaoMultipla()
 <?php if ($bolAcaoExcluir??false) { ?>
 function acaoExcluir(id,desc)
 {
-  if (confirm('Confirma exclusÃ£o do ResponsÃ¡vel \"' + desc + '\"?')) {
+  if (confirm('Confirma exclusão do Responsável \"' + desc + '\"?')) {
     document.getElementById('hdnInfraItemId').value=id;
     document.getElementById('frmMdAbcResponsavelLista').action='<?=$strLinkExcluir??false?>';
     document.getElementById('frmMdAbcResponsavelLista').submit();
@@ -377,10 +377,10 @@ function acaoExcluir(id,desc)
 function acaoExclusaoMultipla()
 {
   if (document.getElementById('hdnInfraItensSelecionados').value=='') {
-    alert('Nenhum ResponsÃ¡vel selecionado.');
+    alert('Nenhum Responsável selecionado.');
     return;
   }
-  if (confirm('Confirma exclusÃ£o dos ResponsÃ¡veis selecionados?')) {
+  if (confirm('Confirma exclusão dos Responsáveis selecionados?')) {
     document.getElementById('hdnInfraItemId').value='';
     document.getElementById('frmMdAbcResponsavelLista').action='<?=$strLinkExcluir??false?>';
     document.getElementById('frmMdAbcResponsavelLista').submit();

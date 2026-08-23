@@ -1,9 +1,9 @@
 <?php
 /**
- * TRIBUNAL REGIONAL FEDERAL DA 4Âª REGIÃO
+ * TRIBUNAL REGIONAL FEDERAL DA 4ª REGIÃO
  * 15/04/2026 - criado por rafaelmontedo@hotmail.com
  *
- * VersÃ£o do Gerador de CÃ³digo: 1.46.4
+ * Versão do Gerador de Código: 1.46.4
  **/
 
 
@@ -29,18 +29,18 @@ class MdAbcContratoRN extends InfraRN
   private function validarNumIdMdAbcAquisicao(MdAbcContratoDTO $objMdAbcContratoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcContratoDTO->getNumIdMdAbcAquisicao())) {
-      $objInfraException->adicionarValidacao('AquisiÃ§Ã£o nÃ£o informadA.');
+      $objInfraException->adicionarValidacao('Aquisição não informadA.');
     }
   }
 
   private function validarStrNumero(MdAbcContratoDTO $objMdAbcContratoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcContratoDTO->getStrNumero())) {
-      $objInfraException->adicionarValidacao('NÃºmero nÃ£o informadN.');
+      $objInfraException->adicionarValidacao('Número não informadN.');
     } else {
       $objMdAbcContratoDTO->setStrNumero(trim($objMdAbcContratoDTO->getStrNumero()));
       if (strlen($objMdAbcContratoDTO->getStrNumero())>20) {
-        $objInfraException->adicionarValidacao('NÃºmero possui tamanho superior a 20 caracteres.');
+        $objInfraException->adicionarValidacao('Número possui tamanho superior a 20 caracteres.');
       }
     }
   }
@@ -48,16 +48,16 @@ class MdAbcContratoRN extends InfraRN
   private function validarDtaAssinatura(MdAbcContratoDTO $objMdAbcContratoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcContratoDTO->getDtaAssinatura())) {
-      $objInfraException->adicionarValidacao('Data de Assinatura nÃ£o informadD.');
+      $objInfraException->adicionarValidacao('Data de Assinatura não informadD.');
     } elseif (!InfraData::validarData($objMdAbcContratoDTO->getDtaAssinatura())) {
-      $objInfraException->adicionarValidacao('Data de Assinatura invÃ¡lidD.');
+      $objInfraException->adicionarValidacao('Data de Assinatura inválidD.');
     }
   }
 
   private function validarDinValor(MdAbcContratoDTO $objMdAbcContratoDTO, InfraException $objInfraException): void
   {
     if (InfraString::isBolVazia($objMdAbcContratoDTO->getDinValor())) {
-      $objInfraException->adicionarValidacao('Valor nÃ£o informadV.');
+      $objInfraException->adicionarValidacao('Valor não informadV.');
     }
   }
 
@@ -68,7 +68,7 @@ class MdAbcContratoRN extends InfraRN
     } else {
       $objMdAbcContratoDTO->setStrObservacao(trim($objMdAbcContratoDTO->getStrObservacao()));
       if (strlen($objMdAbcContratoDTO->getStrObservacao())>500) {
-        $objInfraException->adicionarValidacao('ObservaÃ§Ã£o possui tamanho superior a 500 caracteres.');
+        $objInfraException->adicionarValidacao('Observação possui tamanho superior a 500 caracteres.');
       }
     }
   }

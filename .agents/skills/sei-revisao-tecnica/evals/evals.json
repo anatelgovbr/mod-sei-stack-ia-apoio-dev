@@ -1,0 +1,76 @@
+{
+  "skill_name": "sei-revisao-tecnica",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use sei-revisao-tecnica para revisar em somente leitura o arquivo evals/files/modulo-exemplo/md_rt_exemplo_lista.php. Nao altere arquivos, nao abra tarefas ou issues e devolva o parecer tecnico.",
+      "expected_output": "Relatorio tecnico reproduzivel da pagina *_lista.php fornecida, com gate de pagina, cobertura positiva, segunda passada e um dos quatro pareceres permitidos.",
+      "files": ["evals/files/modulo-exemplo/md_rt_exemplo_lista.php"],
+      "expectations": [
+        "A saida identifica a entrada como arquivos e cita exatamente evals/files/modulo-exemplo/md_rt_exemplo_lista.php.",
+        "A saida aciona sei-verificacao-pagina e registra cobertura P1-P10 aplicavel sobre uma pagina elegivel.",
+        "A saida usa os estados PASS, WARN, BLOCK, NOT_APPLICABLE ou NOT_EXECUTED nos gates e dimensoes.",
+        "Cada PASS de gate nomeia ao menos um artefato compativel e os controles executados.",
+        "A saida registra que a segunda passada foi executada.",
+        "O parecer final e exatamente apto tecnicamente, apto com ajustes, bloquear tecnicamente ou analise humana.",
+        "Nenhum arquivo e alterado e nenhuma tarefa ou issue e aberta."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Faca uma security review tecnica em somente leitura do arquivo fontes/sei/src/main/php/sei/web/modulos/abc/exemplo/MdAbcExemploIntegracao.php. Nao existe spec nem criterio de aceite. Nao abra tarefas ou issues.",
+      "expected_output": "Revisao tecnica reproduzivel que nao penaliza a ausencia de spec e cobre controladores, seguranca e demais dimensoes aplicaveis.",
+      "files": [],
+      "expectations": [
+        "A ausencia de spec nao gera WARN, BLOCK, lacuna nem candidato a tarefa.",
+        "A saida declara requisito, especificacao, regra de negocio e produto fora do escopo.",
+        "A saida nao compara o codigo com criterio de aceite ou comportamento desejado.",
+        "A saida registra explicitamente `Execucao autonoma: code-review nao acionada; spec nao carregada`.",
+        "A saida aciona sei-verificacao-controladores para processarControladorAjax e apresenta cobertura dos controles CI aplicaveis.",
+        "A saida usa um dos quatro pareceres permitidos."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Revise em somente leitura o diff fornecido em evals/files/preexistente-sem-agravamento.diff. A linha com acesso direto a GET e contexto inalterado; somente uma linha vazia foi substituida por comentario. Gere candidato a tarefa no relatorio, mas nao abra tarefa ou issue.",
+      "expected_output": "Relatorio que usa a fixture como alvo, classifica G5 como preexistente sem agravamento, nao bloqueia e apresenta candidato completo sem persistencia.",
+      "files": ["evals/files/preexistente-sem-agravamento.diff"],
+      "expectations": [
+        "O acesso direto a GET e classificado como preexistente porque aparece como linha de contexto inalterada na fixture.",
+        "G5 preexistente sem agravamento recebe WARN, nunca BLOCK.",
+        "O parecer nao e bloquear tecnicamente por causa desse problema.",
+        "O candidato inclui titulo, prioridade/severidade, estado temporal, evidencia, risco, acao minima, dependencia e Persistencia: nao realizada.",
+        "Nenhuma issue, arquivo de backlog ou relatorio persistido e criado.",
+        "A segunda passada confirma que o comentario adicionado nao ampliou alcance, exposicao, impacto ou dependencia."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Revise somente a dimensao Transacao no arquivo fontes/sei/src/main/php/sei/web/modulos/abc/exemplo/rn/MdAbcTesteRN.php. Verifique Controlado, Interno e efeitos externos apos commit. Nao faca analise funcional.",
+      "expected_output": "Revisao de dimensao especifica que aciona o gate RN, limita achados a transacao e marca dimensoes fora do recorte como NOT_APPLICABLE.",
+      "files": [],
+      "expectations": [
+        "A dimensao Transacao tem estado e evidencia tecnica especificos.",
+        "O gate sei-verificacao-rn e acionado com T1-T6 e A1-A3 aplicaveis.",
+        "As dimensoes fora do recorte sao NOT_APPLICABLE, e nao PASS por falta de analise.",
+        "A saida verifica separacao entre persistencia e efeitos externos apos commit.",
+        "A saida nao avalia requisito, especificacao, regra de negocio ou produto.",
+        "A segunda passada e o parecer final estao presentes."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Execute em somente leitura uma revisao tecnica completa do modulo de fixture evals/files/modulo-exemplo/. Inclua passivo, release, integracoes, gates e testes. Nao altere o modulo nem abra tarefas ou issues.",
+      "expected_output": "Auditoria tecnica reproduzivel do diretorio de fixture como modulo completo, com uma pagina *_lista.php elegivel, doze dimensoes e parecer sem persistencia.",
+      "files": ["evals/files/modulo-exemplo/md_rt_exemplo_lista.php"],
+      "expectations": [
+        "O inventario identifica exatamente uma pagina elegivel md_rt_exemplo_lista.php e registra a ausencia das demais classes de artefato.",
+        "A saida aciona sei-guardrails-modulo, sei-verificacao-pagina e sei-testes-validacao para a fixture encontrada.",
+        "As doze dimensoes Escopo, Arquitetura, Permissoes, Transacao, Controladores, Entrada/saida, Seguranca, Banco, Release, Integracoes, Qualidade e Testes aparecem com estado.",
+        "Nenhum gate com zero artefatos recebe PASS.",
+        "Passivo preexistente sem agravamento nao produz BLOCK.",
+        "O relatorio registra a segunda passada e nao persiste candidatos a tarefas."
+      ]
+    }
+  ]
+}

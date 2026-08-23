@@ -1,11 +1,11 @@
-# Andamentos (histórico) — regras para módulos
+# Andamentos (histórico), regras para módulos
 
 ## Regras “hard”
-- `id_tarefa < 1000` é reservado do SEI.
-- Módulo só pode lançar tarefa reservada `ID_TAREFA=65` (texto livre via atributo `DESCRICAO`).
-- Para portabilidade entre instalações, preferir `id_tarefa_modulo`:
-  - até 50 chars, maiúsculo, prefixo `MD_<SIGLA>`
-  - não pode haver duplicidade
+- `id_tarefa` é numérico. Valores menores que 1000 são reservados do SEI.
+- Módulo só pode lançar a exceção `id_tarefa=65` com o atributo `DESCRICAO`.
+- `id_tarefa_modulo` é textual, tem até 50 caracteres e usa o prefixo `MD_<SIGLA>_`.
+- `id_tarefa` e `id_tarefa_modulo` não podem ter duplicidade em suas dimensões.
+- Para portabilidade entre instalações, prefira `id_tarefa_modulo` quando a operação aceitar esse contrato.
 
 ## Variáveis no texto
 - Texto pode conter `@VAR@`. O valor é preenchido por `AtributoAndamentoAPI` (`Nome`/`Valor`/`IdOrigem`).

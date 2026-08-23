@@ -525,7 +525,7 @@ def render_rn(data: dict) -> str:
             + f"        }}\n        $objInfraException->lancarValidacoes();\n\n        $obj{base}BD->reativar($obj{base}DTO);\n      }}\n\n"
             + f"    }} catch (Exception $e) {{\n      throw new InfraException('Erro reativando {singular}.', $e);\n    }}\n  }}\n\n"
             f"  protected function bloquearConectado({base}DTO $obj{base}DTO): ?{base}DTO\n  {{\n"
-            f"    try {{\n      SessaoSEI::getInstance()->validarAuditarPermissao('{table_name}_consultar', __METHOD__, $obj{base}DTO);\n\n"
+            f"    try {{\n      SessaoSEI::getInstance()->validarAuditarPermissao('{table_name}_listar', __METHOD__, $obj{base}DTO);\n\n"
             f"      $obj{base}BD = new {base}BD($this->getObjInfraIBanco());\n      return $obj{base}BD->bloquear($obj{base}DTO);\n\n"
             f"    }} catch (Exception $e) {{\n      throw new InfraException('Erro bloqueando {singular}.', $e);\n    }}\n  }}\n"
         )
@@ -537,7 +537,7 @@ def render_rn(data: dict) -> str:
             f"/*   protected function reativarControlado(array $arrObj{base}DTO): void\n  {{\n    try {{\n      SessaoSEI::getInstance()->validarAuditarPermissao('{table_name}_reativar', __METHOD__, $arrObj{base}DTO);\n\n"
             f"      $obj{base}BD = new {base}BD($this->getObjInfraIBanco());\n      foreach ($arrObj{base}DTO as $obj{base}DTO) {{\n        $obj{base}BD->reativar($obj{base}DTO);\n      }}\n\n"
             f"    }} catch (Exception $e) {{\n      throw new InfraException('Erro reativando {singular}.', $e);\n    }}\n  }}\n */\n"
-            f"/*   protected function bloquearConectado({base}DTO $obj{base}DTO): ?{base}DTO\n  {{\n    try {{\n      SessaoSEI::getInstance()->validarAuditarPermissao('{table_name}_consultar', __METHOD__, $obj{base}DTO);\n\n"
+            f"/*   protected function bloquearConectado({base}DTO $obj{base}DTO): ?{base}DTO\n  {{\n    try {{\n      SessaoSEI::getInstance()->validarAuditarPermissao('{table_name}_listar', __METHOD__, $obj{base}DTO);\n\n"
             f"      $obj{base}BD = new {base}BD($this->getObjInfraIBanco());\n      return $obj{base}BD->bloquear($obj{base}DTO);\n\n"
             f"    }} catch (Exception $e) {{\n      throw new InfraException('Erro bloqueando {singular}.', $e);\n    }}\n  }} */\n"
         )
@@ -578,7 +578,7 @@ def render_rn(data: dict) -> str:
         + f"    try {{\n      SessaoSEI::getInstance()->validarAuditarPermissao('{table_name}_excluir', __METHOD__, $arrObj{base}DTO);\n\n      $obj{base}BD = new {base}BD($this->getObjInfraIBanco());\n      foreach ($arrObj{base}DTO as $obj{base}DTO) {{\n        $obj{base}BD->excluir($obj{base}DTO);\n      }}\n\n"
         + f"    }} catch (Exception $e) {{\n      throw new InfraException('Erro excluindo {singular}.', $e);\n    }}\n  }}\n\n"
         + f"  protected function consultarConectado({base}DTO $obj{base}DTO): ?{base}DTO\n  {{\n"
-        + f"    try {{\n      SessaoSEI::getInstance()->validarAuditarPermissao('{table_name}_consultar', __METHOD__, $obj{base}DTO);\n\n      $obj{base}BD = new {base}BD($this->getObjInfraIBanco());\n      return $obj{base}BD->consultar($obj{base}DTO);\n\n"
+        + f"    try {{\n      SessaoSEI::getInstance()->validarAuditarPermissao('{table_name}_listar', __METHOD__, $obj{base}DTO);\n\n      $obj{base}BD = new {base}BD($this->getObjInfraIBanco());\n      return $obj{base}BD->consultar($obj{base}DTO);\n\n"
         + f"    }} catch (Exception $e) {{\n      throw new InfraException('Erro consultando {singular}.', $e);\n    }}\n  }}\n\n"
         + f"  protected function listarConectado({base}DTO $obj{base}DTO): array\n  {{\n"
         + f"    try {{\n      SessaoSEI::getInstance()->validarAuditarPermissao('{table_name}_listar', __METHOD__, $obj{base}DTO);\n\n      $obj{base}BD = new {base}BD($this->getObjInfraIBanco());\n      return $obj{base}BD->listar($obj{base}DTO);\n\n"

@@ -1,40 +1,55 @@
 {
-  "skill_name": "sei-db-model-audit",
+  "skill_name": "sei-verificacao-banco-dados",
   "evals": [
     {
       "id": 1,
       "prompt": "Execute a auditoria de modelagem no diretório dto do módulo relacionamento-institucional",
       "expected_output": "Relatório markdown com 31 entidades auditadas, nota de conformidade, erros e avisos por entidade",
       "files": [],
-      "assertions": []
+      "assertions": [
+        "O relatório informa ao menos uma entidade analisada antes de retornar PASS",
+        "Toda regra de modelagem exibida usa identificador DB01 a DB15"
+      ]
     },
     {
       "id": 2,
       "prompt": "Rode o audit.py no arquivo DTO do restaurante para verificar conformidade",
       "expected_output": "Relatório markdown confirmando conformidade total ou listando erros/avisos",
       "files": ["fontes/sei/src/main/php/sei/web/modulos/relacionamento-institucional/dto/MdRiRestauranteDTO.php"],
-      "assertions": []
+      "assertions": [
+        "A execução não termina com exceção de parser",
+        "O veredito é BLOCK, WARN ou PASS e contém evidência por entidade"
+      ]
     },
     {
       "id": 3,
       "prompt": "Audite o módulo relacionamento-institucional inteiro (dto + bd) e retorne JSON",
       "expected_output": "JSON estruturado com results[], stats{}, verdict BLOCK/WARN/PASS, exit code correto",
       "files": [],
-      "assertions": []
+      "assertions": [
+        "A saída JSON contém results, stats e verdict",
+        "O auditor associa metadados de BD à entidade correspondente"
+      ]
     },
     {
       "id": 4,
       "prompt": "Verifique se o DTO MdRiRelCardapioPratoDTO está conforme os padrões TRF4",
       "expected_output": "Relatório indicando se a tabela N:N md_ri_rel_cardapio_prato está correta",
       "files": ["fontes/sei/src/main/php/sei/web/modulos/relacionamento-institucional/dto/MdRiRelCardapioPratoDTO.php"],
-      "assertions": []
+      "assertions": [
+        "A entidade N:N é extraída sem exceção",
+        "Os achados de modelagem usam regras DB01 a DB15"
+      ]
     },
     {
       "id": 5,
       "prompt": "Liste todos os erros de modelagem encontrados nos DTOs do módulo",
-      "expected_output": "Lista de erros E001-E008 com código da regra, mensagem e remédio para cada",
+      "expected_output": "Lista de erros E001-E008 com regra DB01-DB15, mensagem e remédio para cada",
       "files": ["fontes/sei/src/main/php/sei/web/modulos/relacionamento-institucional/dto/"],
-      "assertions": []
+      "assertions": [
+        "Todos os achados usam identificadores DB01 a DB15",
+        "Entrada vazia ou sem DTO elegível retorna BLOCK"
+      ]
     }
   ]
 }

@@ -11,7 +11,7 @@ Cada regra inclui: identificador, severidade, base oficial, descrição e exempl
 
 ## Regras de Nomenclatura (Gerais)
 
-### R1 — Nome de Tabela: `md_<sigla>_<entidade>`
+### DB01: Nome de Tabela: `md_<sigla>_<entidade>`
 **Severidade:** Erro
 **Base:** Manual SEI MD §Tabelas (linha 25-33)
 
@@ -35,7 +35,7 @@ Nomes de tabelas devem:
 
 ---
 
-### R2 — Relacionamento N:N: `_rel_`
+### DB02: Relacionamento N:N: `_rel_`
 **Severidade:** Erro
 **Base:** Manual SEI MD §Tabelas (linha 35-41)
 
@@ -57,7 +57,7 @@ pode usar esse conceito como nome:
 
 ---
 
-### R3 — Limite de 26 caracteres
+### DB03: Limite de 26 caracteres
 **Severidade:** Erro
 **Base:** Manual SEI MD §Regras Gerais (linha 8-13)
 
@@ -74,7 +74,7 @@ isso evita atingir o limite de 30 do Oracle para nomes de elementos.
 
 ---
 
-### R15 — Formato do nome: minúsculas + sublinhado + sem preposições
+### DB15: Formato do nome: minúsculas + sublinhado + sem preposições
 **Severidade:** Aviso
 **Base:** Manual SEI MD §Regras Gerais (linha 14-17)
 
@@ -89,7 +89,7 @@ isso evita atingir o limite de 30 do Oracle para nomes de elementos.
 
 ## Regras de Colunas
 
-### R4 — PK Sequencial: `id_md_<sigla>_<entidade>`
+### DB04: PK Sequencial: `id_md_<sigla>_<entidade>`
 **Severidade:** Erro
 **Base:** Manual SEI MD §Colunas (linha 49-52)
 
@@ -110,9 +110,12 @@ igual à chave primária de origem:
 - `id_md_abc_tabela_a`
 - `id_md_abc_tabela_b`
 
+No DTO, todas as colunas da PK composta usam `TIPO_PK_INFORMADO`. A tabela
+de relacionamento com PK composta não possui sequence.
+
 ---
 
-### R6 — `sin_ativo` em entidades com exclusão lógica
+### DB06: `sin_ativo` em entidades com exclusão lógica
 **Severidade:** Erro
 **Base:** Manual SEI MD §Colunas (linha 69)
 
@@ -136,7 +139,7 @@ $this->adicionarAtributoTabela(InfraDTO::$PREFIXO_STR, 'SinAtivo', 'sin_ativo');
 
 ## Regras de Constraints
 
-### R7 — PK constraint: `pk_<nome>`
+### DB07: PK constraint: `pk_<nome>`
 **Severidade:** Erro
 **Base:** Manual SEI MD §Chave Primária (linha 94-99)
 
@@ -152,13 +155,14 @@ Constraint de chave primária deve usar prefixo `pk_` seguido do nome da entidad
 
 ---
 
-### R5 — FK constraint: `fk_md_<sigla>_<ent>_<ref>`
+### DB05: FK constraint: `fk_md_<sigla>_<ent>_<ref>`
 **Severidade:** Erro
 **Base:** Manual SEI MD §Chave Estrangeira (linha 110-114)
 
 FK constraint deve usar prefixo `fk_md_<sigla>` seguido do nome da entidade
 que possui a FK e do nome da entidade referenciada, **sem** o prefixo `md_<sigla>`
 na referência.
+O nome completo da constraint usa apenas letras minúsculas, números e sublinhado.
 
 **Conforme:**
 - `fk_md_abc_item_pedido` (item referencia pedido)
@@ -172,7 +176,7 @@ na referência.
 
 ---
 
-### R11 — AK constraint: `ak_<nome>_<campos>`
+### DB11: AK constraint: `ak_<nome>_<campos>`
 **Severidade:** Aviso
 **Base:** Manual SEI MD §Chave Alternativa (linha 102-107)
 
@@ -191,7 +195,7 @@ nome da entidade e dos campos que a compõem.
 
 ## Regras de Índices e Sequences
 
-### R9 — Índice em colunas FK
+### DB09: Índice em colunas FK
 **Severidade:** Aviso
 **Base:** Manual SEI MD §Índices (linha 117-131)
 
@@ -209,7 +213,7 @@ do nome da entidade. Para FKs, usar o mesmo nome da constraint de FK.
 
 ---
 
-### R10 — Sequence naming: `seq_<nome>`
+### DB10: Sequence naming: `seq_<nome>`
 **Severidade:** Aviso
 **Base:** Manual SEI MD §Sequências (linha 135-171)
 
@@ -230,7 +234,7 @@ Sequences devem usar prefixo `seq_` seguido do nome do objeto ao qual atendem,
 
 ## Regras de Tipos e Comentários
 
-### R8 — Tipos SQL-99 (sem money/text)
+### DB08: Tipos SQL-99 (sem money/text)
 **Severidade:** Erro
 **Base:** Manual SEI MD §Tipos de Dados (linha 71-91)
 
@@ -260,9 +264,13 @@ Apenas tipos definidos pelo padrão SQL-99 (SQL3). Evitar tipos proprietários.
 - `money(10,2)` (não é SQL-99)
 - `text` sem limite definido
 
+Em `adicionarAtributoTabelaRelacionada(...)`, o terceiro argumento identifica
+a coluna SQL. Ele deve ser um literal em snake_case, com alias também em
+snake_case quando qualificado, por exemplo `item.nome`.
+
 ---
 
-### R12 — Comentários / Docblock
+### DB12: Comentários / Docblock
 **Severidade:** Aviso
 **Base:** Manual SEI MD §Regras Gerais (linha 18-19)
 
@@ -297,7 +305,7 @@ class MdRiRestauranteDTO extends InfraDTO {
 
 ## Regras de Semântica
 
-### R13 — Sem verbos no nome da tabela
+### DB13: Sem verbos no nome da tabela
 **Severidade:** Aviso
 **Base:** Manual SEI MD §Tabela (linha 25)
 
@@ -314,7 +322,7 @@ Não utilizar verbos para designar nomes de tabelas. Priorizar substantivos.
 
 ---
 
-### R14 — Singular nos nomes
+### DB14: Singular nos nomes
 **Severidade:** Aviso
 **Base:** Manual SEI MD §Regras Gerais (linha 17)
 
@@ -334,21 +342,21 @@ Todas as tabelas e colunas devem estar no singular.
 
 | ID | Regra | Sev | Base |
 |----|-------|-----|------|
-| R1 | Nome tabela `md_<sigla>_<entidade>` | **Erro** | §Tabela |
-| R2 | N:N: `_rel_` | **Erro** | §Tabela |
-| R3 | Tamanho ≤ 26 chars | **Erro** | §Regras Gerais |
-| R4 | PK gerada `id_md_<sigla>_<entidade>` | **Erro** | §Colunas |
-| R5 | FK `fk_md_<sigla>_<ent>_<ref>` | **Erro** | §Chave Estrangeira |
-| R6 | `sin_ativo` em exclusão lógica | **Erro** | §Colunas |
-| R7 | PK constraint `pk_<nome>` | **Erro** | §Chave Primária |
-| R8 | Tipos SQL-99 (sem money/text) | **Erro** | §Tipos de Dados |
-| R9 | Índice em FK | **Aviso** | §Índices |
-| R10 | Sequence `seq_<nome>` | **Aviso** | §Sequências |
-| R11 | AK constraint `ak_<nome>_<campos>` | **Aviso** | §Chave Alternativa |
-| R12 | COMMENT ON / docblock | **Aviso** | §Regras Gerais |
-| R13 | Sem verbos | **Aviso** | §Tabela |
-| R14 | Singular | **Aviso** | §Regras Gerais |
-| R15 | Formato minúsculas + sublinhado | **Aviso** | §Regras Gerais |
+| DB01 | Nome tabela `md_<sigla>_<entidade>` | **Erro** | §Tabela |
+| DB02 | N:N: `_rel_` | **Erro** | §Tabela |
+| DB03 | Tamanho ≤ 26 chars | **Erro** | §Regras Gerais |
+| DB04 | PK gerada `id_md_<sigla>_<entidade>` | **Erro** | §Colunas |
+| DB05 | FK `fk_md_<sigla>_<ent>_<ref>` | **Erro** | §Chave Estrangeira |
+| DB06 | `sin_ativo` em exclusão lógica | **Erro** | §Colunas |
+| DB07 | PK constraint `pk_<nome>` | **Erro** | §Chave Primária |
+| DB08 | Tipos SQL-99 (sem money/text) | **Erro** | §Tipos de Dados |
+| DB09 | Índice em FK | **Aviso** | §Índices |
+| DB10 | Sequence `seq_<nome>` | **Aviso** | §Sequências |
+| DB11 | AK constraint `ak_<nome>_<campos>` | **Aviso** | §Chave Alternativa |
+| DB12 | COMMENT ON / docblock | **Aviso** | §Regras Gerais |
+| DB13 | Sem verbos | **Aviso** | §Tabela |
+| DB14 | Singular | **Aviso** | §Regras Gerais |
+| DB15 | Formato minúsculas + sublinhado | **Aviso** | §Regras Gerais |
 
 **Erro** = bloqueante (impede conformidade)
 **Aviso** = informativo (não bloqueia mas indica desvio)
@@ -373,4 +381,4 @@ Estes são conveções de nomenclatura de colunas, não regras de auditoria.
 
 - **Templates DDL e InfraMetaBD**: consultar `.agents/references/padrao-modelagem-dados.md`
   - Contém boilerplate de criação de tabelas, sequences multi-SGBD, tipos `InfraMetaBD`
-- **Regras R1-R15 (este arquivo)**: validação de modelagem contra padrões TRF4
+- **Regras DB01-DB15 (este arquivo)**: validação de modelagem contra padrões TRF4

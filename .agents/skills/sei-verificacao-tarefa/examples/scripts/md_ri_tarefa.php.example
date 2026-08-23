@@ -1,43 +1,43 @@
 <?php
 /**
- * Script de exemplo — md_ri_tarefa.php
+ * Script de exemplo: md_ri_tarefa.php
  * Demonstrates conformant task ID definitions for the restaurante-cardapio module.
  */
 
-return array(
-    1001 => array(
-        'id_tarefa_modulo' => 1001,
-        'nome' => 'MD_RI_RESTAURANTE_CADASTRAR',
+return [
+    [
+        'id_tarefa' => 1001,
+        'id_tarefa_modulo' => 'MD_RI_RESTAURANTE_CADASTRAR',
         'descricao' => 'Cadastrar novo restaurante'
-    ),
-    1002 => array(
-        'id_tarefa_modulo' => 1002,
-        'nome' => 'MD_RI_RESTAURANTE_ALTERAR',
+    ],
+    [
+        'id_tarefa' => 1002,
+        'id_tarefa_modulo' => 'MD_RI_RESTAURANTE_ALTERAR',
         'descricao' => 'Alterar dados do restaurante'
-    ),
-    1003 => array(
-        'id_tarefa_modulo' => 1003,
-        'nome' => 'MD_RI_RESTAURANTE_EXCLUIR',
+    ],
+    [
+        'id_tarefa' => 1003,
+        'id_tarefa_modulo' => 'MD_RI_RESTAURANTE_EXCLUIR',
         'descricao' => 'Excluir restaurante'
-    ),
-    1004 => array(
-        'id_tarefa_modulo' => 1004,
-        'nome' => 'MD_RI_CARDAPIO_CADASTRAR',
+    ],
+    [
+        'id_tarefa' => 1004,
+        'id_tarefa_modulo' => 'MD_RI_CARDAPIO_CADASTRAR',
         'descricao' => 'Cadastrar cardapio'
-    ),
-    1005 => array(
-        'id_tarefa_modulo' => 1005,
-        'nome' => 'MD_RI_PRATO_CADASTRAR',
+    ],
+    [
+        'id_tarefa' => 1005,
+        'id_tarefa_modulo' => 'MD_RI_PRATO_CADASTRAR',
         'descricao' => 'Cadastrar prato no cardapio'
-    ),
-    1006 => array(
-        'id_tarefa_modulo' => 1006,
-        'nome' => 'MD_RI_PRATO_VINCULAR_CARDAPIO',
+    ],
+    [
+        'id_tarefa' => 1006,
+        'id_tarefa_modulo' => 'MD_RI_PRATO_VINCULAR_CARDAPIO',
         'descricao' => 'Vincular prato a cardapio'
-    ),
-    65 => array(
-        'id_tarefa_modulo' => 65,
-        'nome' => 'MD_RI_ANDAMENTO_LIVRE',
-        'descricao' => 'Andamentos livres para observacoes diversas'
-    ),
-);
+    ],
+    [
+        'id_tarefa' => 65,
+        'id_tarefa_modulo' => 'MD_RI_ANDAMENTO_LIVRE',
+        'atributos' => ['DESCRICAO' => 'Andamentos livres para observacoes diversas']
+    ],
+];

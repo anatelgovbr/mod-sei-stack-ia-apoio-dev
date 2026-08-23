@@ -1,0 +1,64 @@
+{
+  "skill_name": "code-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use code-review to review the committed changes since HEAD~1. Work read-only.",
+      "expected_output": "A Standards-only review delegated to sei-revisao-tecnica over the three-dot diff.",
+      "files": [],
+      "expectations": [
+        "The output contains ## Standards with the complete sei-revisao-tecnica report.",
+        "Fowler smells appear only as complementary judgement calls, never as automatic violations.",
+        "The Standards output preserves the technical verdict from sei-revisao-tecnica.",
+        "The output contains no Spec section, does not interpret changed requirement files functionally, and makes no functional approval claim.",
+        "The Standards findings cite repository rules or label smells as judgement calls."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review the committed branch since HEAD~1. Use spec.md to run both Standards and Spec and report them separately.",
+      "expected_output": "Standards runs normally, the requested Spec review is refused, and the response states that Spec was not evaluated.",
+      "files": [],
+      "expectations": [
+        "The output contains the Standards report produced under the sei-revisao-tecnica contract.",
+        "The response states that Spec was not evaluated in the current version.",
+        "The output contains no ## Spec section and makes no functional finding about the supplied requirement.",
+        "The changed spec.md file remains in the Standards diff and is inspected only as documentation, not as a functional source of truth.",
+        "The output contains only the Standards review, its technical verdict and its summary."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Do a code review of the current changes. Work read-only.",
+      "expected_output": "A concise request for the missing fixed point before any diff or sub-agent.",
+      "files": [],
+      "expectations": [
+        "The response asks for a commit, branch, tag or other fixed Git reference.",
+        "No default comparison point is invented.",
+        "The response states that the review did not start because the fixed point is missing."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Use code-review to review changes since 0000000000000000000000000000000000000000.",
+      "expected_output": "The invalid reference is rejected before Standards starts.",
+      "files": [],
+      "expectations": [
+        "The invalid Git reference is rejected.",
+        "No replacement reference is invented.",
+        "The response stops without a Standards report."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Use code-review to review changes since HEAD.",
+      "expected_output": "The empty diff is detected before Standards starts.",
+      "files": [],
+      "expectations": [
+        "HEAD resolves as the user-supplied fixed point.",
+        "The HEAD...HEAD diff is identified as empty.",
+        "The response stops without a Standards report."
+      ]
+    }
+  ]
+}
