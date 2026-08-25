@@ -13,22 +13,21 @@
     - [Fluxo padrão](#fluxo-padrão)
     - [Fluxo alternativo (com passos opcionais)](#fluxo-alternativo-com-passos-opcionais)
   - [Ajustes Pontuais](#ajustes-pontuais)
-    - [Ajuste pontual de menu ou página existente](#ajuste-pontual-de-menu-ou-página-existente)
-    - [Ajuste pontual de entidade existente](#ajuste-pontual-de-entidade-existente)
-    - [Ajuste pontual de operação de API ou WebService existente](#ajuste-pontual-de-operação-de-api-ou-webservice-existente)
-  - [Revisão Técnica e Segurança](#revisão-técnica-e-segurança)
+    - [Ajuste pontual de menu ou página](#ajuste-pontual-de-menu-ou-página)
+    - [Ajuste pontual de entidade](#ajuste-pontual-de-entidade)
+    - [Ajuste pontual de operação de API ou WebService](#ajuste-pontual-de-operação-de-api-ou-webservice)
+  - [Revisão Técnica e Segurança de Alto Nível](#revisão-técnica-e-segurança-de-alto-nível)
     - [Revisão técnica completa de módulo](#revisão-técnica-completa-de-módulo)
-    - [Revisão técnica de uma dimensão específica](#revisão-técnica-de-uma-dimensão-específica)
+    - [Revisão técnica exclusiva de dimensões](#revisão-técnica-exclusiva-de-dimensões)
+  - [Revisão Técnica para Desenvolvedores](#revisão-técnica-para-desenvolvedores)
     - [Verificar um guardrail específico, sem orquestrador](#verificar-um-guardrail-específico-sem-orquestrador)
-    - [Auditoria exclusiva de segurança e vulnerabilidade](#auditoria-exclusiva-de-segurança-e-vulnerabilidade)
     - [Code review de mudanças commitadas](#code-review-de-mudanças-commitadas)
     - [Depois da revisão: marcar ou planejar a correção](#depois-da-revisão-marcar-ou-planejar-a-correção)
   - [Dicionário de Dados](#dicionário-de-dados)
-    - [Criar o adaptador de um módulo novo](#criar-o-adaptador-de-um-módulo-novo)
-    - [Criar o dicionário de dados de um módulo novo](#criar-o-dicionário-de-dados-de-um-módulo-novo)
-    - [Criar o dicionário com vários materiais complementares](#criar-o-dicionário-com-vários-materiais-complementares)
-    - [Atualizar um dicionário já existente](#atualizar-um-dicionário-já-existente)
-    - [Revisar a qualidade de um dicionário existente](#revisar-a-qualidade-de-um-dicionário-existente)
+    - [Criar o adaptador](#criar-o-adaptador)
+    - [Criar o dicionário de dados](#criar-o-dicionário-de-dados)
+    - [Atualizar o dicionário](#atualizar-o-dicionário)
+    - [Revisar a qualidade do dicionário](#revisar-a-qualidade-do-dicionário)
     - [Gerar prints de tela como insumo complementar](#gerar-prints-de-tela-como-insumo-complementar)
 
 ---
@@ -40,7 +39,7 @@ Este arquivo reúne prompts prontos para uso real no SEI. Não são ilustraçõe
 O `AGENTS.md` já é carregado em toda sessão neste repositório e concentra boa parte das orientações do projeto: os prompts abaixo não repetem o que já está lá.
 Repita uma orientação do `AGENTS.md` dentro de um prompt só quando quiser reforçar um ponto MUITO crítico, para reduzir o risco de alucinação nesse ponto específico.
 
-Todo trecho entre `<` e `>` é um parâmetro: substitua pela informação real antes de enviar. Use `<módulo>` quando o alvo é um módulo inteiro (SEI ou SIP) e `<módulo ou arquivo>` quando o alvo pode ser mais específico, como um único arquivo. Exemplo: `<módulo>` vira `licitacao`; `<módulo ou arquivo>` vira `licitacao/rn/LicitacaoRN.php`.
+Todo trecho entre `<` e `>` é um parâmetro: substitua pela informação real antes de enviar. Use `<módulo>` quando o alvo é um módulo inteiro (SEI ou SIP), `<módulo ou arquivo>` quando o alvo pode ser mais específico, como um único arquivo, e `<sistema ou módulo>` quando o exemplo também servir para o sistema, não só um módulo. Exemplo: `<módulo>` vira `licitacao`; `<módulo ou arquivo>` vira `licitacao/rn/LicitacaoRN.php`.
 
 Campo marcado como `<se souber>` ou `<opcional>` que você não tiver como preencher: apague a linha, mas nunca deixe o texto entre `<` e `>` dentro do prompt enviado. Não escreva "não sei" no lugar do campo: se você não sabe, a linha não deveria estar lá.
 
@@ -353,7 +352,7 @@ Use estes prompts para uma mudança pequena em algo que já existe, não para cr
 
 Exemplo de ajuste pontual: adicionar um campo de observação em uma entidade já existente. Exemplo de funcionalidade nova: criar uma tela de aprovação com um fluxo de permissão que ainda não existe.
 
-#### Ajuste pontual de menu ou página existente
+#### Ajuste pontual de menu ou página
 
 **Prompt:**
 
@@ -384,7 +383,7 @@ Protocolo de execução:
 Ao final, informe se houve impacto em menu, permissão ou release, e cite o arquivo e a linha onde `validarLink`, `validarPermissao` e `assinarLink` cobrem a ação alterada. Justifique sua resposta.
 ```
 
-#### Ajuste pontual de entidade existente
+#### Ajuste pontual de entidade
 
 **Prompt:**
 
@@ -420,7 +419,7 @@ Protocolo de execução:
 Ao final, informe: nomes de tabela e coluna dentro do limite de 26 caracteres e nomes de índice, FK e sequence dentro de 30; se a entidade pertence a um módulo mapeado em `.agents/references/mapa-modulos-scripts.md`, o estado da atualização dos scripts SEI/SIP de release e da sincronização de versão; e se o dicionário de dados precisa ser atualizado depois desta mudança. Justifique sua resposta.
 ```
 
-#### Ajuste pontual de operação de API ou WebService existente
+#### Ajuste pontual de operação de API ou WebService
 
 **Prompt:**
 
@@ -452,18 +451,16 @@ Protocolo de execução:
 Ao final, descreva: o fluxo da operação após a mudança, como entrada e saída são validadas, e a autorização aplicada por ação ou serviço no controlador correspondente. Justifique sua resposta.
 ```
 
-### Revisão Técnica e Segurança
+### Revisão Técnica e Segurança de Alto Nível
 
 #### Revisão técnica completa de módulo
 
-Use quando quiser pegar legado e débito técnico de vários tipos de uma vez: padrões de codificação, vulnerabilidade e segurança, modelagem de banco, conformidade com a API de módulos e impacto de release. O relatório final é a soma dos relatórios das skills de gate acionadas por `sei-revisao-tecnica`, não uma análise nova por cima delas. Se já tiver uma suspeita de onde o problema está, preencha o campo "Suspeita específica": ajuda a skill priorizar a investigação sem deixar de cobrir o resto do escopo.
+Use quando quiser pegar legado e débito técnico de vários tipos de uma vez: padrões de codificação, vulnerabilidade e segurança, modelagem de banco, conformidade com a API de módulos e impacto de release. O relatório final é a soma dos relatórios das skills de gate acionadas por `sei-revisao-tecnica`, não uma análise nova por cima delas.
 
 **Prompt:**
 
 ```text
 Use a skill `sei-revisao-tecnica` para fazer uma revisão técnica de <módulo ou arquivo>.
-
-Suspeita específica: <preencha se já tiver uma, ou apague a linha>
 
 Use o formato de relatório padrão da skill, com a seção de segunda passada preenchida (executada e o que mudou de classificação, ou "nenhuma mudança") e os candidatos a tarefas ordenados da maior para a menor prioridade, como próximo passo sugerido a partir de cada achado. Detalhe também as lacunas de teste ou validação encontradas.
 
@@ -480,20 +477,32 @@ Use o formato de relatório padrão da skill, com a seção de segunda passada p
 Não altere nenhum arquivo, ref, tarefa ou issue durante a revisão. Justifique sua resposta.
 ```
 
-#### Revisão técnica de uma dimensão específica
+#### Revisão técnica exclusiva de dimensões
 
-Use quando quiser restringir a revisão a uma única dimensão técnica, em vez de rodar a completa. Se já tiver uma suspeita de onde o problema está dentro dessa dimensão, preencha o campo "Suspeita específica": ajuda a skill priorizar a investigação sem deixar de cobrir o resto do escopo.
+Use quando quiser restringir a revisão a uma ou mais dimensões técnicas, em vez de rodar a completa. As dimensões possíveis são:
+
+- Escopo e Limites de Escrita
+- Padrão de Codificação do SEI
+- Permissões e Auditoria
+- Padrão Transacional
+- Controladores e Autorização
+- Entrada e Saída HTTP
+- Segurança e Vulnerabilidade
+- Padrão de Modelagem de Banco
+- Conformidade com a API de Módulos
+- Qualidade de Código
 
 **Prompt:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para revisar exclusivamente <dimensão técnica, ex.: transação e auditoria, permissões, entrada e saída HTTP> em <módulo ou arquivo>.
+Use a skill `sei-revisao-tecnica` para revisar exclusivamente estas dimensões em <módulo ou arquivo>:
 
-Restrinja o relatório a essa dimensão: omita achados de outras dimensões, salvo quando forem evidência direta de um problema concreto na dimensão revisada.
+- <dimensão 1, dentre as listadas acima>
+- <dimensão 2, dentre as listadas acima>
 
-Suspeita específica: <preencha se já tiver uma, ou apague a linha>
+Restrinja o relatório a essas dimensões: omita achados de outras dimensões, salvo quando forem evidência direta de um problema concreto em alguma das dimensões revisadas.
 
-Use o formato de relatório padrão da skill, mantendo apenas as seções pertinentes à dimensão revisada, com a seção de segunda passada preenchida (executada e o que mudou de classificação, ou "nenhuma mudança") e os candidatos a tarefas ordenados da maior para a menor prioridade.
+Use o formato de relatório padrão da skill, mantendo apenas as seções pertinentes às dimensões revisadas, com a seção de segunda passada preenchida (executada e o que mudou de classificação, ou "nenhuma mudança") e os candidatos a tarefas ordenados da maior para a menor prioridade.
 
 Não altere nenhum arquivo, ref, tarefa ou issue durante a revisão. Justifique sua resposta.
 ```
@@ -501,14 +510,19 @@ Não altere nenhum arquivo, ref, tarefa ou issue durante a revisão. Justifique 
 **Exemplo preenchido:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para revisar exclusivamente transação e efeitos colaterais em fontes/sei/src/main/php/sei/web/modulos/peticionamento/rn/MdPetIntEmailNotificacaoRN.php.
+Use a skill `sei-revisao-tecnica` para revisar exclusivamente estas dimensões em fontes/sei/src/main/php/sei/web/modulos/peticionamento/rn/MdPetIntEmailNotificacaoRN.php:
 
-Restrinja o relatório a essa dimensão: omita achados de outras dimensões, salvo quando forem evidência direta de um problema concreto na dimensão revisada.
+- Padrão Transacional
+- Permissões e Auditoria
 
-Use o formato de relatório padrão da skill, mantendo apenas as seções pertinentes à dimensão revisada, com a seção de segunda passada preenchida (executada e o que mudou de classificação, ou "nenhuma mudança") e os candidatos a tarefas ordenados da maior para a menor prioridade.
+Restrinja o relatório a essas dimensões: omita achados de outras dimensões, salvo quando forem evidência direta de um problema concreto em alguma das dimensões revisadas.
+
+Use o formato de relatório padrão da skill, mantendo apenas as seções pertinentes às dimensões revisadas, com a seção de segunda passada preenchida (executada e o que mudou de classificação, ou "nenhuma mudança") e os candidatos a tarefas ordenados da maior para a menor prioridade.
 
 Não altere nenhum arquivo, ref, tarefa ou issue durante a revisão. Justifique sua resposta.
 ```
+
+### Revisão Técnica para Desenvolvedores
 
 #### Verificar um guardrail específico, sem orquestrador
 
@@ -562,46 +576,6 @@ Use a skill `sei-verificacao-tarefa` para verificar <script de tarefa ou diretó
 Reporte o veredito de cada guardrail aplicável (PASS, WARN ou BLOCK), com arquivo e linha de evidência para cada um.
 
 Não altere nenhum arquivo durante a verificação. Justifique sua resposta.
-```
-
-#### Auditoria exclusiva de segurança e vulnerabilidade
-
-Use quando quiser uma auditoria restrita à dimensão Segurança, com a matriz V01-V10 e o checklist C1-C10 aplicados integralmente. Se já tiver uma suspeita de vetor específico, preencha o campo "Suspeita específica": ajuda a skill priorizar a investigação sem deixar de cobrir o resto do escopo.
-
-**Prompt:**
-
-```text
-Use a skill `sei-revisao-tecnica` para uma auditoria exclusiva de segurança e vulnerabilidade do módulo <indicar aqui o módulo que você quer analisar>, em modo de revisão de módulo completo.
-
-Restrinja o relatório à dimensão Segurança: omita achados de qualidade, manutenibilidade, desempenho, estilo, duplicação, cobertura de testes ou funcionalidade, salvo quando forem evidência direta de uma vulnerabilidade concreta.
-
-Suspeita específica: <preencha se já tiver uma, ou apague a linha>
-
-Aplique integralmente a matriz V01-V10 (`.agents/security/matriz-vulnerabilidades-sei.md`) e o checklist C1-C10 (`.agents/checklists/checklist-seguranca.md`). Inclua como achado confirmado somente o que resistir à segunda passada anti-falso-positivo da skill com fluxo explorável demonstrado; achado `incerto` ou sem evidência de exploração fica registrado como `incerto`, nunca como vulnerabilidade confirmada. Não rebaixe a severidade de um achado confirmado para facilitar o parecer.
-
-Inicie a resposta com o título exato:
-# Relatório de Problemas Concretos de Segurança e Vulnerabilidade
-
-Em seguida, use o formato de relatório padrão da skill, mantendo apenas as seções pertinentes à dimensão Segurança, com a seção de segunda passada preenchida (executada e o que mudou de classificação, ou "nenhuma mudança") e os candidatos a tarefas ordenados da maior para a menor prioridade.
-
-Não altere nenhum arquivo, ref, tarefa ou issue durante a revisão. Justifique sua resposta.
-```
-
-**Exemplo preenchido:**
-
-```text
-Use a skill `sei-revisao-tecnica` para uma auditoria exclusiva de segurança e vulnerabilidade do módulo fontes/sei/src/main/php/sei/web/modulos/peticionamento/, em modo de revisão de módulo completo.
-
-Restrinja o relatório à dimensão Segurança: omita achados de qualidade, manutenibilidade, desempenho, estilo, duplicação, cobertura de testes ou funcionalidade, salvo quando forem evidência direta de uma vulnerabilidade concreta.
-
-Aplique integralmente a matriz V01-V10 (`.agents/security/matriz-vulnerabilidades-sei.md`) e o checklist C1-C10 (`.agents/checklists/checklist-seguranca.md`). Inclua como achado confirmado somente o que resistir à segunda passada anti-falso-positivo da skill com fluxo explorável demonstrado; achado `incerto` ou sem evidência de exploração fica registrado como `incerto`, nunca como vulnerabilidade confirmada. Não rebaixe a severidade de um achado confirmado para facilitar o parecer.
-
-Inicie a resposta com o título exato:
-# Relatório de Problemas Concretos de Segurança e Vulnerabilidade
-
-Em seguida, use o formato de relatório padrão da skill, mantendo apenas as seções pertinentes à dimensão Segurança, com a seção de segunda passada preenchida (executada e o que mudou de classificação, ou "nenhuma mudança") e os candidatos a tarefas ordenados da maior para a menor prioridade.
-
-Não altere nenhum arquivo, ref, tarefa ou issue durante a revisão. Justifique sua resposta.
 ```
 
 #### Code review de mudanças commitadas
@@ -672,25 +646,26 @@ Justifique sua resposta.
 
 ### Dicionário de Dados
 
-`dicionario_tabelas.md` e `dicionario_colunas.md` mantêm as descrições semânticas; `CHANGELOG.md` mantém o changelog estrutural. A skill `dicionario-dados-db-scan-codebase-docs` investiga a codebase, os scripts de banco e a documentação disponível para produzir esses artefatos, e reporta proveniência, confiança, conflitos e lacunas ao desenvolvedor durante a execução, sem gravar arquivo dedicado ao relatório.
+A skill `dicionario-dados-db-scan-codebase-docs` investiga a codebase, os scripts de banco e qualquer documentação ou material complementar disponível para gerar e manter dicionários de dados. Ela nasceu de [documento conceitual](../.agents/skills/dicionario-dados-db-scan-codebase-docs/references/conceitos-e-instrucoes-tecnicas_descricao_tabelas_colunas.md) apoiado na família de normas ISO/IEC de qualidade de dados e metadados (ISO 8000-1, ISO/IEC 25012/25024 e ISO/IEC 11179). O alvo pode ser o sistema, um módulo, uma base de dados corporativa ou DW. Todo alvo reconhecido precisa de um adaptador registrado.
 
-Os exemplos a seguir funcionam para qualquer módulo já reconhecido neste repositório, inclusive o núcleo SEI ou SIP quando for o alvo. Para um módulo que ainda não tenha adaptador, crie o adaptador primeiro (exemplo "Criar o adaptador de um módulo novo" logo abaixo) antes de usar os demais exemplos desta seção. Cite a skill `dicionario-dados-db-scan-codebase-docs` pelo nome no prompt, como nos demais exemplos deste arquivo. Não é preciso citar o adaptador do módulo: uma vez criado e registrado, a skill já sabe localizá-lo sozinha. Também não é preciso citar critérios de qualidade ou comandos de verificação internos à skill; o que puder ser descoberto no código, a skill descobre sozinha.
+Adaptador é o arquivo que ensina a skill a localizar, investigar e versionar esse alvo: onde fica a fonte estrutural, qual fonte tem precedência quando houver mais de uma, como a versão é identificada e onde buscar no código. Fica em `adapters/<família>/<caminho-do-adaptador>.md`, listado em `registro-adaptadores.md`, ambos na raiz da skill. Use o prompt "Criar o adaptador" a seguir para criar e registrar o adaptador. Sem ele registrado, a skill recusa gerar o dicionário e aponta a lacuna.
 
-Adaptador é o arquivo que ensina a skill a reconhecer, localizar e versionar um módulo específico: onde fica a fonte estrutural, como a versão é identificada, como buscar no código e como publicar as descrições. Ele fica em `adapters/<família>/<caminho-do-adaptador>.md` e é listado em `registro-adaptadores.md`, ambos na raiz da skill `dicionario-dados-db-scan-codebase-docs`. Você não precisa escrever esse arquivo manualmente: use o prompt "Criar o adaptador de um módulo novo" a seguir para criar e registrar o adaptador antes de gerar o dicionário.
+A skill gera três artefatos de saída: `dicionario_tabelas.md` e `dicionario_colunas.md`, com as descrições semânticas, e `CHANGELOG.md`, com o changelog estrutural.
 
-#### Criar o adaptador de um módulo novo
+#### Criar o adaptador
 
-Use este prompt para o primeiro contato com um módulo que a skill ainda não reconhece, quando quiser criar só o adaptador agora e gerar o dicionário depois, em um pedido separado (exemplo "Criar o dicionário de dados de um módulo novo" a seguir). Informe as convenções que você já souber para reduzir as perguntas que a skill vai precisar fazer; o que você não souber, a skill tenta inferir da codebase antes de perguntar.
+Use este prompt no primeiro contato com um alvo que a skill ainda não reconhece, seja o sistema, um módulo ou uma base de dados corporativa. Ele cria só o adaptador. Gere o dicionário depois, em um pedido separado, com o prompt "Criar o dicionário de dados" a seguir. Informe as convenções que você já souber, para reduzir as perguntas que a skill vai precisar fazer. O que você não souber, ela tenta inferir da codebase antes de perguntar.
 
 **Prompt:**
 
 ```text
-Use a skill `dicionario-dados-db-scan-codebase-docs` para criar o adaptador de <módulo>. Investigue a codebase, crie o adaptador completo e registre-o. Não gere o dicionário de dados nem o changelog nesta etapa.
+Use a skill `dicionario-dados-db-scan-codebase-docs` para criar o adaptador de <sistema ou módulo>. Investigue a codebase, crie o adaptador completo e registre-o. Não gere o dicionário de dados nem o changelog nesta etapa.
 
 O que eu já sei sobre ele:
-- pistas que identificam este módulo (nome, caminhos, prefixo de tabela, pasta de documentação): <se souber, ex.: "prefixo md_abc_, tabelas em fontes/sei/.../modulos/abc/dto/">
-- fonte estrutural e convenção de versionamento: <scripts de instalação, migrations, schema ou DDL, se souber, ex.: "sei_atualizar_versao_modulo_abc.php">
-- codificação, camadas e onde buscar no código: <se souber, ex.: "ISO-8859-1, camadas dto/rn/bd padrão InfraPHP">
+- pistas que identificam este sistema ou módulo (nome, caminhos, prefixo de tabela, pasta de documentação, ou o codebase/repositório em si, se for o sistema inteiro): <se souber, ex.: "prefixo pedidos_, models em app/Models/Pedido.php, migrations em database/migrations/">
+- fonte estrutural e convenção de versionamento: <scripts de instalação, migrations, schema ou DDL, se souber, ex.: "migrations em migrations/Version20240115120000.php">
+- precedência entre fontes, se houver mais de uma fonte estrutural para a mesma informação: <qual prevalece, se souber, ex.: "migration mais recente prevalece sobre o schema.sql legado">
+- codificação, camadas e onde buscar no código: <se souber, ex.: "camadas Entity/Repository/Controller">
 - títulos e pasta de destino dos dicionários: <se souber, ex.: "docs/dicionario_dados/abc/">
 - particularidades ou exceções conhecidas: <se houver, ex.: "módulo tem tabela compartilhada com outro módulo, não duplicar no dicionário">
 
@@ -699,67 +674,55 @@ Trate os itens acima como pista, não como conclusão: confirme cada um contra a
 Pergunte objetivamente só sobre o que não puder ser inferido nem foi informado acima. Justifique sua resposta.
 ```
 
-#### Criar o dicionário de dados de um módulo novo
+#### Criar o dicionário de dados
 
-Use este prompt na primeira vez que for gerar o dicionário de um módulo, depois que o módulo já tiver um adaptador (crie primeiro com "Criar o adaptador de um módulo novo", se ainda não existir).
+Use este prompt na primeira vez que for gerar o dicionário de um sistema ou módulo, depois que ele já tiver um adaptador (crie primeiro com "Criar o adaptador", se ainda não existir). Anexar material complementar aumenta o contexto negocial disponível para a skill e tende a melhorar a qualidade do resultado. Pode ser qualquer formato: esquema de banco em outra ferramenta, dicionário anterior, prints de tela, manuais, vídeos ou transcrições. Cite os materiais que tiver e, se houver mais de um, indique a qual dar atenção especial. A skill sempre confirma tudo contra as fontes estruturais disponíveis (codebase, esquema de banco ou DDL) antes de publicar qualquer descrição, com ou sem material complementar.
 
 **Prompt:**
 
 ```text
-Use a skill `dicionario-dados-db-scan-codebase-docs` para criar o dicionário de dados e o changelog estrutural de <módulo>.
+Use a skill `dicionario-dados-db-scan-codebase-docs` para criar o dicionário de dados e o changelog estrutural de <sistema ou módulo>.
 
-Investigue a codebase para identificar a fonte estrutural (scripts de instalação, migrations, schemas ou DDLs), a convenção de versionamento e onde ficam as regras de negócio. Aproveite também qualquer documentação já existente no repositório.
+Investigue as fontes estruturais disponíveis (codebase, scripts de instalação, migrations, schemas ou DDLs) para identificar a convenção de versionamento e, quando houver codebase, onde ficam as regras de negócio. Aproveite também qualquer documentação já existente. Não publique como fato uma descrição cuja semântica não esteja suficientemente sustentada pelas evidências encontradas.
 
-Ao final, informe explicitamente: as tabelas ou colunas cuja semântica você não conseguiu confirmar na codebase, e o que faltou para confirmá-las. Justifique sua resposta.
+Considere como material complementar <se houver: arquivos anexados, esquema em outro formato, dicionário anterior, prints, manuais, vídeos, transcrições>. Dê atenção especial a <o material mais relevante, se houver mais de um>, mas confirme tudo contra a fonte estrutural disponível (código, esquema de banco ou DDL) antes de publicar qualquer descrição.
+
+Ao final, informe explicitamente: as tabelas ou colunas cuja semântica você não conseguiu confirmar nas fontes disponíveis, o que faltou para confirmá-las, e onde algum material complementar divergiu da fonte estrutural e qual fonte você adotou. Justifique sua resposta.
 ```
 
-#### Criar o dicionário com vários materiais complementares
+#### Atualizar o dicionário
 
-Use quando tiver mais de um material de apoio para o mesmo módulo, por exemplo vários arquivos anexados de uma vez, e quiser que a skill dê atenção especial a um deles sem deixar de confirmar tudo contra a codebase.
-
-**Prompt:**
-
-```text
-Use a skill `dicionario-dados-db-scan-codebase-docs` para criar o dicionário de dados e o changelog estrutural de <módulo>.
-
-Considere como material complementar todos os arquivos anexados em <nome da pasta ou do conjunto de anexos>.
-
-Dê atenção especial ao arquivo <nome do arquivo mais relevante, ex.: script ou lista de comandos de DDL>, mas confirme tudo contra o código e o esquema real antes de publicar qualquer descrição.
-
-Ao final, informe explicitamente onde o material complementar divergiu do código, e qual das duas fontes você adotou em cada divergência. Justifique sua resposta.
-```
-
-#### Atualizar um dicionário já existente
-
-Use quando o dicionário já existir e você quiser atualizá-lo depois de mudanças no módulo ou após uma nova versão.
+Use quando o dicionário já existir e você quiser sincronizá-lo com mudanças estruturais no sistema ou módulo (novas tabelas, colunas ou regras de negócio) ou após uma nova versão. Também serve para corrigir uma descrição anterior, mas só diante de divergência estrutural confirmada ou domínio incompleto confirmado, nunca por ajuste de estilo.
 
 **Prompt:**
 
 ```text
-Use a skill `dicionario-dados-db-scan-codebase-docs` para atualizar o dicionário de dados de <módulo> para o estado mais recente da codebase.
+Use a skill `dicionario-dados-db-scan-codebase-docs` para atualizar o dicionário de dados de <sistema ou módulo> para o estado mais recente da <codebase ou base>.
 
-Já existem os arquivos de dicionário de dados (e o changelog, se houver). Compare com a estrutura e as regras de negócio atuais e altere somente o que realmente mudou desde a última atualização, preservando o restante como está.
+Compare o dicionário de dados e o changelog já existentes com a estrutura e as regras de negócio atuais e altere somente o que realmente mudou desde a última atualização, preservando o restante que não teve mudança sem alteração.
 
-Se você souber a versão-alvo, os commits ou as migrations específicas da mudança, pode indicar; caso contrário, identifique o escopo pela própria codebase.
+Se você souber a versão-alvo, os commits ou as migrations específicas da mudança, indique-os. Caso contrário, identifique o escopo da diferença pela própria codebase.
+
+Considere como material complementar <se houver: arquivos anexados, esquema em outro formato, dicionário anterior, prints, manuais, vídeos, transcrições>. Dê atenção especial a <o material mais relevante, se houver mais de um>, mas confirme tudo contra a fonte estrutural disponível (código, esquema de banco ou DDL) antes de publicar qualquer descrição.
 
 Ao final, liste o que foi alterado e o que foi preservado intencionalmente. Justifique sua resposta.
 ```
 
-#### Revisar a qualidade de um dicionário existente
+#### Revisar a qualidade do dicionário
 
-Use quando quiser avaliar a qualidade e a consistência de um dicionário já existente, sem modificá-lo.
+Use quando quiser avaliar se um dicionário já existente segue os critérios de qualidade e as convenções da própria skill (completude, consistência, terminologia, distinções documentadas), sem alterar nenhum arquivo e independente de a codebase ter mudado.
 
 **Prompt:**
 
 ```text
-Use a skill `dicionario-dados-db-scan-codebase-docs` para revisar a qualidade e a consistência do dicionário de dados de <módulo>, sem alterar nenhum arquivo.
+Use a skill `dicionario-dados-db-scan-codebase-docs` para revisar a qualidade e a consistência do dicionário de dados de <sistema ou módulo>, sem alterar nenhum arquivo.
 
-Aponte descrições incompletas, inconsistentes, genéricas ou desatualizadas em relação à estrutura real, e liste claramente qualquer lacuna que impeça considerar a documentação completa. Justifique sua resposta.
+Classifique cada achado como problema de qualidade documental (descrição incompleta, inconsistente, genérica ou fora das convenções da skill) ou como lacuna (elemento sem descrição). Liste claramente qualquer lacuna que impeça considerar a documentação completa. Justifique sua resposta.
 ```
 
 #### Gerar prints de tela como insumo complementar
 
-Use este exemplo quando já existir um ambiente de teste do módulo disponível (subido localmente ou acessível) antes de rodar o prompt. Os prints gerados aqui podem ser apontados como material complementar no exemplo "Criar o dicionário com vários materiais complementares".
+Use este exemplo quando já existir um ambiente de teste do módulo disponível (subido localmente ou acessível) antes de rodar o prompt. Os prints gerados aqui podem ser apontados como material complementar no exemplo "Criar o dicionário de dados".
 
 Pré-requisito: veja "Pré-requisitos de Automação de Navegador (Playwright e Selenium)", bloco Playwright, no início deste arquivo.
 
