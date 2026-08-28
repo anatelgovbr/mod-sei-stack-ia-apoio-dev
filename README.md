@@ -118,7 +118,6 @@ As **skills** são agentes especializados em tarefas específicas. Cada skill te
 | `sei-tipagem-phpdoc` | Apoia modernização segura de tipagem PHP e PHPDoc quando solicitada explicitamente |
 | `sei-report-todos` | Gera relatório de pendências `TODO:` em módulos escolhidos explicitamente |
 | `dicionario-dados-db-scan-codebase-docs` | Cria, atualiza e verifica dicionários de dados e changelogs estruturais a partir de artefatos versionados da codebase |
-| `escrever-adr` | Documenta decisões arquiteturais significativas como ADR |
 | `napkin` | Mantém runbook operacional pessoal em `.agents/memory/runbook.md` |
 | `caveman`, `ponytail`, `grilling` | Modos auxiliares para comunicação compacta, simplificação e stress-test de planos |
 | `sei-revisao-tecnica` | Revisa diretamente segurança, conformidade, gates e qualidade técnica de diffs, arquivos ou módulos SEI, sem exigir spec |
@@ -149,9 +148,9 @@ A ferramenta **recomendada** é a extensão do **GitHub Copilot no [VS Code](htt
 
 | Ferramenta | Como instalar | Arquivos de configuração |
 |---|---|---|
-| **[GitHub Copilot](https://github.com/features/copilot)** | Instale a extensão "GitHub Copilot" pelo marketplace do VS Code (a loja de extensões do editor, equivalente a uma loja de aplicativos) e faça login com sua conta GitHub | `.github/agents/`, `.github/prompts/` e `.github/copilot-instructions.md` |
-| **[OpenCode](https://opencode.ai)** | Instale via terminal (a interface de texto do computador onde você digita comandos) com `npm install -g opencode-ai` e configure o modelo desejado | `.opencode/`, `.opencode/command/` e `.opencode/opencode.json` |
-| **[Claude Code](https://claude.com/claude-code)** | Instale via terminal com `curl -fsSL https://claude.ai/install.sh \| bash` e faça login com sua conta Claude | `.claude/skills/` (symlink para `.agents/skills/`) e `.claude/commands/` |
+| **[GitHub Copilot](https://github.com/features/copilot)** | Instale a extensão "GitHub Copilot" pelo marketplace do VS Code (a loja de extensões do editor, equivalente a uma loja de aplicativos) e faça login com sua conta GitHub | `.github/copilot-instructions.md` e `.vscode/settings.json` |
+| **[OpenCode](https://opencode.ai)** | Instale via terminal (a interface de texto do computador onde você digita comandos) com `npm install -g opencode-ai` e configure o modelo desejado | `.opencode/opencode.json` |
+| **[Claude Code](https://claude.com/claude-code)** | Instale via terminal com `curl -fsSL https://claude.ai/install.sh \| bash` e faça login com sua conta Claude | `.claude/skills` (symlink para `.agents/skills`) |
 
 > **O que é npm?** É o gerenciador de pacotes do Node.js, uma ferramenta de linha de comando usada para instalar softwares de desenvolvimento. Se você nunca usou, peça ajuda a um desenvolvedor da equipe para instalar o OpenCode.
 
@@ -177,30 +176,32 @@ Use o SpecKit quando a demanda for **maior, nova ou ambígua**, quando você sen
 
 | Fase | Comando | O que faz |
 |---|---|---|
-| 1. Especificação | `/speckit.specify` | Transforma a descrição em linguagem natural em uma especificação estruturada |
-| 2. Clarificação | `/speckit.clarify` | Levanta dúvidas e ambiguidades antes de planejar |
-| 3. Planejamento | `/speckit.plan` | Produz o plano técnico de implementação |
-| 4. Tarefas | `/speckit.tasks` | Decompõe o plano em tarefas granulares e sequenciadas |
-| 5. Análise | `/speckit.analyze` | Analisa riscos, dependências e impactos |
-| 6. Implementação | `/speckit.implement` | Implementa seguindo o plano e as tarefas definidos nas fases anteriores |
+| 1. Especificação | `/speckit-specify` | Transforma a descrição em linguagem natural em uma especificação estruturada |
+| 2. Clarificação | `/speckit-clarify` | Levanta dúvidas e ambiguidades antes de planejar |
+| 3. Planejamento | `/speckit-plan` | Produz o plano técnico de implementação |
+| 4. Tarefas | `/speckit-tasks` | Decompõe o plano em tarefas granulares e sequenciadas |
+| 5. Análise | `/speckit-analyze` | Analisa riscos, dependências e impactos |
+| 6. Implementação | `/speckit-implement` | Implementa seguindo o plano e as tarefas definidos nas fases anteriores |
 
-Além das fases principais, há três comandos auxiliares: `/speckit.checklist` (gera o checklist de implementação da funcionalidade), `/speckit.taskstoissues` (converte as tarefas em issues no GitHub) e `/speckit.constitution` (manutenção do arquivo `constitution.md`, que neste repositório permanece intencionalmente vazio — veja a seção [Como o SpecKit está organizado neste repositório](#como-o-speckit-está-organizado-neste-repositório)).
+Além das fases principais, há três comandos auxiliares: `/speckit-checklist` (gera o checklist de implementação da funcionalidade), `/speckit-taskstoissues` (converte as tarefas em issues no GitHub) e `/speckit-constitution` (manutenção do arquivo `constitution.md`, que neste repositório permanece intencionalmente vazio — veja a seção [Como o SpecKit está organizado neste repositório](#como-o-speckit-está-organizado-neste-repositório)).
 
 Os documentos gerados (especificação, plano, tarefas) ficam em `specs/<nome-da-funcionalidade>/` na sua máquina local. A pasta `specs/` está no `.gitignore` do repositório: os documentos ficam somente na sua máquina e nunca são enviados ao repositório compartilhado. Isso é intencional; esses arquivos são descartáveis e existem apenas para guiar aquela entrega específica.
 
 #### Como invocar as fases
 
-- **No Copilot (VS Code):** abra o painel de chat do Copilot (ícone de balão de conversa na barra lateral esquerda do VS Code), clique no nome do agente atual (geralmente aparece como `@GitHub Copilot` ou `@workspace` acima da caixa de texto) e selecione o agente correspondente, como `speckit.specify`.
-- **No OpenCode (terminal, a interface de texto do computador):** digite o comando diretamente, como `/speckit.specify`.
-- **No Claude Code (terminal ou app):** digite o comando diretamente, como `/speckit.specify`.
+- **No Copilot (VS Code):** abra o painel de chat do Copilot (ícone de balão de conversa na barra lateral esquerda do VS Code), clique no nome do agente atual (geralmente aparece como `@GitHub Copilot` ou `@workspace` acima da caixa de texto) e selecione a skill correspondente, como `speckit-specify`.
+- **No OpenCode (terminal, a interface de texto do computador):** digite o comando diretamente, como `/speckit-specify`.
+- **No Claude Code (terminal ou app):** digite o comando diretamente, como `/speckit-specify`.
 
 #### Integrações por ferramenta
 
-O fluxo padrão do SpecKit vive em `.agents/skills/speckit/`. As integrações por ferramenta apenas expõem esse fluxo:
+O fluxo padrão do SpecKit vive em `.agents/skills/speckit-<fase>/` e **nenhuma integração guarda arquivo dele**. `.claude/commands/`, `.github/agents/`, `.github/prompts/` e `.opencode/command/` estão vazios, só como convenção de cada ferramenta.
 
-- **Copilot**: agentes em `.github/agents/` e prompts em `.github/prompts/`
-- **OpenCode**: comandos em `.opencode/command/`
-- **Claude Code**: comandos em `.claude/commands/`
+As três leem `.agents/skills/` direto e encontram as fases lá, lado a lado com as demais skills do repositório, sem symlink e sem configuração extra:
+
+- **Claude Code**: `.claude/skills`, symlink para `../.agents/skills`
+- **Copilot**: `chat.agentSkillsLocations` em `.vscode/settings.json`
+- **OpenCode**: `skills.paths` em `.opencode/opencode.json`
 
 ### Estrutura da stack
 
@@ -271,7 +272,7 @@ Antes de remover qualquer item do `.gitignore`, avalie se a remoção é realmen
 **Passo 3: Para uma demanda simples,** abra o chat do Copilot e descreva o que precisa. Exemplo:
 > *"Analise o módulo `ia` sem alterar nada. Quero entender como funciona a integração com o servidor de soluções de IA."*
 
-**Passo 4: Para uma demanda maior ou ambígua,** use o fluxo SpecKit, começando por `/speckit.specify`. Exemplo:
+**Passo 4: Para uma demanda maior ou ambígua,** use o fluxo SpecKit, começando por `/speckit-specify`. Exemplo:
 > *"Preciso adicionar uma nova funcionalidade de exportação de relatórios no módulo de utilidades."*
 
 **Passo 5: Consulte os exemplos** em [`docs/prompts-exemplo.md`](docs/prompts-exemplo.md) para ver como formular bons pedidos para diferentes tipos de demanda.
@@ -295,7 +296,7 @@ Para manter e atualizar o SpecKit com segurança, é preciso entender o papel de
 #### Skills: o que de fato executa
 
 ```text
-.agents/skills/speckit/
+.agents/skills/
 ├── speckit-specify/SKILL.md
 ├── speckit-clarify/SKILL.md
 ├── speckit-plan/SKILL.md
@@ -307,20 +308,26 @@ Para manter e atualizar o SpecKit com segurança, é preciso entender o papel de
 └── speckit-taskstoissues/SKILL.md
 ```
 
-Esses arquivos são o **núcleo operacional do SpecKit neste repositório**. Cada `SKILL.md` contém o fluxo completo de uma fase: o que o agente deve fazer, em que ordem, quais verificações realizar e como tratar os resultados. Quando você invoca `/speckit.specify`, é a skill correspondente que o agente executa. As skills são autossuficientes e agnósticas de ferramenta: funcionam no Copilot, no OpenCode ou em qualquer outro assistente que consiga ler o arquivo.
+Esses arquivos são o **núcleo operacional do SpecKit neste repositório**. Cada `SKILL.md` contém o fluxo completo de uma fase: o que o agente deve fazer, em que ordem, quais verificações realizar e como tratar os resultados. Quando você invoca `/speckit-specify`, é a skill correspondente que o agente executa. As skills são autossuficientes e agnósticas de ferramenta: funcionam no Copilot, no OpenCode ou em qualquer outro assistente que consiga ler o arquivo.
+
+As fases ficam no mesmo nível das demais skills do repositório porque a descoberta enxerga um nível abaixo do diretório configurado (`<local>/<nome>/SKILL.md`). Fase nova precisa só de um diretório próprio em `.agents/skills/`, nomeado `speckit-<fase>`.
 
 > **Tenha cautela ao alterar skills do SpecKit.** Qualquer mudança nesses arquivos afeta diretamente o comportamento do fluxo SDD para toda a equipe. Antes de editar, entenda o impacto na fase inteira. Teste o fluxo após a mudança e documente o motivo no Pull Request.
 
-#### Adapters: wrappers finos por ferramenta
+#### Por que não existem adapters por ferramenta
 
 ```text
-.github/agents/speckit.*.agent.md
-.github/prompts/speckit.*.prompt.md
-.opencode/command/speckit.*.md
-.claude/commands/speckit.*.md
+.github/agents/      vazio
+.github/prompts/     vazio
+.opencode/command/   vazio
+.claude/commands/    vazio
 ```
 
-Cada adapter é um arquivo curto que faz duas coisas em comum: instrui o agente a carregar a skill correspondente e segui-la, e mapeia o nome do comando para a sintaxe da ferramenta. Copilot e OpenCode também declaram `handoffs` (os botões de continuação que a ferramenta exibe ao final de cada fase); o Claude Code não tem esse conceito de UI, então seu adapter não declara `handoffs`. O fluxo completo não é duplicado em nenhum adapter; fica na skill. Se uma fase mudar de comportamento, a mudança vai na skill, e o adapter permanece intocado.
+Já existiram: um arquivo curto por fase em cada ferramenta, que carregava a skill correspondente e mapeava o nome do comando. Eram 36 arquivos para expor 9 fases.
+
+Com as fases no mesmo nível das demais skills, todos ficaram desnecessários. As três ferramentas descobrem as 9 fases sozinhas lendo `.agents/skills/`, e o nome do gatilho passa a sair do diretório da skill, igual nas três: `/speckit-specify`.
+
+As pastas continuam no repositório, vazias, porque são convenção de cada ferramenta. Não crie arquivo de comando nelas. Se algum dia uma ferramenta precisar disso para expor a fase, o arquivo aponta para o `SKILL.md` e não carrega workflow.
 
 #### A pasta `.specify/`: papel no setup inicial
 
@@ -334,11 +341,11 @@ Cada adapter é um arquivo curto que faz duas coisas em comum: instrui o agente 
     └── constitution.md  <- intencionalmente vazio; não governa o fluxo (as regras vivem nas skills de fase)
 ```
 
-A pasta `.specify/` cumpriu seu papel principal durante o setup inicial do SpecKit. Os templates em `.specify/templates/` foram usados **uma única vez** para gerar as skills que estão em `.agents/skills/speckit/`. Depois dessa geração, os templates não fazem parte do fluxo de execução diário.
+A pasta `.specify/` cumpriu seu papel principal durante o setup inicial do SpecKit. Os templates em `.specify/templates/` foram usados **uma única vez** para gerar as skills que estão em `.agents/skills/speckit-*/`. Depois dessa geração, os templates não fazem parte do fluxo de execução diário.
 
 Os templates permanecem no repositório como referência para atualizações futuras do SpecKit: ao avaliar uma nova versão, você compara os templates novos com as skills geradas anteriormente para identificar o que mudou e precisa ser incorporado.
 
-O que ainda é ativo em `.specify/` no dia a dia são os scripts em `.specify/scripts/`, chamados pelas skills em tempo de execução (ex: criação de branch). O arquivo `.specify/memory/constitution.md` é mantido **intencionalmente vazio** e não governa o fluxo: as regras de governança vivem nas próprias skills de fase, em `.agents/skills/speckit/`.
+O que ainda é ativo em `.specify/` no dia a dia são os scripts em `.specify/scripts/`, chamados pelas skills em tempo de execução (ex: criação de branch). O arquivo `.specify/memory/constitution.md` é mantido **intencionalmente vazio** e não governa o fluxo: as regras de governança vivem nas próprias skills de fase, em `.agents/skills/speckit-*/`.
 
 Os três arquivos de configuração pessoal estão no `.gitignore` e não são versionados:
 
@@ -354,20 +361,19 @@ Cada desenvolvedor configura esses arquivos na sua máquina conforme a ferrament
 
 | Grupo de arquivo | Ao atualizar o SpecKit | Ao evoluir o projeto SEI |
 |---|---|---|
-| Skills `.agents/skills/speckit/` | Merge com atenção, ver 6.3 | Raramente; abrir PR com justificativa clara |
-| Adapters `.github/agents/`, `.opencode/command/`, `.claude/commands/` | Substituição direta | Apenas se mudar `handoffs` (não aplicável ao Claude Code) ou nomes de fase |
+| Skills `.agents/skills/speckit-*/` | Merge com atenção, ver 6.3 | Raramente; abrir PR com justificativa clara |
 | Templates `.specify/templates/` | Atualizar como referência para comparação | Não se aplica |
 | `checklist-sei-template.md` | Preserve, é da equipe | Atualizar conforme padrões SEI evoluem |
 | `.specify/memory/constitution.md` | Manter vazio; não incorporar o template novo | Manter vazio; as regras vivem nas skills de fase |
 | `.specify/scripts/`, `.specify/integrations/` | Substituição direta | Não se aplica |
-| `.agents/` (fora de `skills/speckit/`) | Não se aplica | Ciclo normal do projeto |
+| `.agents/` (fora de `skills/speckit-*/`) | Não se aplica | Ciclo normal do projeto |
 | `AGENTS.md`, `.github/copilot-instructions.md` | Não se aplica | Ciclo normal do projeto |
 
 ### Como atualizar o SpecKit
 
 1. Identifique a nova versão em [github.com/github/spec-kit](https://github.com/github/spec-kit) e leia o changelog para entender o que mudou em cada fase.
-2. Para cada skill em `.agents/skills/speckit/`, compare a skill atual com o template novo da fase correspondente. Aplique merge manualmente, preservando qualquer ajuste que a equipe tenha feito.
-3. Substitua diretamente os adapters e os scripts em `.specify/scripts/`.
+2. Para cada skill em `.agents/skills/speckit-*/`, compare a skill atual com o template novo da fase correspondente. Aplique merge manualmente, preservando qualquer ajuste que a equipe tenha feito.
+3. Substitua diretamente os scripts em `.specify/scripts/`, nas duas versões: `bash/` e `powershell/`. Se a nova versão criar ou remover fase, crie ou remova o diretório correspondente em `.agents/skills/`.
 4. Atualize os templates em `.specify/templates/` para refletir a nova versão: eles servem de base de comparação para a próxima atualização.
 5. Mantenha `.specify/memory/constitution.md` vazio — as regras de governança vivem nas próprias skills de fase. Não incorpore o conteúdo do novo `constitution-template.md`.
 6. Teste o fluxo ponta a ponta (`specify`, `plan`, `tasks`, `implement`) em uma feature de exemplo.

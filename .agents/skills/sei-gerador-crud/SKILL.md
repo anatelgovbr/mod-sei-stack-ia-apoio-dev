@@ -414,3 +414,19 @@ Diferencas em relacao ao CRUD simples:
 | `ws/`, `css/`, `imagens/`, `js/` fora do escopo | Gerador produz apenas `dto/`, `bd/`, `rn/`, `int/` e paginas raiz |
 
 ---
+
+---
+
+## Testes
+
+```bash
+cd .agents/skills/sei-gerador-crud && python3 -m unittest test_generate_from_contrato
+```
+
+1 testes sobre `generate_from_contrato.py`. O arquivo e independente de proposito: nao importa helper de
+outra skill nem de pasta compartilhada. A duplicacao de andaime e o preco de a skill
+poder ser levada inteira para outro lugar.
+
+Fecha o ciclo da stack: o codigo que o gerador produz e submetido ao auditor de
+`sei-verificacao-rn`, e precisa passar. Por isso este arquivo tambem invoca o
+`audit.py` daquela skill, que e a unica dependencia externa dele.

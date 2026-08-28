@@ -101,7 +101,7 @@ Os padrões abaixo são obrigatórios no SEI/InfraPHP. Não substituir por equiv
 ## Fontes de Contexto
 
 - **Documentacao do modulo e contexto do desenvolvedor**: para contexto funcional e regras de negocio, consultar primeiro o README do modulo e demais documentos especificos do repositorio. Se a regra de negocio nao estiver documentada, perguntar ao desenvolvedor.
-- **Spec Kit**: o fluxo padrao do Spec Kit no repositorio fica em `.agents/skills/speckit/`; integracoes de ferramenta apenas expõem esse conteudo com adapters leves.
+- **Spec Kit**: o fluxo padrao do Spec Kit no repositorio fica em `.agents/skills/speckit-<fase>/SKILL.md`, fonte unica. Nenhuma integracao guarda arquivo do Spec Kit: as ferramentas leem `.agents/skills/` direto e acham as 9 fases ali, lado a lado com as demais skills. Invocacao `/speckit-<fase>`, com hifen. Regra de manutencao em `.agents/references/speckit.md`.
 - **roteamento-de-skills.md**: matriz de demanda, skill principal, skills complementares, contratos obrigatórios e gate de bloqueio.
 - **gates-de-implementacao.md**: gates de bloqueio para problemas técnicos críticos.
 - **mapa-modulos-scripts.md**: mapeamento de módulo para scripts SEI/SIP — consultar quando houver impacto de release.

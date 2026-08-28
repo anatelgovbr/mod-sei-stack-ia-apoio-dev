@@ -52,3 +52,24 @@ sensivel e nao substitui a autorizacao de CI4.
 | 0 | PASS, com ao menos um metodo controlador analisado |
 | 1 | WARN |
 | 2 | BLOCK, inclusive entrada inexistente, incompatível, vazia ou sem extracao |
+
+---
+
+## Testes
+
+```bash
+cd .agents/skills/sei-verificacao-controladores && python3 -m unittest test_audit
+```
+
+11 testes sobre `audit.py`. O arquivo e independente de proposito: nao importa helper de
+outra skill nem de pasta compartilhada. A duplicacao de andaime e o preco de a skill
+poder ser levada inteira para outro lugar.
+
+Dois deles garantem **fail closed**: entrada inexistente, incompativel, vazia, ou
+elegivel da qual o parser nada extraiu, tem de devolver BLOCK. Detector falha verde, e
+sem essa garantia o auditor passa por cima do que nao conseguiu ler e ninguem percebe.
+
+O resto se divide em dois grupos. Um fixa que cada regra realmente barra, com o codigo
+de saida e a linha certa. O outro impede falso positivo, e cada um desses e um caso que
+ja aconteceu. Falso positivo importa porque auditor que grita a toa e desligado pela
+equipe, e ai o gate para de proteger tudo, nao so o caso barulhento.

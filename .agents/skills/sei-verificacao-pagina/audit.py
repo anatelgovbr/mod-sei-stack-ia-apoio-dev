@@ -28,6 +28,9 @@ RE_ECHO_PRINT = re.compile(r"\b(echo|print)\b", re.DOTALL)
 RE_TRATAR_HTML = re.compile(r"PaginaSEI\s*::\s*tratarHTML\s*\(|tratarHTML\s*\(", re.DOTALL)
 RE_INNER_HTML = re.compile(r"innerHTML\s*=|document\.write", re.DOTALL | re.IGNORECASE)
 RE_WRITE_GET = re.compile(r"(cadastrar|alterar|excluir|desativar|remover|bloquear|atualizar|reativar)", re.IGNORECASE)
+RE_INNER_HTML_ALVO = re.compile(r"(?:innerHTML\s*=|document\.write\s*\()\s*([A-Za-z_$][\w$.]*)", re.IGNORECASE)
+RE_FONTE_CONFIRMADA = re.compile(r"response(?:Text|JSON|XML)?\b|\$_(?:GET|POST|REQUEST)\b|PaginaSEI\s*::\s*(?:GET|POST)\s*\(|<\?=|<\?php\s+echo", re.IGNORECASE)
+RE_ECHO_VAR = re.compile(r"\b(?:echo|print)\b[^;\n]*?(\$\w+)", re.IGNORECASE)
 
 
 def build_issue(code, rule, message, content, match=None):
@@ -101,20 +104,59 @@ def validar_p7(content):
 
 
 def validar_p8(content):
+    """Devolve (issue, severidade) ou None.
+
+    Segue a variavel ate a atribuicao que a originou. Origem ja tratada por
+    tratarHTML() nao gera achado; origem em entrada HTTP e erro; origem
+    desconhecida fica em aviso, para nao bloquear em cima de heuristica.
+    """
     if not RE_ECHO_PRINT.search(content):
         return None
-    for index, line in enumerate(content.split("\n"), start=1):
-        if RE_ECHO_PRINT.search(line) and "$" in line and "tratarHTML" not in line:
-            if "$_GET" in line or "$_POST" in line or "$str" in line or "getStr" in line:
-                return {"codigo": "P008", "regra": "P8", "mensagem": "saida HTML com variavel sem tratarHTML()", "linha": index}
+    linhas = content.split("\n")
+    for index, line in enumerate(linhas, start=1):
+        alvo = RE_ECHO_VAR.search(line)
+        if not alvo:
+            continue
+        if RE_TRATAR_HTML.search(line):
+            continue
+        variavel = alvo.group(1)
+        origem = None
+        atribuicao = re.compile(r"^\s*" + re.escape(variavel) + r"\s*=\s*(.+?);", re.MULTILINE)
+        for anterior in atribuicao.finditer("\n".join(linhas[:index - 1])):
+            origem = anterior.group(1)
+        if origem is not None and RE_TRATAR_HTML.search(origem):
+            continue
+        confirmada = origem is not None and RE_FONTE_CONFIRMADA.search(origem)
+        if origem is None:
+            confirmada = any(token in line for token in ("$_GET", "$_POST", "$str", "getStr"))
+        if confirmada:
+            return {"codigo": "P008", "regra": "P8", "mensagem": "saida HTML com entrada HTTP sem tratarHTML()", "linha": index}, "erro"
+        return {"codigo": "P008", "regra": "P8", "mensagem": "saida HTML com variavel de origem nao confirmada", "linha": index}, "aviso"
     return None
 
 
 def validar_p9(content):
+    """Devolve (issue, severidade) ou None.
+
+    Fluxo confirmado (a origem que alcanca o sink e resposta de requisicao ou
+    entrada HTTP) e erro. Variavel de origem desconhecida fica em aviso, para
+    o auditor nao bloquear em cima de heuristica.
+    """
     match = RE_INNER_HTML.search(content)
-    if match and ("response" in content[match.start():match.start() + 120].lower() or "$" in content[match.start():match.start() + 120]):
-        return build_issue("P009", "P9", "innerHTML/document.write com resposta ou variavel potencialmente insegura", content, match)
-    return None
+    if not match:
+        return None
+    alvo = RE_INNER_HTML_ALVO.search(content, match.start())
+    origem = alvo.group(1) if alvo else ""
+    confirmado = bool(RE_FONTE_CONFIRMADA.search(origem))
+    if not confirmado and origem:
+        atribuicao = re.compile(r"\b" + re.escape(origem) + r"\s*=\s*([^;\n]+)")
+        for anterior in atribuicao.finditer(content[:match.start()]):
+            if RE_FONTE_CONFIRMADA.search(anterior.group(1)):
+                confirmado = True
+                break
+    if confirmado:
+        return build_issue("P009", "P9", "innerHTML/document.write recebe resposta ou entrada HTTP sem tratamento", content, match), "erro"
+    return build_issue("P009", "P9", "innerHTML/document.write com variavel de origem nao confirmada", content, match), "aviso"
 
 
 def validar_p10(content):
@@ -187,6 +229,8 @@ def formatar_json(file_results, verdict):
 
 
 def determinar_verdict(file_results):
+    if not file_results:
+        return "BLOCK"
     if any(result.get("erros") for result in file_results):
         return "BLOCK"
     if any(result.get("avisos") for result in file_results):
@@ -194,7 +238,7 @@ def determinar_verdict(file_results):
     return "PASS"
 
 
-def audit_file(path):
+def audit_file(path, pagina_nova=False):
     try:
         content = open(path, "r", encoding="utf-8", errors="replace").read()
     except Exception as error:
@@ -212,10 +256,30 @@ def audit_file(path):
     if p3:
         errors.append(p3)
 
-    for validator in (validar_p5, validar_p6, validar_p7, validar_p8, validar_p9, validar_p10):
+    for validator in (validar_p5, validar_p10):
         result = validator(content)
         if result:
-            warnings.append(result)
+            errors.append(result)
+
+    # P6 e P8: erro em pagina nova, aviso em pagina preexistente.
+    contextual = errors if pagina_nova else warnings
+
+    result = validar_p6(content)
+    if result:
+        contextual.append(result)
+
+    result = validar_p7(content)
+    if result:
+        warnings.append(result)
+
+    p8 = validar_p8(content)
+    if p8:
+        contextual.append(p8[0])
+
+    p9 = validar_p9(content)
+    if p9:
+        issue, severidade = p9
+        (errors if severidade == "erro" else warnings).append(issue)
 
     status = "BLOCK" if errors else ("WARN" if warnings else "PASS")
     return {"file": os.path.basename(path), "path": path, "erros": errors, "avisos": warnings, "status": status}
@@ -228,22 +292,22 @@ def is_page_file(path):
     return name.endswith(".php") and ("_lista" in name or "_cadastro" in name or name in ["controlador.php", "index.php"])
 
 
-def run_audit(input_path, output_format="markdown"):
+def run_audit(input_path, output_format="markdown", pagina_nova=False):
     file_results = []
     if os.path.isfile(input_path):
-        file_results.append(audit_file(input_path))
+        file_results.append(audit_file(input_path, pagina_nova))
     elif os.path.isdir(input_path):
         for name in os.listdir(input_path):
             current = os.path.join(input_path, name)
             if os.path.isfile(current) and is_page_file(current):
-                file_results.append(audit_file(current))
+                file_results.append(audit_file(current, pagina_nova))
     elif "," in input_path:
         for raw_path in input_path.split(","):
             current = raw_path.strip()
             if os.path.exists(current):
-                file_results.append(audit_file(current))
+                file_results.append(audit_file(current, pagina_nova))
     elif os.path.exists(input_path):
-        file_results.append(audit_file(input_path))
+        file_results.append(audit_file(input_path, pagina_nova))
     verdict = determinar_verdict(file_results)
     if output_format == "json":
         return formatar_json(file_results, verdict), file_results, verdict
@@ -255,9 +319,16 @@ def main():
     parser.add_argument("--input", required=True, help="Arquivo, diretorio, ou lista separada por virgula")
     parser.add_argument("--format", choices=["json", "markdown"], default="markdown", help="Formato de saida")
     parser.add_argument("--exit-code", action="store_true", help="Retorna exit code ao inves de imprimir output")
+    parser.add_argument(
+        "--pagina",
+        choices=["nova", "existente"],
+        default="existente",
+        help="Contexto da acao: 'nova' quando a pagina esta sendo criada nesta mudanca (P6 e P8 bloqueiam), "
+             "'existente' quando ja existia e esta sendo alterada (P6 e P8 avisam). Padrao: existente",
+    )
     args = parser.parse_args()
 
-    output, file_results, verdict = run_audit(args.input, args.format)
+    output, file_results, verdict = run_audit(args.input, args.format, args.pagina == "nova")
 
     if args.format == "json":
         print(json.dumps(output, ensure_ascii=False, indent=2))

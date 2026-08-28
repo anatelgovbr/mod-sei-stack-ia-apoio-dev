@@ -254,7 +254,7 @@ Referencie os prints de antes e depois como evidência de cada critério de acei
 
 Use o fluxo Speckit sempre que a demanda criar algo que ainda não existe: nova funcionalidade, nova entidade CRUD completa, novo menu e página, nova operação de API ou WebService, ou release com DDL novo. O Speckit já orquestra as skills pertinentes (verificação de página, RN, banco de dados, controladores, geração de scripts de release, etc.) ao longo das fases, então não repita esse trabalho em um prompt avulso. Para uma mudança pontual em algo que já existe, veja a seção Ajustes Pontuais a seguir.
 
-Quanto mais detalhado o pedido em `/speckit.specify`, melhor a especificação gerada. Descreva contexto, comportamento esperado e critério de aceite em linguagem de negócio; deixe stack técnica, classe e padrão de implementação para o `/speckit.plan`, que é a fase certa para essa decisão.
+Quanto mais detalhado o pedido em `/speckit-specify`, melhor a especificação gerada. Descreva contexto, comportamento esperado e critério de aceite em linguagem de negócio; deixe stack técnica, classe e padrão de implementação para o `/speckit-plan`, que é a fase certa para essa decisão.
 
 O exemplo abaixo usa como demanda "adicionar um filtro de período (data inicial e data final) na listagem de um módulo"; troque pelo objetivo real antes de enviar.
 
@@ -265,7 +265,7 @@ Especificar, planejar, decompor em tarefas e implementar, nessa ordem.
 **1. Especificar:**
 
 ```text
-/speckit.specify
+/speckit-specify
 
 Quero <descreva a funcionalidade nova em uma frase, ex.: "adicionar um filtro de período (data inicial e data final) na listagem"> de <módulo>.
 
@@ -291,7 +291,7 @@ Justifique sua resposta.
 **2. Planejar:**
 
 ```text
-/speckit.plan
+/speckit-plan
 
 No módulo <módulo>, use `PaginaSEI::POST/GET` com normalização de tipo para os <novos parâmetros da funcionalidade, ex.: parâmetros de filtro de período>. Reaproveite tela, RN ou padrão semelhante já existente no módulo antes de propor algo novo.
 
@@ -303,13 +303,13 @@ Justifique sua resposta.
 **3. Decompor em tarefas:** a decomposição usa a spec e o plano já aprovados nas fases anteriores; não precisa de argumento adicional.
 
 ```text
-/speckit.tasks
+/speckit-tasks
 ```
 
 **4. Implementar:** executa as tarefas geradas; não precisa de argumento adicional.
 
 ```text
-/speckit.implement
+/speckit-implement
 ```
 
 #### Fluxo alternativo (com passos opcionais)
@@ -321,7 +321,7 @@ Mesmo fluxo, com três passos opcionais inseridos: clarificar dúvidas antes de 
 **2. Clarificar:** use quando a spec tiver ambiguidade; a skill faz até 5 perguntas objetivas e grava as respostas na própria spec. Não precisa de argumento adicional.
 
 ```text
-/speckit.clarify
+/speckit-clarify
 ```
 
 **3. Planejar:** igual ao fluxo padrão.
@@ -329,7 +329,7 @@ Mesmo fluxo, com três passos opcionais inseridos: clarificar dúvidas antes de 
 **4. Gerar checklist:** use quando o domínio for sensível, como permissão, auditoria ou modelagem de dados, e você quiser validar a qualidade dos requisitos antes de decompor em tarefas.
 
 ```text
-/speckit.checklist
+/speckit-checklist
 
 Gere um checklist para validar os requisitos de permissão e auditoria de <funcionalidade, ex.: filtro de período> antes de implementar.
 
@@ -341,7 +341,7 @@ Justifique sua resposta.
 **6. Analisar:** checa a consistência entre spec, plano e tarefas antes de implementar. Não precisa de argumento adicional.
 
 ```text
-/speckit.analyze
+/speckit-analyze
 ```
 
 **7. Implementar:** igual ao fluxo padrão.

@@ -8,7 +8,6 @@ Este documento é o registro de auditoria de todas as skills disponíveis no rep
 
 - [caveman](#caveman)
 - [code-review](#code-review)
-- [escrever-adr](#escrever-adr)
 - [grill-me](#grill-me)
 - [grilling](#grilling)
 - [napkin](#napkin)
@@ -57,7 +56,6 @@ Este documento é o registro de auditoria de todas as skills disponíveis no rep
 |---|---|---|---|---|
 | caveman | externa | v1.9.0 | MIT | github.com/JuliusBrussee/caveman |
 | code-review | externa | commit `6a34259e99bc5fed4f8fe5da61c273dad14edf67` | MIT | github.com/mattpocock/skills |
-| escrever-adr | interna | — | — | — |
 | grill-me | externa | v1.0.1 | MIT | github.com/mattpocock/skills |
 | grilling | externa | v1.0.1 | MIT | github.com/mattpocock/skills |
 | napkin | externa | v6.1.0 | MIT | github.com/blader/napkin |
@@ -142,18 +140,6 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 - Não busca nem avalia spec, requisito ou issue nesta versão.
 - Worktree sem commit usa revisão técnica direta ou um diff fornecido, fora deste fluxo.
 - Preserva integralmente o parecer técnico emitido por `sei-revisao-tecnica`.
-
----
-
-## escrever-adr
-
-**Origem:** Padrão Architecture Decision Record (ADR), popularizado por Michael Nygard (2011) e adotado em projetos como MADR (Markdown ADR). Adaptado para o fluxo do repositório com template próprio em `.agents/decisions/`.
-
-**Composição:**
-- Cria arquivo `ADR-XXX-titulo-em-kebab-case.md` em `.agents/decisions/`.
-- Template exige: contexto, opções consideradas (com prós/contras), decisão com justificativa, consequências.
-- ADRs são imutáveis — revisão cria novo ADR que supera o anterior.
-- Não cria ADR para mudanças triviais.
 
 ---
 
@@ -692,7 +678,17 @@ Também distribuída em https://github.com/mattpocock/skills/tree/main/skills/pr
 
 **Licença:** MIT
 
-Framework de geração e gestão de especificações de features com workflows estruturados por fase. Integrado diretamente nas skills de fase — `constitution.md` está intencionalmente vazio e não governa o fluxo. As 9 sub-skills abaixo possuem cada uma seu próprio `SKILL.md` em `.agents/skills/speckit/speckit-*/`.
+Framework de geração e gestão de especificações de features com workflows estruturados por fase. Integrado diretamente nas skills de fase. O `constitution.md` está intencionalmente vazio e não governa o fluxo. O framework em si não tem diretório próprio: o que existe no repositório são as 9 sub-skills abaixo, cada uma com seu `SKILL.md` em `.agents/skills/speckit-<fase>/`, fonte única e neutra em relação à ferramenta.
+
+**Nenhuma integração guarda arquivo do SpecKit.** `.claude/commands/`, `.github/agents/`, `.github/prompts/` e `.opencode/command/` estão vazios. As três ferramentas leem `.agents/skills/` direto e encontram as fases lá, lado a lado com as demais skills do repositório, sem symlink e sem configuração extra:
+
+| Ferramenta | Como chega em `.agents/skills/` |
+|---|---|
+| Claude Code | `.claude/skills`, symlink para `../.agents/skills` |
+| Copilot | `chat.agentSkillsLocations` em `.vscode/settings.json` |
+| OpenCode | `skills.paths` em `.opencode/opencode.json` |
+
+Invocação: `/speckit-plan`, com hífen, igual nas três ferramentas. Regra de manutenção: [`.agents/references/speckit.md`](../references/speckit.md).
 
 | Sub-skill | Fase | O que faz |
 |---|---|---|
@@ -716,7 +712,7 @@ Framework de geração e gestão de especificações de features com workflows e
 
 Analisa o código existente para informar o planejamento da feature.
 
-**Como invocar:** OpenCode `/speckit.analyze`; Copilot `speckit.analyze`; Claude Code `/speckit.analyze`
+**Como invocar:** `/speckit-analyze` nas três ferramentas
 
 ---
 
@@ -728,7 +724,7 @@ Analisa o código existente para informar o planejamento da feature.
 
 Gera ou atualiza o checklist de implementação da feature.
 
-**Como invocar:** OpenCode `/speckit.checklist`; Copilot `speckit.checklist`; Claude Code `/speckit.checklist`
+**Como invocar:** `/speckit-checklist` nas três ferramentas
 
 ---
 
@@ -740,7 +736,7 @@ Gera ou atualiza o checklist de implementação da feature.
 
 Resolve ambiguidades e perguntas abertas na spec antes do planejamento.
 
-**Como invocar:** OpenCode `/speckit.clarify`; Copilot `speckit.clarify`; Claude Code `/speckit.clarify`
+**Como invocar:** `/speckit-clarify` nas três ferramentas
 
 ---
 
@@ -752,7 +748,7 @@ Resolve ambiguidades e perguntas abertas na spec antes do planejamento.
 
 Ferramenta de manutenção de `constitution.md`. Não governa o fluxo das fases — as regras vivem nas próprias skills de fase.
 
-**Como invocar:** OpenCode `/speckit.constitution`; Copilot `speckit.constitution`; Claude Code `/speckit.constitution`
+**Como invocar:** `/speckit-constitution` nas três ferramentas
 
 ---
 
@@ -764,7 +760,7 @@ Ferramenta de manutenção de `constitution.md`. Não governa o fluxo das fases 
 
 Executa a implementação seguindo o plano aprovado.
 
-**Como invocar:** OpenCode `/speckit.implement`; Copilot `speckit.implement`; Claude Code `/speckit.implement`
+**Como invocar:** `/speckit-implement` nas três ferramentas
 
 ---
 
@@ -776,7 +772,7 @@ Executa a implementação seguindo o plano aprovado.
 
 Gera o plano de implementação a partir da spec aprovada.
 
-**Como invocar:** OpenCode `/speckit.plan`; Copilot `speckit.plan`; Claude Code `/speckit.plan`
+**Como invocar:** `/speckit-plan` nas três ferramentas
 
 ---
 
@@ -788,7 +784,7 @@ Gera o plano de implementação a partir da spec aprovada.
 
 Cria ou atualiza a spec a partir de descrição em linguagem natural. Inicializa o workspace da feature (diretório, branch, arquivo de spec).
 
-**Como invocar:** OpenCode `/speckit.specify`; Copilot `speckit.specify`; Claude Code `/speckit.specify`
+**Como invocar:** `/speckit-specify` nas três ferramentas
 
 ---
 
@@ -800,7 +796,7 @@ Cria ou atualiza a spec a partir de descrição em linguagem natural. Inicializa
 
 Cria e gerencia tarefas derivadas do plano.
 
-**Como invocar:** OpenCode `/speckit.tasks`; Copilot `speckit.tasks`; Claude Code `/speckit.tasks`
+**Como invocar:** `/speckit-tasks` nas três ferramentas
 
 ---
 
@@ -812,4 +808,4 @@ Cria e gerencia tarefas derivadas do plano.
 
 Converte tarefas do plano em issues no rastreador.
 
-**Como invocar:** OpenCode `/speckit.taskstoissues`; Copilot `speckit.taskstoissues`; Claude Code `/speckit.taskstoissues`
+**Como invocar:** `/speckit-taskstoissues` nas três ferramentas
