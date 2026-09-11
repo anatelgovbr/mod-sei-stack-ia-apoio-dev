@@ -6,6 +6,7 @@ description: >
   desenvolvedor pedir explicitamente para tipar codigo PHP existente,
   adicionar descricao breve aos metodos, ou modernizar assinaturas sem
   refatorar paginas procedurais. Nao usar por roteamento automatico.
+disable-model-invocation: true
 ---
 
 # sei-tipagem-phpdoc

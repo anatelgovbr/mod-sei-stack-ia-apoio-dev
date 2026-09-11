@@ -47,6 +47,12 @@ MdAbcPedido
 MdRiClassificacao
 ```
 
+### Nome do arquivo igual ao nome da classe
+
+A classe e salva em arquivo com o mesmo nome, incluindo a caixa. A classe `AbcExemploIntegracao` mora em `AbcExemploIntegracao.php`, e `MdAbcPedidoRN` mora em `MdAbcPedidoRN.php`.
+
+Vale para toda classe do módulo, não só para a de integração. Em servidor Linux o sistema de arquivos diferencia maiúsculas de minúsculas, então divergência de caixa quebra o carregamento em produção mesmo funcionando em ambiente local com sistema de arquivos insensível.
+
 ---
 
 ## Prefixo de Instâncias
@@ -202,3 +208,34 @@ btnFechar
 tblAcordaosPublicados
 txtNomeParte
 ```
+
+## Diagnostico de acento quebrado
+
+Antes de mexer no conteudo do arquivo, conferir as duas causas possiveis, nesta ordem:
+
+1. **Codificacao do arquivo.** O arquivo PHP e ISO-8859-1, sem BOM, sem caractere fora de Latin-1.
+2. **`default_charset` do PHP.** O runtime precisa estar coerente com `ISO-8859-1`. Arquivo correto com `default_charset` divergente produz acento quebrado do mesmo jeito.
+
+Nao assumir `UTF-8` como padrao implicito do projeto. O erro mais comum e corrigir o arquivo quando o defeito esta no runtime, ou o contrario.
+
+## Convencoes de nomenclatura, quadro completo
+
+| Elemento | Regra |
+|---|---|
+| Nome de arquivo | Apenas letras minusculas, numeros e sublinhado, mais a extensao |
+| Um arquivo por classe | Classe ou interface usa arquivo individual, com o nome do arquivo obrigatoriamente igual ao da classe |
+| Indentacao | De dois a quatro espacos por nivel. **Nunca tabulacao** |
+| Nome de classe | Substantivo no singular, prefixo `Md` mais a sigla da instituicao e do modulo, em PascalCase |
+| Sem preposicoes | Nao usar preposicao nos nomes |
+| Constantes | Todas as letras em maiusculo |
+| Metodos | Verbo no infinitivo, apenas letras minusculas |
+| Atributos e variaveis | Prefixo mais qualificador |
+| Elementos HTML | Prefixo mais qualificador |
+
+O prefixo `md` seguido da sigla vale para todos os artefatos, nao so para classes: recursos, tabelas, parametros, chaves de cache e atributos de sessao.
+
+## InfraException
+
+**`try/catch` obrigatorio.** Para que o tratamento de erro ocorra de forma adequada, todo o codigo e implementado com blocos `try ... catch`, encadeando a excecao original. Ver a regra T5 em `.agents/skills/sei-verificacao-rn/references/padroes-transacao.md`.
+
+**Validacao imediata.** A `InfraException` oferece o lancamento imediato de uma excecao contendo a validacao passada como parametro. Usar para regra de negocio violada, em vez de montar mensagem solta e interromper o fluxo por outro caminho.

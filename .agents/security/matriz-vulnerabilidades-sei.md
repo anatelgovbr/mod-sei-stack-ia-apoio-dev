@@ -2,11 +2,7 @@
 
 Vetores de ataque especificos do SEI/InfraPHP. Cada entrada tem padrao vulneravel e seguro para deteccao e correcao.
 
-Severidade do risco e estado do gate sao dimensoes independentes. `BLOQUEANTE`,
-`ALTA`, `MEDIA` e `BAIXA` qualificam impacto. `PASS`, `WARN` e `BLOCK` registram
-o resultado da verificacao. Toda violacao confirmada de gate bloqueante retorna
-`BLOCK`, ainda que a severidade indicada seja `ALTA`; heuristica inconclusiva
-permanece `WARN`.
+Severidade do risco e estado do gate seguem `.agents/references/gates-de-implementacao.md`, regras 5 e 6.
 
 **Gates base**: `.agents/references/gates-de-implementacao.md`
 **Checklist operacional**: `.agents/checklists/checklist-seguranca.md`
@@ -135,28 +131,7 @@ desfazer toda a persistencia. O metodo `*Controlado` deve conter apenas
 persistencia. Efeitos externos ocorrem no wrapper publico somente depois do
 retorno de `*Controlado`.
 
-```php
-// VULNERAVEL: email dentro da transacao
-protected function gerarProcedimentoControlado($arr) {
-    $retorno = $this->gerarProcedimentoInterno($arr);
-    $rn = new MdRiEmailRN();
-    $rn->notificar($retorno); // falha desfaz processo
-    return $retorno;
-}
-
-// SEGURO: wrapper publico executa o efeito apos o retorno de *Controlado
-public function gerarProcedimento($arr) {
-    $retorno = $this->gerarProcedimentoControlado($arr);
-    try {
-        (new MdRiEmailRN())->notificar($retorno['email']);
-    } catch (Exception $e) { /* registrar falha sem desfazer a persistencia */ }
-    return $retorno['recibo'];
-}
-
-protected function gerarProcedimentoControlado($arr) {
-    return $this->gerarProcedimentoInterno($arr);
-}
-```
+Exemplo vulneravel, exemplo seguro e as tres tecnicas do wrapper estao em `.agents/skills/sei-verificacao-rn/references/padroes-transacao.md`, regra T6, que o `AGENTS.md` nomeia como template.
 
 ---
 
@@ -200,10 +175,10 @@ PII (CPF, email) ou segredos (tokens, senhas) em logs viola LGPD e cria vetor pe
 
 ```php
 // VULNERAVEL
-LogSEI::registrarLog(..., 'Usuario ' . $strCpf . ' token ' . $strToken);
+LogSEI::getInstance()->gravar('Usuario ' . $strCpf . ' token ' . $strToken, InfraLog::$INFORMACAO);
 
 // SEGURO
-LogSEI::registrarLog(..., 'Operacao realizada. ID: ' . $numIdInterno);
+LogSEI::getInstance()->gravar('Operacao realizada. ID: ' . $numIdInterno, InfraLog::$INFORMACAO);
 ```
 
 ---

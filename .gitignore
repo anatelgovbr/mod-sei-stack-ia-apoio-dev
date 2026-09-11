@@ -73,3 +73,7 @@ desktop.ini
 .specify/feature.json
 
 /.agents/memory/runbook.md
+.claude/settings.local.json
+.specify/extensions/*/local-config.yml
+/.specify/init-options.json
+/.specify/integration.json

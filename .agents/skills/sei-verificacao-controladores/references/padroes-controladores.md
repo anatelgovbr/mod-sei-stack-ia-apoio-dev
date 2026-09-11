@@ -62,3 +62,29 @@ Cada acao ou servico que altere estado ou retorne dado sensivel deve chamar
 
 Evitar retornar em AJAX campos sensiveis (senhas, tokens, chaves) mesmo que
 o usuario tenha permissao para a acao.
+
+## CI6 - Contrato de entrada e saida de cada controlador
+
+O dispatch de CI2 e CI3 depende de receber o parametro certo, entao o nome do parametro faz parte da regra.
+
+| Metodo | Parametro recebido | Origem |
+|---|---|---|
+| `processarControlador()` | `$strAcao`, acao recebida na URL | manual 9, processarControlador |
+| `processarControladorExterno()` | `$strAcao`, acao recebida na URL | manual 9, processarControladorExterno |
+| `processarControladorPublicacoes()` | `$strAcao`, acao recebida na URL | manual 9, processarControladorPublicacoes |
+| `processarControladorAjax()` | `$strAcaoAjax`, acao ajax recebida na URL | manual 9, processarControladorAjax |
+| `processarControladorAjaxExterno()` | `$strAcaoAjax`, acao ajax recebida na URL | manual 9, processarControladorAjaxExterno |
+| `processarControladorWebServices()` | `$strServico`, servico recebido na URL | manual 9, processarControladorWebServices |
+| `tratarLinkSemAssinatura()` | `$strLink`, link sem assinatura para redirecionamento automatico | manual 9, tratarLinkSemAssinatura |
+| `validarLoginUsuarioExterno()` | `$objUsuarioAPI` com IdUsuario, Sigla, Nome e StaTipo | manual 9, validarLoginUsuarioExterno |
+
+Retornos obrigatorios:
+
+- `tratarLinkSemAssinatura()` devolve `$bolValido`, booleano true ou false. Nao devolve o link tratado.
+- `validarLoginUsuarioExterno()` devolve booleano.
+
+## CI7 - URL de referencia do WSDL
+
+O WebService do modulo e publicado em `https://[servidor]/sei/controlador_ws.php?servico=[nome do servico do modulo]`.
+
+O nome do servico na URL e o mesmo valor que `processarControladorWebServices()` recebe em `$strServico`, entao o dispatch de CI2 precisa cobrir exatamente os nomes publicados.

@@ -32,3 +32,20 @@ Checklist operacional para revisar `*DTO.php` em modulos SEI/SIP.
 - `InfraDTO::$TIPO_PK_NATIVA` e o tipo correto para sequences `seq_<tabela>`.
 - Atributo relacionado nao deve ser tratado como FK fisica local sem confirmar a
   modelagem real da tabela.
+
+---
+
+## Contrato do InfraDTO
+
+- [ ] O DTO herda de `InfraDTO`.
+- [ ] `montarDTO()` implementado: metodo abstrato onde os atributos do DTO sao adicionados e configurados.
+- [ ] `getStrNomeTabela()` implementado, refletindo o nome real da tabela.
+- [ ] Atributo nao persistido adicionado por `adicionarAtributo`, e nao por `adicionarAtributoTabela`.
+- [ ] Constantes de prefixo de tipo usadas em vez de string literal.
+- [ ] Filtro com segundo parametro quando a pesquisa exigir criterio diferente de igualdade.
+
+### Metodos gerados automaticamente
+
+Depois de configurar o atributo, a classe `InfraDTO` fornece automaticamente o conjunto abaixo para cada um. Nao escrever esses metodos a mao.
+
+`set<Atributo>`, `get<Atributo>`, `unSet<Atributo>`, `isSet<Atributo>`, `ret<Atributo>`, `unRet<Atributo>`, `isRet<Atributo>`, `setOrd<Atributo>`, `getOrd<Atributo>`, `unOrd<Atributo>`, `isOrd<Atributo>`, mais `retTodos`, `unSetTodos`, `unRetTodos` e `unOrdTodos`.

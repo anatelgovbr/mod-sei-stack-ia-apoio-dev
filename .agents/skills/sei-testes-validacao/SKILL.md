@@ -72,3 +72,11 @@ Cenários mínimos a testar:
 ## Saída esperada
 
 Registro do que foi validado (comandos executados + evidência de smoke) no PR ou no README do módulo.
+
+## InfraErroPHP: warnings ignorados e registro de erro
+
+Por padrao o SEI **ignora** os erros `$W_UNDEFINED_ARRAY_KEY`, `$W_UNDEFINED_VARIABLE`, `$W_UNDEFINED_PROPERTY` e equivalentes. Em desenvolvimento isso esconde defeito real de codigo PHP 8.
+
+Para ver esses warnings durante o desenvolvimento, ajustar o grupo `InfraErroPHP` no `ConfiguracaoSEI.php` do ambiente local, nunca no ambiente compartilhado.
+
+Quando o tratamento `InfraErroPHP::$T_REGISTRAR` estiver ativo, o erro e gravado na tabela `infra_erro_php`, consultavel pelo menu correspondente. Conferir essa tabela apos rodar o fluxo e parte do smoke de um modulo novo.

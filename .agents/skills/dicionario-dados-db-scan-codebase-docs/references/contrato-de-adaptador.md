@@ -35,12 +35,12 @@ A ausência de adaptador nunca autoriza presumir caminho, linguagem, persistênc
 
 Em pedido de criação ou atualização:
 
-1. Não escreva dicionários, `CHANGELOG.md` nem relatório de atualização.
+1. Deixe dicionários, `CHANGELOG.md` e relatório de atualização por escrever.
 2. Reporte o alvo inferido, as pistas usadas e as convenções ainda indeterminadas.
 3. Pergunte se o usuário autoriza criar e registrar o adaptador. Sem autorização explícita, encerre sem escrita.
 4. Com autorização, carregue `criacao-adaptador.md`, complete o contrato, registre o adaptador e retome o fluxo.
 
-Em pedido de verificação, não force criação de adaptador e não altere arquivos. Compare apenas o que puder ser estabelecido sem convenções presumidas e reporte claramente:
+Em pedido de verificação, siga sem adaptador e sem tocar em arquivo. Compare apenas o que puder ser estabelecido sem convenções presumidas e reporte claramente:
 
 - escopo que foi possível reconhecer;
 - verificações executadas;

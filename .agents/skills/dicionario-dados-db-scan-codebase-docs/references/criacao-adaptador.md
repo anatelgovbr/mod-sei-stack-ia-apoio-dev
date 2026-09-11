@@ -27,4 +27,4 @@ A fonte estrutural atribui mudanças a versões; a definição de dados confere 
 
 ## Registro
 
-Antes de criar o arquivo, inspecione a codebase e pergunte somente pelos grupos que continuarem indeterminados. Registre o adaptador em `../registro-adaptadores.md`, na raiz desta skill, conforme `contrato-de-adaptador.md`, apenas depois de completar o contrato. Não altere regras centrais somente para reconhecer o novo alvo.
+Antes de criar o arquivo, inspecione a codebase e pergunte somente pelos grupos que continuarem indeterminados. Registre o adaptador em `../registro-adaptadores.md`, na raiz desta skill, conforme `contrato-de-adaptador.md`, apenas depois de completar o contrato. Um alvo novo é reconhecido pelo adaptador, e as regras centrais ficam como estão.

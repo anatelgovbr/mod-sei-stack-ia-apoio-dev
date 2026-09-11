@@ -10,6 +10,7 @@ Documentação técnica do repositório, escrita para ser lida tanto por pessoas
 - [2. Manual de desenvolvimento](#2-manual-de-desenvolvimento)
 - [3. Gabarito do gerador de CRUD](#3-gabarito-do-gerador-de-crud)
 - [4. Prompts de exemplo](#4-prompts-de-exemplo)
+- [5. Documentação da stack de IA](#5-documentação-da-stack-de-ia)
 
 ---
 
@@ -25,7 +26,7 @@ A pasta [`dicionario_dados/`](dicionario_dados/) guarda a semântica de tabelas 
 
 Proveniência, confiança, conflitos e lacunas das descrições são reportados ao desenvolvedor durante a execução da skill (relatório de varredura ou relatório final de `verificar`), sem arquivo dedicado.
 
-**Módulos/alvos documentados hoje:** `apoio-plano-trabalho`, `centraliza-modulos`, `controle-de-demandas`, `correios`, `ia`, `julgar`, `litigioso`, `pen`, `peticionamento`, `sei`, `sip`.
+**Módulos/alvos documentados hoje:** `apoio-plano-trabalho`, `centraliza-modulos`, `cgu`, `correios`, `ia`, `julgar`, `litigioso`, `pen`, `pesquisa`, `peticionamento`, `sei`, `sip`.
 
 Formato, fluxo de criação/atualização e geração de changelog são definidos pela skill [`dicionario-dados-db-scan-codebase-docs`](../.agents/skills/dicionario-dados-db-scan-codebase-docs/SKILL.md). Os dois dicionários são mantidos juntos e descrevem o mesmo conjunto de tabelas na mesma versão. O formato fica em [`formato-dicionario-de-dados.md`](../.agents/skills/dicionario-dados-db-scan-codebase-docs/references/formato-dicionario-de-dados.md).
 
@@ -47,6 +48,23 @@ A pasta [`gabarito_gerador_codigo_crud/`](gabarito_gerador_codigo_crud/) traz um
 
 ## 4. Prompts de exemplo
 
-[`prompts-exemplo.md`](prompts-exemplo.md) reúne prompts prontos para uso real, amarrados às skills do repositório: correção de bug (com variações Playwright e Selenium), fluxo Speckit para funcionalidade nova, ajustes pontuais em menu, entidade e API/WebService, revisão técnica e segurança, e dicionário de dados.
+[`prompts-exemplo.md`](../prompts-exemplo.md) reúne prompts prontos para uso real, amarrados às skills do repositório: correção de bug (com variações Playwright e Selenium), fluxo Speckit para funcionalidade nova, ajustes pontuais em menu, entidade e API/WebService, revisão técnica e segurança, e dicionário de dados.
 
 Cada prompt já traz objetivo, fatos verificados versus hipóteses não confirmadas, critério de aceite e protocolo de execução, prontos para adaptar e enviar.
+
+---
+
+## 5. Documentação da stack de IA
+
+a raiz do repositório (`README.md`, `speckit.md`, `manutencao-da-stack.md` e `prompts-exemplo.md`) explica a stack de IA do repositório para quem vai usá-la: o que é, quais ferramentas funcionam aqui, como usar o SpecKit, prompts prontos e como manter a stack atualizada.
+
+| Arquivo | O que contém |
+|---|---|
+| `README.md` | Documento principal da stack: conceitos, agentes e skills, ferramentas suportadas, SpecKit, estrutura, como começar e como atualizar |
+| `speckit.md` | O que é o SpecKit, quando usar, as 10 fases e como invocar cada uma |
+| `manutencao-da-stack.md` | Como atualizar o SpecKit e os demais arquivos da stack |
+| `prompts-exemplo.md` | Prompts prontos para as demandas reais do SEI: bug, fluxo SpecKit, ajuste pontual, revisão técnica, dicionário de dados e modos auxiliares |
+
+As skills do repositório, de terceiros e do projeto, estão descritas em [`README.md`](../README.md). O `README.md` da raiz não detalha a stack: ele só aponta para essa pasta.
+
+Regras de código, limites de escrita e padrões deste projeto não ficam nessa pasta: estão no [`AGENTS.md`](../AGENTS.md).

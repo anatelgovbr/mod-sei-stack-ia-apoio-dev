@@ -1,0 +1,13 @@
+{
+    "name": "stack-ai-sei",
+    "owner": { "name": "Equipe do repositorio" },
+    "description": "Marketplace local da stack de IA deste repositorio",
+    "plugins": [
+        {
+            "name": "stack-ai",
+            "source": "./.agents",
+            "version": "1.0.0",
+            "description": "Skills e references da stack de IA deste repositorio"
+        }
+    ]
+}

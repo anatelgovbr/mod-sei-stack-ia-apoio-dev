@@ -40,6 +40,7 @@ Nunca duplicar recursos, menus ou perfis já cadastrados nos scripts de release.
 - Criar recurso em **Recursos > Novo**.
 - Convenção obrigatória: `md_<instituicao/modulo>_<acao>` (tudo minúsculo, sem acento).
   - Exemplo: `md_anatel_sdd_listar`, `md_anatel_sdd_cadastrar`
+- Diferença consciente em relação ao manual: o manual recomenda o prefixo `MD_<instituição/módulo>` também para recurso. Este repositório usa minúsculo em recurso e reserva maiúsculo para perfil. A escolha é deliberada e vale para todos os módulos.
 - O recurso deve ser registrado no script de instalação/upgrade do SIP.
 
 ---
@@ -53,6 +54,7 @@ Nunca duplicar recursos, menus ou perfis já cadastrados nos scripts de release.
 
 - O módulo deve implementar o evento `obterDiretorioIconesMenu`.
 - Colocar o SVG no diretório retornado pelo evento.
+- No campo Ícone do SIP, informar apenas o nome do arquivo, não o caminho.
 - No campo "Ícone" do SIP: informar apenas o **nome do arquivo** (sem caminho).
 - SVG deve estar em `svg/` ou em subdiretório retornado pelo evento — verificar
   o padrão do módulo antes de criar.
@@ -71,8 +73,9 @@ Nunca duplicar recursos, menus ou perfis já cadastrados nos scripts de release.
 ## 4) Montagem e permissão
 
 1. Adicionar o recurso e item de menu no perfil em **Perfis > Montar**.
-2. Atribuir o perfil a usuários/unidades conforme política da instalação.
-3. Re-login no SEI para o menu aparecer.
+2. Atribuir a permissão ao perfil criado, no SIP, pelo menu **Permissão > Nova**.
+3. Atribuir o perfil a usuários/unidades conforme política da instalação.
+4. Re-login no SEI para o menu aparecer.
 
 ---
 

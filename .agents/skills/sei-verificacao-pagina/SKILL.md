@@ -139,3 +139,13 @@ e o marcador sai junto.
 
 `test_page_p6_and_p8_severity_follows_action_context` fixa as duas severidades de P6 e
 P8 e o padrao aplicado quando a flag nao vem.
+
+## Contrato da pagina e da InfraPagina
+
+**Parametro `acao`.** A URL de uma pagina contem pelo menos o parametro obrigatorio `acao`, e o valor segue o formato `<entidade>_<acao>`, correspondente ao recurso cadastrado no SIP. Entrar sempre por `controlador.php?acao=`.
+
+**Nome do arquivo.** `<nome da entidade>_lista.php` para listagem ou pesquisa, e `<nome da entidade>_cadastro.php` para cadastro e alteracao.
+
+**Classes CSS.** A montagem da interface usa as classes CSS do proprio SEI, com prefixo `infra`. Nao criar classe equivalente no CSS do modulo quando a do core existir; ver o `AGENTS.md` sobre nao criar `css/` novo quando ja houver.
+
+**`InfraPagina`.** A classe monta os elementos padronizados de interface. Preferir os metodos dela a HTML escrito a mao, porque garantem o comportamento e a acessibilidade esperados do sistema.

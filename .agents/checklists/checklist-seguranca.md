@@ -8,15 +8,11 @@
 Use este checklist em revisoes de seguranca de PR, hardening de modulos e auditorias pontuais.
 Para revisao tecnica ou de seguranca de PR, usar a skill `sei-revisao-tecnica`.
 Este checklist tambem cobre os itens AppSec PHP `C1-C10`.
-Para referencias de apoio desses itens, ver `.agents/security/origem-referencias-seguranca.md`.
+Para o padrao vulneravel e o padrao seguro em PHP, ver `.agents/security/matriz-vulnerabilidades-sei.md`.
 
 ## Estado do gate e severidade do risco
 
-Severidade e estado sao dimensoes independentes. `BLOQUEANTE`, `ALTA`, `MEDIA` e
-`BAIXA` qualificam o impacto do risco. `PASS`, `WARN` e `BLOCK` registram o
-resultado do gate. Toda violacao confirmada de gate bloqueante retorna `BLOCK`,
-mesmo quando a severidade do risco for `ALTA`. Heuristica inconclusiva permanece
-`WARN`, e `PASS` exige cobertura positiva do artefato.
+Severidade e estado seguem `.agents/references/gates-de-implementacao.md`, regras 5 e 6 e tabela de estados. `PASS` exige cobertura positiva do artefato.
 
 ## 0. Checklists Modulares
 
@@ -63,15 +59,15 @@ e o resultado passa a `BLOCK`.
 
 ### 1.2 Acao AJAX / WebService em `*Integracao.php`
 
-| # | Item | Severidade do risco |
-|---|------|-----------------------|
-| A1 | `processarControladorAjax*()` com dispatch explicito por acao | BLOQUEANTE |
-| A2 | Cada acao AJAX valida permissao/autorizacao especifica antes de executar | BLOQUEANTE |
-| A3 | `tratarLinkSemAssinatura()` com `preg_match` restritivo | BLOQUEANTE |
-| A4 | `processarControladorWebServices()` com dispatch explicito por servico | BLOQUEANTE |
-| A5 | Cada servico WS valida permissao/autorizacao especifica antes de executar | BLOQUEANTE |
-| A6 | Payload de retorno sem dados sensiveis quando aplicavel | ALTA |
-| A7 | URL arbitraria do usuario (redirect, fetch, iframe, link sem assinatura) validada por whitelist (scheme/host/path) e regex estrita; negar por padrao (SSRF/Open Redirect) | BLOQUEANTE |
+| # | Item | Controle em `sei-verificacao-controladores` | Severidade do risco |
+|---|------|---|-----------------------|
+| A1 | `processarControladorAjax*()` com dispatch explicito por acao | CI3 | BLOQUEANTE |
+| A2 | Cada acao AJAX valida permissao/autorizacao especifica antes de executar | CI4 | BLOQUEANTE |
+| A3 | `tratarLinkSemAssinatura()` com `preg_match` restritivo | CI1 | BLOQUEANTE |
+| A4 | `processarControladorWebServices()` com dispatch explicito por servico | CI2 | BLOQUEANTE |
+| A5 | Cada servico WS valida permissao/autorizacao especifica antes de executar | CI4 | BLOQUEANTE |
+| A6 | Payload de retorno sem dados sensiveis quando aplicavel | CI5 | ALTA |
+| A7 | URL arbitraria do usuario (redirect, fetch, iframe, link sem assinatura) validada por whitelist (scheme/host/path) e regex estrita; negar por padrao (SSRF/Open Redirect) | sem equivalente; ver `C8` | BLOQUEANTE |
 
 ### 1.3 Evento / Hook (`*Integracao extends SeiIntegracao`)
 

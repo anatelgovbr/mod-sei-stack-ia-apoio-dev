@@ -1,6 +1,7 @@
 ---
 name: sei-report-todos
 description: Gera report de pendencias `TODO:` em modulos SEI escolhidos explicitamente pelo usuario. Use quando o usuario pedir listar, auditar, mapear ou gerar relatorio de TODOs do projeto ou de modulos.
+disable-model-invocation: true
 ---
 
 # Skill: Report de TODOs por Modulo SEI

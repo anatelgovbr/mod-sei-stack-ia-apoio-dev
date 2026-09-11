@@ -729,5 +729,109 @@ class EntradaInvalidaTest(unittest.TestCase):
         self.assertIn("ERRO", saida)
 
 
+class LacunasTest(unittest.TestCase):
+    def executar(self, texto, nome="dicionario_colunas.md", extra=None):
+        with tempfile.TemporaryDirectory() as tmp:
+            caminho = Path(tmp, nome)
+            caminho.write_text(texto, encoding="utf-8")
+            return rodar(["lacunas", str(caminho)] + (extra or []))
+
+    def test_sem_marcador_retorna_zero(self):
+        codigo, saida = self.executar(DICIONARIO_COLUNAS)
+        self.assertEqual(codigo, 0, saida)
+        self.assertIn("sem marcadores de lacuna", saida)
+
+    def test_conta_marcador_na_forma_canonica(self):
+        texto = DICIONARIO_COLUNAS.replace(
+            "| schema.tabela-a | nome.exibicao | Nome exibido. |",
+            "| schema.tabela-a | nome.exibicao | Nome exibido, correspondente a "
+            "TODO: significado e critério - nenhum escritor localizado. |",
+        )
+        codigo, saida = self.executar(texto)
+        self.assertEqual(codigo, 1, saida)
+        self.assertIn("1 marcadores em 1 objetos", saida)
+        self.assertIn("significado e criterio", saida)
+
+    def test_tolera_sufixo_que_torna_a_frase_gramatical(self):
+        texto = DICIONARIO_COLUNAS.replace(
+            "Nome exibido.",
+            "Nome exibido, correspondente a TODO: significado e critério não confirmados "
+            "- sem escritor.",
+        )
+        codigo, saida = self.executar(texto)
+        self.assertEqual(codigo, 1, saida)
+        self.assertIn("significado e criterio", saida)
+        self.assertNotIn("fora do vocabulario", saida)
+
+    def test_marcador_sem_motivo_avisa(self):
+        texto = DICIONARIO_COLUNAS.replace(
+            "Nome exibido.", "Nome exibido de TODO: entidade ou evento."
+        )
+        codigo, saida = self.executar(texto)
+        self.assertEqual(codigo, 1, saida)
+        self.assertIn("sem motivo depois do separador", saida)
+
+    def test_termo_fora_do_vocabulario_avisa(self):
+        texto = DICIONARIO_COLUNAS.replace(
+            "Nome exibido.", "Nome exibido de TODO: coisa inventada - nada encontrado."
+        )
+        codigo, saida = self.executar(texto)
+        self.assertEqual(codigo, 1, saida)
+        self.assertIn("fora do vocabulario", saida)
+
+    def test_marcadores_adjacentes_sem_pontuacao_entre_eles(self):
+        """Motivo de um marcador nao pode engolir o marcador seguinte."""
+        texto = DICIONARIO_COLUNAS.replace(
+            "Nome exibido.",
+            "TODO: propriedade ou conceito - sem definicao de "
+            "TODO: entidade ou evento - sem definicao, correspondente a "
+            "TODO: significado e critério - sem decodificador.",
+        )
+        codigo, saida = self.executar(texto)
+        self.assertEqual(codigo, 1, saida)
+        self.assertIn("3 marcadores em 1 objetos", saida)
+
+    def test_dois_marcadores_na_mesma_descricao(self):
+        texto = DICIONARIO_COLUNAS.replace(
+            "Nome exibido.",
+            "TODO: propriedade ou conceito - sem fonte. É utilizado para "
+            "TODO: função - sem consumidor localizado.",
+        )
+        codigo, saida = self.executar(texto)
+        self.assertEqual(codigo, 1, saida)
+        self.assertIn("2 marcadores em 1 objetos", saida)
+
+    def test_marcador_em_descricao_de_tabela(self):
+        texto = DICIONARIO_TABELAS.replace(
+            "| tabela_á | Armazena outra coisa",
+            "| tabela_á | Representa TODO: granularidade - sem evidência. Armazena outra coisa",
+        )
+        codigo, saida = self.executar(texto, nome="dicionario_tabelas.md")
+        self.assertEqual(codigo, 1, saida)
+        self.assertIn("granularidade", saida)
+
+    def test_json_traz_agregados_e_itens(self):
+        texto = DICIONARIO_COLUNAS.replace(
+            "Nome exibido.", "Nome exibido de TODO: entidade ou evento - sem escritor."
+        )
+        codigo, saida = self.executar(texto, extra=["--json"])
+        self.assertEqual(codigo, 1, saida)
+        dados = json.loads(saida)
+        self.assertEqual(dados["marcadores"], 1)
+        self.assertEqual(dados["objetos_afetados"], 1)
+        self.assertEqual(dados["itens"][0]["coluna"], "nome.exibicao")
+        self.assertEqual(dados["itens"][0]["motivo"], "sem escritor")
+
+    def test_arquivo_de_outro_nome_e_entrada_invalida(self):
+        codigo, saida = self.executar(DICIONARIO_COLUNAS, nome="outro.md")
+        self.assertEqual(codigo, 2, saida)
+        self.assertIn("ERRO", saida)
+
+    def test_dicionario_malformado_e_entrada_invalida(self):
+        texto = DICIONARIO_COLUNAS.replace("## Índice de Tabelas", "## Sumário")
+        codigo, saida = self.executar(texto)
+        self.assertEqual(codigo, 2, saida)
+
+
 if __name__ == "__main__":
     unittest.main()

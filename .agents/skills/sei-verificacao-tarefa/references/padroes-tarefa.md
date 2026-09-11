@@ -132,6 +132,25 @@ o atributo `DESCRICAO` que explica seu propósito.
 
 ---
 
+---
+
+## K8 - Como obter o `id_tarefa` do modulo
+
+**Severidade:** Erro
+**Base:** Manual SEI MD, Considerações Prévias, Atribuição de Tarefa
+
+A parte mais esquecida do procedimento é a atualização da sequência no final.
+
+1. Obter o próximo id por `BancoSEI::getInstance()->getValorSequencia('seq_tarefa')`.
+2. Se a inserção for feita sem essa chamada, calcular por `select max(id_tarefa)+1 from tarefa`.
+3. Se o valor obtido for maior ou igual a 1000, utilizar esse valor.
+4. Se for menor que 1000, utilizar 1000, porque ids abaixo de 1000 são reservados do core.
+5. Depois de inserir com id fixo, atualizar a sequência `seq_tarefa` para voltar à ordem padrão.
+
+**Não conforme:** inserir com id fixo e não atualizar `seq_tarefa`. A próxima inserção que usar a sequência colide com o id já gravado.
+
+---
+
 ## Matriz de severidade
 
 | ID | Regra | Sev |
@@ -142,3 +161,28 @@ o atributo `DESCRICAO` que explica seu propósito.
 | K4 | `id_tarefa_modulo` com até 50 caracteres | **Erro** |
 | K6 | Unicidade dos dois identificadores | **Erro** |
 | K7 | ID=65 com DESCRICAO | **Erro** |
+
+---
+
+## K9 - Variaveis e sinalizadores do andamento
+
+**Severidade:** Erro
+### Variaveis no texto do andamento
+
+O texto da tarefa pode conter variaveis, e o valor de cada uma e informado por **atributos** no momento de lancar o andamento.
+
+Algumas variaveis sao **reservadas do sistema**. O modulo pode utiliza-las, desde que informe os atributos correspondentes ao lancar. Nao redefinir o significado de uma variavel reservada.
+
+### Sinalizadores da tabela `tarefa`
+
+Todos aceitam `S` ou `N`.
+
+| Coluna | O que controla |
+|---|---|
+| `sin_historico_resumido` | Se o andamento aparece no historico resumido |
+| `sin_historico_completo` | Se o andamento aparece no historico completo |
+| `sin_aberto` | Se o andamento e lancado como aberto ou ja concluido |
+| `sin_concluido_unidade` | Se permite lancar o andamento em processo concluido na unidade |
+| `sin_concluir_abertos` | Se os registros de andamento em aberto na unidade devem ser concluidos |
+
+Definir os cinco explicitamente ao cadastrar a tarefa do modulo. Deixar em branco produz comportamento dependente do padrao do banco.

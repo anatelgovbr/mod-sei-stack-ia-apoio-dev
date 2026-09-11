@@ -14,4 +14,4 @@ Classifique pelo conteúdo. Manual pode provar conceito; captura de tela, apenas
 4. Classifique confiança, conflito e lacuna pelo processo semântico.
 5. Registre no relatório material usado, contribuição, limitação e resultado da comparação.
 
-Insumo complementar não define estrutura, versão ou alcance. Não trate exemplo ou opção visível como conjunto completo, não escolha silenciosamente entre material e codebase e não reproduza segredo, credencial ou dado pessoal desnecessário.
+Insumo complementar não define estrutura, versão ou alcance. Trate exemplo ou opção visível como amostra, registre no relatório cada escolha entre material e codebase com o motivo, e mantenha segredo, credencial e dado pessoal fora do que for reproduzido.

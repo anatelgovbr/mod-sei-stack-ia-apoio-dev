@@ -1,6 +1,7 @@
 ---
 name: sei-gerador-crud
-description: Gera 6 arquivos CRUD InfraPHP a partir de JSON padrao, usando os templates do gerador como fonte operacional e o gabarito TRF4 apenas como referencia estrutural, com guardrails obrigatorios de seguranca e release do projeto. Quando escolhida pelo desenvolvedor, esta skill tambem contempla a fase de release do modulo (scripts SEI/SIP e sincronizacao de versao) quando aplicavel.
+description: Gera 6 arquivos CRUD InfraPHP a partir de JSON padrao, usando os templates do gerador como fonte operacional e o gabarito TRF4 apenas como referencia estrutural, com guardrails obrigatorios de seguranca e release do projeto. Quando escolhida pelo desenvolvedor, esta skill tambem contempla a fase de release do modulo (scripts SEI/SIP e sincronizacao de versao) quando aplicavel. Acionar somente com escolha explicita do desenvolvedor pelo gerador, ou por chamada de outra skill; nova tabela, nova entidade ou artefato CRUD sozinho nao aciona. Nao usar por roteamento automatico.
+disable-model-invocation: false
 ---
 
 # Gerador CRUD InfraPHP
@@ -430,3 +431,20 @@ poder ser levada inteira para outro lugar.
 Fecha o ciclo da stack: o codigo que o gerador produz e submetido ao auditor de
 `sei-verificacao-rn`, e precisa passar. Por isso este arquivo tambem invoca o
 `audit.py` daquela skill, que e a unica dependencia externa dele.
+
+## Gerador oficial do InfraPHP
+
+Vale quando o desenvolvedor optar pelo gerador oficial do framework em vez desta skill.
+
+As operacoes basicas podem ser geradas pelo gerador de codigo disponivel no endereco do InfraPHP. O fluxo tem quatro passos:
+
+1. Processar os comandos SQL de criacao da tabela, preenchendo os campos **Usuario** e **Modulo Principal**. Na mesma tela, na secao `Permissoes na RN`, informar se o codigo gerado deve prever auditoria das permissoes por Regras de Auditoria do SIP. Este repositorio exige auditoria em metodo de escrita, entao marcar a opcao.
+2. Clicar no botao de acao **Cadastrar Campos** da tabela escolhida para a geracao do codigo.
+3. Configurar os campos: informar o **campo principal**, os **rotulos** de cada campo e as **teclas de atalho**.
+4. Baixar o codigo pelos botoes de acao **Gerar BD**, **Gerar DTO**, **Gerar RN**, **Gerar INT** e os demais correspondentes as camadas.
+
+**Dialeto SQL.** O gerador aceita apenas alguns dialetos. SQL escrito em dialeto nao suportado falha sem mensagem util.
+
+**Padrao de modelagem.** Seguir o padrao de modelagem de dados, principalmente os prefixos de campo, e o que faz o gerador inferir tipo e widget corretamente. Ver `.agents/references/padrao-modelagem-dados.md`.
+
+**Campo principal.** Configurar o campo principal da tabela antes de gerar. Com ele definido, o campo e retornado automaticamente na tela de lista junto com o ID, e e gerado um metodo de montagem de combo na classe INT buscando por esse campo.

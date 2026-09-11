@@ -62,3 +62,11 @@ nao como skill principal de triagem.
 - Regras de andamentos: `references/andamentos.md`
 - Triagem ambigua entre API, evento e operacao: `sei-direcionador-integracao`
 - Classes API (entrada/saida): `sei-mod-api-classes` / `references/catalogo-api.md`
+
+## Regras gerais de uso das operacoes
+
+**Preferir o ID interno.** Sempre que a operacao aceitar o ID interno ou o numero de protocolo, **usar o ID interno**. O protocolo e identificador de apresentacao e pode mudar de formato.
+
+**A camada de Web Services usa a mesma API.** Toda operacao disponivel por Web Services esta disponivel diretamente ao modulo pela API. Nao chamar o proprio Web Service do SEI de dentro de um modulo do SEI.
+
+**Alteracoes nos objetos e metodos.** Mudancas nos objetos da API e nos metodos da classe acompanham a versao do SEI. Ao subir de versao, conferir o capitulo 10 da versao nova antes de assumir que o contrato permaneceu.

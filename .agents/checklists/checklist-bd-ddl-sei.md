@@ -37,3 +37,15 @@ Checklist operacional para revisar `*BD.php`, DDL e scripts de release SEI/SIP.
 - Em modulo ja mapeado em `mapa-modulos-scripts.md`, nao criar script novo.
 - `AUTO_INCREMENT` e `IDENTITY` aparecem no manual apenas como implementacao de
   sequence multi-SGBD, nao como estrategia geral para tabela funcional comum.
+
+---
+
+## Isolamento e extensao da camada BD
+
+- [ ] A classe de terceira camada herda de `InfraBD` e repassa ao construtor a instancia de banco recebida.
+- [ ] **Uma BD persiste ou atualiza dados em uma unica tabela.** Nao gravar em duas tabelas na mesma classe.
+- [ ] **Nao ha comunicacao direta entre BDs.** Se a operacao precisar de duas tabelas, quem orquestra e a RN.
+- [ ] Comportamento especifico implementado pelos pontos de extensao do `InfraBD`, e nao por SQL solto no meio do metodo.
+- [ ] `getObjInfraIBanco()` usado para recuperar o objeto de banco passado ao construtor, em vez de instanciar um novo.
+
+A regra de uma tabela por BD e o que permite ao gate identificar acoplamento indevido entre entidades. Quebra-la costuma indicar que a modelagem precisa de uma entidade nova, e nao de uma BD maior.

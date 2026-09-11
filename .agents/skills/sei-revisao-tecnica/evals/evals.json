@@ -4,15 +4,16 @@
     {
       "id": 1,
       "prompt": "Use sei-revisao-tecnica para revisar em somente leitura o arquivo evals/files/modulo-exemplo/md_rt_exemplo_lista.php. Nao altere arquivos, nao abra tarefas ou issues e devolva o parecer tecnico.",
-      "expected_output": "Relatorio tecnico reproduzivel da pagina *_lista.php fornecida, com gate de pagina, cobertura positiva, segunda passada e um dos quatro pareceres permitidos.",
+      "expected_output": "Relatorio tecnico reproduzivel da pagina *_lista.php fornecida, nas cinco secoes do template, com gate de pagina, cobertura positiva, segunda passada na coluna Evidencia e Resultado em uma linha.",
       "files": ["evals/files/modulo-exemplo/md_rt_exemplo_lista.php"],
       "expectations": [
         "A saida identifica a entrada como arquivos e cita exatamente evals/files/modulo-exemplo/md_rt_exemplo_lista.php.",
         "A saida aciona sei-verificacao-pagina e registra cobertura P1-P10 aplicavel sobre uma pagina elegivel.",
         "A saida usa os estados PASS, WARN, BLOCK, NOT_APPLICABLE ou NOT_EXECUTED nos gates e dimensoes.",
         "Cada PASS de gate nomeia ao menos um artefato compativel e os controles executados.",
-        "A saida registra que a segunda passada foi executada.",
-        "O parecer final e exatamente apto tecnicamente, apto com ajustes, bloquear tecnicamente ou analise humana.",
+        "A coluna Evidencia do gate afetado registra o resultado da segunda passada.",
+        "A secao Resultado traz exatamente uma linha, com ✅ PASS ou ❌ BLOCKED e nada mais.",
+        "O relatorio tem as cinco secoes do template e passa em validar_relatorio.py com exit 0.",
         "Nenhum arquivo e alterado e nenhuma tarefa ou issue e aberta."
       ]
     },
@@ -25,9 +26,9 @@
         "A ausencia de spec nao gera WARN, BLOCK, lacuna nem candidato a tarefa.",
         "A saida declara requisito, especificacao, regra de negocio e produto fora do escopo.",
         "A saida nao compara o codigo com criterio de aceite ou comportamento desejado.",
-        "A saida registra explicitamente `Execucao autonoma: code-review nao acionada; spec nao carregada`.",
+        "A skill code-review nao e acionada e nenhuma spec e carregada.",
         "A saida aciona sei-verificacao-controladores para processarControladorAjax e apresenta cobertura dos controles CI aplicaveis.",
-        "A saida usa um dos quatro pareceres permitidos."
+        "A secao Resultado traz exatamente uma linha, com ✅ PASS ou ❌ BLOCKED e nada mais."
       ]
     },
     {
@@ -50,12 +51,12 @@
       "expected_output": "Revisao de dimensao especifica que aciona o gate RN, limita achados a transacao e marca dimensoes fora do recorte como NOT_APPLICABLE.",
       "files": [],
       "expectations": [
-        "A dimensao Transacao tem estado e evidencia tecnica especificos.",
+        "O gate sei-verificacao-rn traz estado e evidencia tecnica da dimensao Transacao.",
         "O gate sei-verificacao-rn e acionado com T1-T6 e A1-A3 aplicaveis.",
-        "As dimensoes fora do recorte sao NOT_APPLICABLE, e nao PASS por falta de analise.",
+        "Gate fora do recorte nao vira linha na tabela, e nenhum recebe PASS por falta de analise.",
         "A saida verifica separacao entre persistencia e efeitos externos apos commit.",
         "A saida nao avalia requisito, especificacao, regra de negocio ou produto.",
-        "A segunda passada e o parecer final estao presentes."
+        "A coluna Evidencia registra a segunda passada, e a secao Resultado traz ✅ PASS ou ❌ BLOCKED."
       ]
     },
     {
@@ -66,10 +67,11 @@
       "expectations": [
         "O inventario identifica exatamente uma pagina elegivel md_rt_exemplo_lista.php e registra a ausencia das demais classes de artefato.",
         "A saida aciona sei-guardrails-modulo, sei-verificacao-pagina e sei-testes-validacao para a fixture encontrada.",
-        "As doze dimensoes Escopo, Arquitetura, Permissoes, Transacao, Controladores, Entrada/saida, Seguranca, Banco, Release, Integracoes, Qualidade e Testes aparecem com estado.",
+        "As dimensoes avaliadas aparecem pelas linhas de gate e de achado, sem tabela propria de dimensoes.",
         "Nenhum gate com zero artefatos recebe PASS.",
-        "Passivo preexistente sem agravamento nao produz BLOCK.",
-        "O relatorio registra a segunda passada e nao persiste candidatos a tarefas."
+        "Sem delta, o estado do achado reflete o controle violado, e a coluna Origem registra preexistente.",
+        "A coluna Evidencia registra a segunda passada, o candidato a tarefa fica na coluna Menor ajuste e nada e persistido.",
+        "O relatorio passa em validar_relatorio.py com exit 0."
       ]
     }
   ]

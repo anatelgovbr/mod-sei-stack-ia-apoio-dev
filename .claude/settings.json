@@ -1,0 +1,6 @@
+{
+    "extraKnownMarketplaces": {
+        "stack-ai-sei": { "source": { "source": "directory", "path": "." } }
+    },
+    "enabledPlugins": { "stack-ai@stack-ai-sei": true }
+}

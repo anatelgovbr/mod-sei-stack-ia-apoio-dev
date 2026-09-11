@@ -12,9 +12,7 @@ handoffs:
 scripts:
   sh: .specify/scripts/bash/setup-plan.sh --json
   ps: .specify/scripts/powershell/setup-plan.ps1 -Json
-agent_scripts:
-  sh: .specify/scripts/bash/update-agent-context.sh __AGENT__
-  ps: .specify/scripts/powershell/update-agent-context.ps1 -AgentType __AGENT__
+disable-model-invocation: true
 ---
 
 ## User Input
@@ -31,8 +29,6 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 - On Linux, macOS or WSL, run the `sh` entry with `bash`.
 - On Windows PowerShell, run the `ps` entry with `pwsh` or `powershell`.
-
-The same rule applies to the agent context script declared under `agent_scripts`. Replace `__AGENT__` with the key of the agent in use (for example `claude`, `copilot` or `opencode`) before running it.
 
 ## Pre-Execution Checks
 
@@ -81,7 +77,6 @@ The same rule applies to the agent context script declared under `agent_scripts`
    - Evaluate gates (ERROR if violations unjustified)
    - Phase 0: Generate research.md (resolve all NEEDS CLARIFICATION)
    - Phase 1: Generate data-model.md, contracts/, quickstart.md
-   - Phase 1: Update agent context by running the agent script
    - Re-evaluate Constitution Check post-design
 
 ## Mandatory Post-Execution Hooks

@@ -28,6 +28,38 @@ HEADER_INDICE = "## Índice de Tabelas"
 RE_TITULO_DICIONARIO = re.compile(r"^# (\S(?:.*\S)?) - (\S(?:.*\S)?)$")
 RE_TITULO_CHANGELOG = re.compile(r"^# \S(?:.*\S)?$")
 RE_SECAO = re.compile(r"^## (.+)$")
+
+# Separador entre o termo e o motivo: hifen entre espacos. Travessao nao e usado.
+RE_MARCADOR_LACUNA = re.compile(
+    r"TODO:\s*([^.|]*?)"
+    r"(?:\s+-\s+((?:(?!TODO:)[^|])*?))?"
+    r"\s*(?=\.(?:\s|$)|TODO:|\||$)"
+)
+
+TERMOS_COLUNA = (
+    "propriedade ou conceito",
+    "entidade ou evento",
+    "significado e criterio",
+    "momento, periodo ou condicao",
+    "unidade, moeda, escala, dominio ou referencia",
+    "captura, origem ou regra",
+    "semantica da ausencia",
+    "funcao",
+    "distincao ou limitacao",
+)
+
+TERMOS_TABELA = (
+    "entidade, evento, relacao ou resultado de negocio",
+    "granularidade",
+    "evento ou criterio",
+    "escopo",
+    "exclusoes relevantes",
+    "estado atual, historico, vigencia, fotografia ou agregacao",
+    "momento ou periodo",
+    "origem",
+    "processos, operacoes ou decisoes",
+    "limitacoes",
+)
 RE_ITEM_INDICE = re.compile(r"^- \[(.+)]\(#([^)]+)\)$")
 
 RE_VERSAO_CHANGELOG = re.compile(r"^## \[(.*)]$")
@@ -775,6 +807,162 @@ def cmd_changelog(args):
     return 1
 
 
+def normalizar_termo(texto):
+    """Reduz um nome de termo a forma comparavel: minusculas e sem acento."""
+    tabela = str.maketrans("aaaaaeeeeiiiiooooouuuuc", "aaaaaeeeeiiiiooooouuuuc")
+    baixo = texto.strip().lower().translate(tabela)
+    for de, para in (
+        ("\u00e1", "a"), ("\u00e0", "a"), ("\u00e2", "a"), ("\u00e3", "a"), ("\u00e4", "a"),
+        ("\u00e9", "e"), ("\u00e8", "e"), ("\u00ea", "e"), ("\u00eb", "e"),
+        ("\u00ed", "i"), ("\u00ec", "i"), ("\u00ee", "i"), ("\u00ef", "i"),
+        ("\u00f3", "o"), ("\u00f2", "o"), ("\u00f4", "o"), ("\u00f5", "o"), ("\u00f6", "o"),
+        ("\u00fa", "u"), ("\u00f9", "u"), ("\u00fb", "u"), ("\u00fc", "u"),
+        ("\u00e7", "c"),
+    ):
+        baixo = baixo.replace(de, para)
+    baixo = " ".join(baixo.split())
+    # O sufixo que torna a frase publicada gramatical nao integra o nome do termo.
+    for sufixo in (
+        "nao confirmados", "nao confirmadas", "nao confirmado", "nao confirmada",
+        "nao determinados", "nao determinadas", "nao determinado", "nao determinada",
+    ):
+        if baixo.endswith(" " + sufixo):
+            baixo = baixo[: -len(sufixo) - 1].strip()
+            break
+    return baixo
+
+
+def casar_termo(bruto, vocabulario):
+    """Reduz o texto capturado ao nome de termo do vocabulario, pelo prefixo mais longo.
+
+    Aceita tanto a forma canonica, `TODO: <termo> - <motivo>`, quanto a forma livre
+    herdada, em que o marcador emenda na oracao seguinte da propria formula.
+    """
+    normalizado = normalizar_termo(bruto)
+    candidatos = [t for t in vocabulario if normalizado.startswith(normalizar_termo(t))]
+    if not candidatos:
+        return normalizado, None
+    melhor = max(candidatos, key=lambda t: len(normalizar_termo(t)))
+    return normalizar_termo(melhor), melhor
+
+
+def extrair_lacunas(descricao, vocabulario):
+    """Retorna [(termo_normalizado, termo_exibido, motivo, reconhecido)] dos marcadores."""
+    achados = []
+    for bruto, motivo in RE_MARCADOR_LACUNA.findall(descricao or ""):
+        normalizado, canonico = casar_termo(bruto, vocabulario)
+        achados.append(
+            (
+                normalizado,
+                canonico if canonico else bruto.strip(),
+                (motivo or "").strip(),
+                canonico is not None,
+            )
+        )
+    return achados
+
+
+def coletar_lacunas(caminho):
+    """Percorre um dos dicionarios e devolve o inventario de marcadores."""
+    nome = Path(caminho).name
+    if nome == "dicionario_tabelas.md":
+        descricoes, _, erros = parse_dicionario_tabelas(caminho)
+        alvos = [(tabela, None, texto) for tabela, texto in descricoes.items()]
+        vocabulario = TERMOS_TABELA
+    elif nome == "dicionario_colunas.md":
+        tabelas, _, descricoes, _, erros = parse_dicionario_colunas(caminho)
+        alvos = [(tabela, None, texto) for tabela, texto in descricoes.items()]
+        for tabela, colunas in tabelas.items():
+            for coluna, texto in colunas.items():
+                alvos.append((tabela, coluna, texto))
+        vocabulario = TERMOS_COLUNA + TERMOS_TABELA
+    else:
+        print(
+            "ERRO: lacunas aceita somente dicionario_tabelas.md e dicionario_colunas.md.",
+            file=sys.stderr,
+        )
+        raise EntradaInvalida
+    if erros:
+        for erro in erros:
+            print(f"ERRO de formato em {nome}: {erro}", file=sys.stderr)
+        raise EntradaInvalida
+
+    itens = []
+    for tabela, coluna, texto in alvos:
+        for _, termo, motivo, reconhecido in extrair_lacunas(texto, vocabulario):
+            itens.append(
+                {
+                    "tabela": tabela,
+                    "coluna": coluna,
+                    "termo": termo,
+                    "motivo": motivo,
+                    "termo_reconhecido": reconhecido,
+                    "motivo_ausente": not motivo,
+                }
+            )
+    itens.sort(key=lambda i: (i["tabela"], i["coluna"] or "", i["termo"]))
+    return itens
+
+
+def cmd_lacunas(args):
+    itens = coletar_lacunas(args.dicionario)
+    rotulo = Path(args.dicionario).name
+
+    objetos = {(i["tabela"], i["coluna"]) for i in itens}
+    tabelas_afetadas = {i["tabela"] for i in itens}
+    por_termo = Counter(i["termo"] for i in itens)
+    por_tabela = Counter(i["tabela"] for i in itens)
+    desconhecidos = [i for i in itens if not i["termo_reconhecido"]]
+    sem_motivo = [i for i in itens if i["motivo_ausente"]]
+
+    if args.json:
+        print(
+            json.dumps(
+                {
+                    "arquivo": rotulo,
+                    "marcadores": len(itens),
+                    "objetos_afetados": len(objetos),
+                    "tabelas_afetadas": len(tabelas_afetadas),
+                    "por_termo": dict(por_termo.most_common()),
+                    "por_tabela": dict(por_tabela.most_common()),
+                    "termos_fora_do_vocabulario": len(desconhecidos),
+                    "marcadores_sem_motivo": len(sem_motivo),
+                    "itens": itens,
+                },
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=False,
+            )
+        )
+        return 1 if itens else 0
+
+    if not itens:
+        print(f"OK: {rotulo} sem marcadores de lacuna.")
+        return 0
+
+    print(
+        f"Lacunas em {rotulo}: {len(itens)} marcadores em {len(objetos)} objetos, "
+        f"{len(tabelas_afetadas)} tabelas."
+    )
+    print("Por termo da formula:")
+    for termo, quantidade in por_termo.most_common():
+        print(f"  {quantidade:5d}  {termo}")
+    print("Por tabela:")
+    for tabela, quantidade in por_tabela.most_common():
+        print(f"  {quantidade:5d}  {tabela}")
+    if desconhecidos:
+        print(f"AVISO: {len(desconhecidos)} marcadores fora do vocabulario de termos:", file=sys.stderr)
+        for item in desconhecidos:
+            alvo = f"{item['tabela']}.{item['coluna']}" if item["coluna"] else item["tabela"]
+            print(f"  - {alvo}: '{item['termo']}'", file=sys.stderr)
+    if sem_motivo:
+        print(f"AVISO: {len(sem_motivo)} marcadores sem motivo depois do separador:", file=sys.stderr)
+        for item in sem_motivo:
+            alvo = f"{item['tabela']}.{item['coluna']}" if item["coluna"] else item["tabela"]
+            print(f"  - {alvo}: '{item['termo']}'", file=sys.stderr)
+    return 1
+
+
 def cmd_diff(args):
     if any(Path(caminho).name != "dicionario_colunas.md" for caminho in (args.antigo, args.novo)):
         print(
@@ -946,6 +1134,11 @@ def main():
         help="ordem opcional, da versao mais recente para a mais antiga",
     )
     p_chg.set_defaults(func=cmd_changelog)
+
+    p_lac = sub.add_parser("lacunas", help="conta marcadores de lacuna em um dos dois dicionarios")
+    p_lac.add_argument("dicionario")
+    p_lac.add_argument("--json", action="store_true")
+    p_lac.set_defaults(func=cmd_lacunas)
 
     p_diff = sub.add_parser("diff", help="compara duas estruturas atuais de dicionario_colunas")
     p_diff.add_argument("--antigo", required=True)

@@ -154,22 +154,33 @@ protected function cadastrarControlado($objDTO) {
 ## T6 - Efeitos externos somente apos o retorno transacional
 
 **Severidade:** Erro
-**Base:** AGENTS.md, secao Padrao Transacional Obrigatorio
-
 Um metodo `*Controlado` contem somente persistencia em banco. E-mail, Solr,
 indexacao e integracoes externas ficam em um wrapper publico, depois do retorno
 da operacao transacional. O retorno marca o ponto em que a `InfraRN` ja concluiu
 o commit.
 
 Motivo: efeito colateral que falha dentro da transacao pode acionar `cancelarTransacao()`
-e desfazer silenciosamente a persistencia critica.
+e desfazer silenciosamente a persistencia critica. Alem disso, efeito lento dentro da
+transacao aumenta o tempo de lock no banco.
 
 **Conforme:**
 ```php
 public function gerarProcedimentoComEfeitos(MdAbcProcedimentoDTO $objDTO)
 {
+    FeedSEIProtocolos::getInstance()->setBolAcumularFeeds(true);
+
     $retorno = $this->gerarProcedimento($objDTO);
+
+    FeedSEIProtocolos::getInstance()->setBolAcumularFeeds(false);
     FeedSEIProtocolos::getInstance()->indexarFeeds();
+
+    try {
+        $objEmailRN = new MdAbcEmailNotificacaoRN();
+        $objEmailRN->notificar($retorno->getArrParametrosEmail());
+    } catch (Exception $e) {
+        // falha de notificacao nao desfaz o que ja foi persistido
+    }
+
     return $retorno;
 }
 
@@ -184,7 +195,19 @@ protected function gerarProcedimentoControlado(MdAbcProcedimentoDTO $objDTO)
 `gerarProcedimentoControlado()`. O wrapper nao chama o metodo protegido
 diretamente.
 
-**Nao conforme, chamada direta ao método protegido:**
+### Tres tecnicas que o wrapper precisa aplicar
+
+1. **Acumular indexacao do Solr.** Ligar `setBolAcumularFeeds(true)` antes da operacao
+   transacional, desligar depois e so entao chamar `indexarFeeds()`. Sem isso cada
+   protocolo indexa individualmente durante a transacao.
+2. **Isolar a notificacao em `try/catch`.** Falha de e-mail nao pode propagar erro para
+   o fluxo que ja persistiu. O manual usa `catch` vazio nesse ponto; registrar o erro em
+   log e preferivel a engolir silenciosamente.
+3. **Extrair um metodo interno quando o `Controlado` crescer.** Se a persistencia tiver
+   varios passos, mover para `<operacao>Interno()` e deixar o `Controlado` chamando so
+   esse metodo. E organizacao de leitura, nao muda o limite da transacao.
+
+**Nao conforme, chamada direta ao metodo protegido:**
 ```php
 public function gerarProcedimentoComEfeitos(MdAbcProcedimentoDTO $objDTO)
 {
@@ -206,6 +229,12 @@ protected function gerarProcedimentoControlado($arrParametros)
     MdAbcEmailNotificacaoRN::notificar($arrParametros); // ERRO: dentro da transacao
 }
 ```
+
+### Divergencia consciente
+
+O exemplo do capitulo 3 do manual coloca `indexarFeeds()` e o envio de e-mail dentro de `gerarProcedimentoControlado`. Este repositorio nao segue esse exemplo: efeito externo fica no wrapper publico, depois do retorno. Nao "corrigir" o codigo do modulo para a forma do exemplo.
+
+A decomposicao em `<operacao>Interno` e adotada como organizacao de leitura, nao como fronteira transacional.
 
 ---
 
@@ -280,18 +309,34 @@ protected function excluirControlado(array $arrObjDTO): void
 
 ---
 
-## A3 - Leitura publica usa o recurso `_listar`
+## A3 - Recurso de leitura correto por operacao
 
 **Severidade:** Erro
-**Base:** AGENTS.md, secao Guardrails Universais
+**Base:** `.agents/references/padrao-auditoria-sip-sei.md`
 
-Operacoes publicas de leitura `consultar`, `listar` e `contar` devem usar
-`validarAuditarPermissao` com o recurso `_listar`. Helpers internos e caminhos
-de hook ou evento sem usuario nao recebem verificacao de sessao artificial.
+Operacoes de leitura usam `validarAuditarPermissao`, e o recurso muda conforme a operacao. Nenhum recurso de leitura entra na regra de auditoria do SIP.
+
+| Metodo | Recurso |
+|---|---|
+| `listarConectado` | `_listar` |
+| `contarConectado` | `_listar`, compartilhado com listar |
+| `consultarConectado` | `_consultar` |
+| `bloquearConectado` | `_consultar`, compartilhado com consultar |
+
+Helpers internos e caminhos de hook ou evento sem usuario nao recebem verificacao de sessao artificial.
 
 **Conforme:**
 ```php
 protected function consultarConectado(MdAbcItemDTO $objDTO)
+{
+    SessaoSEI::getInstance()->validarAuditarPermissao(
+        'md_abc_item_consultar',
+        __METHOD__,
+        $objDTO
+    );
+}
+
+protected function listarConectado(MdAbcItemDTO $objDTO)
 {
     SessaoSEI::getInstance()->validarAuditarPermissao(
         'md_abc_item_listar',
@@ -300,6 +345,117 @@ protected function consultarConectado(MdAbcItemDTO $objDTO)
     );
 }
 ```
+
+**Nao conforme:** usar `_listar` em `consultar` ou em `bloquear`. O recurso `_consultar` existe e e o que o gerador produz.
+
+---
+
+## T7 - `getIdConexao()` nao devolve recurso de conexao
+
+**Severidade:** Erro
+
+O manual e explicito: `getIdConexao()` devolve um identificador, nao um recurso de conexao do PHP. Ele nao pode ser usado em chamada direta da extensao do banco. Por questao de seguranca, o recurso de conexao e privado e controlado pela classe de banco do `InfraPHP`.
+
+Uso legitimo e apenas testar se ja existe conexao aberta antes de abrir:
+
+```php
+if (BancoSEI::getInstance()->getIdConexao() == null) {
+    BancoSEI::getInstance()->abrirConexao();
+}
+```
+
+**Nao conforme:** passar o retorno de `getIdConexao()` para `mysqli_*`, `oci_*`, `pg_*` ou equivalente. O modulo nunca fala direto com a extensao do banco.
+
+## T8 - Contrato completo dos metodos `Conectado` e `Controlado`
+
+**Severidade:** Erro
+A T1 fixa qual sufixo usar por tipo de operacao. Esta regra fixa o resto do contrato, que o manual detalha e que a T1 sozinha nao cobre.
+
+| Item | Regra |
+|---|---|
+| Classe | A classe de regra de negocio herda de `InfraRN`, direta ou indiretamente |
+| Visibilidade | O metodo com sufixo e `protected`, nunca `public` nem `private` |
+| Parametro | O metodo aceita **um unico parametro**: o DTO da entidade ou um array encapsulador. Nao aceita multiplos parametros |
+| `Conectado` | Abre conexao **se ainda nao estiver aberta**. Nao abre transacao |
+| `Controlado` | Abre conexao **e** transacao, cada uma **se ainda nao estiver aberta** |
+| Chamada | O consumidor chama o metodo publico sem sufixo, resolvido pela `InfraRN`. Nunca o metodo protegido |
+
+O detalhe do "se ainda nao estiver aberta" importa em chamada encadeada: uma RN que chama outra RN nao abre uma segunda transacao, reaproveita a que ja existe.
+
+**Conforme:**
+```php
+class MdAbcPedidoRN extends InfraRN
+{
+    protected function inicializarObjInfraIBanco(): InfraIBanco
+    {
+        return BancoSEI::getInstance();
+    }
+
+    protected function cadastrarControlado(MdAbcPedidoDTO $objDTO): MdAbcPedidoDTO
+    {
+        // um unico parametro, visibilidade protected, sufixo correto
+    }
+}
+```
+
+**Nao conforme:**
+```php
+public function cadastrarControlado(MdAbcPedidoDTO $objDTO, $numIdUsuario) // ERRO: public e dois parametros
+```
+
+---
+
+## T9 - Antipadrao: uma transacao por elemento do laco
+
+**Severidade:** Erro
+
+Metodo `Conectado` que percorre uma colecao e, para cada elemento, chama uma operacao `Controlado`, abre uma transacao por elemento. O manual manda analisar se o proprio metodo do laco nao deveria ser `Controlado`, para garantir uma unica transacao em todo o processamento.
+
+**Nao conforme:**
+```php
+protected function processarTudoConectado(array $arrObjDTO): void
+{
+    foreach ($arrObjDTO as $objDTO) {
+        $this->cadastrar($objDTO); // abre e fecha uma transacao a cada volta
+    }
+}
+```
+
+**Conforme:**
+```php
+protected function processarTudoControlado(array $arrObjDTO): void
+{
+    foreach ($arrObjDTO as $objDTO) {
+        $this->cadastrar($objDTO); // reaproveita a transacao ja aberta
+    }
+}
+```
+
+Consequencia do antipadrao: falha no elemento 40 de 50 deixa 39 gravados e 11 fora, sem atomicidade. Alem disso, o custo de abrir e confirmar transacao repete por elemento.
+
+Quando a atomicidade total nao for desejada, por exemplo em processamento em lote que deve continuar apos falha isolada, a escolha por `Conectado` e legitima e deve estar registrada em comentario no metodo.
+
+---
+
+## T10 - Controle manual exige mecanismo auxiliar de estado
+
+**Severidade:** Alerta
+Quando o modulo assume o controle manual pelo `BancoSEI`, o conjunto e `abrirConexao()`, `abrirTransacao()`, `confirmarTransacao()`, `cancelarTransacao()` e `fecharConexao()`.
+
+Em chamadas encadeadas entre metodos, o manual exige **implementar um mecanismo de controle auxiliar** para saber se a conexao ou a transacao ja foi aberta antes de tentar abrir de novo. Sem esse controle, o metodo interno abre uma segunda transacao ou fecha uma conexao que o chamador ainda usa.
+
+Antes de escrever esse mecanismo, reveja a T4: na maioria dos casos a resposta certa e usar `InfraRN` com sufixo e deixar o controle com o framework.
+
+---
+
+## T11 - A RN repete as validacoes ja feitas na interface
+
+**Severidade:** Erro
+Todas as regras de negocio levantadas sao implementadas na RN, **inclusive as regras simples que a interface ja valida**, como tamanho maximo de campo e obrigatoriedade.
+
+Motivo: a interface nao e o unico caminho de entrada. A mesma RN e alcancada por WebService, por evento de outro modulo e por script de tarefa, e nenhum deles passa pela validacao da tela.
+
+---
 
 ---
 
@@ -313,6 +469,11 @@ protected function consultarConectado(MdAbcItemDTO $objDTO)
 | T4 | Controle manual de conexao/transacao merece revisao | **Aviso** |
 | T5 | try/catch com `InfraException` e encadeamento de erro | **Aviso** |
 | T6 | Efeitos externos somente apos retorno transacional | **Erro** |
+| T7 | `getIdConexao()` usado como recurso de conexao | **Erro** |
+| T8 | Contrato dos metodos `Conectado` e `Controlado` | **Erro** |
+| T9 | Uma transacao por elemento do laco | **Erro** |
+| T10 | Controle manual sem mecanismo auxiliar de estado | **Aviso** |
+| T11 | RN sem as validacoes ja feitas na interface | **Erro** |
 | A1 | Escrita com validarPermissao sem auditoria | **Erro** |
 | A2 | Escrita sem verificacao de permissao/auditoria | **Aviso** |
-| A3 | Leitura publica sem recurso `_listar` | **Erro** |
+| A3 | Recurso de leitura errado por operacao | **Erro** |

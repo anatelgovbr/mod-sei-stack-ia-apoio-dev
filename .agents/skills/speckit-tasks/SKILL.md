@@ -13,6 +13,7 @@ handoffs:
 scripts:
   sh: .specify/scripts/bash/setup-tasks.sh --json
   ps: .specify/scripts/powershell/setup-tasks.ps1 -Json
+disable-model-invocation: true
 ---
 
 ## User Input

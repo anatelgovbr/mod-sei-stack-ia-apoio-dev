@@ -5,6 +5,7 @@ tools: ['github/github-mcp-server/list_issues', 'github/github-mcp-server/issue_
 scripts:
   sh: .specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks
   ps: .specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
+disable-model-invocation: true
 ---
 
 ## User Input

@@ -16,7 +16,7 @@ Leia apenas a secao do artefato que sera escrito ou verificado e a [secao de val
 | Relatorio de atualizacao | Arquivo versionado, quando aplicavel | Pasta de relatorios declarada pelo adaptador |
 | Relatorio de varredura | Somente resposta ao usuario | Nao gravar em arquivo |
 
-Nao produza outro tipo de dicionario ou representacao paralela. Destino indeterminado bloqueia a escrita do artefato.
+Esses artefatos sao a saida completa desta skill. Destino indeterminado bloqueia a escrita do artefato.
 
 ## Codificacao dos artefatos
 
@@ -59,8 +59,7 @@ Os dois dicionarios sao mantidos juntos e descrevem o mesmo conjunto de tabelas 
 | <identificador fisico da tabela B> | <descricao da tabela B> |
 ```
 
-- Use exatamente um `H1` e uma unica tabela Markdown.
-- Nao crie indice nem secoes por tabela.
+- Use exatamente um `H1` e uma unica tabela Markdown, sem indice e sem secoes por tabela.
 - Use exatamente os cabecalhos `Tabela` e `Descrição`, nessa ordem.
 - Ordene as linhas pelo identificador fisico em ordem lexicografica crescente, sem alterar caixa para comparar.
 - Escreva somente o identificador fisico na celula `Tabela`, sem anotacoes de navegacao ou situacao.
@@ -98,7 +97,7 @@ Os dois dicionarios sao mantidos juntos e descrevem o mesmo conjunto de tabelas 
 - Cada secao usa esta ordem exata: `H2`, linha em branco, descricao em uma unica linha fisica, linha em branco, tabela Markdown.
 - Use exatamente os cabecalhos `Tabela`, `Coluna` e `Descrição`, nessa ordem, em toda secao.
 - A celula `Tabela` repete em cada linha o identificador fisico exato do `H2`.
-- Nao envolva as secoes em outro cabecalho e nao acrescente origem, metodologia ou relatorio ao documento.
+- O documento tem apenas os cabecalhos e as tabelas descritos acima.
 
 ### Ordem das colunas
 
@@ -122,9 +121,28 @@ Na formula com dominio multivalorado, a frase fixa "um dominio multivalorado de 
 
 ## Marcacao de lacuna
 
-Nao insira rotulo, flag, texto fixo ou significado presumido no identificador, no cabecalho ou na descricao para representar uma lacuna.
+Nenhuma celula de descricao pode ficar vazia e nenhum significado pode ser presumido. Termo da formula sem evidencia recebe marcador de lacuna, no lugar do termo, dentro da propria frase da formula.
 
-Se qualquer termo da formula obrigatoria estiver indeterminado, a descricao afetada permanece incompleta: preserve o texto anterior somente quando ele continuar integralmente comprovado e ja obedecer a formula; caso contrario, nao publique uma frase substituta e registre a lacuna no relatorio. O artefato nao pode ser declarado completo enquanto o requisito de descricao permanecer sem atendimento.
+**Forma do marcador**, obrigatoria e unica:
+
+```
+TODO: <nome do termo da formula> - <o que ja foi buscado e nao resolveu>
+```
+
+- `TODO:` em maiusculas, seguido de um espaco.
+- `<nome do termo da formula>` e o nome do termo entre colchetes na formula aplicavel, copiado literalmente de `templates-descricao.md`: para colunas, `propriedade ou conceito`, `entidade ou evento`, `significado e criterio`, `momento, periodo ou condicao`, `unidade, moeda, escala, dominio ou referencia`, `captura, origem ou regra`, `semantica da ausencia`, `funcao`, `distincao ou limitacao`; para tabelas, `entidade, evento, relacao ou resultado de negocio`, `granularidade`, `evento ou criterio`, `escopo`, `exclusoes relevantes`, `estado atual, historico, vigencia, fotografia ou agregacao`, `momento ou periodo`, `origem`, `processos, operacoes ou decisoes`, `limitacoes`. Vocabulario fechado: nao invente nome de termo.
+- O separador e um hifen entre espacos, ` - `. O motivo e obrigatorio e nomeia o que ja foi procurado, para que uma retomada futura nao repita a busca.
+- Nao use travessao em nenhuma parte do marcador nem da descricao.
+
+**Regras de aplicacao:**
+
+- A frase da formula e preservada inteira. O marcador substitui apenas o conteudo do termo, nunca a frase, a ordem ou a pontuacao.
+- Um marcador por termo aberto. Uma descricao pode conter mais de um.
+- Marcador nao vai em identificador fisico, em cabecalho de secao, em entrada de indice, no `CHANGELOG.md` nem em descricao de tabela replicada entre os dois dicionarios de forma divergente: a descricao de tabela e identica nos dois arquivos, com marcador e tudo.
+- Termo comprovadamente inaplicavel nao e lacuna: declare a condicao no termo, sem marcador, conforme as Regras de uso de `templates-descricao.md`.
+- Dominio multivalorado incompleto continua bloqueando a descricao por A2: nao publique lista parcial com marcador no lugar dos valores que faltam. Se o conjunto de valores nao esta comprovado, a coluna nao usa a formula de dominio multivalorado; usa a formula geral, e o marcador vai no termo `significado e criterio`.
+
+**Medicao:** a completude do artefato passa a ser medida pelo subcomando `lacunas` do verificador, que conta os marcadores por tabela e por coluna. Um artefato com marcador nao e um artefato completo: e um artefato publicado com o inventario do que falta legivel por ferramenta. O relatorio de atualizacao reporta a contagem e a concentracao das lacunas.
 
 ## Relatorio de atualizacao
 
@@ -210,9 +228,9 @@ Forma minima:
 | <A1 a A10 aplicável> | <n> | aprovado, reprovado ou não aplicável | automatizado ou manual |
 ```
 
-- Use os niveis definidos pelo processo; nao crie uma escala paralela.
+- Use os niveis definidos pelo processo.
 - Registre `nao se aplica` e `nao acessado` com motivo.
-- Resultados sem achado equivalentes podem ser agregados; nao esconda excecoes no grupo.
+- Resultados sem achado equivalentes podem ser agregados, com cada excecao nomeada fora do grupo.
 - Nomeie individualmente conflito, lacuna e afirmacao positiva que altere uma descricao.
 
 ## CHANGELOG.md
@@ -228,7 +246,7 @@ O `CHANGELOG.md` registra fatos de estrutura por versao. Conteudo semantico ou d
 ```
 
 - Use exatamente um `H1` e um `H2` por versao incluida.
-- Nao escreva data, preambulo, metodologia ou links de comparacao.
+- Sob cada `H2`, escreva apenas os bullets de mudanca estrutural.
 - Cada identificador de versao aparece uma unica vez.
 - Ordene as versoes da mais recente para a mais antiga segundo a gramatica do adaptador.
 
@@ -282,7 +300,7 @@ Omita a versao inteira quando nao houver mudanca fisica liquida. Dados de refere
 - Preserve na definicao os tokens da fonte estrutural. Traduza uma chamada de framework somente quando o adaptador declarar mapeamento inequivoco.
 - Use um bullet por objeto. Identifique objeto sem nome pela assinatura fisica suficiente para distingui-lo.
 - Renomeacao comprovada usa `renomeada de <antigo>` na entrada do nome novo. Sem prova de renomeacao, registre exclusao e adicao separadamente.
-- Nao inclua finalidade, justificativa negocial nem significado de valor.
+- Cada entrada descreve apenas o fato fisico da mudanca.
 
 ## Validacao da forma
 

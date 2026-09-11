@@ -9,6 +9,7 @@ handoffs:
     agent: speckit.clarify
     prompt: Clarify specification requirements
     send: true
+disable-model-invocation: true
 ---
 
 ## User Input

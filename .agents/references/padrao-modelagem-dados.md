@@ -207,3 +207,26 @@ $objInfraMetaBD = new InfraMetaBD(BancoSEI::getInstance());
 
 > Para regras de auditoria de modelagem (DB01-DB15) com verificação automatizada,
 > consultar: `.agents/skills/sei-verificacao-banco-dados/references/padroes-manual-md.md`
+
+
+## Portabilidade entre bancos
+
+Regras do manual que valem para todo script de instalação e atualização. Erro aqui passa no banco de desenvolvimento e quebra o release no banco do cliente.
+
+- **Comprimento de coluna**: evitar comprimentos superiores a **1000 caracteres**. Acima disso a portabilidade entre os bancos suportados deixa de ser garantida.
+- **Sequences**: são usadas quando o DTO declara o tipo de chave primária nativa. Dependendo do banco, a sequence é implementada como tabela ou como sequence real, então o script não pode assumir uma das duas formas.
+- **Funções de banco**: em script de instalação e atualização, usar as funções disponíveis em `/infra/InfraBD.php` em vez de DDL solto. O catálogo dessas funções é a referência a consultar antes de escrever DDL própria.
+
+### Bind de campos CLOB em `executarSql`
+
+A assinatura completa e `executarSql($strSql, $arrCamposBind = null)`, e devolve o numero de registros afetados.
+
+O segundo parametro existe **apenas para Oracle**: e um array indexado pelos nomes dos campos CLOB, usado para bind. Em outros bancos ele nao se aplica e fica nulo.
+
+Consequencia pratica para release multi-SGBD: escrita em coluna CLOB que funciona em MySQL ou SQL Server pode falhar em Oracle se o bind nao for informado. Script que grava texto longo precisa prever os dois caminhos.
+
+## Nomenclatura de tabela, regras do manual
+
+- **Sem verbos.** Nao usar verbo para designar nome de tabela. Priorizar substantivo, com o prefixo do modulo.
+- **Clareza dentro de 26 caracteres.** O nome representa a entidade de forma clara dentro do limite. Abreviar so quando o nome completo nao couber, e de forma consistente entre tabelas do mesmo modulo.
+- **Conjunto de valores.** Tabela que representa conjunto de valores relacionados a uma entidade recebe prefixo proprio, para distingui-la da tabela da entidade.

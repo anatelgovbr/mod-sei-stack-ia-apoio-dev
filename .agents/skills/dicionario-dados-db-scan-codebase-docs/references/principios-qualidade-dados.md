@@ -6,20 +6,20 @@ Autoridade sobre: conteúdo publicável das descrições e critérios A1 a A10.
 
 Uma descrição deve permitir que alguém entenda o conceito sem abrir o código. Estrutura física pertence à fonte estrutural e ao `CHANGELOG.md`; significado e uso pertencem aos dicionários.
 
-Use integralmente a fórmula obrigatória aplicável. Preencha todos os termos com evidência; termo indeterminado impede publicar a descrição. Quando algo comprovadamente não se aplicar, declare essa condição no termo correspondente sem alterar a fórmula.
+Use integralmente a fórmula obrigatória aplicável. Preencha com evidência todos os termos que a busca resolver e marque como lacuna os que continuarem abertos, conforme `templates-descricao.md`. Quando algo comprovadamente não se aplicar, declare essa condição no termo correspondente sem alterar a fórmula.
 
 ## Redação
 
 - Formule no singular e no afirmativo.
-- Defina o conceito; não traduza apenas o identificador nem use o termo definido como sua própria definição.
+- Defina o conceito com termos independentes do identificador e do próprio termo definido.
 - Faça a frase funcionar sem depender do nome da coluna ao lado.
 - Expanda siglas na primeira ocorrência e use o mesmo termo para o mesmo conceito.
 - Distinga conceitos vizinhos e termos diferentes apresentados pela interface; divergência gera conflito, não um terceiro termo.
 - Descreva chave estrangeira pela entidade e pelo papel referenciado, não pelo nome físico da tabela.
-- Não use classe, método, arquivo, caminho, framework ou norma como significado de negócio.
-- Não use `atual`, `último`, `vigente`, `total` ou `saldo` sem referência temporal ou escopo.
-- Não use termos subjetivos como `correto`, `válido`, `normal` ou `adequado` sem informar o critério que os torna verdadeiros.
-- Não publique afirmação genérica que continuaria verdadeira ao trocar o alvo.
+- Dê o significado de negócio do dado, que vale independentemente da classe, do método, do arquivo, do framework ou da norma que o implementa.
+- Acompanhe `atual`, `último`, `vigente`, `total` e `saldo` da referência temporal ou do escopo que os torna precisos.
+- Acompanhe termos subjetivos como `correto`, `válido`, `normal` e `adequado` do critério que os torna verdadeiros.
+- Publique afirmação que só se sustenta neste alvo.
 
 ## Tabelas
 
@@ -54,7 +54,7 @@ Em verificação, avalie `dicionario_tabelas.md` e `dicionario_colunas.md` intei
 | A1 | Tabelas com granularidade determinada | 100% |
 | A2 | Domínios fechados completos, com valores e significados | 100%; incompletude bloqueia a descrição |
 | A3 | Descrições tautológicas ou genéricas | 0 |
-| A4 | Afirmações sem evidência suficiente | 0 publicadas; lacunas reportadas |
+| A4 | Afirmações sem evidência suficiente | 0 publicadas; termo sem evidência publicado com marcador de lacuna e contado por `lacunas` |
 | A5 | Conflitos decididos silenciosamente | 0 |
 | A6 | Termos divergentes para o mesmo conceito | 0 |
 | A7 | Implementação ou norma mencionada nos dicionários | 0 |
