@@ -18,6 +18,20 @@ Regras comuns de versão-alvo, âncora, assinatura de bloco, baseline e bloqueio
 
 O rodapé chama `setArrVersoes` com chaves de faixa `M.m.*` e valores `versao_M_m_0`. Ordene pelas chaves do mapa, não pelo nome isolado do método.
 
+## Vocabulário de negócio
+
+Estes termos são legados na estrutura física do SEI, mas o vocabulário de negócio usado por usuário, manual e documentação funcional é outro. Ao redigir prosa (descrição de tabela, descrição de coluna e demais textos livres do dicionário), traduza os termos abaixo; nunca altere o identificador físico correspondente.
+
+| Termo físico/legado (prosa) | Termo de negócio a usar na prosa |
+|---|---|
+| procedimento | processo |
+| tipo de procedimento | tipo de processo |
+| serie | tipo de documento |
+
+- Aplique a tradução somente em prosa; identificador físico preserva a forma definida em "Identificadores e âncoras", inclusive quando citado entre crases dentro de uma frase. Ajuste artigo, adjetivo e pronome da frase para manter a concordância correta em português com o termo de negócio substituído; não é necessária uma regra mecânica passo a passo para isso.
+- Não aplique a tradução de `serie` quando o termo não se referir à classificação do tipo de documento do SEI (por exemplo, série histórica ou série temporal).
+- CHANGELOG.md relata efeito estrutural sobre o identificador físico; não aplique esta tradução a ele.
+
 ### Identificadores e âncoras
 
 - Versões sem método próprio pertencem à faixa explícita `M.m.*`; não crie bloco implícito para patch.

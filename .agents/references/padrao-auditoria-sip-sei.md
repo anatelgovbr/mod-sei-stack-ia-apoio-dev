@@ -23,7 +23,7 @@ Mapa de metodo da RN para recurso:
 | `desativarControlado` | `_desativar` |
 | `reativarControlado` | `_reativar` |
 | `consultarConectado` | `_consultar` |
-| `bloquearConectado` | `_consultar`, compartilhado com consultar |
+| `bloquearControlado` | `_consultar`, compartilhado com consultar; sufixo `Controlado` porque o lock so vale dentro da transacao (manual cap. 4) |
 | `listarConectado` | `_listar` |
 | `contarConectado` | `_listar`, compartilhado com listar |
 
@@ -39,6 +39,8 @@ Duas operacoes compartilham recurso com outra: `bloquear` usa o recurso de
 $objRecursoDTO = $this->adicionarRecursoPerfil($numIdSistemaSei, $numIdPerfilAdministrador, 'md_xxx_listar');
 $this->adicionarRecursoPerfil($numIdSistemaSei, $numIdPerfilAdministrador, 'md_xxx_cadastrar');
 $this->adicionarRecursoPerfil($numIdSistemaSei, $numIdPerfilAdministrador, 'md_xxx_alterar');
+$this->adicionarRecursoPerfil($numIdSistemaSei, $numIdPerfilAdministrador, 'md_xxx_consultar');
+$this->adicionarRecursoPerfil($numIdSistemaSei, $numIdPerfilAdministrador, 'md_xxx_selecionar');
 $this->adicionarRecursoPerfil($numIdSistemaSei, $numIdPerfilAdministrador, 'md_xxx_excluir');
 
 // 2. Criar item de menu (usa o recurso listar como ancora)
@@ -114,7 +116,7 @@ protected function consultarConectado(MdXxxEntidadeDTO $objDTO): ?MdXxxEntidadeD
     }
 }
 
-protected function bloquearConectado(MdXxxEntidadeDTO $objDTO): ?MdXxxEntidadeDTO
+protected function bloquearControlado(MdXxxEntidadeDTO $objDTO): ?MdXxxEntidadeDTO
 {
     try {
         SessaoSEI::getInstance()->validarAuditarPermissao('md_xxx_entidade_consultar', __METHOD__, $objDTO);
@@ -179,7 +181,7 @@ Esta convencao vale para o **nome da regra de auditoria**, e nao se confunde com
 
 ### Recurso do metodo `bloquear`
 
-O metodo `bloquear` compartilha o recurso do metodo `consultar` e nao recebe recurso proprio. `bloquearConectado` valida `md_<modulo>_<entidade>_consultar`.
+O metodo `bloquear` compartilha o recurso do metodo `consultar` e nao recebe recurso proprio. `bloquearControlado` valida `md_<modulo>_<entidade>_consultar`. O sufixo e `Controlado` porque `bloquear` abre lock de linha (`FOR UPDATE`) e o lock so persiste dentro da transacao aberta pelo `Controlado` (manual cap. 4, "Bloquear (Controlado)").
 
 ### Auditoria de permissao na RN e opcional no gerador oficial
 

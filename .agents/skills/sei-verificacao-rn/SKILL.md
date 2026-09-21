@@ -29,9 +29,9 @@ Skill de gate para validar padroes de transacao em classes RN do SEI.
 | T4 | Controle manual de conexao/transacao merece revisao | **Aviso** | `fecharConexao()`, `commitTransacao()` e similares exigem contexto claro |
 | T5 | try/catch com `InfraException` e encadeamento de erro e recomendavel | **Aviso** | padrao recorrente nos exemplos do manual |
 | T6 | `*Controlado` contem somente persistencia | **Erro** | e-mail, Solr, indexacao e integracao externa devem ocorrer em wrapper publico depois de todos os acessos de persistencia |
-| A1 | Metodo de escrita usa recurso auditado compatível | **Erro** | o recurso inicia com `md_` e termina com o sufixo da operação de escrita |
+| A1 | Metodo de escrita usa recurso auditado compatível | **Erro** | o recurso inicia com `md_` e termina com o sufixo da operação de escrita; `bloquear` compartilha o recurso `_consultar`, porque o SIP não gera recurso `bloquear` |
 | A2 | Wrapper publico de escrita sem verificacao | **Aviso** | revisar intencionalidade sem exigir sessao em helper `*Interno`, hook ou evento sem usuario |
-| A3 | Leitura publica usa recurso `_listar` coerente | **Erro** | consultar/listar/contar usam recurso iniciado por `md_` e terminado em `_listar` |
+| A3 | Leitura publica usa o recurso da operacao | **Erro** | `consultar` e `bloquear` usam recurso terminado em `_consultar`; `listar` e `contar` usam recurso terminado em `_listar`; todos iniciados por `md_` |
 
 ## Observacao sobre sufixos
 
@@ -111,7 +111,8 @@ CRUD_READ  = ['consultar', 'listar', 'contar']
 | Tipo | Chamada obrigatoria | Recurso SIP esperado |
 |------|--------------------|-----------------------|
 | Escrita (cadastrar/alterar/excluir) | `validarAuditarPermissao('md_xxx_<acao>', __METHOD__, $dto)` | registrado na regra de auditoria do SIP |
-| Leitura (consultar/listar/contar) | `validarAuditarPermissao('md_xxx_listar', __METHOD__, $dto)` | recurso `listar`, nao entra na regra de auditoria |
+| Leitura (listar/contar) | `validarAuditarPermissao('md_xxx_listar', __METHOD__, $dto)` | recurso `listar`, nao entra na regra de auditoria |
+| Leitura (consultar/bloquear) | `validarAuditarPermissao('md_xxx_consultar', __METHOD__, $dto)` | recurso `consultar`, nao entra na regra de auditoria; `bloquear` e `*Controlado` e compartilha o mesmo recurso |
 | Helper interno (hook/evento) | nenhuma, sem sessao de usuario | nao aplicavel |
 
 Ver `.agents/references/padrao-auditoria-sip-sei.md` para o padrao completo incluindo o script SIP.

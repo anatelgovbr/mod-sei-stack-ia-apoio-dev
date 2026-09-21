@@ -1,7 +1,7 @@
 <?php
 
 try {
-  require_once dirname(__FILE__) . '/../../SEI.php';
+{{REQUIRE_SEI}}
 
   session_start();
 
@@ -21,22 +21,30 @@ try {
   switch ($strAcao) {
 {{LIST_SWITCH_CASES}}
     default:
-      throw new InfraException("Aï¿½ï¿½o '".$strAcao."' nï¿½o reconhecida.");
+      throw new InfraException("Ação '".$strAcao."' não reconhecida.");
   }
 
-  $arrComandos = array();
+  $arrComandos = [];
 {{LIST_TOP_COMMANDS}}
   $obj{{CLASS_NAME}}DTO = new {{CLASS_NAME}}DTO();
 {{LIST_DTO_RETURN_LINES}}
 {{LIST_FILTER_APPLY_LINES}}
   PaginaSEI::getInstance()->prepararOrdenacao($obj{{CLASS_NAME}}DTO, '{{LIST_SORT_FIELD}}', InfraDTO::$TIPO_ORDENACAO_ASC);
+{{LIST_PREPARE_PAGINATION}}
 
   $obj{{CLASS_NAME}}RN = new {{CLASS_NAME}}RN();
   $arrObj{{CLASS_NAME}}DTO = $obj{{CLASS_NAME}}RN->listar($obj{{CLASS_NAME}}DTO);
 
+{{LIST_PROCESS_PAGINATION}}
+
+  /** @var {{CLASS_NAME}}DTO[] $arrObj{{CLASS_NAME}}DTO */
+
   $numRegistros = count($arrObj{{CLASS_NAME}}DTO);
 
   if ($numRegistros > 0) {
+
+    $bolCheck = false;
+
 {{LIST_ACTION_FLAG_LINES}}
 {{LIST_BULK_COMMAND_LINES}}
     $strResultado = '';
@@ -47,8 +55,11 @@ try {
     $strResultado .= '</tr></thead><tbody>' . "\n";
     $strCssTr = '';
     for ($i = 0; $i < $numRegistros; $i++) {
+
 {{LIST_TR_COLOR_LOGIC}}
+
 {{LIST_ROW_LINES}}
+
       $strResultado .= '</td></tr>' . "\n";
     }
     $strResultado .= '</tbody>' . "\n";
@@ -79,7 +90,7 @@ PaginaSEI::getInstance()->abrirJavaScript();
 ?>
 <?php if (0) { ?><script type="text/javascript"><?php } ?>
 
- function inicializar()
+function inicializar()
 {
 {{LIST_INITIALIZE_LINES}}
 }

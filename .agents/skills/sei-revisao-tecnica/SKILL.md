@@ -169,7 +169,7 @@ Ao receber um diretório de módulo, inclua:
 | `*BD.php`, DTO ou DDL | `sei-verificacao-banco-dados` | controles DB aplicáveis, mapeamento, SQL e multi-SGBD |
 | controlador Ajax/WS ou `tratarLinkSemAssinatura` em `*Integracao.php` | `sei-verificacao-controladores` | controles CI aplicáveis e autorização por ação ou serviço |
 | `*_tarefa.php` ou definição de tarefa | `sei-verificacao-tarefa` | controles K aplicáveis e unicidade |
-| qualquer PHP no delta | `sei-testes-validacao` | `php -l`, encoding e checks locais disponíveis |
+| qualquer PHP no delta | `sei-validacao-padrao` | `php -l`, encoding e checks locais disponíveis |
 | DDL ou alteração de modelo em script SEI/SIP | `sei-verificacao-banco-dados` com `release_check` | somente DB01-DB15 aplicáveis aos objetos extraídos |
 | script SEI/SIP mapeado ou impacto de versão/recurso | inspeção técnica de release desta skill | R1, R3, R4, R5 e R6, histórico, switch e `getVersao()` aplicáveis |
 | módulo completo ou padrão técnico ambíguo | `sei-guardrails-modulo` | inventário, escopo e gates especializados acionados |

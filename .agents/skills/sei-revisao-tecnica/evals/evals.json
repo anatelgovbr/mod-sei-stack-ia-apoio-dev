@@ -66,7 +66,7 @@
       "files": ["evals/files/modulo-exemplo/md_rt_exemplo_lista.php"],
       "expectations": [
         "O inventario identifica exatamente uma pagina elegivel md_rt_exemplo_lista.php e registra a ausencia das demais classes de artefato.",
-        "A saida aciona sei-guardrails-modulo, sei-verificacao-pagina e sei-testes-validacao para a fixture encontrada.",
+        "A saida aciona sei-guardrails-modulo, sei-verificacao-pagina e sei-validacao-padrao para a fixture encontrada.",
         "As dimensoes avaliadas aparecem pelas linhas de gate e de achado, sem tabela propria de dimensoes.",
         "Nenhum gate com zero artefatos recebe PASS.",
         "Sem delta, o estado do achado reflete o controle violado, e a coluna Origem registra preexistente.",

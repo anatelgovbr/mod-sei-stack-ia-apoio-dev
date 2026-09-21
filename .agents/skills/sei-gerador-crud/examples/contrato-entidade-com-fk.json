@@ -33,7 +33,7 @@
       "nome": "dta_inicio",
       "tipoBanco": "date",
       "obrigatorio": true,
-      "comentario": "Data de inicio do projeto."
+      "comentario": "Data de início do projeto."
     },
     {
       "nome": "sin_ativo",
@@ -64,15 +64,18 @@
     "campos": {
       "nome": {
         "rotulo": "Nome do projeto",
-        "teclaAtalho": "n"
+        "teclaAtalho": "N",
+        "artigo": "o"
       },
       "id_md_ana_tema": {
         "rotulo": "Tema",
-        "teclaAtalho": "t"
+        "teclaAtalho": "M",
+        "artigo": "o"
       },
       "dta_inicio": {
-        "rotulo": "Data de inicio",
-        "teclaAtalho": "d"
+        "rotulo": "Data de início",
+        "teclaAtalho": "D",
+        "artigo": "a"
       }
     }
   }

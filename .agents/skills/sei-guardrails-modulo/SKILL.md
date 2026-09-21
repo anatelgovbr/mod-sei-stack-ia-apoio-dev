@@ -37,7 +37,7 @@ description: Guardrails obrigatorios para qualquer trabalho em modulos SEI — v
    - auditoria quando aplicável
 6. Acionar as skills específicas quando necessário:
    - **Implementacao**: `sei-menu-pagina`, `sei-mod-api-eventos`, `sei-mod-api-operacoes`,
-      `sei-gerador-scripts-release`, `sip-gerador-scripts-release`, `sei-testes-validacao`
+      `sei-gerador-scripts-release`, `sip-gerador-scripts-release`, `sei-validacao-padrao`
    - **Gates de verificacao** (obrigatorios conforme artefatos presentes):
      - `sei-verificacao-pagina` — para toda pagina `*_lista.php` ou `*_cadastro.php`
      - `sei-verificacao-controladores` — para metodos de controlador em `*Integracao.php`

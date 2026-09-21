@@ -21,7 +21,7 @@ APROVADO = """## Revisao tecnica
 | Gate | Artefatos | Estado | Evidencia |
 |---|---|---|---|
 | G6 escopo de escrita | 8 arquivos PHP | ✅ PASS | Todos em `módulos/**`, caminho permitido |
-| G2 `php -l`, via `sei-testes-validacao` | 8 arquivos PHP | ✅ PASS | 8 de 8 sem erro de sintaxe |
+| G2 `php -l`, via `sei-validacao-padrao` | 8 arquivos PHP | ✅ PASS | 8 de 8 sem erro de sintaxe |
 | G1 encoding Latin-1 | 8 arquivos PHP | ✅ PASS | 8 de 8 em ISO-8859-1, nenhum BOM |
 | `sei-verificacao-pagina` | 5 páginas `*_exemplo.php` | ❌ BLOCK | P1 e P2 ok em 4 de 5; P5 e P6 violados nas 5, com 53 leituras cruas de superglobal e zero uso de `PaginaSEI::GET/POST`; P8 ok, saída com `tratarHTML` |
 | `sei-verificacao-controladores` | `MdAbcExemploIntegracao.php` | ❌ BLOCK | CI4 violado: `md_abc_auto_completar` executa sem `validarPermissao` |

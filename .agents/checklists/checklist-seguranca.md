@@ -54,7 +54,7 @@ e o resultado passa a `BLOCK`.
 > para gerar trilha em `infra_auditoria`. Leitura simples: `validarPermissao` e suficiente.
 > Para verificar sem lancar excecao: `verificarPermissao` (retorna bool).
 
-> **Lint PHP**: `php -l` em todo PHP alterado continua obrigatorio via `sei-testes-validacao`
+> **Lint PHP**: `php -l` em todo PHP alterado continua obrigatorio via `sei-validacao-padrao`
 > e gate G2. Ele nao entra na numeracao P1-P10.
 
 ### 1.2 Acao AJAX / WebService em `*Integracao.php`

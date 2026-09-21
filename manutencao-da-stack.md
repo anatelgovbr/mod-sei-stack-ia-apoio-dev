@@ -56,7 +56,7 @@ Não crie arquivo de comando em `.claude/commands/`, `.github/agents/`, `.github
 
 ```text
 .specify/
-├── templates/         <- base de comparação para atualizar as skills
+├── templates/         <- esqueletos de spec, plan, tasks e checklist, copiados pelos scripts para cada nova spec
 ├── scripts/           <- scripts de suporte chamados em tempo de execução
 ├── integrations/      <- manifestos de integração
 ├── workflows/         <- registro de workflows
@@ -64,9 +64,9 @@ Não crie arquivo de comando em `.claude/commands/`, `.github/agents/`, `.github
     └── constitution.md  <- intencionalmente vazio; não governa o fluxo
 ```
 
-Os templates em `.specify/templates/` são a origem das skills em `.agents/skills/speckit-*/`. Eles não fazem parte do fluxo de execução diário e permanecem no repositório como referência para atualizações futuras: ao avaliar uma nova versão, você compara os templates novos com as skills geradas anteriormente para identificar o que mudou e precisa ser incorporado.
+O SpecKit tem dois tipos de template. Os templates de comando (`templates/commands/<fase>.md` no projeto de origem) são a origem das skills em `.agents/skills/speckit-*/` e não ficam neste repositório: o conteúdo deles já está nas skills. Os templates de artefato em `.specify/templates/` fazem parte do fluxo de execução: `create-new-feature.sh` copia `spec-template.md`, `setup-plan.sh` copia `plan-template.md`, `setup-tasks.sh` entrega `tasks-template.md` e `check-prerequisites.sh --template checklist-template` entrega `checklist-template.md`; a skill da fase preenche o artefato seguindo a estrutura do template. A equipe customizou esses templates com as seções do SEI (roteamento de skills, gate do gerador de CRUD, impacto em BD, menus e indexação), então a estrutura de um artefato gerado muda no template correspondente, e não na skill.
 
-O que é ativo no dia a dia são os scripts em `.specify/scripts/`, chamados pelas skills em tempo de execução, por exemplo para criar a branch da funcionalidade.
+Os scripts em `.specify/scripts/` também são ativos no dia a dia: as skills os chamam em tempo de execução para criar a branch da funcionalidade, resolver e copiar o template do artefato e verificar pré-requisitos.
 
 O arquivo `.specify/memory/constitution.md` é mantido **intencionalmente vazio** e não governa o fluxo: as regras de governança vivem nas próprias skills de fase.
 
@@ -81,7 +81,7 @@ Os arquivos de configuração pessoal do SpecKit ficam no `.gitignore` e não s�
 | Grupo de arquivo | Ao atualizar o SpecKit | Ao evoluir o projeto |
 |---|---|---|
 | Skills em `.agents/skills/speckit-*/` | Merge manual com atenção, preservando os ajustes da equipe | Raramente; abrir PR com justificativa clara |
-| Templates em `.specify/templates/` | Atualizar, para servirem de base na comparação seguinte | Não se aplica |
+| Templates em `.specify/templates/` | Comparar com a versão nova e aplicar o merge manualmente, preservando as seções do SEI | Ciclo normal do projeto, quando a estrutura de um artefato gerado precisar mudar |
 | Scripts em `.specify/scripts/` e manifestos em `.specify/integrations/` | Substituição direta pela versão nova | Não se aplica |
 | Arquivo `.specify/memory/constitution.md` | Manter vazio; não incorporar o template novo | Manter vazio; as regras vivem nas skills de fase |
 | Checklists e templates criados pela equipe | Preservar, porque são da equipe e não do SpecKit | Atualizar conforme os padrões do projeto evoluem |
@@ -103,9 +103,9 @@ Os arquivos de configuração pessoal do SpecKit ficam no `.gitignore` e não s�
 ## Como atualizar o SpecKit
 
 1. Identifique a nova versão em [github.com/github/spec-kit](https://github.com/github/spec-kit) e leia o changelog para entender o que mudou em cada fase.
-2. Para cada skill em `.agents/skills/speckit-*/`, compare a skill atual com o template novo da fase correspondente. Aplique o merge manualmente, preservando qualquer ajuste que a equipe tenha feito.
+2. Para cada skill em `.agents/skills/speckit-*/`, compare a skill atual com o template de comando novo da fase correspondente (`templates/commands/<fase>.md` no projeto de origem). Aplique o merge manualmente, preservando qualquer ajuste que a equipe tenha feito.
 3. Substitua diretamente os scripts em `.specify/scripts/`, nas duas versões: `bash/` e `powershell/`. Se a nova versão criar ou remover fase, crie ou remova o diretório correspondente em `.agents/skills/`.
-4. Atualize os templates em `.specify/templates/` para refletir a nova versão: eles servem de base de comparação para a próxima atualização.
+4. Compare os templates de artefato em `.specify/templates/` com os da nova versão e aplique o merge manualmente, preservando as seções do SEI: eles são copiados pelos scripts para `specs/<feature>/` em tempo de execução.
 5. Mantenha `.specify/memory/constitution.md` vazio. As regras de governança vivem nas próprias skills de fase, então não incorpore o conteúdo do novo `constitution-template.md`.
 6. Teste o fluxo ponta a ponta (`specify`, `plan`, `tasks`, `implement`) em uma funcionalidade de exemplo.
 7. Atualize a versão registrada na nota de [`speckit.md`](speckit.md) e na tabela de skills de terceiros do [`README.md`](README.md), e abra um Pull Request descrevendo o que mudou.
@@ -137,7 +137,7 @@ A skill `owasp-playbook` tem duas partes. O `SKILL.md` é do projeto: seleciona 
 
 | Retirado do upstream | Motivo |
 |---|---|
-| `plugins/*/agents/` | Subagentes no formato do Claude Code. Copilot e OpenCode ignoram, e o `AGENTS.md` não autoriza abrir subagente por conta própria |
+| `plugins/*/agents/` | Subagentes no formato do Claude Code. Copilot e OpenCode ignoram |
 | `.claude-plugin/` na raiz e em cada plugin | Manifesto de marketplace do Claude Code. O repositório já tem o seu em `.claude-plugin/marketplace.json` |
 | `.claude/skills/` | Duas skills com frontmatter `allowed-tools:`, específico do Claude Code. Os plays correspondentes já vêm em `plugins/ai-security-skills/plays/` |
 | `scripts/` | Extratores em Python que geram `data/` a partir dos repositórios OWASP. Não são usados em tempo de execução |
@@ -189,3 +189,5 @@ Os demais arquivos da stack seguem o ciclo normal do projeto: branch dedicada, a
 Três arquivos são do projeto e nunca são substituídos por uma atualização da stack, porque o conteúdo deles é próprio do repositório: `AGENTS.md`, `CLAUDE.md` e o `README.md` da raiz.
 
 Três arquivos recebem acréscimos da stack e mantêm o que o time já tinha, então divergência neles é esperada e não é problema: `.gitignore`, `.vscode/settings.json` e `.claude/settings.json`.
+
+O validador `quick_validate.py` da skill `skill-creator` (cópia da origem, sem ajuste local) reclama da chave `disable-model-invocation` no frontmatter das skills deste repositório. A chave é convenção do projeto, registrada em `.agents/references/roteamento-de-skills.md`, e a reclamação é esperada: não remova a chave nem edite o validador, que é substituído inteiro na atualização.

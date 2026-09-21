@@ -13,12 +13,12 @@
   - [Fluxo Speckit para Funcionalidade Nova](#fluxo-speckit-para-funcionalidade-nova)
     - [Fluxo padrão](#fluxo-padrão)
     - [Fluxo alternativo (com passos opcionais)](#fluxo-alternativo-com-passos-opcionais)
-  - [Revisão Técnica e de Segurança](#revisão-técnica-e-de-segurança)
-    - [Revisar alterações](#revisar-alterações)
-    - [Revisar um módulo ou um arquivo](#revisar-um-módulo-ou-um-arquivo)
-    - [Revisar assuntos específicos](#revisar-assuntos-específicos)
-    - [Variações de saída da revisão técnica](#variações-de-saída-da-revisão-técnica)
-      - [Gerar revisão no formato PDF](#gerar-revisão-no-formato-pdf)
+  - [Revisão Técnica (inclui Segurança e Vulnerabilidade)](#revisão-técnica-inclui-segurança-e-vulnerabilidade)
+    - [Revisão Técnica de alterações](#revisão-técnica-de-alterações)
+    - [Revisão Técnica de módulo ou arquivo](#revisão-técnica-de-módulo-ou-arquivo)
+    - [Revisão Técnica de Dimensões Específicas](#revisão-técnica-de-dimensões-específicas)
+    - [Variações de Saída da Revisão Técnica](#variações-de-saída-da-revisão-técnica)
+      - [Revisão Técnica em PDF](#revisão-técnica-em-pdf)
       - [Gerar as issues ou tarefas técnicas](#gerar-as-issues-ou-tarefas-técnicas)
       - [Para uma revisão já entregue](#para-uma-revisão-já-entregue)
     - [Depois da revisão: marcar ou planejar a correção](#depois-da-revisão-marcar-ou-planejar-a-correção)
@@ -529,93 +529,93 @@ Funcionalidade: relatório de demandas institucionais por tema.
 
 **7. Implementar:** igual ao fluxo padrão.
 
-### Revisão Técnica e de Segurança
+### Revisão Técnica (inclui Segurança e Vulnerabilidade)
 
 Use `sei-revisao-tecnica` para conferir os padrões técnicos do SEI em código já implementado: escopo, arquitetura, permissões, transação, controladores, entrada e saída, segurança, banco, release, integrações, qualidade e testes. A skill aciona as verificações de cada artefato encontrado, como página, RN, banco de dados, controladores e tarefa, e o relatório reúne o resultado dessas verificações. Ela não avalia requisito, regra de negócio nem especificação.
 
-#### Revisar alterações
+#### Revisão Técnica de alterações
 
-Sempre que fizer alterações antes de realizar um merge para branches de ambiente utilize estes exemplos abaixo para garantir a qualidade da entrega.
+Sempre que fizer alterações antes de realizar um merge para branches de ambiente utilize estes exemplos para garantir a qualidade da entrega.
 
 | O que você quer revisar | O que escrever no lugar de `<o que revisar>` |
 |---|---|
-| Uma branch antes do merge | `a branch <nome da branch>, comparada com <branch ou commit de referência>` |
-| Um commit | `o commit <identificador do commit>` |
-| Mais de um commit | `os commits <identificador 1> e <identificador 2>`, etc... |
+| Uma branch antes do merge | `da branch <nome da branch>, comparada com <branch ou commit de referência>` |
+| Um commit | `do commit <identificador do commit>` |
+| Mais de um commit | `dos commits <identificador 1> e <identificador 2>`, etc... |
 
 **Prompt:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para revisar <o que revisar>.
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica** <o que revisar>
 ```
 
 Se quiser dar contexto ao agente, acrescente as duas linhas abaixo ao final do prompt. Elas são opcionais: apague a que você não tiver como preencher.
 
 ```text
-Escopo da mudança: <resumo do que foi alterado>.
-Pontos de atenção conhecidos: <o que você já sabe que merece olhar>.
+Escopo da mudança: <resumo do que foi alterado>
+Pontos de atenção conhecidos: <o que você já sabe que merece olhar>
 ```
 
-As branches e os identificadores dos exemplos abaixo existem neste repositório. Troque pelos da sua mudança antes de enviar.
+As branches e os identificadores dos exemplos existem neste repositório. Troque pelos da sua mudança antes de enviar.
 
 **Exemplo preenchido, avaliar o diff da branch antes do merge:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para revisar a branch origin/pet_v4.6.6, comparada com origin/master.
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica** da branch origin/pet_v4.6.6, comparada com origin/master
 ```
 
 **Exemplo preenchido, um commit:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para revisar o commit 8bf4ab729d.
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica** do commit 8bf4ab729d
 ```
 
 **Exemplo preenchido, mais de um commit:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para revisar os commits 29e8ee1308 e 19b852d280.
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica** dos commits 29e8ee1308 e 19b852d280
 ```
 
-**Exemplo preenchido, com o contexto opcional no final:**
+**Exemplo preenchido, com o contexto opcional:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para revisar o commit 8bf4ab729d.
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica** do commit 8bf4ab729d
 
 Escopo da mudança: o cadastro de controle do módulo litigioso passou a exigir dispositivo normativo ou conduta vinculada.
 Pontos de atenção conhecidos: a validação entrou na RN e na página de cadastro, e quero saber se ela continua valendo em chamada direta pela URL.
 ```
 
-#### Revisar um módulo ou um arquivo
+#### Revisão Técnica de módulo ou arquivo
 
-Use para levantar o estado atual do código que já está no repositório, incluindo o passivo antigo. Em um módulo, a revisão cobre todas as dimensões técnicas e também os scripts SEI e SIP de instalação e atualização mapeados para ele. Fonte: `sei-revisao-tecnica/SKILL.md`, seção "Escopo de modulo completo".
+Use para levantar o estado atual do código que está no repositório, incluindo o passivo. Em um módulo, a revisão cobre todas as dimensões técnicas e também os scripts SEI e SIP de instalação e atualização mapeados para ele. Fonte: `sei-revisao-tecnica/SKILL.md`, seção "Escopo de modulo completo".
 
-**Prompt para um módulo:**
-
-```text
-Use a skill `sei-revisao-tecnica` para fazer uma revisão técnica completa do módulo: <nome do módulo>
-```
-
-**Exemplo preenchido, um módulo inteiro:**
+**Prompt para módulo inteiro:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para fazer uma revisão técnica completa do módulo: Peticionamento
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica Completa** do módulo: <nome do módulo>
 ```
 
-**Prompt para um arquivo:**
+**Prompt para módulo inteiro, exemplo preenchido:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para fazer uma revisão técnica completa do arquivo: <caminho do arquivo>
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica Completa** do módulo: Peticionamento
 ```
 
-**Exemplo preenchido, um arquivo:**
+**Prompt para arquivo:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para fazer uma revisão técnica completa do arquivo: fontes/sei/src/main/php/sei/web/modulos/litigioso/rn/MdLitLancamentoRN.php.
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica Completa** do arquivo: <caminho do arquivo>
 ```
 
-#### Revisar assuntos específicos
+**Prompt para arquivo, exemplo preenchido:**
 
-Use quando quiser limitar a revisão a um ou mais assuntos. A tabela traduz o assunto para o nome exato da dimensão usada pela skill. Escreva o nome como está na coluna da direita. Fonte: `sei-revisao-tecnica/SKILL.md`, seção "Dimensões técnicas".
+```text
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica Completa** do arquivo: fontes/sei/src/main/php/sei/web/modulos/litigioso/rn/MdLitLancamentoRN.php
+```
+
+#### Revisão Técnica de Dimensões Específicas
+
+Use quando quiser limitar a revisão a uma ou mais dimensões. A tabela traduz o assunto para o nome exato da dimensão usada pela skill. Escreva o nome como está na coluna da direita. Fonte: `sei-revisao-tecnica/SKILL.md`, seção "Dimensões técnicas".
 
 | Assunto | Dimensão para escrever no prompt |
 |---|---|
@@ -635,28 +635,25 @@ Use quando quiser limitar a revisão a um ou mais assuntos. A tabela traduz o as
 **Prompt:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para revisar somente estas dimensões: <dimensões escolhidas>.
-
-Alvo: <caminho do módulo ou arquivo>.
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica** somente destas **Dimensões**: <dimensões escolhidas>
+- Alvo: <caminho do módulo ou arquivo>
 ```
 
-**Exemplo preenchido, permissões e transações:**
+**Exemplo preenchido:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para revisar somente estas dimensões: Permissoes e Transacao.
-
-Alvo: fontes/sei/src/main/php/sei/web/modulos/peticionamento/rn/MdPetIntEmailNotificacaoRN.php.
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica** somente destas **Dimensões**: Permissões e Transação
+- Alvo: fontes/sei/src/main/php/sei/web/modulos/peticionamento/rn/MdPetIntEmailNotificacaoRN.php
 ```
 
-**Exemplo preenchido, somente segurança:**
+**Exemplo preenchido:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para revisar somente estas dimensões: Seguranca.
-
-Alvo: fontes/sei/src/main/php/sei/web/modulos/peticionamento/.
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica** somente destas **Dimensões**: Segurança
+- Alvo: fontes/sei/src/main/php/sei/web/modulos/peticionamento/
 ```
 
-#### Variações de saída da revisão técnica
+#### Variações de Saída da Revisão Técnica
 
 Peça uma variação quando precisar de um arquivo para compartilhar o resultado ou para alimentar o acompanhamento do time. São duas saídas:
 
@@ -665,78 +662,148 @@ Peça uma variação quando precisar de um arquivo para compartilhar o resultado
 
 Cada trecho abaixo é autossuficiente: cole no final de qualquer prompt de revisão das subseções anteriores, separado por uma linha em branco. Você preenche só o alvo da revisão; o agente cuida de identificadores, datas e nomes de arquivo.
 
-##### Gerar revisão no formato PDF
+##### Revisão Técnica em PDF
 
 Adicione este trecho ao final do prompt de revisão.
 
 ```text
-Gere também um relatório em PDF desta revisão com todos os achados.
+Gere relatório em PDF desta revisão técnica com todos os achados.
 
-Consolide antes os achados em `specs/relatorios/achados-<slug>-<AAAA-MM-DD-HHhMM>.json`, com o mesmo carimbo gravado no campo `gerado_em`. Os números do relatório saem desse arquivo: gráficos e tabela leem dele e nada é recalculado durante a geração. Cada achado leva `id`, `categoria`, `severidade` (`critica`, `alta`, `media` ou `baixa`), `arquivo`, `linha_inicio`, `linha_fim`, `descricao`, `evidencia`, `impacto`, `sugestao_correcao`, `criterios_aceite`, `acionavel` e `grupo_issue`. Mascare segredo real na evidência; nunca reproduza um segredo válido em texto claro. Achado que é hipótese continua marcado como hipótese.
+Consolide antes os achados em `specs/relatorios/achados-<slug>-<AAAA-MM-DD-HHhMM>.json`, com mesmo carimbo gravado no campo `gerado_em`. Os números do relatório sairão desse arquivo preliminar: gráficos e tabela leem dele e nada é recalculado durante a geração da formatação final do relatório. Cada achado leva `id`, `dimensão`, `categoria`, `subtipo`, `severidade` (`critica`, `alta`, `media` ou `baixa`), `estado` (`CONFIRMED` ou `HYPOTHESIS`), `arquivo`, `linha_inicio`, `linha_fim`, `descricao`, `evidencia`, `impacto`, `sugestao_correcao`, `criterios_aceite`, `acionavel` e `grupo_issue`.
+	- `categoria` é o nome da vulnerabilidade na nomenclatura internacional, em inglês, escolhido desta lista fechada: SQL Injection; Cross-Site Scripting (XSS); Broken Access Control; Broken Authentication; Sensitive Data Exposure; Security Misconfiguration; Vulnerable and Outdated Components; Information Disclosure; Unrestricted File Upload; Path Traversal; XML External Entity (XXE); Server-Side Request Forgery (SSRF); Cross-Site Request Forgery (CSRF); Command Injection; HTML Injection (Email); Insecure Deserialization; Open Redirect; Weak Cryptography; Insufficient Logging and Monitoring; Business Logic Flaw. Não invente categoria fora da lista; se nenhuma couber, use a mais próxima e explique no `subtipo`.
+	- `subtipo` é a forma específica encontrada no código, em português (por exemplo: "comando de escrita sem parâmetro vinculado, exploração por consulta empilhada ou cega"; "consulta de leitura com resultado na tela"; "refletido em atributo HTML"; "armazenado"; "IDOR: identificador do registro vindo do cliente sem conferir o dono"; "credencial na URL").
+	- O JSON traz também a lista `categorias`, com quantidade por categoria e por subtipo e os ids de cada um, que alimenta a tabela e o gráfico por categoria.
+	- Mascare segredo real na evidência; nunca reproduza um segredo válido em texto claro. Mascare também login de pessoa física, CPF, e-mail pessoal e nome de servidor de banco. Achado que é hipótese continua marcado como hipótese.
 
 Salve o PDF em `specs/relatorios/relatorio-<slug>-<AAAA-MM-DD-HHhMM>.pdf`, reaproveitando o carimbo do JSON. Conteúdo:
-	- **Capa**: título, **Data**, **Commit de Referência**, *Dimensões da Revisão*, **Escopo Revisado** com pastas incluídas e excluídas do escopo e **Nota Metodológica**;
-	- **Resumo Executivo**: total de achados por severidade, gráfico de rosca por severidade e gráfico de barras por categoria. Paleta de cores das severidades: crítica `#B91C1C`, alta `#EA580C`, média `#D97706`, baixa `#2563EB`, ponto forte `#059669`. Todo indicador de severidade leva o texto além da cor, para leitura em preto e branco;
-	- **Pontos Fortes**: o que está protegido, com evidência;
-	- **Pontos Fracos** (riscos centrais priorizados);
-	- **Tabela de Achados**, ordenada por severidade dentro de cada categoria: **ID**, **Severidade**, **Arquivo:Linha** e **Descrição** com chip de severidade colorido;
-	- **Recomendações Priorizadas**: P1, P2, P3, P4...;
-	- **Issues**: seguindo ordem crítica das **Recomendações Priorizadas**, criar subseção com número da Issue e título para cada achado acionável, o texto COMPLETO da Issue correspondente em Markdown, dentro de um bloco delimitado pronto para copiar e colar (ex: entre --- ISSUE n --- e --- FIM ISSUE n ---). Cada Issue deve conter:
-		- Título no formato "[<escopo da dimensão/verificação da revisão correspondente à Issue>] <descrição curta do problema>";
-		- **Labels** sugeridas;
-		- Descrição do **Problema**;
-		- **Por que é explorável** se o acionamento envolver segurança/vulnerabilidade ou **Por que é um problema** nos demais casos;
-		- **Evidência**: cada arquivo:linha-linha com trecho de código correspondente ao problema;
-		- **Impacto**;
-		- **Sugestão de Correção**;
-		- **Critérios de Aceite** com checklist verificável;
-	- Agrupe achados triviais relacionados em uma Issue única quando fizer sentido, para não gerar spam de issues.
+	- **Capa** com:
+		- Título: **Revisão Técnica <"Completa"/escopo/"por Dimensões Específicas"> - <alvo da revisão técnica>**
+		- Subtítulo em itálico: "Relatório de Revisão Estática e de Conformidade Técnica"
+		- Tabela com cabeçalho na primeira coluna, com as seguintes linhas:
+			- "Data da Execução": a data e hora da execução da revisão técnica em BRT;
+			- "Alvo da Revisão Técnica": <alvo da revisão técnica> igual ao do título - **<se aplicável, Versão do alvo no formato vN.N.N>** (QUANDO módulo, consta na raiz da pasta do módulo em `*Integracao.php` > getVersao; QUANDO SEI, consta em SEI.php > SEI_VERSAO; QUANDO SIP; está em Sip.php > SIP_VERSAO);
+			- "Commit de Referência": identificação do commit de referência conforme o alvo;
+			- "Resultado Global": da revisão técnica executada como um todo.
+		- "### Dimensões da Revisão Técnica": tabela com as colunas "Dimensão" transcrevendo o nome de cada dimensão abrangida pela revisão técnica executada; "Estado"; e "Cobertura" da dimensão.
+		- "### Escopo da Revisão Técnica": informando a lista do que está "Incluído":`#059669` e a lista do que está "Excluído":`#B91C1C` do escopo da revisão técnica, em termos de pastas, arquivos, camadas, situações do ambiente computacional e outras circunstâncias do código, da execução ou do ambiente que contextualiza sobre o que e como foi executada a revisão técnica.
+		- "### Nota Metodológica".
+		- "### Como ler este relatório": tabela com as colunas "Termo" e "Significado", explicando em linguagem simples cada código usado no relatório: o identificador do achado; categoria e subtipo; os vetores da matriz de vulnerabilidades do SEI (V01 a V10); CWE; OWASP Top 10; os níveis de severidade; os estados do achado (CONFIRMED e HYPOTHESIS); as prioridades (P1, P2, P3, P4...); os estados de verificação (PASS, WARN, BLOCK, NOT_EXECUTED, NOT_APPLICABLE); e as técnicas de exploração citadas (por exemplo, consulta empilhada e injeção cega).
+	- "## Resumo Executivo", com um texto de introdução no estilo de resumo geral da execução/achados; tabela centralizada com as colunas "Severidade" (com nome sobre chip colorido) e "Quantidade" com total de achados por Severidade, e última linha de total geral na mesma tabela com "Total" na coluna "Severidade" em negrito e alinhado à direita na célula e o número do total geral na célula da coluna "Quantidade".
+		- "### Achados por Categoria de Vulnerabilidade": tabela com as colunas "Categoria" (nome em inglês, em negrito, uma vez por categoria); "Subtipo"; "Qtde."; e "Achados" (ids), com linha de total por categoria quando houver mais de um subtipo e linha de total geral ao fim, ordenada da categoria com mais achados para a com menos.
+		- "### Distribuição Visual", com gráfico de rosca por Severidade, gráfico de barras por categoria de vulnerabilidade e gráfico de barras por dimensão, os dois últimos empilhados por Severidade com a paleta abaixo e com o total ao fim de cada barra.
+		- "### Status de Verificação": tabela com as colunas "Gate"; "Estado"; e "Evidência".
+	- "## Pontos Fortes": o que está protegido, com evidência - título curto de cada ponto forte na cor `#059669`.
+	- "## Pontos Fracos": riscos centrais priorizados, com evidência - título curto de cada ponto fraco na cor `#B91C1C`.
+	- "## Tabela de Achados", tabela ordenada por Severidade **dentro de cada dimensão**. Colunas: "ID", "Severidade" (com nome sobre chip colorido), "Categoria" (nome em inglês em negrito e, abaixo, o subtipo em português), "Arquivo:Linha-Linha" e "Descrição" (descrição curta; achado em hipótese recebe o prefixo `[HYPOTHESIS]`).
+	- "## Recomendação de Ordem de Priorização": justificar as prioridades P1, em seguida apresentar tabela com as colunas: "Prioridade" (P1, P2, P3, P4...); "ID do Achado"; "Severidade" (com nome sobre chip colorido); "Categoria" (nome em inglês e subtipo); e "Ação Necessária";
+	- "## Issues dos Achados": seguindo a ordem constante em "Recomendação de Ordem de Priorização", criar **para cada achado acionável** uma subseção com número da Issue e Título, seguida da linha "Achados cobertos" com o id e a categoria de cada achado.
+		- Incluir o texto COMPLETO da Issue em Markdown dentro de um bloco delimitado pronto para copiar e colar (ex: entre --- ISSUE n --- e --- FIM ISSUE n ---). Cada Issue deve conter:
+			- Título no formato "# [<categoria da vulnerabilidade em inglês>] <descrição curta do problema>";
+			- "**Labels sugeridas:**": com lista de tags para indexar a issue;
+			- "Problema": com descrição de cada achado coberto, precedida do id, do arquivo:linha-linha, da severidade, do estado e da categoria com subtipo;
+			- "## Por que é explorável" se o achado envolver segurança/vulnerabilidade ou "## Por que é um problema" nos demais casos;
+			- "## Evidência": informando **cada** arquivo:linha-linha e dentro de snippet o trecho de código correspondente ao problema, seguido do caminho do dado (da entrada até o ponto de uso, com arquivo:linha em cada salto) e das ocorrências adicionais;
+			- "## Impacto";
+			- "## Sugestão de Correção";
+			- "## Critérios de Aceite" com checklist verificável.
+		- Quando fizer sentido, agrupe achados **triviais** ou relacionados com a mesma causa numa Issue única.
+	- **Atenção**:
+		- Em todos os pontos do relatório QUANDO tratar de "Estado", ENTÃO escrever o texto no estilo de variável em inglês, em MAIÚSCULO e nunca use chip colorido nisso.
+		- Em todos os pontos do relatório QUANDO tratar de "Severidade", ENTÃO utilizar apenas esses níveis e paleta de cor do chip colorido correspondente: "CRÍTICA":`#B91C1C`; "ALTA":`#EA580C`; "MÉDIA":`#D97706`; e "BAIXA":`#2563EB`.
+		- Em todos os pontos do relatório QUANDO tratar de "Categoria", ENTÃO usar o nome em inglês da lista fechada acima, sempre acompanhado do subtipo em português onde houver espaço.
+		- Em todo texto corrido (descrição, explorabilidade, impacto, sugestão, critérios, notas), na primeira menção de cada vetor da matriz de vulnerabilidades (V01 a V10) e de cada CWE, escreva o nome por extenso ao lado, entre parênteses. Um leitor sem familiaridade com os códigos precisa entender o achado sem consultar outra fonte.
+		- Não inclua achados sobre a stack de agentes de IA (arquivos de configuração e skills dos agentes): ela não roda na aplicação. Registre a inspeção no "Status de Verificação" e no escopo excluído.
+		- Não cite identificadores intermediários de trabalho (numeração provisória de agentes ou de rodadas) nem notas de bastidor entre agentes; o relatório usa somente os ids finais.
 
-Use ambiente isolado, sem instalar nada globalmente: venv Python com reportlab e matplotlib. Deixe o script gerador em `specs/relatorios/gerar_relatorio.py`, recebendo o JSON como entrada, para permitir regenerar o PDF sem repetir a revisão. Se o script já existir, reutilize em vez de reescrever. Página A4, margens de 2 cm, cabeçalho e rodapé com nome do relatório e número da página.
+Use ambiente isolado, sem instalar nada globalmente: venv Python com reportlab e matplotlib. Deixe o script gerador em `specs/relatorios/gerar_relatorio-<slug>-<AAAA-MM-DD-HHhMM>.py`, recebendo o JSON como entrada, para permitir regenerar apenas o PDF sem repetir a revisão. Se o script já existir, reutilize em vez de reescrever. Página A4, margens de 2 cm, cabeçalho e rodapé com nome do relatório à esquerda e número da página à direita.
 
-Antes de entregar, confirme que a contagem do JSON bate com os gráficos e com a tabela. Rasterize as páginas e confira texto cortado, tabela que estoura a largura, título separado do seu gráfico e legenda ilegível. Garanta que nenhum segredo aparece em texto claro em nenhuma página. Corrija qualquer defeito antes de entregar.
-	- NÃO cite o arquivo JSON em nenhuma parte do PDF.
+Antes de entregar, confirme que a contagem do JSON bate com os gráficos e com as tabelas (por severidade, por categoria, por dimensão, linhas da Tabela de Achados, linhas da priorização e blocos de issue). Antes de entregar, renderize temporariamente cada página do PDF como imagem para inspeção visual, sem rasterizar o PDF final. Confira se há texto cortado, tabelas que ultrapassam a largura da página, títulos separados de seus gráficos ou legendas ilegíveis, cabeçalho de grupo órfão no fim da página e página quase vazia sem motivo.
+	- Garanta que nenhum segredo aparece em texto claro em nenhuma página. Corrija qualquer defeito antes de entregar.
+	- NÃO cite o arquivo JSON em nenhuma parte do relatório.
 
-Quando o conteúdo estiver preparado, antes de finalizar, execute uma revisão e pelo menos uma verificação independente de **correção gramatical e ortográfica em Português brasileiro** conforme as 'Regras de Escrita' do AGENTS.md.
+Quando o conteúdo estiver preparado, antes de finalizar, execute uma revisão e pelo menos uma verificação independente de **correção gramatical e ortográfica em Português brasileiro** seguindo as 'Regras de Escrita' do AGENTS.md. Os nomes de categoria em inglês, os identificadores de código e os trechos de programa ficam fora da revisão gramatical.
 
-Entregue o relatório em PDF, a lista de achados no chat informando arquivo por arquivo e linha por linha e o caminho de todos os arquivos gerados.
+É muito relevante para mim o batimento dos números computados dos achados com o constante no PDF; a estética do PDF; correção gramatical e ortográfica; e que na dimensão de Segurança tenha maior verificação que o problema é de fato explorável.
+- Assim, dispare times de agentes de execução e de verificação correspondente sobre cada ponto relevante para mim, com um agente orquestrador e um agente final consolidador e verificador do todo antes da entrega final ao orquestrador.
+	- Utilize no máximo três turnos de execução-verificação do que é relevante em qualquer parte da execução desta demanda.
+
+Estude bem duas vezes o Dicionário de Dados correspondente para compreender bem o negócio, localizado nesse caminho: docs\dicionario_dados\<slug>\dicionario_colunas.md
+
+FAÇA APENAS o solicitado; nada mais.
+
+Entregue o relatório em PDF, a lista de achados no chat (uma tabela com id, severidade, estado, prioridade, categoria em inglês, **cada** arquivo:linha-linha e o número da issue que o cobre) e o caminho de todos os arquivos gerados.
 ```
 
 **Exemplo preenchido, revisão de módulo com o trecho do PDF já colado:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para fazer uma revisão técnica completa do módulo: ABC
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica Completa** do módulo: ABC
 
-Gere também um relatório em PDF desta revisão com todos os achados.
+Gere relatório em PDF desta revisão técnica com todos os achados.
 
-Consolide antes os achados em `specs/relatorios/achados-<slug>-<AAAA-MM-DD-HHhMM>.json`, com o mesmo carimbo gravado no campo `gerado_em`. Os números do relatório saem desse arquivo: gráficos e tabela leem dele e nada é recalculado durante a geração. Cada achado leva `id`, `categoria`, `severidade` (`critica`, `alta`, `media` ou `baixa`), `arquivo`, `linha_inicio`, `linha_fim`, `descricao`, `evidencia`, `impacto`, `sugestao_correcao`, `criterios_aceite`, `acionavel` e `grupo_issue`. Mascare segredo real na evidência; nunca reproduza um segredo válido em texto claro. Achado que é hipótese continua marcado como hipótese.
+Consolide antes os achados em `specs/relatorios/achados-<slug>-<AAAA-MM-DD-HHhMM>.json`, com mesmo carimbo gravado no campo `gerado_em`. Os números do relatório sairão desse arquivo preliminar: gráficos e tabela leem dele e nada é recalculado durante a geração da formatação final do relatório. Cada achado leva `id`, `dimensão`, `categoria`, `subtipo`, `severidade` (`critica`, `alta`, `media` ou `baixa`), `estado` (`CONFIRMED` ou `HYPOTHESIS`), `arquivo`, `linha_inicio`, `linha_fim`, `descricao`, `evidencia`, `impacto`, `sugestao_correcao`, `criterios_aceite`, `acionavel` e `grupo_issue`.
+	- `categoria` é o nome da vulnerabilidade na nomenclatura internacional, em inglês, escolhido desta lista fechada: SQL Injection; Cross-Site Scripting (XSS); Broken Access Control; Broken Authentication; Sensitive Data Exposure; Security Misconfiguration; Vulnerable and Outdated Components; Information Disclosure; Unrestricted File Upload; Path Traversal; XML External Entity (XXE); Server-Side Request Forgery (SSRF); Cross-Site Request Forgery (CSRF); Command Injection; HTML Injection (Email); Insecure Deserialization; Open Redirect; Weak Cryptography; Insufficient Logging and Monitoring; Business Logic Flaw. Não invente categoria fora da lista; se nenhuma couber, use a mais próxima e explique no `subtipo`.
+	- `subtipo` é a forma específica encontrada no código, em português (por exemplo: "comando de escrita sem parâmetro vinculado, exploração por consulta empilhada ou cega"; "consulta de leitura com resultado na tela"; "refletido em atributo HTML"; "armazenado"; "IDOR: identificador do registro vindo do cliente sem conferir o dono"; "credencial na URL").
+	- O JSON traz também a lista `categorias`, com quantidade por categoria e por subtipo e os ids de cada um, que alimenta a tabela e o gráfico por categoria.
+	- Mascare segredo real na evidência; nunca reproduza um segredo válido em texto claro. Mascare também login de pessoa física, CPF, e-mail pessoal e nome de servidor de banco. Achado que é hipótese continua marcado como hipótese.
 
 Salve o PDF em `specs/relatorios/relatorio-<slug>-<AAAA-MM-DD-HHhMM>.pdf`, reaproveitando o carimbo do JSON. Conteúdo:
-	- **Capa**: título, **Data**, **Commit de Referência**, *Dimensões da Revisão*, **Escopo Revisado** com pastas incluídas e excluídas do escopo e **Nota Metodológica**;
-	- **Resumo Executivo**: total de achados por severidade, gráfico de rosca por severidade e gráfico de barras por categoria. Paleta de cores das severidades: crítica `#B91C1C`, alta `#EA580C`, média `#D97706`, baixa `#2563EB`, ponto forte `#059669`. Todo indicador de severidade leva o texto além da cor, para leitura em preto e branco;
-	- **Pontos Fortes**: o que está protegido, com evidência;
-	- **Pontos Fracos** (riscos centrais priorizados);
-	- **Tabela de Achados**, ordenada por severidade dentro de cada categoria: **ID**, **Severidade**, **Arquivo:Linha** e **Descrição** com chip de severidade colorido;
-	- **Recomendações Priorizadas**: P1, P2, P3, P4...;
-	- **Issues**: seguindo ordem crítica das **Recomendações Priorizadas**, criar subseção com número da Issue e título para cada achado acionável, o texto COMPLETO da Issue correspondente em Markdown, dentro de um bloco delimitado pronto para copiar e colar (ex: entre --- ISSUE n --- e --- FIM ISSUE n ---). Cada Issue deve conter:
-		- Título no formato "[<escopo da dimensão/verificação da revisão correspondente à Issue>] <descrição curta do problema>";
-		- **Labels** sugeridas;
-		- Descrição do **Problema**;
-		- **Por que é explorável** se o acionamento envolver segurança/vulnerabilidade ou **Por que é um problema** nos demais casos;
-		- **Evidência**: cada arquivo:linha-linha com trecho de código correspondente ao problema;
-		- **Impacto**;
-		- **Sugestão de Correção**;
-		- **Critérios de Aceite** com checklist verificável;
-	- Agrupe achados triviais relacionados em uma Issue única quando fizer sentido, para não gerar spam de issues.
+	- **Capa** com:
+		- Título: **Revisão Técnica <"Completa"/escopo/"por Dimensões Específicas"> - <alvo da revisão técnica>**
+		- Subtítulo em itálico: "Relatório de Revisão Estática e de Conformidade Técnica"
+		- Tabela com cabeçalho na primeira coluna, com as seguintes linhas:
+			- "Data da Execução": a data e hora da execução da revisão técnica em BRT;
+			- "Alvo da Revisão Técnica": <alvo da revisão técnica> igual ao do título - **<se aplicável, Versão do alvo no formato vN.N.N>** (QUANDO módulo, consta na raiz da pasta do módulo em `*Integracao.php` > getVersao; QUANDO SEI, consta em SEI.php > SEI_VERSAO; QUANDO SIP; está em Sip.php > SIP_VERSAO);
+			- "Commit de Referência": identificação do commit de referência conforme o alvo;
+			- "Resultado Global": da revisão técnica executada como um todo.
+		- "### Dimensões da Revisão Técnica": tabela com as colunas "Dimensão" transcrevendo o nome de cada dimensão abrangida pela revisão técnica executada; "Estado"; e "Cobertura" da dimensão.
+		- "### Escopo da Revisão Técnica": informando a lista do que está "Incluído":`#059669` e a lista do que está "Excluído":`#B91C1C` do escopo da revisão técnica, em termos de pastas, arquivos, camadas, situações do ambiente computacional e outras circunstâncias do código, da execução ou do ambiente que contextualiza sobre o que e como foi executada a revisão técnica.
+		- "### Nota Metodológica".
+		- "### Como ler este relatório": tabela com as colunas "Termo" e "Significado", explicando em linguagem simples cada código usado no relatório: o identificador do achado; categoria e subtipo; os vetores da matriz de vulnerabilidades do SEI (V01 a V10); CWE; OWASP Top 10; os níveis de severidade; os estados do achado (CONFIRMED e HYPOTHESIS); as prioridades (P1, P2, P3, P4...); os estados de verificação (PASS, WARN, BLOCK, NOT_EXECUTED, NOT_APPLICABLE); e as técnicas de exploração citadas (por exemplo, consulta empilhada e injeção cega).
+	- "## Resumo Executivo", com um texto de introdução no estilo de resumo geral da execução/achados; tabela centralizada com as colunas "Severidade" (com nome sobre chip colorido) e "Quantidade" com total de achados por Severidade, e última linha de total geral na mesma tabela com "Total" na coluna "Severidade" em negrito e alinhado à direita na célula e o número do total geral na célula da coluna "Quantidade".
+		- "### Achados por Categoria de Vulnerabilidade": tabela com as colunas "Categoria" (nome em inglês, em negrito, uma vez por categoria); "Subtipo"; "Qtde."; e "Achados" (ids), com linha de total por categoria quando houver mais de um subtipo e linha de total geral ao fim, ordenada da categoria com mais achados para a com menos.
+		- "### Distribuição Visual", com gráfico de rosca por Severidade, gráfico de barras por categoria de vulnerabilidade e gráfico de barras por dimensão, os dois últimos empilhados por Severidade com a paleta abaixo e com o total ao fim de cada barra.
+		- "### Status de Verificação": tabela com as colunas "Gate"; "Estado"; e "Evidência".
+	- "## Pontos Fortes": o que está protegido, com evidência - título curto de cada ponto forte na cor `#059669`.
+	- "## Pontos Fracos": riscos centrais priorizados, com evidência - título curto de cada ponto fraco na cor `#B91C1C`.
+	- "## Tabela de Achados", tabela ordenada por Severidade **dentro de cada dimensão**. Colunas: "ID", "Severidade" (com nome sobre chip colorido), "Categoria" (nome em inglês em negrito e, abaixo, o subtipo em português), "Arquivo:Linha-Linha" e "Descrição" (descrição curta; achado em hipótese recebe o prefixo `[HYPOTHESIS]`).
+	- "## Recomendação de Ordem de Priorização": justificar as prioridades P1, em seguida apresentar tabela com as colunas: "Prioridade" (P1, P2, P3, P4...); "ID do Achado"; "Severidade" (com nome sobre chip colorido); "Categoria" (nome em inglês e subtipo); e "Ação Necessária";
+	- "## Issues dos Achados": seguindo a ordem constante em "Recomendação de Ordem de Priorização", criar **para cada achado acionável** uma subseção com número da Issue e Título, seguida da linha "Achados cobertos" com o id e a categoria de cada achado.
+		- Incluir o texto COMPLETO da Issue em Markdown dentro de um bloco delimitado pronto para copiar e colar (ex: entre --- ISSUE n --- e --- FIM ISSUE n ---). Cada Issue deve conter:
+			- Título no formato "# [<categoria da vulnerabilidade em inglês>] <descrição curta do problema>";
+			- "**Labels sugeridas:**": com lista de tags para indexar a issue;
+			- "Problema": com descrição de cada achado coberto, precedida do id, do arquivo:linha-linha, da severidade, do estado e da categoria com subtipo;
+			- "## Por que é explorável" se o achado envolver segurança/vulnerabilidade ou "## Por que é um problema" nos demais casos;
+			- "## Evidência": informando **cada** arquivo:linha-linha e dentro de snippet o trecho de código correspondente ao problema, seguido do caminho do dado (da entrada até o ponto de uso, com arquivo:linha em cada salto) e das ocorrências adicionais;
+			- "## Impacto";
+			- "## Sugestão de Correção";
+			- "## Critérios de Aceite" com checklist verificável.
+		- Quando fizer sentido, agrupe achados **triviais** ou relacionados com a mesma causa numa Issue única.
+	- **Atenção**:
+		- Em todos os pontos do relatório QUANDO tratar de "Estado", ENTÃO escrever o texto no estilo de variável em inglês, em MAIÚSCULO e nunca use chip colorido nisso.
+		- Em todos os pontos do relatório QUANDO tratar de "Severidade", ENTÃO utilizar apenas esses níveis e paleta de cor do chip colorido correspondente: "CRÍTICA":`#B91C1C`; "ALTA":`#EA580C`; "MÉDIA":`#D97706`; e "BAIXA":`#2563EB`.
+		- Em todos os pontos do relatório QUANDO tratar de "Categoria", ENTÃO usar o nome em inglês da lista fechada acima, sempre acompanhado do subtipo em português onde houver espaço.
+		- Em todo texto corrido (descrição, explorabilidade, impacto, sugestão, critérios, notas), na primeira menção de cada vetor da matriz de vulnerabilidades (V01 a V10) e de cada CWE, escreva o nome por extenso ao lado, entre parênteses. Um leitor sem familiaridade com os códigos precisa entender o achado sem consultar outra fonte.
+		- Não inclua achados sobre a stack de agentes de IA (arquivos de configuração e skills dos agentes): ela não roda na aplicação. Registre a inspeção no "Status de Verificação" e no escopo excluído.
+		- Não cite identificadores intermediários de trabalho (numeração provisória de agentes ou de rodadas) nem notas de bastidor entre agentes; o relatório usa somente os ids finais.
 
-Use ambiente isolado, sem instalar nada globalmente: venv Python com reportlab e matplotlib. Deixe o script gerador em `specs/relatorios/gerar_relatorio.py`, recebendo o JSON como entrada, para permitir regenerar o PDF sem repetir a revisão. Se o script já existir, reutilize em vez de reescrever. Página A4, margens de 2 cm, cabeçalho e rodapé com nome do relatório e número da página.
+Use ambiente isolado, sem instalar nada globalmente: venv Python com reportlab e matplotlib. Deixe o script gerador em `specs/relatorios/gerar_relatorio-<slug>-<AAAA-MM-DD-HHhMM>.py`, recebendo o JSON como entrada, para permitir regenerar apenas o PDF sem repetir a revisão. Se o script já existir, reutilize em vez de reescrever. Página A4, margens de 2 cm, cabeçalho e rodapé com nome do relatório à esquerda e número da página à direita.
 
-Antes de entregar, confirme que a contagem do JSON bate com os gráficos e com a tabela. Rasterize as páginas e confira texto cortado, tabela que estoura a largura, título separado do seu gráfico e legenda ilegível. Garanta que nenhum segredo aparece em texto claro em nenhuma página. Corrija qualquer defeito antes de entregar.
-	- NÃO cite o arquivo JSON em nenhuma parte do PDF.
+Antes de entregar, confirme que a contagem do JSON bate com os gráficos e com as tabelas (por severidade, por categoria, por dimensão, linhas da Tabela de Achados, linhas da priorização e blocos de issue). Antes de entregar, renderize temporariamente cada página do PDF como imagem para inspeção visual, sem rasterizar o PDF final. Confira se há texto cortado, tabelas que ultrapassam a largura da página, títulos separados de seus gráficos ou legendas ilegíveis, cabeçalho de grupo órfão no fim da página e página quase vazia sem motivo.
+	- Garanta que nenhum segredo aparece em texto claro em nenhuma página. Corrija qualquer defeito antes de entregar.
+	- NÃO cite o arquivo JSON em nenhuma parte do relatório.
 
-Quando o conteúdo estiver preparado, antes de finalizar, execute uma revisão e pelo menos uma verificação independente de **correção gramatical e ortográfica em Português brasileiro** conforme as 'Regras de Escrita' do AGENTS.md.
+Quando o conteúdo estiver preparado, antes de finalizar, execute uma revisão e pelo menos uma verificação independente de **correção gramatical e ortográfica em Português brasileiro** seguindo as 'Regras de Escrita' do AGENTS.md. Os nomes de categoria em inglês, os identificadores de código e os trechos de programa ficam fora da revisão gramatical.
 
-Entregue o relatório em PDF, a lista de achados no chat informando arquivo por arquivo e linha por linha e o caminho de todos os arquivos gerados.
+É muito relevante para mim o batimento dos números computados dos achados com o constante no PDF; a estética do PDF; correção gramatical e ortográfica; e que na dimensão de Segurança tenha maior verificação que o problema é de fato explorável.
+- Assim, dispare times de agentes de execução e de verificação correspondente sobre cada ponto relevante para mim, com um agente orquestrador e um agente final consolidador e verificador do todo antes da entrega final ao orquestrador.
+	- Utilize no máximo três turnos de execução-verificação do que é relevante em qualquer parte da execução desta demanda.
+
+Estude bem duas vezes o Dicionário de Dados correspondente para compreender bem o negócio, localizado nesse caminho: docs\dicionario_dados\<slug>\dicionario_colunas.md
+
+FAÇA APENAS o solicitado; nada mais.
+
+Entregue o relatório em PDF, a lista de achados no chat (uma tabela com id, severidade, estado, prioridade, categoria em inglês, **cada** arquivo:linha-linha e o número da issue que o cobre) e o caminho de todos os arquivos gerados.
 ```
 
 ##### Gerar as issues ou tarefas técnicas
@@ -746,11 +813,11 @@ Adicione este trecho ao final do prompt de revisão.
 ```text
 Gere também o texto completo das issues desta revisão, prontas para copiar e colar. Não crie issue, tarefa ou PR em ferramenta nenhuma: apenas gere o conteúdo em Markdown.
 
-Consolide antes os achados em `specs/relatorios/achados-<slug>-<AAAA-MM-DD-HHhMM>.json`, se ainda não existir, com `id`, `categoria`, `severidade` (`critica`, `alta`, `media` ou `baixa`), `arquivo`, `linha_inicio`, `linha_fim`, `descricao`, `evidencia`, `impacto`, `sugestao_correcao`, `criterios_aceite`, `acionavel` e `grupo_issue`. Mascare segredo real na evidência.
+Consolide antes os achados em `specs/relatorios/achados-<slug>-<AAAA-MM-DD-HHhMM>.json`, se ainda não existir, com `id`, `dimensão`, `categoria`, `subtipo`, `severidade` (`critica`, `alta`, `media` ou `baixa`), `estado` (`CONFIRMED` ou `HYPOTHESIS`), `arquivo`, `linha_inicio`, `linha_fim`, `descricao`, `evidencia`, `impacto`, `sugestao_correcao`, `criterios_aceite`, `acionavel` e `grupo_issue`. `categoria` é o nome da vulnerabilidade em inglês, escolhido desta lista fechada: SQL Injection; Cross-Site Scripting (XSS); Broken Access Control; Broken Authentication; Sensitive Data Exposure; Security Misconfiguration; Vulnerable and Outdated Components; Information Disclosure; Unrestricted File Upload; Path Traversal; XML External Entity (XXE); Server-Side Request Forgery (SSRF); Cross-Site Request Forgery (CSRF); Command Injection; HTML Injection (Email); Insecure Deserialization; Open Redirect; Weak Cryptography; Insufficient Logging and Monitoring; Business Logic Flaw; se nenhuma couber, use a mais próxima e explique no `subtipo`. `subtipo` é a forma específica encontrada no código, em português. Mascare segredo real na evidência.
 
 Salve o resultado em `specs/relatorios/issues-<slug>-<AAAA-MM-DD-HHhMM>.md`, reaproveitando o carimbo do JSON. Para cada achado com `acionavel` verdadeiro, gere o texto de uma issue delimitado por `--- ISSUE <id> ---` e `--- FIM ISSUE <id> ---`, contendo:
 
-- Título no formato `[Categoria] descrição curta do problema`.
+- Título no formato `[<categoria da vulnerabilidade em inglês>] descrição curta do problema`.
 - Labels sugeridas: a categoria e a severidade.
 - O ID do achado, para rastreabilidade.
 - Descrição do problema e por que ele importa.
@@ -771,7 +838,7 @@ Nos dois exemplos abaixo o trecho aparece abreviado, para não repetir o texto i
 **Exemplo preenchido, revisão de commit com o bloco das tarefas técnicas:**
 
 ```text
-Use a skill `sei-revisao-tecnica` para revisar o commit 8bf4ab729d.
+Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica** do commit 8bf4ab729d
 
 <cole aqui o trecho das issues, sem alterar nada>
 ```
@@ -779,7 +846,7 @@ Use a skill `sei-revisao-tecnica` para revisar o commit 8bf4ab729d.
 **Exemplo preenchido, revisão de segurança com o bloco das tarefas técnicas:**
 
 ```text
-Use a skill `owasp-playbook` para revisar a segurança do módulo Peticionamento.
+Use a skill `owasp-playbook` para revisar a **Segurança** do módulo: Peticionamento
 
 <cole aqui o trecho das issues, sem alterar nada>
 ```
@@ -857,8 +924,7 @@ Para um módulo comum do SEI ou do SIP, a skill pode concluir que o adaptador pa
 
 ```text
 Use a skill `dicionario-dados-db-scan-codebase-docs` para criar o adaptador do alvo abaixo. Investigue a codebase, crie o adaptador completo e registre-o. Não gere o dicionário de dados nem o changelog nesta etapa.
-
-Alvo: <nome do sistema ou do módulo>.
+- Alvo: <nome do sistema ou do módulo>
 
 O que eu já sei sobre ele:
 - pistas que identificam este sistema ou módulo (nome, caminhos, prefixo de tabela, pasta de documentação, ou a própria codebase, se for o sistema inteiro): <se souber, ex.: "prefixo pedidos_, models em app/Models/Pedido.php, migrations em database/migrations/">
@@ -877,8 +943,7 @@ Pergunte objetivamente só sobre o que não puder ser inferido nem tiver sido in
 
 ```text
 Use a skill `dicionario-dados-db-scan-codebase-docs` para criar o adaptador do alvo abaixo. Investigue a codebase, crie o adaptador completo e registre-o. Não gere o dicionário de dados nem o changelog nesta etapa.
-
-Alvo: relacionamento-institucional.
+- Alvo: relacionamento-institucional
 
 O que eu já sei sobre ele:
 - pistas que identificam este sistema ou módulo: prefixo md_ri_, código em fontes/sei/src/main/php/sei/web/modulos/relacionamento-institucional/, com DTO em dto/ e repositório em bd/
@@ -901,8 +966,7 @@ Use este prompt na primeira vez que for gerar o dicionário de um sistema ou mó
 
 ```text
 Use a skill `dicionario-dados-db-scan-codebase-docs` para criar o dicionário de dados e o changelog estrutural do alvo abaixo.
-
-Alvo: <nome do sistema ou do módulo>.
+- Alvo: <nome do sistema ou do módulo>
 
 Investigue as fontes estruturais disponíveis (codebase, scripts de instalação, migrations, schemas ou DDLs) para identificar a convenção de versionamento e, quando houver codebase, onde ficam as regras de negócio. Aproveite também qualquer documentação já existente. Só publique uma descrição quando as evidências encontradas sustentarem a semântica dela; sem essa sustentação, marque a descrição como não confirmada.
 
@@ -918,8 +982,7 @@ Ao final, informe explicitamente: 1) as tabelas ou colunas cuja semântica você
 
 ```text
 Use a skill `dicionario-dados-db-scan-codebase-docs` para criar o dicionário de dados e o changelog estrutural do alvo abaixo.
-
-Alvo: relacionamento-institucional.
+- Alvo: relacionamento-institucional
 
 Investigue as fontes estruturais disponíveis (codebase, scripts de instalação, migrations, schemas ou DDLs) para identificar a convenção de versionamento e, quando houver codebase, onde ficam as regras de negócio. Aproveite também qualquer documentação já existente. Só publique uma descrição quando as evidências encontradas sustentarem a semântica dela; sem essa sustentação, marque a descrição como não confirmada.
 
@@ -939,8 +1002,7 @@ Use quando o dicionário já existir e você quiser sincronizá-lo com as mudan�
 
 ```text
 Use a skill `dicionario-dados-db-scan-codebase-docs` para atualizar o dicionário de dados conforme o estado mais recente das fontes disponíveis.
-
-Alvo: <nome do sistema ou do módulo>.
+- Alvo: <nome do sistema ou do módulo>
 
 Compare o dicionário de dados e o changelog já existentes com a estrutura e as regras de negócio atuais e altere somente o que realmente mudou desde a última atualização, preservando os demais conteúdos.
 
@@ -958,8 +1020,7 @@ Ao final, liste o que foi alterado e o que foi preservado intencionalmente.
 
 ```text
 Use a skill `dicionario-dados-db-scan-codebase-docs` para atualizar o dicionário de dados conforme o estado mais recente das fontes disponíveis.
-
-Alvo: peticionamento.
+- Alvo: peticionamento
 
 Compare o dicionário de dados e o changelog já existentes com a estrutura e as regras de negócio atuais e altere somente o que realmente mudou desde a última atualização, preservando os demais conteúdos.
 
@@ -978,8 +1039,7 @@ Use quando quiser avaliar se um dicionário já existente segue os critérios de
 
 ```text
 Use a skill `dicionario-dados-db-scan-codebase-docs` para revisar a qualidade e a consistência do dicionário de dados do alvo abaixo, sem alterar nenhum arquivo.
-
-Alvo: <nome do sistema ou do módulo>.
+- Alvo: <nome do sistema ou do módulo>
 
 Classifique cada achado como problema de qualidade documental (descrição incompleta, inconsistente, genérica ou fora das convenções da skill) ou como lacuna (elemento sem descrição). Liste claramente qualquer lacuna que impeça considerar a documentação como completa.
 ```
@@ -988,8 +1048,7 @@ Classifique cada achado como problema de qualidade documental (descrição incom
 
 ```text
 Use a skill `dicionario-dados-db-scan-codebase-docs` para revisar a qualidade e a consistência do dicionário de dados do alvo abaixo, sem alterar nenhum arquivo.
-
-Alvo: litigioso.
+- Alvo: litigioso
 
 Classifique cada achado como problema de qualidade documental (descrição incompleta, inconsistente, genérica ou fora das convenções da skill) ou como lacuna (elemento sem descrição). Liste claramente qualquer lacuna que impeça considerar a documentação como completa.
 ```

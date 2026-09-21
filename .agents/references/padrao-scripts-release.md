@@ -89,8 +89,10 @@ Métodos de tipo disponíveis em `InfraMetaBD`:
 | `int`, `integer` | `tipoNumero()` | PKs e FKs |
 | `varchar(N)` | `tipoTextoVariavel(N)` | N = tamanho declarado no contrato |
 | `char(1)` | `tipoTextoFixo(1)` | Usado em `sin_ativo` e flags |
-| `datetime` | `tipoDataHora()` | Data e hora |
-| `numeric` | `tipoNumeroDecimal(p,s)` | Usar precisão e escala do contrato |
+| `date` | `tipoDataHora()` | `InfraMetaBD` não tem tipo de data pura; a coluna `dta_*` guarda data e hora e o atributo `Dta` do DTO trata só a data |
+| `timestamp` | `tipoDataHora()` | Data e hora (coluna `dth_*`) |
+| `datetime` | `tipoDataHora()` | Data e hora; proprietário MySQL, preferir `date` ou `timestamp` |
+| `numeric` | `tipoNumeroDecimal(p,s)` | Usar `precisao` e `escala` do contrato (chaves opcionais da coluna) |
 
 ### Chave primária simples
 
@@ -136,6 +138,16 @@ $objInfraMetaBD->adicionarChaveEstrangeira('fk_md_xx_rel_entpai', 'md_xx_entidad
 
 Assinatura: `adicionarChaveEstrangeira(nomeFk, tabelaFilha, colunasFilha[], tabelaPai, colunasPai[])`.
 Nome da FK deve respeitar o limite de **30 caracteres**.
+
+### Índice para chave estrangeira
+
+`adicionarChaveEstrangeira()` já cria o índice da FK com o mesmo nome da chave (parâmetro `$bolCriarIndice`, padrão `true`), que é a regra do manual cap. 5 ("índices que representam chaves estrangeiras usam o mesmo nome da chave"). Não chamar `criarIndice` para FK: duplica o índice. `criarIndice` serve só para índice que não representa FK, com nome `iNN_<tabela>`:
+
+```php
+$objInfraMetaBD->criarIndice('md_xx_entidade', 'i01_md_xx_entidade', array('dta_cadastro'));
+```
+
+Assinatura: `criarIndice(tabela, nomeIndice, colunas[], unico = false)`. O aviso DB09 do auditor de banco sobre o DTO some quando o script de release cria a FK.
 
 ### Limites de nomenclatura (cross-SGBD)
 

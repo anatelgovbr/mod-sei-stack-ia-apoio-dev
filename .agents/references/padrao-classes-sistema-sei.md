@@ -36,7 +36,7 @@ Le e grava parametros na tabela `infra_parametro`, visiveis no menu Infra/Parame
 
 Le e grava informacoes de debug, armazenando os registros na sessao.
 
-Nao deixar debug ligado em producao. Ver a regra de `InfraErroPHP` em `sei-testes-validacao`.
+Nao deixar debug ligado em producao. Ver a regra de `InfraErroPHP` em `sei-validacao-padrao`.
 
 ## ConfiguracaoSEI
 

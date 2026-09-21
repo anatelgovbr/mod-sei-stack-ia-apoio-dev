@@ -28,14 +28,14 @@
 
 ## Roteamento de Skills e Contratos
 
-> Preencher usando `.agents/references/skill-routing-and-contracts.md`.
+> Preencher usando `.agents/references/roteamento-de-skills.md`.
 > Esse arquivo e a fonte autoritativa de contratos e gates — nao redefinir aqui;
 > apenas registrar o status para esta feature.
 > Se nenhuma skill SEI for necessaria, definir statuses como `nao-aplicavel` e explicar.
 
 - **Tipo de Demanda**: [CRUD/menu-pagina/evento/API-WS/release/novo-modulo/hardening/validacao/outro]
 - **Skill Necessaria**: [nome da skill ou nao-aplicavel]
-- **Skills de Suporte**: [ex.: `sei-testes-validacao`, `sei-guardrails-modulo`]
+- **Skills de Suporte**: [ex.: `sei-validacao-padrao`, `sei-guardrails-modulo`]
 - **Status do Roteamento de Skills**: [PASS/BLOCKED/nao-aplicavel]
 
 | Contrato | Localizacao | Status | Regra de Bloqueio |

@@ -108,20 +108,6 @@ Monte chaves InfraPHP para cada tabela e coluna:
 
 Na busca indireta, localize assinaturas que recebem o atributo e depois seus chamadores. Na busca por consulta, inclua `consultarSql`, `executarSql`, `SELECT`, `JOIN`, `WHERE` e aliases. Use apenas as raízes e extensões declaradas pelo adaptador e exclua dependências vendorizadas, salvo referência direta do código do alvo.
 
-## Vocabulário de negócio
-
-Estes termos são legados na estrutura física do SEI, mas o vocabulário de negócio usado por usuário, manual e documentação funcional é outro. Ao redigir prosa (descrição de tabela, descrição de coluna e demais textos livres do dicionário), traduza os termos abaixo; nunca altere o identificador físico correspondente.
-
-| Termo físico/legado (prosa) | Termo de negócio a usar na prosa |
-|---|---|
-| procedimento | processo |
-| tipo de procedimento | tipo de processo |
-| série | tipo de documento |
-
-- Aplique a tradução somente em prosa; identificador físico preserva a forma definida em "Identificadores e âncoras", inclusive quando citado entre crases dentro de uma frase. Ajuste artigo, adjetivo e pronome da frase para manter a concordância correta em português com o termo de negócio substituído; não é necessária uma regra mecânica passo a passo para isso.
-- Não aplique a tradução de `série` quando o termo não se referir à classificação do tipo de documento do SEI (por exemplo, série histórica ou série temporal).
-- CHANGELOG.md relata efeito estrutural sobre o identificador físico; não aplique esta tradução a ele.
-
 ## Identificadores e âncoras
 
 - Tabela, coluna e objeto técnico usam o identificador físico não vazio e em uma única linha, exatamente como emitido pela fonte estrutural. O padrão não qualificado desta família é `[a-z][a-z0-9_]*`; qualificação por esquema separa componentes por ponto. Caixa, qualificação ou citação fora desse padrão exigem declaração no adaptador ou overlay e validação manual.

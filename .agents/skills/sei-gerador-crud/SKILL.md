@@ -1,6 +1,6 @@
 ---
 name: sei-gerador-crud
-description: Gera 6 arquivos CRUD InfraPHP a partir de JSON padrao, usando os templates do gerador como fonte operacional e o gabarito TRF4 apenas como referencia estrutural, com guardrails obrigatorios de seguranca e release do projeto. Quando escolhida pelo desenvolvedor, esta skill tambem contempla a fase de release do modulo (scripts SEI/SIP e sincronizacao de versao) quando aplicavel. Acionar somente com escolha explicita do desenvolvedor pelo gerador, ou por chamada de outra skill; nova tabela, nova entidade ou artefato CRUD sozinho nao aciona. Nao usar por roteamento automatico.
+description: Gera 6 arquivos CRUD InfraPHP a partir de JSON padrao, usando o motor generate_from_contrato.py como fonte operacional e o gabarito TRF4 apenas como referencia estrutural, com guardrails obrigatorios de seguranca e release do projeto. Quando escolhida pelo desenvolvedor, esta skill tambem contempla a fase de release do modulo (scripts SEI/SIP, menu e sincronizacao de versao) quando aplicavel. Acionar somente com escolha explicita do desenvolvedor pelo gerador, ou por chamada de outra skill; nova tabela, nova entidade ou artefato CRUD sozinho nao aciona. Nao usar por roteamento automatico.
 disable-model-invocation: false
 ---
 
@@ -8,27 +8,28 @@ disable-model-invocation: false
 
 ## Proposito
 
-Gera 6 arquivos CRUD InfraPHP (DTO, BD, RN, INT, lista, cadastro) com fidelidade ao padrao TRF4 e guardrails SEI.
-Quando o modulo-alvo estiver mapeado e a entidade for nova, a fase de release (scripts SEI/SIP + sincronizacao de versao) faz parte da entrega.
-JSON de contrato: artefato interno — construir internamente, resumir ao usuario, aguardar confirmacao antes de salvar ou usar. Se o usuario fornecer JSON proprio, validar antes de usar.
+Gera 6 arquivos CRUD InfraPHP (DTO, BD, RN, INT, lista, cadastro) com fidelidade estrutural ao padrao TRF4 e guardrails SEI.
+Quando o modulo-alvo estiver mapeado e a entidade for nova, a fase de release (scripts SEI/SIP, item de menu e sincronizacao de versao) faz parte da entrega.
+JSON de contrato: artefato interno. Construir internamente, resumir ao usuario, aguardar confirmacao antes de salvar ou usar. Se o usuario fornecer JSON proprio, validar antes de usar.
 Nao gerar comentario de cabecalho institucional nos arquivos.
 
 Fonte operacional do CRUD gerado:
-- `generate_from_contrato.py`
-- `templates/*.tpl`
+- `generate_from_contrato.py` (monta DTO, BD, RN, INT, cadastro e lista N:N por codigo)
+- `templates/lista.php.tpl` (unico template lido pelo motor; vale para a lista de entidade simples)
 
 Fonte de referencia estrutural:
-- `references/gabarito-trf4.md`
+- `references/gabarito-trf4.md` (resumo, convencoes e a tabela de desvios conscientes)
+- `references/gabarito-trf4/` (saida do Gerador de Codigo TRF4 1.46.4 para o dominio `md_abc`, com os ajustes descritos no resumo)
 
-Regra: o gabarito TRF4 serve para comparacao estrutural e validacao de padrao. Nao usar o gabarito como template literal, nem copiar nomes, textos, identificadores ou detalhes de dominio do exemplo.
-
+Regra: o gabarito TRF4 serve para comparacao estrutural e validacao de padrao. Nao usar o gabarito como template literal, nem copiar nomes, textos, identificadores ou detalhes de dominio do exemplo. Onde o gabarito e o projeto divergem, o projeto prevalece e o desvio esta registrado em `references/gabarito-trf4.md`, secao "Desvios conscientes do gabarito".
 
 ## Preflight obrigatorio
 
 Ler as referencias principais antes de definir nomes fisicos ou release:
 - `references/gabarito-trf4.md`
 - `.agents/references/padrao-modelagem-dados.md`
-- `references/padroes-sei.md`
+- `.agents/references/padrao-auditoria-sip-sei.md`
+- `references/mapeamento-tipos-e-widgets.md`
 
 ## Guard de assets existentes
 
@@ -40,8 +41,9 @@ Antes de criar ou sugerir arquivos CSS/JS para o modulo-alvo, verificar:
 
 ## Textos exibidos ao usuario
 
-- Textos padrao universais do CRUD devem sair acentuados pelo gerador: `Ações`, `Operação realizada com sucesso.`, `Ação ... não reconhecida.`, `inválido`, `desativação`, `reativação` e `exclusão`.
-- Textos de dominio (singular, plural, rotulos, titulos, captions, `title`, `alt`): nao inferir — devem vir no contrato. Se ausentes ou sem acento, alertar o desenvolvedor antes de entregar.
+- Textos padrao universais do CRUD saem acentuados pelo gerador: `Ações`, `Operação realizada com sucesso.`, `Ação ... não reconhecida.`, `inválido`, `desativação`, `reativação`, `exclusão`, `não encontrado(a)`.
+- Textos de dominio (singular, plural, rotulos, titulos, captions, `title`, `alt`): nao inferir; devem vir no contrato. Se ausentes ou sem acento, alertar o desenvolvedor antes de entregar.
+- Concordancia: `entidade.artigo` rege as mensagens da entidade (`Nova`, `cadastrada`, `não encontrada`); `ui.campos.<coluna>.artigo` rege as mensagens da coluna (`não informada`, `inválida`, `Informe a ...`). Sem artigo por coluna, o gerador usa o masculino.
 
 ---
 
@@ -49,23 +51,23 @@ Antes de criar ou sugerir arquivos CSS/JS para o modulo-alvo, verificar:
 
 Identificar o caminho pelo contexto. Ordem de deteccao: C > A > B.
 
-### Caminho A — Documentacao disponivel
+### Caminho A: documentacao disponivel
 
 Use quando existir qualquer artefato pre-escrito sobre a entidade (spec, plano, data-model, task ou descricao estruturada).
 
 1. Ler o artefato disponivel e extrair: nome da tabela, colunas, relacoes FK, campo principal, labels de UI.
 2. Validar os nomes fisicos antes de propor o contrato:
    - PK gerada por sequence nativa: `id_<nome_tabela_completo>`
-   - FK: repetir exatamente o nome da PK da tabela de origem
-   - N:N: preferir `md_<sigla>_rel_<entidade_a>_<entidade_b>`
-3. Se houver lacunas pontuais (ex: tamanho de coluna, artigo), perguntar apenas o que falta, em rodadas de no maximo 3 perguntas por vez, repetindo quantas rodadas forem necessarias ate nao restar nenhuma duvida obrigatoria.
+   - FK: preferir o nome da PK da tabela de origem; nome diferente e aceito quando houver papeis distintos (origem e destino) e gera alerta
+   - N:N: preferir `md_<sigla>_rel_<entidade_a>_<entidade_b>`; outro nome gera alerta, nao bloqueio
+3. Se houver lacunas pontuais (ex: tamanho de coluna, artigo, tecla de atalho), perguntar apenas o que falta, em rodadas de no maximo 3 perguntas por vez, repetindo quantas rodadas forem necessarias ate nao restar nenhuma duvida obrigatoria.
 4. Construir o JSON internamente (nao mostrar ao usuario a menos que ele peca).
 5. Apresentar um resumo curto do contrato e aguardar confirmacao explicita do desenvolvedor.
-6. Salvar o contrato em arquivo (localizacao a criterio da ferramenta) para executar o gerador.
+6. Salvar o contrato em arquivo para executar o gerador (`specs/<feature>/crud-contratos/<tabela>.json` em fluxo Spec Kit; `tmp/crud-contratos/<tabela>.json` fora dele).
 7. Executar o gerador (ver secao "Execucao").
-8. Apos `php -l` verde, executar obrigatoriamente a Fase de Release (ver secao "Fase de Release").
+8. Apos os gates verdes, executar obrigatoriamente a Fase de Release (ver secao "Fase de Release").
 
-### Caminho B — Descricao em linguagem natural
+### Caminho B: descricao em linguagem natural
 
 Use quando nao houver artefato pre-escrito sobre a entidade e o usuario descrever a entidade livremente.
 
@@ -74,29 +76,30 @@ Perguntar somente o necessario, na ordem da tabela, parando ao ter o suficiente:
 | # | O que perguntar | Quando pular |
 |---|----------------|-------------|
 | 1 | Nome da tabela fisica (`md_<inst>_<entidade>` ou `md_<inst>_rel_<a>_<b>` para N:N) e modulo-alvo | Se ja informado |
-| 2 | Colunas: nome, tipo, tamanho (para varchar), obrigatorio | Se descricao ja cobre |
-| 3 | Existe FK para outra tabela? Qual e o campo de exibicao no pai? | Se nao ha relacao |
+| 2 | Colunas: nome, tipo, tamanho (para varchar), obrigatorio, precisao e escala (para numeric) | Se descricao ja cobre |
+| 3 | Existe FK para outra tabela? Qual e o campo de exibicao no pai e qual helper `montarSelect*` existe na INT do pai? | Se nao ha relacao |
 | 4 | A entidade tem exclusao logica (`sin_ativo`)? | Se ja confirmado |
 | 5 | Qual coluna identifica o registro na listagem? (campoPrincipal) | Se ja confirmado |
-| 6 | Ja existem scripts de instalacao do modulo? Informar nome ou caminho | Se o modulo for novo ou scripts forem detectados automaticamente |
+| 6 | Rotulo, tecla de atalho e artigo de cada campo | Se o artefato ja traz |
+| 7 | Ja existem scripts de instalacao do modulo? Informar nome ou caminho | Se o modulo for novo ou scripts forem detectados automaticamente |
 
-O contrato JSON gerado internamente DEVE incluir a chave `regrasGeracao` com `campoSinAtivo` preenchido com o nome da coluna (`"sin_ativo"`) quando houver exclusao logica, ou com `null`/ausente quando nao houver. O gerador nao deriva esse valor automaticamente — a ausencia da chave causa erro.
+O contrato JSON gerado internamente DEVE incluir a chave `regrasGeracao` com `campoSinAtivo` igual a `"sin_ativo"` quando houver exclusao logica, ou `null` quando nao houver. O gerador rejeita o contrato simples sem essa chave.
 
 Apos coletar o suficiente:
 - Construir o JSON internamente.
-- Apresentar um **resumo de 3 linhas** (tabela, campos, flags ativas) e perguntar se pode prosseguir — nao mostrar o JSON completo a menos que o usuario peca.
+- Apresentar um **resumo de 3 linhas** (tabela, campos, flags ativas) e perguntar se pode prosseguir; nao mostrar o JSON completo a menos que o usuario peca.
 - Salvar o contrato em arquivo para executar o gerador.
 - Executar o gerador (ver secao "Execucao").
-- Apos `php -l` verde, executar obrigatoriamente a Fase de Release (ver secao "Fase de Release").
+- Apos os gates verdes, executar obrigatoriamente a Fase de Release (ver secao "Fase de Release").
 
-### Caminho C — JSON pronto
+### Caminho C: JSON pronto
 
 Use quando o usuario fornecer um arquivo JSON, caminho ou bloco JSON compativel.
 
-1. Se o desenvolvedor pedir um modelo, apontar para `examples/README.md` e para os contratos em `examples/`.
+1. Se o desenvolvedor pedir um modelo, apontar para `examples/README.md` (esquema completo) e para os contratos em `examples/`.
 2. Validar o JSON (ver secao "Validacoes obrigatorias").
 3. Executar o gerador diretamente.
-4. Apos `php -l` verde, executar obrigatoriamente a Fase de Release (ver secao "Fase de Release").
+4. Apos os gates verdes, executar obrigatoriamente a Fase de Release (ver secao "Fase de Release").
 
 ---
 
@@ -106,55 +109,46 @@ Apos ter o JSON salvo em arquivo:
 
 ```bash
 python3 .agents/skills/sei-gerador-crud/generate_from_contrato.py \
-  <caminho/contrato.json> <diretorio_saida>
+  <caminho/contrato.json> <diretorio_saida> [--niveis N]
 ```
 
-Diretorio de saida: o modulo-alvo em `fontes/sei/src/main/php/sei/web/modulos/<instituicao>/<modulo>/`.
+Diretorio de saida: o modulo-alvo em `fontes/sei/src/main/php/sei/web/modulos/<instituicao>/<modulo>/` (ou `modulos/<modulo>/` nos modulos de um nivel).
 
-**Estrutura final do modulo**:
+**Estrutura de saida**: o motor grava direto na estrutura final do manual: `dto/<Classe>DTO.php`, `bd/<Classe>BD.php`, `rn/<Classe>RN.php`, `int/<Classe>INT.php` e as paginas `<tabela>_lista.php` e `<tabela>_cadastro.php` na raiz do diretorio informado. Nenhum arquivo existente e sobrescrito; se algum dos 6 ja existir, o motor para com erro.
 
-- O motor atual grava os 6 arquivos no diretorio informado.
-- Quando o destino for o modulo real, mover imediatamente as classes para as camadas corretas antes de validar:
-  - `*DTO.php` -> `dto/`
-  - `*BD.php` -> `bd/`
-  - `*RN.php` -> `rn/`
-  - `*INT.php` -> `int/`
-- As paginas `*_lista.php` e `*_cadastro.php` permanecem na raiz do modulo.
-- So considerar a geracao concluida quando o resultado final respeitar a estrutura do manual (`dto/`, `rn/`, `bd/`, `int/`, paginas na raiz).
-- Use `tmp/<tabela>/` apenas quando o desenvolvedor pedir explicitamente para testar antes de integrar.
+**Profundidade do `require_once`**: o motor deriva a quantidade de `..` ate `web/SEI.php` do proprio diretorio de saida quando ele esta em `web/modulos/` (`modulos/<inst>/<modulo>/` = 3 niveis para paginas e 4 para classes; `modulos/<modulo>/` = 2 e 3). Fora dessa arvore (ex.: `tmp/`), usa 3 e emite alerta; passar `--niveis` para outro leiaute. Use `tmp/<tabela>/` apenas quando o desenvolvedor pedir explicitamente para testar antes de integrar.
 
-Apos reorganizar os arquivos para a estrutura final, rodar obrigatoriamente:
-
-```bash
-for f in <diretorio_saida>/*.php <diretorio_saida>/dto/*.php <diretorio_saida>/bd/*.php <diretorio_saida>/rn/*.php <diretorio_saida>/int/*.php; do php -l "$f"; done
-```
-
-Reportar:
+O motor imprime um JSON com `generated_files`, `niveis`, `flags` (`temSinAtivo`, `temFk`, `numeroFks`, `nn`) e `developer_alerts`. Reportar ao desenvolvedor:
 - 6 arquivos gerados com seus caminhos.
-- Resultado do `php -l` (OK ou ERRO com mensagem).
-- Flags aplicadas: `temSinAtivo`, `temFk`, numero de FKs.
+- Resultado dos gates (abaixo).
+- Flags aplicadas e alertas do motor (FK fora do padrao de nome, `numeric` sem `din_`, helper INT nao localizado, N:N sem `_rel_`, saida fora de `web/modulos/`).
 - Limitacoes observadas para esta entidade especifica.
 
-### Gates pos-geracao do motor
+### Gates obrigatorios apos a geracao
 
-Depois de gerar os arquivos, conferir antes de entregar:
+Rodar, nesta ordem, sobre o diretorio gerado. Qualquer erro bloqueia a entrega; corrigir o gerador ou o contrato antes de ajustar manualmente o CRUD gerado.
 
-- paginas usam `$strAcao = PaginaSEI::GET('acao')`, `validarPermissao($strAcao)` e `switch ($strAcao)`; nao aceitar `$_GET['acao']`.
-- formularios e JavaScript usam `$strAcao` em vez de reler `PaginaSEI::GET('acao')`.
-- saida dinamica usa `PaginaSEI::tratarHTML(...)`, inclusive mensagens com dados do usuario, celulas de tabela e campos hidden.
-- listas N:N validam o identificador composto antes de `set*`: `count(...)==2` e `ctype_digit(...)`.
-- listas N:N retornam e exibem os campos relacionados, com `</tbody>` fora do loop.
-- helpers INT de entidades com `sin_ativo` filtram ativos por padrao e incluem o item selecionado mesmo inativo.
-- validadores RN de `numeric` aceitam virgula decimal, normalizam para ponto, rejeitam negativos e setam `null` quando opcional vazio.
-- reativacao logica consulta o registro completo com exclusao logica desabilitada e reexecuta validadores basicos antes de reativar.
+```bash
+for f in <saida>/*.php <saida>/dto/*.php <saida>/bd/*.php <saida>/rn/*.php <saida>/int/*.php; do php -l "$f"; done
+python3 .agents/skills/sei-verificacao-rn/audit.py --input <saida>/rn --format markdown --exit-code
+python3 .agents/skills/sei-verificacao-pagina/audit.py --input <saida>/<tabela>_lista.php,<saida>/<tabela>_cadastro.php --pagina nova --format markdown --exit-code
+python3 .agents/skills/sei-verificacao-banco-dados/audit.py --input <saida> --mode audit --type php --format markdown --exit-code
+```
 
-Se qualquer item falhar, corrigir o gerador ou o template antes de ajustar manualmente o CRUD gerado.
+Avisos esperados e aceitos: `P007` no cadastro (botoes Salvar e Cancelar sem `verificarPermissao`, mesmo idioma do core; a acao ja passou por `validarPermissao`) e `W001`/`DB09` (indice por FK, criado por `adicionarChaveEstrangeira` na Fase de Release). Depois dos auditores, rodar `sei-validacao-padrao` conforme `.agents/references/roteamento-de-skills.md`.
+
+Conferencia manual complementar:
+- paginas usam `$strAcao = PaginaSEI::GET('acao')`, `validarPermissao($strAcao)` e `switch ($strAcao)`; nenhum `$_GET` ou `$_POST` direto.
+- saida dinamica usa `PaginaSEI::tratarHTML(...)` em celulas, atributos `value` e campos hidden; `adicionarMensagem` recebe texto cru, porque `InfraPagina::montarMensagens` ja escapa.
+- identificadores de GET, POST e selecao passam por `ctype_digit` ou `(int)`; listas N:N validam o ID composto com `count(...)==2` e `ctype_digit(...)`.
+- helpers INT de entidades com `sin_ativo` filtram ativos por padrao (via `configurarExclusaoLogica`) e incluem o item selecionado mesmo inativo.
+- `numeric` com `din_` valida com `InfraUtil::validarDin` sem alterar o valor; `dth_` valida com `InfraData::validarDataHora` e usa `infraMascaraDataHora` no cadastro.
 
 ---
 
 ## Fase de Release
 
-Executar esta fase apos `php -l` verde em todos os arquivos gerados.
+Executar esta fase apos os gates verdes em todos os arquivos gerados.
 
 ### Verificacao obrigatoria no mapa
 
@@ -162,20 +156,21 @@ Consultar `.agents/references/mapa-modulos-scripts.md` para o modulo-alvo:
 
 - **Modulo esta no mapa**: atualizacao dos scripts obrigatoria como parte desta skill. Nao perguntar se o desenvolvedor quer incluir release no escopo; informar que faz parte da entrega e perguntar apenas a versao-alvo quando nao estiver definida no contexto.
 - **Modulo nao esta no mapa**: verificar fisicamente em `sei/scripts/` e `sip/scripts/` (nomes podem divergir do padrao convencional). Se encontrado, tratar como mapeado. Se confirmada ausencia: oferecer criacao via `sei-gerador-scripts-release` e `sip-gerador-scripts-release`, conforme escopo.
+- **Modulo novo**: confirmar que existe a classe `Md<Sigla>Integracao.php` com `getVersao()`; sem ela o SEI nao carrega o modulo (`sei/web/SEI.php`). Sua criacao segue `sei-guardrails-modulo` (linha "Novo modulo" do roteamento).
 
-### Quando os scripts existem — atualizacao incremental (obrigatoria)
+### Quando os scripts existem: atualizacao incremental (obrigatoria)
 
-Consultar `.agents/references/padrao-scripts-release.md` para padroes de codigo concretos (DDL multi-SGBD, sequences, FKs, boilerplate SIP).
+Seguir `sei-gerador-scripts-release` e `sip-gerador-scripts-release` como procedimento, com `.agents/references/padrao-scripts-release.md` para os padroes de codigo concretos (DDL multi-SGBD, sequences, FKs, indices, boilerplate SIP) e `sei-menu-pagina` para o item de menu.
 
 Propor a proxima versao (bump de **minor** por padrao para nova entidade) e aguardar confirmacao do desenvolvedor antes de alterar qualquer arquivo.
 
 Apos confirmacao, gerar e inserir nos scripts existentes:
 
-1. `case '<versaoAtual>': $this->instalarv<XYZ>();` no switch de ambos os scripts (sem `break` — fallthrough intencional; `break` migra para o novo ultimo case)
-2. Metodo `instalarv<XYZ>()` no SEI com DDL multi-SGBD: tabela, sequence, FKs e chamada a `atualizarNumeroVersao()`
-3. Metodo `instalarv<XYZ>()` no SIP com `adicionarRecursoPerfil()` por acao e chamada a `atualizarNumeroVersao()`
-4. Sincronizar `getVersao()` na classe `*Integracao.php` do modulo com a mesma versao aplicada nos scripts
-5. Criar ou atualizar regra de auditoria no SIP: incluir apenas os recursos de escrita (`_cadastrar`, `_alterar`, `_excluir`; adicionar `_desativar`/`_reativar` quando `temSinAtivo == true`). O recurso `_listar` nunca entra na regra. Chamar `replicarRegraAuditoria` ao final. Ver `.agents/references/padrao-auditoria-sip-sei.md`.
+1. `case '<versaoAtual>': $this->instalarv<XYZ>();` no switch de ambos os scripts (sem `break`; fallthrough intencional; `break` migra para o novo ultimo case).
+2. Metodo `instalarv<XYZ>()` no SEI com DDL multi-SGBD: tabela (comentarios de tabela e coluna a partir do contrato), sequence `seq_<tabela>` no CRUD simples (N:N nao tem sequence), FKs via `adicionarChaveEstrangeira` (inclusive a FK para `unidade` quando houver `escopoUnidade`), que ja cria o indice com o nome da FK (manual cap. 5), e chamada a `atualizarNumeroVersao()`.
+3. Metodo `instalarv<XYZ>()` no SIP com lookup antes de cada cadastro (idempotencia), `adicionarRecursoPerfil()` por recurso, item de menu para a acao `<tabela>_listar` (sem ele a lista fica inacessivel) e chamada a `atualizarNumeroVersao()`.
+4. Sincronizar `getVersao()` na classe `*Integracao.php` do modulo com a mesma versao aplicada nos scripts.
+5. Criar ou atualizar regra de auditoria no SIP: incluir apenas os recursos de escrita (`_cadastrar`, `_alterar`, `_excluir`; adicionar `_desativar`/`_reativar` quando `temSinAtivo == true`). Recursos de leitura nunca entram na regra. Chamar `replicarRegraAuditoria` ao final. Ver `.agents/references/padrao-auditoria-sip-sei.md`.
 
 Atualizar em ambos os scripts:
 - `$versaoAtualDesteModulo = '<novaVersao>'`
@@ -188,7 +183,9 @@ Atualizar em ambos os scripts:
 | Sempre               | `_cadastrar`, `_alterar`, `_consultar`, `_listar`, `_excluir`, `_selecionar`              |
 | `temSinAtivo == true`| Adicionar `_desativar`, `_reativar`                                                       |
 
-**Regra de auditoria SIP — recursos incluídos:**
+`_consultar` e auditado pela RN em `consultarConectado` e `bloquearControlado` e e a acao da pagina de consulta; `_listar` e auditado em `listarConectado` e `contarConectado`.
+
+**Regra de auditoria SIP, recursos incluidos:**
 
 | Condicao             | Entra na regra de auditoria                        |
 |----------------------|----------------------------------------------------|
@@ -198,14 +195,15 @@ Atualizar em ambos os scripts:
 
 Perfil `Basico`: nao vincular por padrao. Vincular apenas quando a spec disser explicitamente que a funcionalidade e acessivel a todos os usuarios internos.
 
-Validar apos edicao:
+Validar apos edicao (script de release legado que abre com `<?` recebe a troca para `<?php` antes do lint; com `short_open_tag=Off` o `php -l` trata arquivo `<?` como texto e passa sem analisar):
 
 ```bash
 php -l fontes/sei/src/main/php/sei/scripts/<script_sei>.php
 php -l fontes/sei/src/main/php/sip/scripts/<script_sip>.php
+python3 .agents/skills/sei-verificacao-banco-dados/audit.py --input fontes/sei/src/main/php/sei/scripts/<script_sei>.php --mode release_check --exit-code
 ```
 
-### Quando os scripts nao existem — delegar
+### Quando os scripts nao existem: delegar
 
 Scripts novos completos estao fora do escopo desta skill. Orientar o desenvolvedor a usar `sei-gerador-scripts-release` e/ou `sip-gerador-scripts-release` fornecendo:
 - O contrato JSON da entidade como insumo para modelagem inicial
@@ -215,16 +213,19 @@ Scripts novos completos estao fora do escopo desta skill. Orientar o desenvolved
 
 ## Validacoes obrigatorias antes de gerar
 
-1. JSON sintaticamente valido.
-2. CRUD simples: exatamente uma coluna com `chavePrimaria: true`; N:N: exatamente duas.
+O motor aplica todas com mensagem clara (sem traceback). Esquema completo em `examples/README.md`.
+
+1. JSON sintaticamente valido, com `entidade` (`tabela`, `singular`, `plural`, `artigo` em `o` ou `a`, `campoPrincipal`, `comentario`) e `colunas` nao vazia.
+2. CRUD simples: exatamente uma coluna com `chavePrimaria: true`, chamada `id_<tabela>`, e `regrasGeracao.campoSinAtivo` presente (`"sin_ativo"` ou `null`); N:N: exatamente duas PKs e `relacionamentosNn` com 2 entradas.
 3. `entidade.campoPrincipal` referencia uma coluna existente em `colunas`.
-4. Nomes fisicos: lowercase + digits + underscore, max 26 chars.
-   - PK gerada por sequence nativa deve seguir `id_<nome_tabela_completo>`.
-   - FK deve repetir o nome da PK de origem.
-5. Tabela e todas as colunas possuem `comentario` negocial preenchido.
-6. Tipos no subconjunto suportado: `int`, `integer`, `varchar`, `datetime`, `date`, `timestamp`, `char`, `numeric`. Preferir `date` (coluna `dta_*`) e `timestamp` (coluna `dth_*`) sobre `datetime` (proprietário MySQL).
-7. Nenhum dos 6 arquivos-alvo ja existe no diretorio de saida (no-overwrite).
-8. Se houver FK em `relacionamentos`, a coluna declarada existe em `colunas`.
+4. Nomes fisicos: lowercase + digits + underscore, max 26 chars; tabela com prefixo `md_<sigla>_`.
+5. Tabela e todas as colunas possuem `comentario` negocial preenchido; toda coluna tem `obrigatorio` booleano.
+   Textos exibidos (`singular`, `plural`, `comentario`, `rotulo`) aceitam apostrofo, que o motor escapa nos literais PHP e JavaScript; `"`, `\`, `<`, `>`, `&`, caractere de controle e `*/` sao rejeitados com mensagem.
+6. Tipos no subconjunto suportado: `int`, `integer`, `varchar`, `datetime`, `date`, `timestamp`, `char`, `numeric`. `timestamp` exige `dth_`; `date` nao aceita `dth_`; `sta_*` e rejeitado.
+7. `campoSinAtivo`, quando informado, e `sin_ativo` e a coluna existe com tipo `char`.
+8. Relacionamentos: `coluna` existe em `colunas`, `campoExibicao` informado, `tipoFk` coerente com `obrigatorio` da coluna; o helper `<Classe>INT::montarSelect<CampoExibicao>` existe em `web/int/` ou no `int/` do modulo (classe encontrada sem o metodo bloqueia; classe ausente gera alerta).
+9. `ui.ordemFormulario`, quando presente, contem toda coluna de formulario; `ui.campos.<coluna>.teclaAtalho` nao usa tecla reservada (`S`, `C`, `F`; em FK tambem `N`, `E`, `T`, `R`).
+10. Nenhum dos 6 arquivos-alvo ja existe no diretorio de saida (no-overwrite).
 
 ---
 
@@ -234,10 +235,10 @@ Scripts novos completos estao fora do escopo desta skill. Orientar o desenvolved
 
 | Entrada | Regra | Exemplo |
 |---------|-------|---------|
-| `entidade.tabela` | PascalCase | `md_abc_projeto` → `MdAbcProjeto` |
-| classeBase + camada | — | `MdAbcProjetoDTO.php`, `MdAbcProjetoBD.php` |
-| `{tabela}_lista.php` | — | `md_abc_projeto_lista.php` |
-| `{tabela}_cadastro.php` | — | `md_abc_projeto_cadastro.php` |
+| `entidade.tabela` | PascalCase | `md_abc_projeto` vira `MdAbcProjeto` |
+| classeBase + camada | sufixo da camada | `MdAbcProjetoDTO.php`, `MdAbcProjetoBD.php` |
+| `{tabela}_lista.php` | nome fisico | `md_abc_projeto_lista.php` |
+| `{tabela}_cadastro.php` | nome fisico | `md_abc_projeto_cadastro.php` |
 
 ### Prefixos de atributo DTO
 
@@ -248,23 +249,26 @@ Scripts novos completos estao fora do escopo desta skill. Orientar o desenvolved
 | `date` / `datetime` + coluna `dta_*` | `Dta` | `dta_cadastramento` | `DtaCadastramento` |
 | `timestamp` / `datetime` + coluna `dth_*` | `Dth` | `dth_entrega` | `DthEntrega` |
 | `char(1)` | `Str` | `sin_ativo` | `StrSinAtivo` |
-| `numeric` | `Din` | `din_custo` | `DinCusto` |
+| `numeric` + coluna `din_*` | `Din` | `din_custo` | `DinCusto` |
+| `numeric` sem `din_` | `Dbl` | `percentual` | `DblPercentual` |
 
-Normalizacao: prefixos semanticos (`num_`, `str_`, `din_`, `dta_`, `dth_`) sao removidos antes do PascalCase para evitar duplicacao (ex: `dta_` nao vira `DtaDta`; `dth_` nao vira `DthDth`).
-O discriminador `Dta` vs `Dth` e determinado pelo nome da coluna: prefixo `dth_` → `Dth`; qualquer outro tipo de data → `Dta`.
+Normalizacao: prefixos semanticos (`num_`, `str_`, `din_`, `dbl_`, `dta_`, `dth_`) sao removidos antes do PascalCase para evitar duplicacao (ex: `dta_` nao vira `DtaDta`).
+O discriminador `Dta` vs `Dth` e determinado pelo nome da coluna: prefixo `dth_` vira `Dth`; qualquer outro tipo de data vira `Dta`.
+
+Atributo relacionado (FK): `<CampoExibicao><SufixoDaFkSemId>`; `id_md_abc_projeto` + `identificacao` vira `StrIdentificacaoMdAbcProjeto` (igual ao gabarito) e `id_unidade_origem` + `sigla` vira `StrSiglaUnidadeOrigem`. A segunda FK para a mesma tabela recebe alias SQL (`unidade u2`, `u2.sigla`, `u2.id_unidade`).
 
 ### Elementos HTML
 
 | Tipo | Prefixo HTML | Exemplo |
 |------|-------------|---------|
 | `varchar`, `datetime`, `date`, `timestamp`, `numeric`, `char` | `txt` | `txtIdentificacao` |
-| FK | `sel` | `selMdAbcProjeto` |
+| FK | `sel` + sufixo da FK sem `Id` | `selMdAbcProjeto`, `selUnidadeOrigem` |
 | campo oculto | `hdn` | `hdnIdMdAbcProjeto` |
 | imagem calendario | `imgCal` | `imgCalCadastramento` |
 
 ### Acoes
 
-Padrao: `{tabela}_{operacao}` — ex: `md_abc_projeto_cadastrar`, `md_abc_projeto_alterar`.
+Padrao: `{tabela}_{operacao}`; ex: `md_abc_projeto_cadastrar`, `md_abc_projeto_alterar`.
 
 ---
 
@@ -273,23 +277,35 @@ Padrao: `{tabela}_{operacao}` — ex: `md_abc_projeto_cadastrar`, `md_abc_projet
 ### Quando existe `sin_ativo`
 
 - DTO: `configurarExclusaoLogica('SinAtivo', 'N')`.
-- RN: `desativarControlado()`, `reativarControlado()`, `bloquearConectado()` **ativos**.
-- INT: `adicionarCriterio(...)` para incluir item selecionado mesmo inativo.
-- lista: cases e botoes de desativar/reativar **ativos**.
+- RN: `desativarControlado()`, `reativarControlado()`, `bloquearControlado()` **ativos**.
+- INT: `adicionarCriterio(...)` para incluir item selecionado mesmo inativo; o filtro de ativos vem de `configurarExclusaoLogica`.
+- lista: modelo inline, desvio consciente do gabarito (que abre tela propria de reativacao): lista unica com `setBolExclusaoLogica(false)`, inativos em `trVermelha`, icones e botoes de desativar e reativar na propria lista, sem `acao_confirmada`; na selecao (`_selecionar`) so ativos. Referencia real: `trf4/julgamento/motivo_ausencia_lista.php`.
 
 ### Quando NAO existe `sin_ativo`
 
-- Os blocos acima sao gerados como comentarios `/* ... */` — **nunca omitidos**.
+- Os blocos acima sao gerados em comentario com o mesmo conteudo do modo ativo (cases, flags, botoes, icones, JavaScript e metodos da RN), **nunca omitidos**, como o gabarito TRF4. `$bolAcaoDesativar` e `$bolAcaoReativar` ficam em `false`.
 - Referencia padrao: `md_abc_aquisicao`.
 
 ### Quando existe FK (uma ou mais)
 
 - DTO: `adicionarAtributoTabelaRelacionada(...)` e `configurarFK(...)` para cada FK.
-- FK obrigatoria: `InfraDTO::$TIPO_FK_OBRIGATORIA`; FK opcional: `InfraDTO::$TIPO_FK_OPCIONAL`.
-- Filtro de FK: preferir `InfraDTO::$FILTRO_FK_ON`; usar `InfraDTO::$FILTRO_FK_WHERE` apenas quando necessario.
-- INT: `montarSelect{CampoPrincipalPai}(..., $fkVar='')` com parametro por FK.
-- cadastro: `<select>` populado via classe INT, `salvarCamposPost` com todos os selects.
+- FK obrigatoria: `InfraDTO::$TIPO_FK_OBRIGATORIA`; FK opcional (`tipoFk: opcional` e `obrigatorio: false`): `InfraDTO::$TIPO_FK_OPCIONAL`, `infraLabelOpcional`, sem checagem no JavaScript e RN aceitando vazio como `null`.
+- Filtro de FK: preferir `InfraDTO::$FILTRO_FK_ON`; usar `InfraDTO::$FILTRO_FK_WHERE` apenas quando necessario (`filtroFk: where`).
+- INT: `montarSelect{CampoPrincipal}(..., $numId<SufixoDaFk>='')` com parametro por FK.
+- cadastro: `<select>` populado via `<ClassePai>INT::montarSelect<CampoExibicao>`, `salvarCamposPost` com todos os selects.
 - lista: filtro persistido com dropdown por FK.
+- FK para tabela do core (`usuario`, `unidade`, `procedimento`): o helper precisa existir em `web/int/` com o nome derivado de `campoExibicao` (ex.: `UnidadeINT::montarSelectSigla`); o motor confere.
+
+### Regras opcionais em `regrasGeracao` e nas colunas
+
+| Chave | Efeito no CRUD gerado | Idioma de referencia |
+|---|---|---|
+| `regrasGeracao.paginacao` (padrao `true`) | lista com `prepararPaginacao` e `processarPaginacao` ativos; `false` deixa as duas linhas comentadas como no gabarito | `sei/web/serie_lista.php` |
+| `regrasGeracao.escopoUnidade: "<coluna int>"` | a coluna recebe `SessaoSEI::getInstance()->getNumIdUnidadeAtual()` no cadastrar, no alterar e antes de consultar; lista e helper INT filtram pela unidade atual; DTO ganha `configurarFK` para `unidade` e atributo relacionado `Sigla<Sufixo>`; a coluna nao entra no formulario nem em `relacionamentos`; RN valida a coluna como obrigatoria com rotulo "Unidade" | `trf4/julgamento/destaque_cadastro.php` |
+| `colunas[].unico: true` | validador da coluna consulta outro registro com o mesmo valor (`OPER_DIFERENTE` na PK, que vira `IS NOT NULL` no cadastro) e, com `sin_ativo`, distingue ocorrencia ativa de inativa; com `escopoUnidade`, a unicidade vale dentro da unidade | `trf4/julgamento/rn/MotivoAusenciaRN.php` |
+| `regrasGeracao.dependentes: [{tabela, coluna, rotulo, artigo}]` | `excluirControlado` e `desativarControlado` chamam `contar` na RN filha e lancam validacao quando ha registro dependente | `trf4/julgamento/rn/MotivoAusenciaRN.php` |
+
+Nenhuma das quatro vale para N:N. `unico` nao se aplica a PK nem a coluna de escopo.
 
 ### Quando ha PK composta (entidade N:N)
 
@@ -297,36 +313,34 @@ Detectado automaticamente quando existem 2 colunas com `chavePrimaria: true`. O 
 
 ```json
 "relacionamentosNn": [
-  { "tabelaOrigem": "md_ri_filme", "classeInt": "MdRiFilmeINT", "metodoInt": "montarSelectTitulo", "rotulo": "Filme" },
-  { "tabelaOrigem": "md_ri_ator",  "classeInt": "MdRiAtorINT",  "metodoInt": "montarSelectNome",   "rotulo": "Ator"  }
+  { "tabelaOrigem": "md_ri_filme", "classeInt": "MdRiFilmeINT", "metodoInt": "montarSelectTitulo", "rotulo": "Filme", "artigo": "o", "teclaAtalho": "I" },
+  { "tabelaOrigem": "md_ri_ator",  "classeInt": "MdRiAtorINT",  "metodoInt": "montarSelectNome",   "rotulo": "Ator", "artigo": "o", "teclaAtalho": "A" }
 ]
 ```
 
 Diferencas em relacao ao CRUD simples:
 
-- DTO: duas `configurarPK(..., $TIPO_PK_INFORMADO)` em vez de uma sequencial; sem `configurarExclusaoLogica`.
-- RN: desativar/reativar/bloquear sempre comentados (`/* ... */`).
-- INT: metodo recebe os dois atributos PK como filtros opcionais.
-- lista: IDs compostos com `explode('-', $strId)`; o gerador usa índices `[0]` e `[1]` com validação `count(...)==2` e `ctype_digit(...)`; o gabarito TRF4 v1.46.4 usa `[1]` e `[2]` — divergência conhecida, padrão do gerador adotado por ser logicamente consistente com o ID armazenado como `pk1-pk2`.
-- lista: retornar e exibir os campos relacionados declarados em `relacionamentos`, escapando com `PaginaSEI::tratarHTML(...)`.
-- cadastro: dois `<select>` FK com `hdnPk1`/`hdnPk2` ocultos; sem campo sequencial.
+- DTO: duas `configurarPK(..., $TIPO_PK_INFORMADO)` em vez de uma PK nativa; sem `configurarExclusaoLogica`.
+- RN: as duas PKs recebem validador de obrigatoriedade; desativar/reativar/bloquear sempre comentados.
+- INT: helper `montarSelect<CampoExibicaoDaPrimeiraFk>` recebe as duas PKs como filtros opcionais; e esqueleto para composicao, porque o valor do select e a primeira PK.
+- lista: IDs compostos com `explode('-', $strId)`; indices `[0]` e `[1]` com validacao `count(...)==2` e `ctype_digit(...)` (o gabarito TRF4 usa `[1]` e `[2]`, desvio registrado); colunas relacionadas exibidas com `tratarHTML` e `getThOrdenacao`.
+- cadastro: dois `<select>` FK com `hdn<SufixoDaPk>` ocultos, rotulos e teclas de `relacionamentosNn`, campos extras com `ui.campos`.
 - `regrasGeracao.campoSinAtivo` deve ser `null` (sin_ativo nao faz sentido em N:N).
 
 ---
 
 ## Guardrails SEI obrigatorios (todo arquivo de pagina)
 
-- usar caminho relativo coerente com a camada final do modulo:
-  - classes em `dto/`, `bd/`, `rn/`, `int/`: `require_once dirname(__FILE__) . '/../../../SEI.php';`
-  - paginas na raiz do modulo: `require_once dirname(__FILE__) . '/../../SEI.php';`
+- caminho relativo coerente com a camada final do modulo, derivado pelo motor: classes em `dto/`, `bd/`, `rn/`, `int/` usam um `..` a mais que as paginas da raiz do modulo.
 - entrar por `controlador.php?acao=...` e tratar `acao` como parametro obrigatorio
 - `session_start();`
-- `SessaoSEI::getInstance()->validarLink();` — primeira validacao do bloco `try`
+- `SessaoSEI::getInstance()->validarLink();` como primeira validacao do bloco `try`
 - `$strAcao = PaginaSEI::GET('acao');` seguido de `SessaoSEI::getInstance()->validarPermissao($strAcao);`
 - `SessaoSEI::getInstance()->assinarLink(...)` em todos os links/redirects
 - `PaginaSEI::tratarHTML(...)` em toda saida HTML
-- RN: `SessaoSEI::getInstance()->validarAuditarPermissao(...)` em cada metodo
-- Escrita: `*Controlado`; Leitura: `*Conectado`
+- a pagina submete para ela mesma via `controlador.php`
+- RN: `SessaoSEI::getInstance()->validarAuditarPermissao(...)` em cada metodo; BD instanciada com `$this->getObjInfraIBanco()`
+- Escrita: `*Controlado` (inclusive `bloquear`); Leitura: `*Conectado`
 - toda comunicacao entre camadas deve trafegar via DTO
 - uma RN nao pode chamar a BD de outra classe
 - nao deve haver comunicacao direta entre BDs
@@ -338,6 +352,7 @@ Diferencas em relacao ao CRUD simples:
 ## Checklist por camada
 
 ### DTO
+- docblock com `@table` e `@column` a partir dos comentarios do contrato
 - `extends InfraDTO`
 - `getStrNomeTabela()` retorna a tabela fisica
 - `adicionarAtributoTabela(...)` para cada coluna
@@ -351,28 +366,31 @@ Diferencas em relacao ao CRUD simples:
 - construtor unico delegando a `parent::__construct($objInfraIBanco)`
 
 ### RN
-- Docblock com `@method` para todos os metodos publicos
-- Validadores privados por campo (`validarStr*`, `validarNum*`, `validarDta*`)
+- Docblock `@method` na classe e `@param`, `@return`, `@throws` por metodo
+- Validadores privados por campo (`validarStr*`, `validarNum*`, `validarDta*`, `validarDth*`, `validarDin*`, `validarDbl*`), com unicidade quando `unico: true`
 - `cadastrarControlado`, `alterarControlado` (com guards `isSet*()`), `excluirControlado`
-- `consultarConectado`, `listarConectado`, `contarConectado`
+- `consultarConectado` e `bloquearControlado` com `_consultar`; `listarConectado` e `contarConectado` com `_listar`
+- Ancoras `//Regras de Negocio` nos metodos sem validador
 - Blocos de desativar/reativar/bloquear ativos ou comentados conforme `sin_ativo`
 
 ### INT
 - `extends InfraINT`
-- Helper `montarSelect{CampoPrincipal}(...)` com ordenacao ascendente
+- Helper `montarSelect{CampoPrincipal}(...)` com ordenacao ascendente e `@throws InfraException`
 - Parametro FK por relacionamento quando aplicavel
 - Bloco `adicionarCriterio(sin_ativo OR pk)` apenas quando houver `sin_ativo`
 
 ### lista
 - switch/case por acao
+- `$bolCheck = false;` antes das flags de acao
 - Filtro persistido em sessao para cada FK
 - Tabela com acoes assinadas (consultar, alterar, desativar/reativar, excluir)
 - JS de confirmacao para acoes destrutivas
+- Andaimes comentados: retornos das demais colunas; paginacao ativa por padrao (`regrasGeracao.paginacao`)
 
 ### cadastro
 - switch para `cadastrar`, `alterar`, `consultar`
 - `<select>` para cada FK populado via INT
-- `<input>` para `varchar`, `numeric`, `datetime` com mascaras corretas
+- `<input>` para `varchar`, `numeric`, datas com mascaras corretas (`infraMascaraTexto`, `infraMascaraDinheiro`, `infraMascaraNumero`, `infraMascaraData`, `infraMascaraDataHora`)
 - Validacao JS (`validarCadastro()`) para todos os campos obrigatorios
 - Redirect assinado apos persistencia com ancora
 
@@ -381,28 +399,31 @@ Diferencas em relacao ao CRUD simples:
 ## Fontes de verdade e artefatos
 
 ### Contrato de entrada
-- `references/dominio-md-abc.md` — dominio padrao de referencia (5 entidades)
-- `examples/README.md` — guia rapido para desenvolvedores que desejam fornecer JSON pronto
-- `examples/contrato-entidade-minimo.json` — exemplo minimo de entidade standalone sem FK
-- `examples/contrato-entidade-com-fk.json` — exemplo de entidade simples com FK e `sin_ativo`
-- `examples/contrato-relacao-nn.json` — exemplo de relacao N:N com PK composta
+- `references/dominio-md-abc.md`: dominio padrao de referencia (5 entidades)
+- `examples/README.md`: esquema completo do contrato e guia para desenvolvedores que desejam fornecer JSON pronto
+- `examples/contrato-entidade-minimo.json`: exemplo minimo de entidade standalone sem FK
+- `examples/contrato-entidade-com-fk.json`: exemplo de entidade simples com FK e `sin_ativo`
+- `examples/contrato-relacao-nn.json`: exemplo de relacao N:N com PK composta
 
 ### Referencias de qualidade (guardrails da IA)
-- `references/gabarito-trf4.md` — dois contratos padrao de referencia estrutural
-- `references/padroes-sei.md` — guardrails SEI: recursos SIP, permissao, auditoria, estrutura de paginas e camadas (cobre cap. 3 e 4 do manual)
-- `.agents/references/padrao-modelagem-dados.md` — regras de nomenclatura fisica, tipos, chaves e sequencias (fonte primaria; cobre integralmente o cap. 5 do manual)
-- `.agents/references/padrao-codificacao-php.md` — convencoes de codificacao
-- `references/mapeamento-tipos-e-widgets.md` — tipos de banco x widgets HTML
+- `references/gabarito-trf4.md`: dois contratos padrao de referencia estrutural e a tabela de desvios conscientes
+- `references/gabarito-trf4/`: arquivos completos do gabarito TRF4 (DTO, BD, RN, INT, lista e cadastro das 5 entidades de `md_abc`)
+- `.agents/references/padrao-modelagem-dados.md`: regras de nomenclatura fisica, tipos, chaves e sequencias (fonte primaria; cobre integralmente o cap. 5 do manual)
+- `.agents/references/padrao-codificacao-php.md`: convencoes de codificacao
+- `.agents/references/padrao-auditoria-sip-sei.md`: recursos SIP, permissao e auditoria por metodo
+- `references/mapeamento-tipos-e-widgets.md`: tipos de banco x prefixos x widgets x validacao
 
 ### Runtime
-- `generate_from_contrato.py` — motor de geracao (nesta pasta)
-- `templates/lista.php.tpl` — template ativo para lista
+- `generate_from_contrato.py`: motor de geracao (nesta pasta)
+- `templates/lista.php.tpl`: template da lista de entidade simples
+- `test_generate_from_contrato.py`: testes do motor
 
 ### Complementar
-- `sei-gerador-scripts-release` — criacao/atualizacao do script SEI
-- `sip-gerador-scripts-release` — criacao/atualizacao do script SIP
-- `.agents/references/padrao-scripts-release.md` — padroes de codigo concretos: DDL multi-SGBD, sequences, FKs, boilerplate SIP
-- `.agents/references/mapa-modulos-scripts.md` — manifesto modulo→scripts (consultar antes de qualquer trabalho)
+- `sei-gerador-scripts-release`: criacao/atualizacao do script SEI
+- `sip-gerador-scripts-release`: criacao/atualizacao do script SIP
+- `sei-menu-pagina`: item de menu SIP para a lista
+- `.agents/references/padrao-scripts-release.md`: padroes de codigo concretos: DDL multi-SGBD, sequences, FKs, indices, boilerplate SIP
+- `.agents/references/mapa-modulos-scripts.md`: manifesto modulo para scripts (consultar antes de qualquer trabalho)
 
 ---
 
@@ -410,11 +431,11 @@ Diferencas em relacao ao CRUD simples:
 
 | Limitacao | Impacto |
 |-----------|---------|
-| `sta_` nao suportado | Entidades com status multi-valor sao rejeitadas |
+| `sta_` rejeitado | Entidades com status multi-valor precisam de widget de opcoes escrito a mao |
 | Todos `varchar` como `<input>` | Sem suporte a `textarea` no v1 |
+| Dependentes so por contrato | O gerador nao descobre as tabelas filhas; sem `regrasGeracao.dependentes` a exclusao nao checa vinculos |
+| Helper INT de N:N | Esqueleto: valor da primeira PK, descricao pelo campo de exibicao da primeira FK |
 | `ws/`, `css/`, `imagens/`, `js/` fora do escopo | Gerador produz apenas `dto/`, `bd/`, `rn/`, `int/` e paginas raiz |
-
----
 
 ---
 
@@ -424,13 +445,7 @@ Diferencas em relacao ao CRUD simples:
 cd .agents/skills/sei-gerador-crud && python3 -m unittest test_generate_from_contrato
 ```
 
-1 testes sobre `generate_from_contrato.py`. O arquivo e independente de proposito: nao importa helper de
-outra skill nem de pasta compartilhada. A duplicacao de andaime e o preco de a skill
-poder ser levada inteira para outro lugar.
-
-Fecha o ciclo da stack: o codigo que o gerador produz e submetido ao auditor de
-`sei-verificacao-rn`, e precisa passar. Por isso este arquivo tambem invoca o
-`audit.py` daquela skill, que e a unica dependencia externa dele.
+A suite gera as 3 entidades do dominio de referencia (standalone com `sin_ativo`, 1:N com dinheiro, N:N), uma entidade de sonda (`dth_`, `numeric` sem `din_`, inteiro e FK opcionais, duas FKs para a mesma tabela), uma entidade com escopo por unidade, coluna unica, dependentes e paginacao desligada, textos com apostrofo, e os 3 exemplos de `examples/`, e para cada saida exige `php -l` verde, Latin-1 sem BOM, sem `U+FFFD`, sem `array(`, sem `$_GET`/`$_POST`, e veredito diferente de BLOCK nos auditores de `sei-verificacao-rn`, `sei-verificacao-pagina` (`--pagina nova`) e `sei-verificacao-banco-dados`. Cobre ainda a profundidade do `require_once`, as mensagens de validacao do contrato, JSON invalido e no-overwrite. Um teste carrega DTO e BD gerados com o `InfraDTO` e o `InfraBD` reais do repositorio, com um driver falso que captura o SQL em vez de executar, e confere joins de FK, LEFT JOIN da FK opcional com alias, PK composta da N:N, sequence nativa, exclusao logica e conversao de dinheiro, decimal e data e hora na gravacao. O arquivo e independente de proposito: nao importa helper de outra skill; os auditores sao a unica dependencia externa.
 
 ## Gerador oficial do InfraPHP
 
@@ -448,3 +463,5 @@ As operacoes basicas podem ser geradas pelo gerador de codigo disponivel no ende
 **Padrao de modelagem.** Seguir o padrao de modelagem de dados, principalmente os prefixos de campo, e o que faz o gerador inferir tipo e widget corretamente. Ver `.agents/references/padrao-modelagem-dados.md`.
 
 **Campo principal.** Configurar o campo principal da tabela antes de gerar. Com ele definido, o campo e retornado automaticamente na tela de lista junto com o ID, e e gerado um metodo de montagem de combo na classe INT buscando por esse campo.
+
+**Saida do gerador oficial.** A partir da versao 1.44 ele emite `bloquearConectado` e `array()`, deixa `montarSelect???????` para o desenvolvedor resolver e nao gera `configurarFK`; ajustar esses pontos para o padrao do projeto antes de integrar (ver `references/gabarito-trf4.md`, "Desvios conscientes").

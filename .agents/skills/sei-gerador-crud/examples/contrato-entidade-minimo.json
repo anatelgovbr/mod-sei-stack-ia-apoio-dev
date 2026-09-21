@@ -27,10 +27,28 @@
       "tipoBanco": "varchar",
       "tamanho": 250,
       "obrigatorio": false,
-      "comentario": "Descricao complementar da categoria."
+      "comentario": "Descrição complementar da categoria."
     }
   ],
   "regrasGeracao": {
     "campoSinAtivo": null
+  },
+  "ui": {
+    "ordemFormulario": [
+      "nome",
+      "descricao"
+    ],
+    "campos": {
+      "nome": {
+        "rotulo": "Nome",
+        "teclaAtalho": "N",
+        "artigo": "o"
+      },
+      "descricao": {
+        "rotulo": "Descrição",
+        "teclaAtalho": "D",
+        "artigo": "a"
+      }
+    }
   }
 }

@@ -67,7 +67,7 @@ class MdTsItemRN extends InfraRN
     protected function consultarConectado($objDTO)
     {{
         try {{
-            SessaoSEI::getInstance()->validarAuditarPermissao('md_ts_item_listar', __METHOD__, $objDTO);
+            SessaoSEI::getInstance()->validarAuditarPermissao('md_ts_item_consultar', __METHOD__, $objDTO);
             $objBD = new MdTsItemBD($this->getObjInfraIBanco());
             return $objBD->consultar($objDTO);
         }} catch (Exception $e) {{
@@ -240,8 +240,8 @@ class MdTsItemRN extends InfraRN
 
     def test_rn_ignores_commented_read_audit(self):
         content = self.rn_base().replace(
-            "SessaoSEI::getInstance()->validarAuditarPermissao('md_ts_item_listar', __METHOD__, $objDTO);",
-            "// SessaoSEI::getInstance()->validarAuditarPermissao('md_ts_item_listar', __METHOD__, $objDTO);",
+            "SessaoSEI::getInstance()->validarAuditarPermissao('md_ts_item_consultar', __METHOD__, $objDTO);",
+            "// SessaoSEI::getInstance()->validarAuditarPermissao('md_ts_item_consultar', __METHOD__, $objDTO);",
         )
         path = self.write("MdTsItemRN.php", content)
         process, payload = self.run_auditor("rn", path)
@@ -282,12 +282,51 @@ class MdTsItemRN extends InfraRN
         self.assertEqual(2, process.returncode)
         self.assertIn("T006", self.codes(payload))
 
-    def test_rn_requires_listar_for_public_reads(self):
-        content = self.rn_base().replace("md_ts_item_listar", "md_ts_item_consultar")
+    def test_rn_requires_consultar_for_consultar_and_listar_for_listar(self):
+        content = self.rn_base().replace("md_ts_item_consultar", "md_ts_item_listar")
         path = self.write("MdTsItemRN.php", content)
         process, payload = self.run_auditor("rn", path)
         self.assertEqual(2, process.returncode)
         self.assertIn("A003", self.codes(payload))
+
+        listar_with_consultar = """
+    protected function listarConectado($objDTO)
+    {
+        SessaoSEI::getInstance()->validarAuditarPermissao('md_ts_item_consultar', __METHOD__, $objDTO);
+        $objBD = new MdTsItemBD($this->getObjInfraIBanco());
+        return $objBD->listar($objDTO);
+    }
+"""
+        path = self.write("MdTsItemRN.php", self.rn_base(listar_with_consultar))
+        process, payload = self.run_auditor("rn", path)
+        self.assertEqual(2, process.returncode)
+        self.assertIn("A003", self.codes(payload))
+
+    def test_rn_bloquear_shares_consultar_resource(self):
+        bloquear_ok = """
+    protected function bloquearControlado($objDTO)
+    {
+        SessaoSEI::getInstance()->validarAuditarPermissao('md_ts_item_consultar', __METHOD__, $objDTO);
+        $objBD = new MdTsItemBD($this->getObjInfraIBanco());
+        return $objBD->bloquear($objDTO);
+    }
+"""
+        path = self.write("MdTsItemRN.php", self.rn_base(bloquear_ok))
+        process, payload = self.run_auditor("rn", path)
+        self.assertNotIn("A001", self.codes(payload))
+        self.assertNotIn("A003", self.codes(payload))
+
+        bloquear_listar = bloquear_ok.replace("md_ts_item_consultar", "md_ts_item_listar")
+        path = self.write("MdTsItemRN.php", self.rn_base(bloquear_listar))
+        process, payload = self.run_auditor("rn", path)
+        self.assertEqual(2, process.returncode)
+        self.assertIn("A001", self.codes(payload))
+
+        bloquear_conectado = bloquear_listar.replace("bloquearControlado", "bloquearConectado")
+        path = self.write("MdTsItemRN.php", self.rn_base(bloquear_conectado))
+        process, payload = self.run_auditor("rn", path)
+        self.assertIn("A003", self.codes(payload))
+        self.assertIn("T001", self.codes(payload, "avisos"))
 
     def test_rn_requires_md_prefix_and_operation_suffix_without_class_equality(self):
         wrong_write = """
@@ -313,7 +352,7 @@ class MdTsItemRN extends InfraRN
 
         wrong_read = self.write(
             "MdTsOutroRN.php",
-            self.rn_base().replace("MdTsItemRN", "MdTsOutroRN").replace("MdTsItemBD", "MdTsOutroBD").replace("md_ts_item_listar", "md_ts_outra_listar"),
+            self.rn_base().replace("MdTsItemRN", "MdTsOutroRN").replace("MdTsItemBD", "MdTsOutroBD").replace("md_ts_item_consultar", "md_ts_outra_consultar"),
         )
         process, payload = self.run_auditor("rn", wrong_read)
         self.assertNotEqual(2, process.returncode, payload)
@@ -321,7 +360,7 @@ class MdTsItemRN extends InfraRN
 
         invalid_prefix = self.write(
             "MdTsPrefixRN.php",
-            self.rn_base().replace("MdTsItemRN", "MdTsPrefixRN").replace("MdTsItemBD", "MdTsPrefixBD").replace("md_ts_item_listar", "ts_item_listar"),
+            self.rn_base().replace("MdTsItemRN", "MdTsPrefixRN").replace("MdTsItemBD", "MdTsPrefixBD").replace("md_ts_item_consultar", "ts_item_consultar"),
         )
         process, payload = self.run_auditor("rn", invalid_prefix)
         self.assertEqual(2, process.returncode)
@@ -329,7 +368,7 @@ class MdTsItemRN extends InfraRN
 
         wrong_module = self.write(
             "MdTsWrongModuleRN.php",
-            self.rn_base().replace("MdTsItemRN", "MdTsWrongModuleRN").replace("MdTsItemBD", "MdTsWrongModuleBD").replace("md_ts_item_listar", "md_zz_item_listar"),
+            self.rn_base().replace("MdTsItemRN", "MdTsWrongModuleRN").replace("MdTsItemBD", "MdTsWrongModuleBD").replace("md_ts_item_consultar", "md_zz_item_consultar"),
         )
         process, payload = self.run_auditor("rn", wrong_module)
         self.assertEqual(2, process.returncode)
@@ -344,7 +383,7 @@ class MdTsItemRN extends InfraRN
         return (new {class_prefix}ItemBD($this->getObjInfraIBanco()))->cadastrar($objDTO);
     }}
 """
-                content = self.rn_base(write).replace("MdTsItemRN", f"{class_prefix}ItemRN").replace("MdTsItemBD", f"{class_prefix}ItemBD").replace("md_ts_item_listar", f"md_{sigla}_outra_entidade_listar")
+                content = self.rn_base(write).replace("MdTsItemRN", f"{class_prefix}ItemRN").replace("MdTsItemBD", f"{class_prefix}ItemBD").replace("md_ts_item_consultar", f"md_{sigla}_outra_entidade_consultar")
                 path = self.write(f"{class_prefix}ItemRN.php", content)
                 process, payload = self.run_auditor("rn", path)
                 self.assertNotEqual(2, process.returncode, payload)

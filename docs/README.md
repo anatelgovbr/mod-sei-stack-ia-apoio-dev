@@ -8,9 +8,8 @@ Documentação técnica do repositório, escrita para ser lida tanto por pessoas
 
 - [1. Dicionários de dados](#1-dicionários-de-dados)
 - [2. Manual de desenvolvimento](#2-manual-de-desenvolvimento)
-- [3. Gabarito do gerador de CRUD](#3-gabarito-do-gerador-de-crud)
-- [4. Prompts de exemplo](#4-prompts-de-exemplo)
-- [5. Documentação da stack de IA](#5-documentação-da-stack-de-ia)
+- [3. Prompts de exemplo](#3-prompts-de-exemplo)
+- [4. Documentação da stack de IA](#4-documentação-da-stack-de-ia)
 
 ---
 
@@ -40,13 +39,7 @@ Formato, fluxo de criação/atualização e geração de changelog são definido
 
 ---
 
-## 3. Gabarito do gerador de CRUD
-
-A pasta [`gabarito_gerador_codigo_crud/`](gabarito_gerador_codigo_crud/) traz um exemplo completo de saída do gerador de CRUD (`sei-gerador-crud`) para o domínio fictício `md_abc`: DTO, BD, RN, INT e páginas de lista/cadastro, mais o contrato de domínio (`dominio-md-abc.md`). Funciona como referência estrutural adicional aos gabaritos de módulo citados no `AGENTS.md`: `abc/exemplo` como referência mínima e `trf4/julgamento` como referência robusta.
-
----
-
-## 4. Prompts de exemplo
+## 3. Prompts de exemplo
 
 [`prompts-exemplo.md`](../prompts-exemplo.md) reúne prompts prontos para uso real, amarrados às skills do repositório: correção de bug (com variações Playwright e Selenium), fluxo Speckit para funcionalidade nova, ajustes pontuais em menu, entidade e API/WebService, revisão técnica e segurança, e dicionário de dados.
 
@@ -54,9 +47,9 @@ Cada prompt já traz objetivo, fatos verificados versus hipóteses não confirma
 
 ---
 
-## 5. Documentação da stack de IA
+## 4. Documentação da stack de IA
 
-a raiz do repositório (`README.md`, `speckit.md`, `manutencao-da-stack.md` e `prompts-exemplo.md`) explica a stack de IA do repositório para quem vai usá-la: o que é, quais ferramentas funcionam aqui, como usar o SpecKit, prompts prontos e como manter a stack atualizada.
+A raiz do repositório (`README.md`, `speckit.md`, `manutencao-da-stack.md` e `prompts-exemplo.md`) explica a stack de IA do repositório para quem vai usá-la: o que é, quais ferramentas funcionam aqui, como usar o SpecKit, prompts prontos e como manter a stack atualizada.
 
 | Arquivo | O que contém |
 |---|---|

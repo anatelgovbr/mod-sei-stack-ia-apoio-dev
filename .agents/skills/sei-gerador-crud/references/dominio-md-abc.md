@@ -13,11 +13,11 @@ Cobre 5 entidades: standalone, 1:N, 1:N (2º nível), 1:1 e N:N.
 
 | Campo | Tipo | Tamanho | Requerido | PK | FK | Tabela Origem |
 |---|---|---|---|---|---|---|
-| id_md_abc_projeto | integer | — | Sim | Sim | — | — |
-| identificacao | varchar | 50 | Sim | — | — | — |
-| descricao | varchar | 255 | Não | — | — | — |
-| dta_cadastramento | date | — | Sim | — | — | — |
-| sin_ativo | char | 1 | Sim | — | — | — |
+| id_md_abc_projeto | integer | - | Sim | Sim | - | - |
+| identificacao | varchar | 50 | Sim | - | - | - |
+| descricao | varchar | 255 | Não | - | - | - |
+| dta_cadastramento | date | - | Sim | - | - | - |
+| sin_ativo | char | 1 | Sim | - | - | - |
 
 **Labels UI:**
 
@@ -25,8 +25,8 @@ Cobre 5 entidades: standalone, 1:N, 1:N (2º nível), 1:1 e N:N.
 |---|---|---|---|
 | identificacao | Identificação | I | a |
 | descricao | Descrição | D | a |
-| dta_cadastramento | Data de Cadastramento | C | a |
-| sin_ativo | Ativo | — | o |
+| dta_cadastramento | Data de Cadastramento | M | a |
+| sin_ativo | Ativo | - | o |
 
 ---
 
@@ -36,10 +36,10 @@ Cobre 5 entidades: standalone, 1:N, 1:N (2º nível), 1:1 e N:N.
 
 | Campo | Tipo | Tamanho | Requerido | PK | FK | Tabela Origem |
 |---|---|---|---|---|---|---|
-| id_md_abc_aquisicao | integer | — | Sim | Sim | — | — |
-| id_md_abc_projeto | integer | — | Sim | — | Sim | md_abc_projeto |
-| descricao | varchar | 50 | Sim | — | — | — |
-| din_custo | numeric | 15,2 | Sim | — | — | — |
+| id_md_abc_aquisicao | integer | - | Sim | Sim | - | - |
+| id_md_abc_projeto | integer | - | Sim | - | Sim | md_abc_projeto |
+| descricao | varchar | 50 | Sim | - | - | - |
+| din_custo | numeric | 15,2 | Sim | - | - | - |
 
 **Labels UI:**
 
@@ -47,7 +47,7 @@ Cobre 5 entidades: standalone, 1:N, 1:N (2º nível), 1:1 e N:N.
 |---|---|---|---|
 | id_md_abc_projeto | Projeto | P | o |
 | descricao | Descrição | D | a |
-| din_custo | Custo | C | o |
+| din_custo | Custo | U | o |
 
 ---
 
@@ -57,12 +57,12 @@ Cobre 5 entidades: standalone, 1:N, 1:N (2º nível), 1:1 e N:N.
 
 | Campo | Tipo | Tamanho | Requerido | PK | FK | Tabela Origem |
 |---|---|---|---|---|---|---|
-| id_md_abc_contrato | integer | — | Sim | Sim | — | — |
-| id_md_abc_aquisicao | integer | — | Sim | — | Sim | md_abc_aquisicao |
-| numero | varchar | 20 | Sim | — | — | — |
-| dta_assinatura | date | — | Sim | — | — | — |
-| din_valor | numeric | 15,2 | Sim | — | — | — |
-| observacao | varchar | 500 | Não | — | — | — |
+| id_md_abc_contrato | integer | - | Sim | Sim | - | - |
+| id_md_abc_aquisicao | integer | - | Sim | - | Sim | md_abc_aquisicao |
+| numero | varchar | 20 | Sim | - | - | - |
+| dta_assinatura | date | - | Sim | - | - | - |
+| din_valor | numeric | 15,2 | Sim | - | - | - |
+| observacao | varchar | 500 | Não | - | - | - |
 
 **Labels UI:**
 
@@ -82,40 +82,40 @@ Cobre 5 entidades: standalone, 1:N, 1:N (2º nível), 1:1 e N:N.
 
 | Campo | Tipo | Tamanho | Requerido | PK | FK | Tabela Origem |
 |---|---|---|---|---|---|---|
-| id_md_abc_responsavel | integer | — | Sim | Sim | — | — |
-| id_md_abc_contrato | integer | — | Sim | — | Sim | md_abc_contrato |
-| nome | varchar | 100 | Sim | — | — | — |
-| cargo | varchar | 50 | Sim | — | — | — |
-| email | varchar | 100 | Não | — | — | — |
+| id_md_abc_responsavel | integer | - | Sim | Sim | - | - |
+| id_md_abc_contrato | integer | - | Sim | - | Sim | md_abc_contrato |
+| nome | varchar | 100 | Sim | - | - | - |
+| cargo | varchar | 50 | Sim | - | - | - |
+| email | varchar | 100 | Não | - | - | - |
 
-**Constraint de unicidade:** `ak_md_abc_responsavel_contrato` em `id_md_abc_contrato` — garante o 1:1.
+**Constraint de unicidade:** `ak_md_abc_responsavel_contrato` em `id_md_abc_contrato`, garante o 1:1.
 
 **Labels UI:**
 
 | Campo | Rótulo | Atalho | Artigo |
 |---|---|---|---|
-| id_md_abc_contrato | Contrato | C | o |
+| id_md_abc_contrato | Contrato | O | o |
 | nome | Nome | N | o |
 | cargo | Cargo | G | o |
 | email | E-mail | E | o |
 
 ---
 
-### md_abc_rel_contrato_projeto
+### md_abc_rel_contrato_proj
 **Tipo:** N:N → md_abc_contrato + md_abc_projeto (PK composta)
 **Artigo:** a | **Singular:** Associação | **Plural:** Associações | **Campo principal:** `id_md_abc_contrato` (exibe `numero` via JOIN)
 
 | Campo | Tipo | Tamanho | Requerido | PK | FK | Tabela Origem |
 |---|---|---|---|---|---|---|
-| id_md_abc_contrato | integer | — | Sim | Sim | Sim | md_abc_contrato |
-| id_md_abc_projeto | integer | — | Sim | Sim | Sim | md_abc_projeto |
-| dta_associacao | date | — | Sim | — | — | — |
+| id_md_abc_contrato | integer | - | Sim | Sim | Sim | md_abc_contrato |
+| id_md_abc_projeto | integer | - | Sim | Sim | Sim | md_abc_projeto |
+| dta_associacao | date | - | Sim | - | - | - |
 
 **Labels UI:**
 
 | Campo | Rótulo | Atalho | Artigo |
 |---|---|---|---|
-| id_md_abc_contrato | Contrato | C | o |
+| id_md_abc_contrato | Contrato | O | o |
 | id_md_abc_projeto | Projeto | P | o |
 | dta_associacao | Data de Associação | D | a |
 
@@ -129,7 +129,7 @@ Cobre 5 entidades: standalone, 1:N, 1:N (2º nível), 1:1 e N:N.
 | pk_md_abc_aquisicao | md_abc_aquisicao | id_md_abc_aquisicao |
 | pk_md_abc_contrato | md_abc_contrato | id_md_abc_contrato |
 | pk_md_abc_responsavel | md_abc_responsavel | id_md_abc_responsavel |
-| pk_md_abc_rel_contrato_projeto | md_abc_rel_contrato_projeto | id_md_abc_contrato, id_md_abc_projeto |
+| pk_md_abc_rel_contrato_proj | md_abc_rel_contrato_proj | id_md_abc_contrato, id_md_abc_projeto |
 
 ---
 
@@ -140,8 +140,8 @@ Cobre 5 entidades: standalone, 1:N, 1:N (2º nível), 1:1 e N:N.
 | fk_md_abc_aquisicao_projeto | md_abc_aquisicao | id_md_abc_projeto | md_abc_projeto | id_md_abc_projeto |
 | fk_md_abc_contrato_aquisicao | md_abc_contrato | id_md_abc_aquisicao | md_abc_aquisicao | id_md_abc_aquisicao |
 | fk_md_abc_responsavel_contrato | md_abc_responsavel | id_md_abc_contrato | md_abc_contrato | id_md_abc_contrato |
-| fk_md_abc_rel_contrato_projeto_c | md_abc_rel_contrato_projeto | id_md_abc_contrato | md_abc_contrato | id_md_abc_contrato |
-| fk_md_abc_rel_contrato_projeto_p | md_abc_rel_contrato_projeto | id_md_abc_projeto | md_abc_projeto | id_md_abc_projeto |
+| fk_md_abc_rel_contrato_proj_c | md_abc_rel_contrato_proj | id_md_abc_contrato | md_abc_contrato | id_md_abc_contrato |
+| fk_md_abc_rel_contrato_proj_p | md_abc_rel_contrato_proj | id_md_abc_projeto | md_abc_projeto | id_md_abc_projeto |
 
 ---
 
@@ -160,7 +160,7 @@ md_abc_contrato (FK → aquisicao)
     │                    │
     │ 1:1                │ N:N (via rel)
     ▼                    ▼
-md_abc_responsavel   md_abc_rel_contrato_projeto
+md_abc_responsavel   md_abc_rel_contrato_proj
 (FK única →              (FK → contrato + FK → projeto)
  contrato)
 ```
@@ -224,20 +224,20 @@ alter table md_abc_responsavel
   foreign key (id_md_abc_contrato) references md_abc_contrato (id_md_abc_contrato);
 create index fk_md_abc_responsavel_contrato on md_abc_responsavel (id_md_abc_contrato);
 
-create table md_abc_rel_contrato_projeto (
+create table md_abc_rel_contrato_proj (
   id_md_abc_contrato integer  not null,
   id_md_abc_projeto  integer  not null,
   dta_associacao     date     not null
 );
-alter table md_abc_rel_contrato_projeto
-  add constraint pk_md_abc_rel_contrato_projeto
+alter table md_abc_rel_contrato_proj
+  add constraint pk_md_abc_rel_contrato_proj
   primary key (id_md_abc_contrato, id_md_abc_projeto);
-alter table md_abc_rel_contrato_projeto
-  add constraint fk_md_abc_rel_contrato_projeto_c
+alter table md_abc_rel_contrato_proj
+  add constraint fk_md_abc_rel_contrato_proj_c
   foreign key (id_md_abc_contrato) references md_abc_contrato (id_md_abc_contrato);
-alter table md_abc_rel_contrato_projeto
-  add constraint fk_md_abc_rel_contrato_projeto_p
+alter table md_abc_rel_contrato_proj
+  add constraint fk_md_abc_rel_contrato_proj_p
   foreign key (id_md_abc_projeto) references md_abc_projeto (id_md_abc_projeto);
-create index fk_md_abc_rel_contrato_projeto_c on md_abc_rel_contrato_projeto (id_md_abc_contrato);
-create index fk_md_abc_rel_contrato_projeto_p on md_abc_rel_contrato_projeto (id_md_abc_projeto);
+create index fk_md_abc_rel_contrato_proj_c on md_abc_rel_contrato_proj (id_md_abc_contrato);
+create index fk_md_abc_rel_contrato_proj_p on md_abc_rel_contrato_proj (id_md_abc_projeto);
 ```

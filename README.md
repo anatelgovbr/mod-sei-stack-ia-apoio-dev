@@ -103,20 +103,25 @@ Os agentes são configurados na pasta `.agents/` e integrados às ferramentas vi
 
 As **skills** são agentes especializados em tarefas específicas. Cada skill tem um escopo bem definido. Para acionar uma skill, mencione o nome dela na conversa com o assistente (no painel de chat da ferramenta de IA, como o chat do Copilot no VS Code). Por exemplo: *"Use a skill `skill-creator` para criar uma skill de X."* O assistente carrega as instruções da skill e executa o processo correspondente.
 
-Hoje são **37 skills** em `.agents/skills/`, distribuídas em três grupos:
+As skills ficam em `.agents/skills/`, uma pasta por skill, distribuídas em três grupos:
 
-| Grupo de skills | Quantidade | Onde estão descritas |
-|---|---|---|
-| Fases do SpecKit, com prefixo `speckit-` | 10 | Seção [Fases do SpecKit](#fases-do-speckit) deste documento |
-| Demais skills de terceiros | 9 | Tabela de skills de terceiros, logo abaixo |
-| Skills criadas pela equipe do projeto | 18 | Tabela de skills do projeto, mais abaixo |
+| Grupo de skills | Onde estão descritas |
+|---|---|
+| Fases do SpecKit, com prefixo `speckit-` | Seção [Fases do SpecKit](#fases-do-speckit) deste documento |
+| Demais skills de terceiros | Tabela de skills de terceiros, logo abaixo |
+| Skills criadas pela equipe do projeto | Tabela de skills do projeto, mais abaixo |
 
 As skills de terceiros trazem a versão que está em `.agents/skills/` hoje. Essa versão não se atualiza sozinha: a troca é coordenada pela equipe conforme [`manutencao-da-stack.md`](manutencao-da-stack.md).
 
 | Skill | O que faz | Versão instalada | Licença | Repositório |
 |---|---|---|---|---|
-| `speckit-<fase>`, as 10 fases | Conduzem as fases do fluxo SDD com SpecKit | v1.0.3 | MIT | [github/spec-kit](https://github.com/github/spec-kit) |
+| `speckit-<fase>`, uma por fase | Conduzem as fases do fluxo SDD com SpecKit | v1.0.3 | MIT | [github/spec-kit](https://github.com/github/spec-kit) |
 | `skill-creator` | Cria, edita e avalia skills | sem versionamento na origem | Apache-2.0 | [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/skill-creator) |
+| `docx` | Cria, lê, edita e manipula documentos Word (`.docx`, `.dotx`), inclusive controle de alterações e comentários | sem versionamento na origem | Proprietária da Anthropic, termos em `LICENSE.txt` | [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/docx) |
+| `pdf` | Lê, extrai texto e tabelas, junta, divide, preenche formulários e aplica OCR em PDF | sem versionamento na origem | Proprietária da Anthropic, termos em `LICENSE.txt` | [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/pdf) |
+| `pptx` | Cria, lê e edita apresentações (`.pptx`, `.potx`), incluindo layouts, notas e comentários | sem versionamento na origem | Proprietária da Anthropic, termos em `LICENSE.txt` | [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/pptx) |
+| `xlsx` | Cria, lê, edita e converte planilhas (`.xlsx`, `.xlsm`, `.csv`, `.tsv`), com fórmulas, formatação e gráficos | sem versionamento na origem | Proprietária da Anthropic, termos em `LICENSE.txt` | [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/xlsx) |
+| `frontend-design` | Orienta direção visual, tipografia e escolhas de design ao construir ou refazer interface | sem versionamento na origem | Apache-2.0 | [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design) |
 | `dicionario-dados-db-scan-codebase-docs` | Cria, atualiza e verifica dicionários de dados e changelogs estruturais de banco de dados a partir da codebase, dos scripts de banco e da documentação | sem versionamento na origem | GPL-3.0 | Repositório interno `ai-skills` |
 | `gauntlet-loop-forge` | Transforma um objetivo, plano, especificação ou prompt existente em um prompt de execução pronto para colar, com critérios de aceite verificáveis, revisão por agente que não construiu o artefato e limite finito de rodadas | sem versionamento na origem | GPL-3.0 | Repositório interno `ai-skills` |
 | `caveman` | Comprime a prosa da resposta preservando termo técnico, código e mensagem de erro | v1.9.0 | MIT | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) |
@@ -149,7 +154,7 @@ As skills do projeto nascem neste repositório e são versionadas junto com ele:
 | `sei-mod-api-operacoes` | Orienta operações oficiais do SEI via API e `SeiRN` |
 | `sei-mod-api-eventos` | Orienta interceptação de eventos do SEI via integração de módulo |
 | `sei-menu-pagina` | Orienta criação ou ajuste de menus internos e páginas correspondentes |
-| `sei-testes-validacao` | Centraliza checagens e validações após alterações PHP |
+| `sei-validacao-padrao` | Centraliza checagens e validações após alterações PHP |
 | `sei-tipagem-phpdoc` | Apoia modernização segura de tipagem PHP e PHPDoc quando solicitada explicitamente |
 | `sei-report-todos` | Gera relatório de pendências `TODO:` em módulos escolhidos explicitamente |
 | `sei-revisao-tecnica` | Revisa diretamente segurança, conformidade, gates e qualidade técnica de diffs, arquivos ou módulos SEI, sem exigir spec |

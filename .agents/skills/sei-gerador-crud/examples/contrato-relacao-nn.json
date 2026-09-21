@@ -1,8 +1,8 @@
 {
   "entidade": {
     "tabela": "md_ana_rel_projeto_tema",
-    "singular": "Vinculo projeto x tema",
-    "plural": "Vinculos projeto x tema",
+    "singular": "Vínculo projeto x tema",
+    "plural": "Vínculos projeto x tema",
     "artigo": "o",
     "campoPrincipal": "str_descricao",
     "comentario": "Relaciona projetos e temas."
@@ -29,7 +29,7 @@
       "tipoBanco": "varchar",
       "tamanho": 100,
       "obrigatorio": true,
-      "comentario": "Descricao do vinculo."
+      "comentario": "Descrição do vínculo."
     }
   ],
   "relacionamentos": [
@@ -53,26 +53,31 @@
       "tabelaOrigem": "md_ana_projeto",
       "classeInt": "MdAnaProjetoINT",
       "metodoInt": "montarSelectNome",
-      "rotulo": "Projeto"
+      "rotulo": "Projeto",
+      "artigo": "o",
+      "teclaAtalho": "P"
     },
     {
       "tabelaOrigem": "md_ana_tema",
       "classeInt": "MdAnaTemaINT",
       "metodoInt": "montarSelectNome",
-      "rotulo": "Tema"
+      "rotulo": "Tema",
+      "artigo": "o",
+      "teclaAtalho": "M"
     }
   ],
   "regrasGeracao": {
     "campoSinAtivo": null
   },
   "ui": {
-      "ordemFormulario": [
-        "str_descricao"
-      ],
-      "campos": {
-        "str_descricao": {
-        "rotulo": "Descricao",
-        "teclaAtalho": "d"
+    "ordemFormulario": [
+      "str_descricao"
+    ],
+    "campos": {
+      "str_descricao": {
+        "rotulo": "Descrição",
+        "teclaAtalho": "D",
+        "artigo": "a"
       }
     }
   }

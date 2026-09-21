@@ -321,7 +321,7 @@ Operacoes de leitura usam `validarAuditarPermissao`, e o recurso muda conforme a
 | `listarConectado` | `_listar` |
 | `contarConectado` | `_listar`, compartilhado com listar |
 | `consultarConectado` | `_consultar` |
-| `bloquearConectado` | `_consultar`, compartilhado com consultar |
+| `bloquearControlado` | `_consultar`, compartilhado com consultar; e `Controlado` porque o lock so vale dentro da transacao (manual cap. 4) |
 
 Helpers internos e caminhos de hook ou evento sem usuario nao recebem verificacao de sessao artificial.
 
@@ -346,7 +346,7 @@ protected function listarConectado(MdAbcItemDTO $objDTO)
 }
 ```
 
-**Nao conforme:** usar `_listar` em `consultar` ou em `bloquear`. O recurso `_consultar` existe e e o que o gerador produz.
+**Nao conforme:** usar `_listar` em `consultar` ou em `bloquear`. O recurso `_consultar` e registrado no SIP junto com os demais recursos base da entidade e e o que `sei-gerador-crud` produz.
 
 ---
 

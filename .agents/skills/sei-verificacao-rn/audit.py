@@ -18,6 +18,9 @@ SKILL_NAME = "sei-verificacao-rn"
 
 CRUD_WRITE = ["cadastrar", "alterar", "excluir", "desativar", "reativar", "bloquear", "incluir", "remover"]
 CRUD_READ = ["consultar", "listar", "contar"]
+# Recurso auditado por operacao de leitura (AGENTS.md, "Permissao/auditoria RN, leitura"):
+# consultar e bloquear compartilham _consultar; listar e contar compartilham _listar.
+READ_RESOURCE_SUFFIX = {"consultar": "_consultar", "bloquear": "_consultar", "listar": "_listar", "contar": "_listar"}
 
 RE_CLASS_EXTENDS = re.compile(r"class\s+\w+\s+extends\s+InfraRN")
 RE_INIT_METHOD = re.compile(r"protected\s+function\s+inicializarObjInfraIBanco\s*\(\s*\)(\s*:\s*[\w\\]+)?\s*\{[^}]*return\s+BancoSEI\s*::\s*getInstance\s*\(\s*\)", re.DOTALL)
@@ -187,11 +190,13 @@ def validar_a1(content):
         if not lower.endswith("controlado") or operation is None:
             continue
         resources = RE_AUDIT_RESOURCE.findall(body)
-        compatible = any((not module_prefix or resource.startswith(module_prefix)) and resource.endswith(f"_{operation}") for resource in resources)
+        # bloquear nao tem recurso proprio no SIP: compartilha o de consultar (manual cap. 4)
+        expected_suffix = READ_RESOURCE_SUFFIX.get(operation, f"_{operation}")
+        compatible = any((not module_prefix or resource.startswith(module_prefix)) and resource.endswith(expected_suffix) for resource in resources)
         if not compatible:
             errors.append(build_issue(
                 "A001", "A1",
-                f"Metodo de escrita '{method_name}' deve auditar com recurso compatível com '{operation}' e nunca _listar",
+                f"Metodo de escrita '{method_name}' deve auditar com recurso terminado em '{expected_suffix}' e nunca _listar",
                 content, match
             ))
     return errors or None
@@ -214,18 +219,23 @@ def validar_a2(content):
 
 
 def validar_a3(content):
+    """BLOCK: leitura publica audita o recurso da operacao: consultar e bloquear com _consultar; listar e contar com _listar."""
     errors = []
     module_prefix = infer_module_prefix(content)
     for method_name, body, match in iter_methods(content):
         lower = method_name.lower()
-        if not lower.endswith("conectado") or not any(lower.startswith(kw) for kw in CRUD_READ):
+        if not lower.endswith("conectado"):
             continue
+        operation = crud_operation(method_name, list(READ_RESOURCE_SUFFIX))
+        if operation is None:
+            continue
+        expected_suffix = READ_RESOURCE_SUFFIX[operation]
         resources = RE_AUDIT_RESOURCE.findall(body)
-        compatible = any((not module_prefix or resource.startswith(module_prefix)) and resource.endswith("_listar") for resource in resources)
+        compatible = any((not module_prefix or resource.startswith(module_prefix)) and resource.endswith(expected_suffix) for resource in resources)
         if not compatible:
             errors.append(build_issue(
                 "A003", "A3",
-                f"Metodo de leitura '{method_name}' deve usar recurso _listar coerente com a RN",
+                f"Metodo de leitura '{method_name}' deve usar recurso terminado em '{expected_suffix}' coerente com a RN",
                 content, match,
             ))
     return errors or None

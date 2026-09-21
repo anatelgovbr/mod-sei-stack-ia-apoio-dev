@@ -151,7 +151,7 @@ Aplicar preferencialmente nesta ordem:
 ## Validacao obrigatoria
 
 - `php -l` em todo arquivo PHP alterado
-- `sei-testes-validacao` como complemento em qualquer entrega PHP
+- `sei-validacao-padrao` como complemento em qualquer entrega PHP
 - `sei-verificacao-rn` para `*RN.php`
 - `sei-verificacao-banco-dados` para `*BD.php`
 - `sei-verificacao-controladores` quando houver controlador em `*Integracao.php`

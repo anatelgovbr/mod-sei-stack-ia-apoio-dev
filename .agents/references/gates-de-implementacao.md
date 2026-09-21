@@ -27,11 +27,11 @@ Zero artefatos analisados nao equivale a `PASS`.
 | ID | Categoria | Condicao de Bloqueio | Condicao de Desbloqueio | Skill associada |
 | --- | --- | --- | --- | --- |
 | C1 | CRUD gerador | Gerador escolhido para novo CRUD sem contrato JSON confirmado | Obter confirmacao do contrato JSON com o desenvolvedor | `sei-gerador-crud` |
-| C2 | CRUD gerador | Contrato JSON com campos obrigatorios ausentes (`entidade`, `colunas`, `sin_ativo`, `relacionamentos`) | Completar todos os campos obrigatorios com confirmacao do desenvolvedor | `sei-gerador-crud` |
+| C2 | CRUD gerador | Contrato JSON com campos obrigatorios ausentes (`entidade` com `tabela`, `singular`, `plural`, `artigo`, `campoPrincipal` e `comentario`; `colunas` com `obrigatorio` e `comentario`; `regrasGeracao.campoSinAtivo` no CRUD simples; `relacionamentosNn` na N:N) | Completar todos os campos obrigatorios com confirmacao do desenvolvedor | `sei-gerador-crud` |
 | C3 | CRUD gerador | Escrita manual de `DTO`, `RN`, `BD`, `*_lista.php` ou `*_cadastro.php` antes do contrato confirmado | Aguardar confirmacao do contrato; usar gerador | `sei-gerador-crud` |
 | C4 | CRUD gerador | `php -l` com erro nos arquivos gerados | Corrigir erro de sintaxe antes de continuar | `sei-gerador-crud` |
 | G1 | Seguranca | Arquivo PHP com BOM ou caractere fora da conversao Latin-1 | Corrigir para blob final compativel com `.gitattributes` | `sei-verificacao-pagina` (P3) |
-| G2 | Seguranca | `php -l` com erro de sintaxe em qualquer arquivo PHP | Corrigir erro antes de qualquer entrega | `sei-testes-validacao` |
+| G2 | Seguranca | `php -l` com erro de sintaxe em qualquer arquivo PHP | Corrigir erro antes de qualquer entrega | `sei-validacao-padrao` |
 | G3 | Seguranca | Acao PHP sem `validarLink()` e/ou `validarPermissao()` | Adicionar as chamadas no inicio da acao | `sei-verificacao-pagina` |
 | G4 | Seguranca | Link de acao sem `assinarLink()` | Corrigir link para usar `assinarLink()` | `sei-verificacao-pagina` |
 | G5 | Seguranca | Uso de `$_REQUEST` ou input nao validado | Substituir por `PaginaSEI::POST/GET` com validacao de tipo | `sei-verificacao-pagina` |
