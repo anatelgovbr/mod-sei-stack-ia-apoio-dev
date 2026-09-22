@@ -23,13 +23,14 @@ Repositório de customizações e módulos do SEI com release versionada e padr�
 - `fontes/sei/src/main/php/sei/web/modulos/**`
 - `fontes/sei/src/main/php/sei/scripts/**`
 - `fontes/sei/src/main/php/sip/scripts/**`
+- `fontes/sei/src/main/php/sip/web/modulos/**`
 - `docs/**`
 - `specs/**`
 - `.agents/**`
 
 **Proibido sem autorização:**
 - `fontes/sei/src/main/php/sei/web/**` fora de `modulos/`
-- `fontes/sei/src/main/php/sip/web/**`
+- `fontes/sei/src/main/php/sip/web/**` fora de `modulos/`
 - `infra/**`
 
 Mudança no core exige proposta documentada — sem patch direto.
