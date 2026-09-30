@@ -13,7 +13,7 @@
 
 ## O que é o SpecKit
 
-> **Não é necessário instalar o SpecKit.** Toda a estrutura já está presente no repositório. O único requisito é ter uma das ferramentas de IA listadas em [`README.md`](README.md) instalada e configurada.
+> **Não é necessário instalar o SpecKit.** Toda a estrutura já está presente no repositório. O único requisito é ter uma das ferramentas de IA listadas em [`README.md`](../../README.md) instalada e configurada.
 
 **SpecKit** é o framework de especificação que estrutura o fluxo SDD no repositório. Ele divide o trabalho em fases sequenciais e produz documentos padronizados (especificação, plano técnico e lista de tarefas) que servem de contexto para a implementação.
 

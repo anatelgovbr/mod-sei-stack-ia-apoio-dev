@@ -50,7 +50,7 @@ Exemplos práticos do que você pode pedir ao assistente:
 - *"Crie um plano de implementação para adicionar um novo campo no formulário X."*
 - *"Revise o código que acabei de escrever e verifique se segue os padrões do projeto."*
 
-Prompts prontos para adaptar e enviar estão em [`prompts-exemplo.md`](prompts-exemplo.md).
+Prompts prontos para adaptar e enviar estão em [`prompts-exemplo.md`](docs/stack_ai/prompts-exemplo.md).
 
 ---
 
@@ -111,7 +111,7 @@ As skills ficam em `.agents/skills/`, uma pasta por skill, distribuídas em trê
 | Demais skills de terceiros | Tabela de skills de terceiros, logo abaixo |
 | Skills criadas pela equipe do projeto | Tabela de skills do projeto, mais abaixo |
 
-As skills de terceiros trazem a versão que está em `.agents/skills/` hoje. Essa versão não se atualiza sozinha: a troca é coordenada pela equipe conforme [`manutencao-da-stack.md`](manutencao-da-stack.md).
+As skills de terceiros trazem a versão que está em `.agents/skills/` hoje. Essa versão não se atualiza sozinha: a troca é coordenada pela equipe conforme [`manutencao-da-stack.md`](docs/stack_ai/manutencao-da-stack.md).
 
 | Skill | O que faz | Versão instalada | Licença | Repositório |
 |---|---|---|---|---|
@@ -130,11 +130,11 @@ As skills de terceiros trazem a versão que está em `.agents/skills/` hoje. Ess
 | `owasp-playbook` | Revisão de segurança por procedimento OWASP: 16 plays cobrindo código, Top 10, API, segredos, dependências, agente de IA, servidor MCP e aplicação LLM, com templates de achado e de relatório | v0.2.7 | CC-BY-4.0 no playbook e CC-BY-SA-4.0 nos dados OWASP | [OWASP/secure-agent-playbook](https://github.com/OWASP/secure-agent-playbook) |
 | `napkin` | Mantém runbook operacional pessoal em `.agents/memory/runbook.md` | v6.1.0 | MIT | [blader/napkin](https://github.com/blader/napkin) |
 
-A pasta `upstream/` da `owasp-playbook` é cópia literal do projeto de origem e **não deve ser editada**. A atualização é substituição da pasta inteira, e editar o conteúdo cria obra derivada, o que aciona a cláusula ShareAlike que cobre os dados OWASP. Ajuste específico do projeto fica fora de `upstream/`. O procedimento de atualização está em [`manutencao-da-stack.md`](manutencao-da-stack.md#como-atualizar-o-owasp-secure-agent-playbook).
+A pasta `upstream/` da `owasp-playbook` é cópia literal do projeto de origem e **não deve ser editada**. A atualização é substituição da pasta inteira, e editar o conteúdo cria obra derivada, o que aciona a cláusula ShareAlike que cobre os dados OWASP. Ajuste específico do projeto fica fora de `upstream/`. O procedimento de atualização está em [`manutencao-da-stack.md`](docs/stack_ai/manutencao-da-stack.md#como-atualizar-o-owasp-secure-agent-playbook).
 
 A `owasp-playbook` é **opt-in por regra**: ela roda quando você pede ou quando outra skill precisa do procedimento, nunca por roteamento automático. Para pedir, basta uma frase em português, sem conhecer segurança: a skill escolhe os procedimentos pelo que há no escopo, roda os auditores que o SEI registrou na ponte e responde com um resumo em linguagem simples antes da tabela técnica. A skill é agnóstica; o que é do SEI está em `.agents/security/mapa-seguranca-cwe-sei.md`. O playbook não cobre PHP, então a revisão de módulo SEI usa junto o mapa `.agents/security/mapa-seguranca-cwe-sei.md`, que é do projeto.
 
-A skill `caveman` é um **modo opcional**: o agente nunca a aciona sozinho, e ela só entra se você invocar. O uso dela está em [`prompts-exemplo.md`](prompts-exemplo.md), na seção de modos auxiliares.
+A skill `caveman` é um **modo opcional**: o agente nunca a aciona sozinho, e ela só entra se você invocar. O uso dela está em [`prompts-exemplo.md`](docs/stack_ai/prompts-exemplo.md), na seção de modos auxiliares.
 
 As skills do projeto nascem neste repositório e são versionadas junto com ele:
 
@@ -159,7 +159,7 @@ As skills do projeto nascem neste repositório e são versionadas junto com ele:
 | `sei-report-todos` | Gera relatório de pendências `TODO:` em módulos escolhidos explicitamente |
 | `sei-revisao-tecnica` | Revisa diretamente segurança, conformidade, gates e qualidade técnica de diffs, arquivos ou módulos SEI, sem exigir spec |
 
-Use `sei-revisao-tecnica` diretamente para revisão técnica, security review, compliance, gates ou módulo SEI, inclusive sobre worktree ou diff fornecido. Os aliases históricos são resolvidos textualmente conforme a matriz de roteamento em [`.agents/references/roteamento-de-skills.md`](../../.agents/references/roteamento-de-skills.md).
+Use `sei-revisao-tecnica` diretamente para revisão técnica, security review, compliance, gates ou módulo SEI, inclusive sobre worktree ou diff fornecido. Os aliases históricos são resolvidos textualmente conforme a matriz de roteamento em [`.agents/references/roteamento-de-skills.md`](.agents/references/roteamento-de-skills.md).
 
 > **Glossário rápido:** CRUD = conjunto de operações de criar, ler, atualizar e deletar registros. Script de release = arquivo executado na instalação ou atualização do módulo no servidor.
 
@@ -203,7 +203,7 @@ Se você optar por uma ferramenta diferente das listadas acima, confirme antes q
 
 O SpecKit é o ponto de partida do SDD por algumas razões práticas: é de fácil adoção para equipes que estão começando a introduzir especificação no fluxo de desenvolvimento, tem integração direta com o GitHub Copilot e conta com uma comunidade ativa que mantém o framework atualizado. Isso reduz o risco de depender de algo que ficará sem suporte.
 
-> **Não substitua os arquivos do SpecKit por conta própria.** Se houver uma nova versão disponível, a atualização deve ser coordenada pela equipe seguindo o processo de [`manutencao-da-stack.md`](manutencao-da-stack.md). Substituir os arquivos sem revisão pode quebrar o fluxo para todas as ferramentas integradas.
+> **Não substitua os arquivos do SpecKit por conta própria.** Se houver uma nova versão disponível, a atualização deve ser coordenada pela equipe seguindo o processo de [`manutencao-da-stack.md`](docs/stack_ai/manutencao-da-stack.md). Substituir os arquivos sem revisão pode quebrar o fluxo para todas as ferramentas integradas.
 
 > **Versão do template:** a estrutura instalada foi gerada a partir do **Template Version 1.0.3**. Consulte essa versão como referência ao comparar ou atualizar os arquivos em `.specify/`.
 
@@ -354,7 +354,7 @@ Antes de remover qualquer item do `.gitignore`, avalie se a remoção é realmen
 
 **Passo 4: Para uma demanda maior ou ambígua,** use o fluxo SpecKit, começando por `/speckit-specify`. Leia antes a seção [O que é o SpecKit](#o-que-é-o-speckit).
 
-**Passo 5: Consulte os exemplos** em [`prompts-exemplo.md`](prompts-exemplo.md) para ver como formular bons pedidos para diferentes tipos de demanda.
+**Passo 5: Consulte os exemplos** em [`prompts-exemplo.md`](docs/stack_ai/prompts-exemplo.md) para ver como formular bons pedidos para diferentes tipos de demanda.
 
 Você **não** precisa instalar o SpecKit nem qualquer componente adicional da stack. Tudo já está configurado no repositório. O único passo é instalar a ferramenta de IA.
 
@@ -362,7 +362,7 @@ Você **não** precisa instalar o SpecKit nem qualquer componente adicional da s
 
 ## Atualizações da stack
 
-A manutenção da stack tem documento próprio: [`manutencao-da-stack.md`](manutencao-da-stack.md). Ele cobre como o SpecKit está organizado, o mapa de atualização, como atualizar o SpecKit, como atualizar a skill `owasp-playbook` e como atualizar os demais arquivos da stack.
+A manutenção da stack tem documento próprio: [`manutencao-da-stack.md`](docs/stack_ai/manutencao-da-stack.md). Ele cobre como o SpecKit está organizado, o mapa de atualização, como atualizar o SpecKit, como atualizar a skill `owasp-playbook` e como atualizar os demais arquivos da stack.
 
 Não substitua arquivos da stack por conta própria. A atualização é coordenada pela equipe, em branch dedicada e com Pull Request para revisão.
 
@@ -374,13 +374,13 @@ Não substitua arquivos da stack por conta própria. A atualização é coordena
 
 | Documento | O que contém |
 |---|---|
-| [`AGENTS.md`](../../AGENTS.md) | Regras centrais do projeto para agentes: o que pode ser feito, padrões de código e regras de decisão |
-| [`prompts-exemplo.md`](prompts-exemplo.md) | Prompts prontos para as demandas reais: bug, fluxo SpecKit, ajuste pontual, revisão técnica, dicionário de dados e modos auxiliares |
-| [`manutencao-da-stack.md`](manutencao-da-stack.md) | Manutenção da stack: organização do SpecKit, mapa de atualização e procedimentos de atualização do SpecKit e da skill `owasp-playbook` |
-| [`docs/manual_desenvolvimento_md/`](../manual_desenvolvimento_md/) | Manual oficial de desenvolvimento de módulos SEI |
-| [`docs/dicionario_dados/`](../dicionario_dados/) | Dicionário de dados por módulo (uma pasta por módulo: SEI, SIP, Litigioso, ...) |
-| [`.agents/references/roteamento-de-skills.md`](../../.agents/references/roteamento-de-skills.md) | Qual skill usar para cada tipo de demanda |
-| [`.agents/references/gates-de-implementacao.md`](../../.agents/references/gates-de-implementacao.md) | Pontos de verificação obrigatórios que impedem a implementação de avançar com problemas não resolvidos |
+| [`AGENTS.md`](AGENTS.md) | Regras centrais do projeto para agentes: o que pode ser feito, padrões de código e regras de decisão |
+| [`prompts-exemplo.md`](docs/stack_ai/prompts-exemplo.md) | Prompts prontos para as demandas reais: bug, fluxo SpecKit, ajuste pontual, revisão técnica, dicionário de dados e modos auxiliares |
+| [`manutencao-da-stack.md`](docs/stack_ai/manutencao-da-stack.md) | Manutenção da stack: organização do SpecKit, mapa de atualização e procedimentos de atualização do SpecKit e da skill `owasp-playbook` |
+| [`docs/manual_desenvolvimento_md/`](docs/manual_desenvolvimento_md/) | Manual oficial de desenvolvimento de módulos SEI |
+| [`docs/dicionario_dados/`](docs/dicionario_dados/) | Dicionário de dados por módulo (uma pasta por módulo: SEI, SIP, Litigioso, ...) |
+| [`.agents/references/roteamento-de-skills.md`](.agents/references/roteamento-de-skills.md) | Qual skill usar para cada tipo de demanda |
+| [`.agents/references/gates-de-implementacao.md`](.agents/references/gates-de-implementacao.md) | Pontos de verificação obrigatórios que impedem a implementação de avançar com problemas não resolvidos |
 
 **Ferramentas e padrões externos:**
 

@@ -41,7 +41,7 @@ Formato, fluxo de criação/atualização e geração de changelog são definido
 
 ## 3. Prompts de exemplo
 
-[`prompts-exemplo.md`](../prompts-exemplo.md) reúne prompts prontos para uso real, amarrados às skills do repositório: correção de bug (com variações Playwright e Selenium), fluxo Speckit para funcionalidade nova, ajustes pontuais em menu, entidade e API/WebService, revisão técnica e segurança, e dicionário de dados.
+[`stack_ai/prompts-exemplo.md`](stack_ai/prompts-exemplo.md) reúne prompts prontos para uso real, amarrados às skills do repositório: correção de bug (com variações Playwright e Selenium), fluxo Speckit para funcionalidade nova, ajustes pontuais em menu, entidade e API/WebService, revisão técnica e segurança, e dicionário de dados.
 
 Cada prompt já traz objetivo, fatos verificados versus hipóteses não confirmadas, critério de aceite e protocolo de execução, prontos para adaptar e enviar.
 
@@ -49,7 +49,7 @@ Cada prompt já traz objetivo, fatos verificados versus hipóteses não confirma
 
 ## 4. Documentação da stack de IA
 
-A raiz do repositório (`README.md`, `speckit.md`, `manutencao-da-stack.md` e `prompts-exemplo.md`) explica a stack de IA do repositório para quem vai usá-la: o que é, quais ferramentas funcionam aqui, como usar o SpecKit, prompts prontos e como manter a stack atualizada.
+O [`README.md`](../README.md) da raiz e a pasta [`stack_ai/`](stack_ai/) (`speckit.md`, `manutencao-da-stack.md` e `prompts-exemplo.md`) explicam a stack de IA do repositório para quem vai usá-la: o que é, quais ferramentas funcionam aqui, como usar o SpecKit, prompts prontos e como manter a stack atualizada.
 
 | Arquivo | O que contém |
 |---|---|
