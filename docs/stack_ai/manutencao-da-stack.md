@@ -1,6 +1,6 @@
 # Manutenção da stack
 
-> Este documento é para quem mantém ou evolui a stack de IA. Se você só quer usar a stack, leia [`README.md`](../../README.md) e [`speckit.md`](speckit.md).
+> Este documento é para quem mantém ou evolui a stack de IA. Se você só quer usar a stack, leia [`README.md`](README.md) e [`speckit.md`](speckit.md).
 
 Aqui estão as mudanças nos arquivos da stack dentro do repositório: `.agents/`, `.claude/`, `.claude-plugin/`, `.github/`, `.opencode/`, `.specify/`, `.vscode/` e `docs/stack_ai/`. Atualizações das ferramentas locais (Copilot, OpenCode, Claude Code) são responsabilidade de cada ferramenta e documentadas por elas mesmas.
 
@@ -108,7 +108,7 @@ Os arquivos de configuração pessoal do SpecKit ficam no `.gitignore` e não s�
 4. Compare os templates de artefato em `.specify/templates/` com os da nova versão e aplique o merge manualmente, preservando as seções do SEI: eles são copiados pelos scripts para `specs/<feature>/` em tempo de execução.
 5. Mantenha `.specify/memory/constitution.md` vazio. As regras de governança vivem nas próprias skills de fase, então não incorpore o conteúdo do novo `constitution-template.md`.
 6. Teste o fluxo ponta a ponta (`specify`, `plan`, `tasks`, `implement`) em uma funcionalidade de exemplo.
-7. Atualize a versão registrada na nota de [`speckit.md`](speckit.md) e na tabela de skills de terceiros do [`README.md`](../../README.md), e abra um Pull Request descrevendo o que mudou.
+7. Atualize a versão registrada na nota de [`speckit.md`](speckit.md) e na tabela de skills de terceiros do [`README.md`](README.md), e abra um Pull Request descrevendo o que mudou.
 
 ---
 
@@ -175,7 +175,7 @@ rm -rf "$ORIGEM"
 
 O script copia tudo e depois remove a lista de exclusão. Pasta nova que o upstream criar aparece no `git status` e é avaliada no Pull Request: ou entra na lista de exclusão, ou fica.
 
-3. Registre o commit e a data que o script imprimiu na tabela desta seção, e atualize a versão na tabela de skills de terceiros do [`README.md`](../../README.md).
+3. Registre o commit e a data que o script imprimiu na tabela desta seção, e atualize a versão na tabela de skills de terceiros do [`README.md`](README.md).
 4. Confira a tabela de plays disponíveis do `SKILL.md` da skill contra `ls upstream/plugins/*/plays/`. Play novo, removido ou renomeado exige ajuste na tabela e na contagem de plays citada em `AGENTS.md` e no `README.md`.
 5. Confira a tabela OpenCRE de `.agents/security/mapa-seguranca-cwe-sei.md` contra `ls upstream/data/opencre/`. Ficha nova pode cobrir CWE que hoje está fora do mapa.
 6. Abra o Pull Request descrevendo o que mudou.

@@ -1,6 +1,6 @@
 # Catálogo de Eventos do SEI (v5.0 — Cap. 9)
 
-> Fonte: `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_9_eventos.md`
+> Fonte: `docs/manuais/sei/manual_md/sei_modulos_manual_dev_9_eventos.md`
 > Uso: localizar o hook correto em `*Integracao.php` antes de propor interceptacao propria ou alteracao no core.
 
 Se a duvida ainda estiver ambigua entre API, evento e operacao, usar primeiro

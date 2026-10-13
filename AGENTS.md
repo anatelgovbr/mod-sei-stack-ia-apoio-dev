@@ -3,7 +3,7 @@
 3. Mudanças cirúrgicas
 4. Execução orientada a objetivo
 
-## Contexto
+## Contexto do Projeto
 
 Repositório de customizações e módulos do SEI com release versionada e padrões InfraPHP. Trate o projeto como sistema administrativo, com requisitos de auditoria, permissão e compatibilidade de release.
 
@@ -76,22 +76,29 @@ Teste de saída: cada linha alterada no diff responde a um trecho do pedido ou a
 
 ### 4. Execução orientada a objetivo
 
-**Definir critérios de sucesso. Repetir até a verificação passar.**
+**Definir critérios de sucesso verificáveis. Repetir até a verificação passar.**
 
-Traduzir o pedido em critério verificável:
+Traduzir o pedido em critérios verificáveis:
 - "Adicionar validação" → "listar as entradas inválidas, implementar, provar cada uma com comando".
 - "Corrigir o bug" → "reproduzir com comando, corrigir, repetir o comando até passar".
 - "Refatorar ou otimizar X" → "registrar o comportamento antes, alterar, comprovar o mesmo comportamento depois".
 
-Antes da primeira edição, declarar o plano como checklist, um item por passo:
+Antes da primeira edição, declarar plano com `Impacto Arquitetural` definido em "Decisões Arquiteturais" e `Checklist de Critérios Verificáveis` com um item por passo:
+
 ```
+**Impacto Arquitetural:** <exige novo ADR / exige atualizar ADR / nenhum impacto>
+- Dimensões: <dimensões tocadas>
+- <nome do fator>: <motivo do fator valer para esta mudança>
+- <nome do fator>: <motivo do fator valer para esta mudança>
+
+**Checklist de Critérios Verificáveis:**
 - [ ] [Step] → verify: [check]
 - [ ] [Step] → verify: [check]
 - [ ] [Step] → verify: [check]
 ```
 
 Ao verificar:
-- Executar os gates obrigatórios e os critérios de sucesso.
+- Executar os gates obrigatórios e os critérios de sucesso verificáveis.
 - Repetir correção e verificação até todos passarem.
 - Verificação que depende do desenvolvedor, como smoke manual, entra na resposta como pendente.
 - Informar impedimentos e pendências sem declarar a entrega concluída.
@@ -183,6 +190,49 @@ Os padrões abaixo são obrigatórios no SEI/InfraPHP. Não substituir por equiv
 - Em documentação, prompts e instruções internas, nunca usar a palavra "canonica" ou variantes; usar sempre a palavra "padrão".
 - Em caso de conflito entre documentos: parar, identificar os documentos conflitantes e aguardar decisão do usuário antes de prosseguir.
 
+## Decisões Arquiteturais
+
+Toda mudança passa por esta triagem e o resultado é explicitado na linha "Impacto Arquitetural" da execução orientada a objetivo da Disciplina Agêntica, informando:
+	- **Com impacto**: `exige novo ADR` ou `exige atualizar ADR`, com lista das Dimensões, nome de cada fator e motivo da mudança que justifica ADR novo ou atualização de ADR;
+	- **Sem impacto**: `nenhum impacto` e o motivo da mudança não envolver fatores que justificam ADR novo ou atualização de ADR.
+
+A mudança exige ADR novo ou atualização **QUANDO** atende às duas condições:
+
+	1. Escolhe entre alternativas viáveis em pelo menos uma dimensão: estrutura, responsabilidade funcional (qual componente ou sistema responde por cada capacidade de negócio, processo ou dado mestre), atributo de qualidade, tecnologia ou dependência externa, interface ou contrato publicado e técnica de construção; e
+	2. Tem pelo menos um destes fatores de significância:
+	   - Difícil de reverter: desfazer exige migrar dados ou mudar, de forma coordenada, outros sistemas, equipes, consumidores ou cópias já distribuídas;
+	   - Transversal: afeta várias partes do sistema ou a interação entre elas;
+	   - Risco ou exigência externa: segurança, privacidade, conformidade legal, auditoria ou pedido de parte interessada crítica;
+	   - Dependência sem controle: dependência externa fora do controle do time;
+	   - Primeira vez: tecnologia ou padrão sem precedente no projeto; e
+	   - Altera ADR: muda decisão registrada em ADR aceita.
+
+Dispensam novo ADR ou atualização: implementação que segue padrão ou ADR vigente, correção que preserva a arquitetura, refatoração sem mudança de interface ou contrato, atualização compatível de dependência, edição do texto de documentação existente, mudança de regra de negócio que não muda qual componente responde por ela e decisão interna de componente autocontido, que fica na documentação do próprio componente.
+
+Estados de uma ADR, em ordem: `proposta -> aceita -> descontinuada`.
+
+- Toda ADR nasce `proposta` e só pode ser editada ou descartada enquanto estiver `proposta`.
+- ADR `aceita` não é editada. Só muda de estado, para `descontinuada`.
+- `exige novo ADR`: nenhuma ADR `proposta` trata do assunto. Se uma ADR `aceita` trata, a nova leva "Substitui: ADR-<SIGLA>-NNN", e a anterior passa a `descontinuada`, com "Substituída por: ADR-<SIGLA>-MMM", quando a nova for aceita.
+- `exige atualizar ADR`: uma ADR `proposta` trata do assunto. Edite-a.
+
+Se a mudança tocar uma dimensão, liste `docs/architecture/adr/<modulo>/` e `docs/architecture/adr/sei/`, abra só as ADRs cujo título trate do mesmo assunto e confira pelo Status se a mudança segue ou altera uma ADR aceita. Quando a triagem indicar ADR, pare antes de editar, informe a dimensão e o fator, sugira um título curto e aguarde a decisão do desenvolvedor. Com a ADR aprovada, siga as regras de `docs/architecture/adr/README.md`.
+
+## Requisitos Ancorados
+
+`docs/requisitos-ancorados/<modulo>/` descreve o comportamento vigente do módulo: regras de negócio (`RN`), requisitos funcionais (`RF`) e requisitos técnicos (`RT`). Formato, IDs e templates em `docs/requisitos-ancorados/README.md`.
+
+- **Antes de alterar o módulo**: ler `docs/requisitos-ancorados/<modulo>/`. Divergência entre requisito e código: parar, citar arquivo e linha dos dois lados e perguntar qual vale; nunca corrigir requisito ou código em silêncio.
+- **Especificação da feature (Spec Kit)**: preencher "Requisitos Ancorados Afetados" com cada ID que a mudança adiciona, altera ou retira; módulo sem pasta em `docs/requisitos-ancorados/`: "Nenhum".
+- **Tarefas (Spec Kit)**: com ID afetado, a fase de release e validação inclui a tarefa "Atualizar `docs/requisitos-ancorados/<modulo>/` com os IDs de Requisitos Ancorados Afetados".
+- **Entrega**: na mesma entrega do código, os arquivos do módulo passam a descrever o novo estado. Requisito retirado sai do arquivo. ID novo usa o número seguinte ao maior já usado no módulo, conferido também no histórico do Git; nenhum ID é reutilizado.
+- **Resposta final**: listar cada ID adicionado, alterado ou retirado, com o motivo em uma frase, para a descrição da MR.
+- **Motivo**: os documentos de requisitos não têm campo de origem nem de justificativa; o motivo de cada mudança vai na descrição da MR ou na ADR. Nunca inventar motivo de negócio nem explicar requisito pela leitura do código. Requisito novo sem fonte conhecida: perguntar ao desenvolvedor.
+- **Mudança técnica**: passa pela triagem de "Decisões Arquiteturais"; com ADR, o requisito técnico cita o número da ADR e só muda quando a ADR estiver `aceita`.
+- **Módulo sem pasta em `docs/requisitos-ancorados/`**: não criar os requisitos do módulo sem pedido do desenvolvedor; com pedido, documentar só a parte que a mudança toca, a partir dos templates `docs/requisitos-ancorados/TEMPLATE-*.md`.
+
+Teste de saída: o diff altera `docs/requisitos-ancorados/<modulo>/` sempre que altera comportamento, restrição ou requisito de qualidade descrito ali, ou a resposta explica por que não altera.
+
 ## Regras de Escrita
 
 Salvo solicitação explícita em contrário, aplique estas regras às mensagens em linguagem natural destinada a pessoas durante a sessão e aos entregáveis textuais em português brasileiro. Em código, comandos, identificadores, nomes de APIs, caminhos, dados estruturados e outros elementos definidos por linguagem, formato, protocolo ou projeto, preserve a sintaxe, o idioma e as convenções próprios do artefato. Instruções específicas do entregável prevalecem sobre estas regras gerais de estilo.
@@ -198,6 +248,7 @@ Preserve literalmente citações diretas e outros conteúdos que precisem perman
 ## Fontes de Contexto
 
 - **Regra de negócio ou contexto funcional**: README do módulo e documentos específicos do repositório primeiro; se a regra não estiver documentada, perguntar ao desenvolvedor.
+- **Comportamento vigente do módulo**: `docs/requisitos-ancorados/<modulo>/`; leitura e atualização conforme a seção "Requisitos dos Módulos".
 - **Spec Kit**: invocação `/speckit-<fase>`, com hífen; fonte única em `.agents/skills/speckit-<fase>/SKILL.md`, 10 fases lado a lado com as demais skills; regra de manutenção em `.agents/references/speckit.md`.
 - **skill `napkin` e `.agents/memory/runbook.md`**: runbook operacional do desenvolvedor, local e fora do versionamento (`.gitignore`). Skill sempre ativa, sem gatilho: ler e curar o runbook no início de cada sessão, antes do trabalho. Lição que vale para todo o repositório sobe para este `AGENTS.md` ou para `.agents/references/`.
 - **Problema técnico crítico durante a implementação**: `.agents/references/gates-de-implementacao.md`, gates de bloqueio.

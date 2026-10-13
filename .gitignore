@@ -53,7 +53,7 @@ phpinfo.php
 # OpenCode / spec-kit / local tooling
 node_modules/
 vendor/
-/specs/
+/specs/*
 *.log
 *.cache
 .env*
@@ -73,6 +73,7 @@ desktop.ini
 .specify/feature.json
 
 /.agents/memory/runbook.md
+# Claude Code
 .claude/settings.local.json
 .specify/extensions/*/local-config.yml
 /.specify/init-options.json

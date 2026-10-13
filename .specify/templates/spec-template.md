@@ -131,6 +131,22 @@
 
 - **RF-006**: Sistema DEVE [NECESSITA CLARIFICACAO: detalhe nao especificado]
 
+### Requisitos Ancorados Afetados
+
+<!--
+  Consultar docs/requisitos-ancorados/<modulo>/ e listar cada ID que esta feature adiciona,
+  altera ou retira. Os RF-001 acima sao locais desta spec; os IDs ancorados levam
+  a sigla do modulo (RF-<SIGLA>-NNN, RN-<SIGLA>-NNN, RT-<SIGLA>-NNN).
+  ID novo usa o numero seguinte ao maior ja usado no modulo, inclusive os retirados,
+  que ficam no historico do Git.
+  Na entrega, os arquivos de docs/requisitos-ancorados/<modulo>/ passam a descrever o novo estado.
+  Regras em docs/requisitos-ancorados/README.md. Modulo sem pasta em docs/requisitos-ancorados/: escrever "Nenhum".
+-->
+
+| ID | Mudanca | Resumo |
+|----|---------|--------|
+| [RF-<SIGLA>-NNN] | [adicionado / alterado / retirado] | [o que muda, em uma frase] |
+
 ### Guardrails SEI aplicaveis
 
 <!--

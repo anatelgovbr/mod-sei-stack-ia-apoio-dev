@@ -1,6 +1,6 @@
 # Catálogo de Classes API do SEI (v5.0 — Cap. 8)
 
-> Fonte: `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_8_classes_api.md`
+> Fonte: `docs/manuais/sei/manual_md/sei_modulos_manual_dev_8_classes_api.md`
 > Uso: localizar o contrato oficial antes de propor acesso ao core, classe interna ou implementacao propria.
 
 Se a duvida do desenvolvedor ainda estiver ambigua entre API, evento e

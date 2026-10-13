@@ -1,6 +1,6 @@
 # Catálogo de Operações (SeiRN) do SEI (v5.0 — Cap. 10)
 
-> Fonte: `docs/manual_desenvolvimento_md/sei_modulos_manual_dev_10_operacoes.md`
+> Fonte: `docs/manuais/sei/manual_md/sei_modulos_manual_dev_10_operacoes.md`
 > Uso: identificar qual operacao oficial usar antes de criar logica propria equivalente.
 
 Se a duvida ainda estiver ambigua entre API, evento e operacao, usar primeiro
