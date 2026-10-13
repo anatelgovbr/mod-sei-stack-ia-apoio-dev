@@ -3,34 +3,44 @@
 ## Sumário
 
 - [Introdução](#introdução)
-- [Templates de Prompts para Utilizar em Casos Reais no SEI](#templates-de-prompts-para-utilizar-em-casos-reais-no-sei)
-  - [Pré-requisitos de Automação de Navegador (Playwright e Selenium)](#pré-requisitos-de-automação-de-navegador-playwright-e-selenium)
-  - [Loop de Verificação](#loop-de-verificação)
-  - [Correção de Bugs](#correção-de-bugs)
-    - [Investigar e corrigir bug](#investigar-e-corrigir-bug)
-    - [Investigar e corrigir bug com auxílio do Playwright](#investigar-e-corrigir-bug-com-auxílio-do-playwright)
-    - [Investigar e corrigir bug com auxílio do Selenium](#investigar-e-corrigir-bug-com-auxílio-do-selenium)
-  - [Fluxo Speckit para Funcionalidade Nova](#fluxo-speckit-para-funcionalidade-nova)
-    - [Fluxo padrão](#fluxo-padrão)
-    - [Fluxo alternativo (com passos opcionais)](#fluxo-alternativo-com-passos-opcionais)
-  - [Revisão Técnica (inclui Segurança e Vulnerabilidade)](#revisão-técnica-inclui-segurança-e-vulnerabilidade)
-    - [Revisão Técnica de alterações](#revisão-técnica-de-alterações)
-    - [Revisão Técnica de módulo ou arquivo](#revisão-técnica-de-módulo-ou-arquivo)
-    - [Revisão Técnica de Dimensões Específicas](#revisão-técnica-de-dimensões-específicas)
-    - [Variações de Saída da Revisão Técnica](#variações-de-saída-da-revisão-técnica)
-      - [Revisão Técnica em PDF](#revisão-técnica-em-pdf)
-      - [Gerar as issues ou tarefas técnicas](#gerar-as-issues-ou-tarefas-técnicas)
-      - [Para uma revisão já entregue](#para-uma-revisão-já-entregue)
-    - [Depois da revisão: marcar ou planejar a correção](#depois-da-revisão-marcar-ou-planejar-a-correção)
-  - [Dicionário de Dados](#dicionário-de-dados)
-    - [Criar o adaptador](#criar-o-adaptador)
-    - [Criar o dicionário de dados](#criar-o-dicionário-de-dados)
-    - [Atualizar o dicionário](#atualizar-o-dicionário)
-    - [Revisar a qualidade do dicionário](#revisar-a-qualidade-do-dicionário)
-    - [Gerar prints de tela como insumo complementar](#gerar-prints-de-tela-como-insumo-complementar)
-  - [Modos Auxiliares (Skills Externas de Uso Geral)](#modos-auxiliares-skills-externas-de-uso-geral)
-    - [Interrogar um plano ou um pedido utilizando o grill-me](#interrogar-um-plano-ou-um-pedido-utilizando-o-grill-me)
-    - [Comprimir a resposta utilizando o caveman](#comprimir-a-resposta-utilizando-o-caveman)
+- [Pré-requisitos de Automação de Navegador (Playwright e Selenium)](#pré-requisitos-de-automação-de-navegador-playwright-e-selenium)
+- [gauntlet-loop-forge](#gauntlet-loop-forge)
+- [Correção de Bugs](#correção-de-bugs)
+	- [Investigar e corrigir bug](#investigar-e-corrigir-bug)
+	- [Investigar e corrigir bug com auxílio do Playwright](#investigar-e-corrigir-bug-com-auxílio-do-playwright)
+	- [Investigar e corrigir bug com auxílio do Selenium](#investigar-e-corrigir-bug-com-auxílio-do-selenium)
+- [Fluxo Speckit para Funcionalidade Nova](#fluxo-speckit-para-funcionalidade-nova)
+	- [Fluxo padrão](#fluxo-padrão)
+	- [Fluxo alternativo (com passos opcionais)](#fluxo-alternativo-com-passos-opcionais)
+- [Revisão Técnica (inclui Segurança e Vulnerabilidade)](#revisão-técnica-inclui-segurança-e-vulnerabilidade)
+	- [Revisão Técnica de alterações](#revisão-técnica-de-alterações)
+	- [Revisão Técnica de módulo ou arquivo](#revisão-técnica-de-módulo-ou-arquivo)
+	- [Revisão Técnica de Dimensões Específicas](#revisão-técnica-de-dimensões-específicas)
+	- [Variações de Saída da Revisão Técnica](#variações-de-saída-da-revisão-técnica)
+		- [Revisão Técnica em PDF](#revisão-técnica-em-pdf)
+		- [Gerar as issues ou tarefas técnicas](#gerar-as-issues-ou-tarefas-técnicas)
+		- [Para uma revisão já entregue](#para-uma-revisão-já-entregue)
+	- [Depois da revisão: marcar ou planejar a correção](#depois-da-revisão-marcar-ou-planejar-a-correção)
+- [configuracao-de-testes-unitarios](#configuracao-de-testes-unitarios)
+	- [Projeto sem testes](#projeto-sem-testes)
+	- [Projeto que já tem testes](#projeto-que-já-tem-testes)
+	- [Projeto que roda em Docker](#projeto-que-roda-em-docker)
+	- [Projeto sem Docker](#projeto-sem-docker)
+	- [Analisar o repositório e planejar os testes unitários](#analisar-o-repositório-e-planejar-os-testes-unitários)
+- [manual-creator-scan-codebase](#manual-creator-scan-codebase)
+	- [Preparar o adaptador do manual](#preparar-o-adaptador-do-manual)
+	- [Criar um manual de uso](#criar-um-manual-de-uso)
+	- [Atualizar um manual de uso](#atualizar-um-manual-de-uso)
+	- [Verificar um manual de uso sem escrita](#verificar-um-manual-de-uso-sem-escrita)
+- [dicionario-dados-db-scan-codebase-docs](#dicionario-dados-db-scan-codebase-docs)
+	- [Criar o adaptador](#criar-o-adaptador)
+	- [Criar o dicionário de dados](#criar-o-dicionário-de-dados)
+	- [Atualizar o dicionário](#atualizar-o-dicionário)
+	- [Revisar a qualidade do dicionário](#revisar-a-qualidade-do-dicionário)
+	- [Gerar prints de tela como insumo complementar](#gerar-prints-de-tela-como-insumo-complementar)
+- [Modos Auxiliares (Skills Externas de Uso Geral)](#modos-auxiliares-skills-externas-de-uso-geral)
+	- [Interrogar um plano ou um pedido utilizando o grill-me](#interrogar-um-plano-ou-um-pedido-utilizando-o-grill-me)
+	- [Comprimir a resposta utilizando o caveman](#comprimir-a-resposta-utilizando-o-caveman)
 
 ---
 
@@ -78,9 +88,7 @@ A última seção do arquivo, "Modos Auxiliares (Skills Externas de Uso Geral)",
 
 ---
 
-## Templates de Prompts para Utilizar em Casos Reais no SEI
-
-### Pré-requisitos de Automação de Navegador (Playwright e Selenium)
+## Pré-requisitos de Automação de Navegador (Playwright e Selenium)
 
 Consulte esta seção antes de usar qualquer prompt deste arquivo que peça Playwright ou Selenium. Os prompts que usam uma dessas ferramentas apontam para cá em vez de repetir o conteúdo.
 
@@ -90,9 +98,11 @@ Qualquer prompt com automação de navegador exige o ambiente de desenvolvimento
 
 **Selenium:** ao contrário do Playwright, já vem configurado via Docker em `fontes/sei/ops_sei-docker/tests/`, com o container `selenium/standalone-chrome` e um runner pytest. Para rodar a suíte de exemplo (login, criação de processo, logout), use `make test_selenium_basico1` dentro de `fontes/sei/ops_sei-docker/tests/`. Essa suíte serve de referência para você adaptá-la a outros cenários. Essa configuração funciona só em Linux, com o ambiente em localhost.
 
-### Loop de Verificação
+---
 
-A skill `gauntlet-loop-forge` recebe um prompt que você já tem e devolve o mesmo prompt com a técnica de loop de verificação acrescentada. Ela só escreve o prompt e para: executar é um pedido separado, em uma janela nova.
+## gauntlet-loop-forge
+
+A skill `gauntlet-loop-forge` monta um prompt com a técnica de loop de verificação a partir do que você tiver: uma ideia, uma especificação ou um prompt que já existe. Ela só escreve o prompt e para: executar é um pedido separado, em uma janela nova.
 
 Para agregar a técnica, acrescente esta linha ao início ou ao fim de qualquer prompt deste arquivo, antes de enviar:
 
@@ -112,9 +122,11 @@ Onde o loop compensa:
 
 **Modelo para executar o prompt com loop:** prefira modelos intermediários e mais baratos. Exemplos em 2026: Luna e Terra (GPT), Haiku e Sonnet (Claude). Eles tendem a gastar menos tokens e, com o loop e os critérios bem definidos no prompt, entregam bom resultado. Modelos de topo, como Opus e Fable (Claude) ou Sol e Astra (GPT), tendem a alongar o loop, porque o mecanismo de execução do próprio modelo já repete e reverifica passos por conta própria, e o gasto de tokens cresce muito.
 
-### Correção de Bugs
+---
 
-#### Investigar e corrigir bug
+## Correção de Bugs
+
+### Investigar e corrigir bug
 
 Use este prompt como ponto de partida para qualquer bug. Quanto mais insumos você informar (print, mensagem de erro, chamado, suspeita de causa), menor a investigação exploratória e mais assertiva a correção.
 
@@ -201,7 +213,7 @@ Protocolo de execução:
 2. Só então implemente e valide.
 ```
 
-#### Investigar e corrigir bug com auxílio do Playwright
+### Investigar e corrigir bug com auxílio do Playwright
 
 Use esta variação quando o bug for difícil de reproduzir só pela descrição, ou quando você quiser confirmação visual do antes e do depois da correção.
 
@@ -236,7 +248,7 @@ Critério de aceite:
 
 Acesso ao ambiente de teste:
 - endereço: <URL do ambiente de teste, ex.: http://localhost:8000/sei>
-- autenticação: use as credenciais de teste já documentadas no `README.md` (usuário `teste`); se precisar de outro perfil, peça a credencial no momento do uso
+- autenticação: use as credenciais de teste já documentadas no `README.md` (usuário `teste`); se precisar de outro perfil, pare e me peça para configurar a credencial dele em um arquivo local não versionado, sem recebê-la pela conversa
 
 Passos:
 1. Use a imagem Docker `mcr.microsoft.com/playwright:v1.60.0-noble` (baixe se ainda não tiver localmente) para abrir a seguinte tela ou fluxo: <tela ou fluxo onde o bug ocorre>. Se a reprodução exigir um estado específico na base (registro, status, permissão), prepare esse estado você mesmo antes de tentar reproduzir o problema.
@@ -275,7 +287,7 @@ Critério de aceite:
 
 Acesso ao ambiente de teste:
 - endereço: http://localhost:8000/sei
-- autenticação: use as credenciais de teste já documentadas no `README.md` (usuário `teste`); se precisar de outro perfil, peça a credencial no momento do uso
+- autenticação: use as credenciais de teste já documentadas no `README.md` (usuário `teste`); se precisar de outro perfil, pare e me peça para configurar a credencial dele em um arquivo local não versionado, sem recebê-la pela conversa
 
 Passos:
 1. Use a imagem Docker `mcr.microsoft.com/playwright:v1.60.0-noble` (baixe se ainda não tiver localmente) para abrir a seguinte tela ou fluxo: Indisponibilidades do SEI, no menu do módulo Peticionamento. Se a reprodução exigir um estado específico na base (registro, status, permissão), prepare esse estado você mesmo antes de tentar reproduzir o problema.
@@ -287,7 +299,7 @@ Passos:
 Referencie os prints de antes e depois como evidência de cada critério de aceite verificado na tela.
 ```
 
-#### Investigar e corrigir bug com auxílio do Selenium
+### Investigar e corrigir bug com auxílio do Selenium
 
 Use esta variação quando quiser reproduzir e validar o bug via Selenium em vez de Playwright. A lógica é a mesma: reproduzir o bug, corrigir e validar visualmente o antes e o depois.
 
@@ -322,7 +334,7 @@ Critério de aceite:
 
 Acesso ao ambiente de teste:
 - endereço: <URL do ambiente de teste, ex.: http://localhost:8000/sei>
-- autenticação: use as credenciais de teste já documentadas no `README.md` (usuário `teste`); se precisar de outro perfil, peça a credencial no momento do uso
+- autenticação: use as credenciais de teste já documentadas no `README.md` (usuário `teste`); se precisar de outro perfil, pare e me peça para configurar a credencial dele em um arquivo local não versionado, sem recebê-la pela conversa
 - driver e navegador: container `selenium/standalone-chrome` já configurado em `fontes/sei/ops_sei-docker/tests/`, com os comandos no `Makefile` dessa mesma pasta
 
 Passos:
@@ -362,7 +374,7 @@ Critério de aceite:
 
 Acesso ao ambiente de teste:
 - endereço: http://localhost:8000/sei
-- autenticação: use as credenciais de teste já documentadas no `README.md` (usuário `teste`); se precisar de outro perfil, peça a credencial no momento do uso
+- autenticação: use as credenciais de teste já documentadas no `README.md` (usuário `teste`); se precisar de outro perfil, pare e me peça para configurar a credencial dele em um arquivo local não versionado, sem recebê-la pela conversa
 - driver e navegador: container `selenium/standalone-chrome` já configurado em `fontes/sei/ops_sei-docker/tests/`, com os comandos no `Makefile` dessa mesma pasta
 
 Passos:
@@ -375,7 +387,9 @@ Passos:
 Referencie os prints de antes e depois como evidência de cada critério de aceite verificado na tela.
 ```
 
-### Fluxo Speckit para Funcionalidade Nova
+---
+
+## Fluxo Speckit para Funcionalidade Nova
 
 Use o fluxo Speckit sempre que a demanda criar algo que ainda não existe: nova funcionalidade, nova entidade CRUD completa, novo menu e página, nova operação de API ou WebService, ou release com DDL novo.
 
@@ -387,7 +401,7 @@ Quanto mais detalhado o pedido em `/speckit-specify`, melhor a especificação g
 
 Os exemplos abaixo usam como demanda "uma tela de relatório das demandas institucionais agrupadas por tema, com filtro de período", no módulo `relacionamento-institucional`. Troque pelo objetivo real antes de enviar.
 
-#### Fluxo padrão
+### Fluxo padrão
 
 Especificar, planejar, decompor em tarefas e implementar, nessa ordem.
 
@@ -485,7 +499,7 @@ Aplique também os gates por artefato do `AGENTS.md`, seção "Roteamento", aos 
 /speckit-implement
 ```
 
-#### Fluxo alternativo (com passos opcionais)
+### Fluxo alternativo (com passos opcionais)
 
 Mesmo fluxo, com três passos opcionais inseridos: clarificar dúvidas antes de planejar, gerar um checklist de requisitos sensíveis antes de decompor, e analisar consistência antes de implementar.
 
@@ -529,11 +543,13 @@ Funcionalidade: relatório de demandas institucionais por tema.
 
 **7. Implementar:** igual ao fluxo padrão.
 
-### Revisão Técnica (inclui Segurança e Vulnerabilidade)
+---
+
+## Revisão Técnica (inclui Segurança e Vulnerabilidade)
 
 Use `sei-revisao-tecnica` para conferir os padrões técnicos do SEI em código já implementado: escopo, arquitetura, permissões, transação, controladores, entrada e saída, segurança, banco, release, integrações, qualidade e testes. A skill aciona as verificações de cada artefato encontrado, como página, RN, banco de dados, controladores e tarefa, e o relatório reúne o resultado dessas verificações. Ela não avalia requisito, regra de negócio nem especificação.
 
-#### Revisão Técnica de alterações
+### Revisão Técnica de alterações
 
 Sempre que fizer alterações antes de realizar um merge para branches de ambiente utilize estes exemplos para garantir a qualidade da entrega.
 
@@ -585,7 +601,7 @@ Escopo da mudança: o cadastro de controle do módulo litigioso passou a exigir 
 Pontos de atenção conhecidos: a validação entrou na RN e na página de cadastro, e quero saber se ela continua valendo em chamada direta pela URL.
 ```
 
-#### Revisão Técnica de módulo ou arquivo
+### Revisão Técnica de módulo ou arquivo
 
 Use para levantar o estado atual do código que está no repositório, incluindo o passivo. Em um módulo, a revisão cobre todas as dimensões técnicas e também os scripts SEI e SIP de instalação e atualização mapeados para ele. Fonte: `sei-revisao-tecnica/SKILL.md`, seção "Escopo de modulo completo".
 
@@ -613,7 +629,7 @@ Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica Completa** do a
 Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica Completa** do arquivo: fontes/sei/src/main/php/sei/web/modulos/litigioso/rn/MdLitLancamentoRN.php
 ```
 
-#### Revisão Técnica de Dimensões Específicas
+### Revisão Técnica de Dimensões Específicas
 
 Use quando quiser limitar a revisão a uma ou mais dimensões. A tabela traduz o assunto para o nome exato da dimensão usada pela skill. Escreva o nome como está na coluna da direita. Fonte: `sei-revisao-tecnica/SKILL.md`, seção "Dimensões técnicas".
 
@@ -653,7 +669,7 @@ Use a skill `sei-revisao-tecnica` para fazer **Revisão Técnica** somente desta
 - Alvo: fontes/sei/src/main/php/sei/web/modulos/peticionamento/
 ```
 
-#### Variações de Saída da Revisão Técnica
+### Variações de Saída da Revisão Técnica
 
 Peça uma variação quando precisar de um arquivo para compartilhar o resultado ou para alimentar o acompanhamento do time. São duas saídas:
 
@@ -662,7 +678,7 @@ Peça uma variação quando precisar de um arquivo para compartilhar o resultado
 
 Cada trecho abaixo é autossuficiente: cole no final de qualquer prompt de revisão das subseções anteriores, separado por uma linha em branco. Você preenche só o alvo da revisão; o agente cuida de identificadores, datas e nomes de arquivo.
 
-##### Revisão Técnica em PDF
+#### Revisão Técnica em PDF
 
 Adicione este trecho ao final do prompt de revisão.
 
@@ -806,7 +822,7 @@ FAÇA APENAS o solicitado; nada mais.
 Entregue o relatório em PDF, a lista de achados no chat (uma tabela com id, severidade, estado, prioridade, categoria em inglês, **cada** arquivo:linha-linha e o número da issue que o cobre) e o caminho de todos os arquivos gerados.
 ```
 
-##### Gerar as issues ou tarefas técnicas
+#### Gerar as issues ou tarefas técnicas
 
 Adicione este trecho ao final do prompt de revisão.
 
@@ -851,14 +867,15 @@ Use a skill `owasp-playbook` para revisar a **Segurança** do módulo: Peticiona
 <cole aqui o trecho das issues, sem alterar nada>
 ```
 
-##### Para uma revisão já entregue
+#### Para uma revisão já entregue
 
 Use na mesma conversa em que recebeu a revisão, quando decidir pelo arquivo só depois de ler o relatório. Troque `o PDF` por `o texto das issues` quando quiser a outra saída. O bloco abaixo não tem campo para preencher.
 
 ```text
 Gere o PDF do relatório de revisão que você acabou de entregar, nos caminhos e no formato do trecho do PDF acima. Os números vêm do relatório que você entregou: não refaça a análise nem recalcule contagem, severidade ou resultado.
 ```
-#### Depois da revisão: marcar ou planejar a correção
+
+### Depois da revisão: marcar ou planejar a correção
 
 Os dois prompts abaixo são continuação da mesma conversa, logo depois que o agente entregou o relatório de uma das revisões desta seção. Não cole nem repita os achados: o agente já tem o relatório na conversa. Escolha um dos dois caminhos; nenhum dos dois corrige nada sozinho.
 
@@ -906,7 +923,141 @@ Salve a especificação e a lista de tarefas em um arquivo Markdown (`.md`) na p
 Pare aqui. Se eu pedir para implementar agora, use o prompt "Investigar e corrigir bug" deste arquivo para cada tarefa, achado por achado, com minha confirmação antes de cada um.
 ```
 
-### Dicionário de Dados
+---
+
+## configuracao-de-testes-unitarios
+
+Lê o projeto e devolve um plano para configurar os testes unitários e a cobertura, sem meta de cobertura. A skill só lê: quem executa o plano é você, com o agente, depois de aprovar.
+
+Os prompts de situação, com ou sem testes, e os de ambiente, com ou sem Docker, se combinam: junte em um só pedido as linhas que descrevem o seu projeto.
+
+### Projeto sem testes
+
+Use quando o projeto nunca teve teste automatizado.
+
+**Prompt:**
+
+```text
+Use a skill `configuracao-de-testes-unitarios` para planejar a configuração de testes unitários no repositório em <caminho da raiz>.
+- Situação do projeto: ainda não tem nenhum teste
+```
+
+### Projeto que já tem testes
+
+Use quando o projeto já tem testes e você quer saber como rodá-los e como medir quanto do código eles exercitam.
+
+**Prompt:**
+
+```text
+Use a skill `configuracao-de-testes-unitarios` no repositório em <caminho da raiz>.
+- Situação do projeto: já tem testes
+```
+
+### Projeto que roda em Docker
+
+Use quando a aplicação sobe em contêiner, pelo Docker.
+
+**Prompt:**
+
+```text
+Use a skill `configuracao-de-testes-unitarios` para planejar a configuração de testes unitários no repositório em <caminho da raiz>.
+- Ambiente: a aplicação roda em Docker
+- Serviço da aplicação: <nome do serviço, se souber>
+```
+
+### Projeto sem Docker
+
+Use quando a aplicação roda direto na máquina, sem contêiner.
+
+**Prompt:**
+
+```text
+Use a skill `configuracao-de-testes-unitarios` para planejar a configuração de testes unitários no repositório em <caminho da raiz>.
+- Ambiente: o projeto não usa Docker e roda direto na máquina
+```
+
+### Analisar o repositório e planejar os testes unitários
+
+Use quando, além do plano de configuração, você quer saber por onde começar a escrever os testes. Essa análise fica fora do que a skill entrega e vem depois do plano.
+
+**Prompt:**
+
+```text
+Use a skill `configuracao-de-testes-unitarios` para analisar o repositório em <caminho da raiz> e montar o plano de configuração dos testes unitários.
+
+Depois de entregar o plano, traga uma análise com:
+- Testável sem refatoração: as unidades que já podem ser testadas isoladamente, sem mexer no código, com o caminho de cada uma
+- Partes críticas: as que merecem prioridade nos primeiros testes, com o caminho e o motivo de cada uma; considere crítica a unidade com regra de negócio, cálculo ou validação, priorizando as que mais mudaram no histórico do versionamento
+```
+
+---
+
+## manual-creator-scan-codebase
+
+Cria e mantém manuais de uso no destino declarado pelo adaptador, que por padrão é `docs/manuais/<slug_do_manual>.md`, com imagens em `docs/manuais/imagens-<slug_do_manual>/`. Primeiro combina entrevista e inspeção da codebase para preparar o adaptador do sistema; depois conecta tarefas e personas às telas, campos, textos, regras e permissões para redigir o manual em linguagem simples. Qualquer prompt demanda primeiro ter adaptador necessário criado, sendo possível preparar somente o adaptador.
+
+Informe o público-alvo e as tarefas que conhece. A skill investiga antes de perguntar pelas lacunas e não presume que um perfil de acesso define sozinho uma persona. O renderizador e a logo permitem verificar a apresentação do Markdown; ter acesso ao código não comprova a versão implantada nem substitui observação de conteúdo dinâmico.
+
+A varredura funcional também planeja onde os prints ajudam a explicar telas, campos e decisões. Quando faltar uma captura necessária, a skill deixa um aviso padronizado no ponto correspondente para depois incluir a imagem/print, com o caminho no sistema e o contexto de coleta. Os prints precisam ser obtidos manualmente depois. Na verificação sem escrita, essas posições são apenas reportadas.
+
+A entrevista da skill define o público-alvo antes da escrita; não depende de preencher este template. Grupos escolhidos com necessidades distintas recebem manuais separados por padrão, salvo escolha de manual conjunto. Na atualização, conteúdo jurídico, contextual, empírico ou externo já existente é preservado, inclusive em trechos mistos; a ausência dele no código não autoriza exclusão. Mudança de mérito exige proposta e decisão específica. Revisão de redação exige alcance autorizado, sem mudar sentido ou citações.
+
+### Preparar o adaptador do manual
+
+Use quando quiser preparar a investigação sem gerar o manual ainda. Apenas criar o adaptador necessário pertinente ao sistema ou módulo.
+
+```text
+Use a skill `manual-creator-scan-codebase` para criar ou atualizar somente o adaptador do <sistema ou módulo> neste repositório.
+
+Público e tarefas: <o que já souber sobre quem usa e o que precisa fazer>.
+Versão, idioma e configuração: <se souber>.
+Local de leitura e renderizador Markdown: <se souber>.
+Logo e materiais complementares: <arquivos locais, se houver>.
+
+Confira no código as convenções informadas, com atenção especial sobre como rastrear caminhos visíveis, telas, estados e personas, inclusive para orientar posterior coleta manual de prints. Entreviste-me sobre as lacunas relevantes e registre o adaptador completo. Não gere o manual nem insira avisos nele nesta etapa.
+```
+
+### Criar um manual de uso
+
+```text
+Use a skill `manual-creator-scan-codebase` para criar o manual de uso do <sistema ou módulo> neste repositório.
+
+Público: <grupos que cada manual deve atender e seus objetivos>.
+Organização dos manuais: <se tiver preferência por arquivos separados ou um manual conjunto>.
+Tarefas no alcance: <tarefas ou funcionalidades>.
+Versão e idioma da interface: <se souber>.
+Local de leitura e renderizador Markdown: <onde o manual será lido>.
+Logo: <caminho do arquivo ou indicação da logo existente no projeto>.
+Materiais complementares: <documentos ou capturas locais, se houver>.
+Ambiente para conferência: <fonte e alcance autorizados, se houver>.
+
+Defina comigo o público e a intenção que continuarem indeterminados. Prepare primeiro o adaptador e só depois faça a varredura funcional completa de cada alcance e redija os manuais conforme as Regras de Escrita da mencionada skill. Articule o texto com as capturas disponíveis; onde faltar um print necessário, insira o aviso padronizado junto à explicação pertinente, com o caminho comprovado no sistema e o contexto para posterior coleta manual do print. Ao final, apresente as lacunas, os prints pendentes e diferencie a conferência no código da observação na interface.
+```
+
+### Atualizar um manual de uso
+
+```text
+Use a skill `manual-creator-scan-codebase` para atualizar o manual em <docs/manuais/nome-do-manual.md> conforme a codebase atual referente ao <sistema ou módulo> neste repositório.
+
+Mudança a documentar: <funcionalidades, versão ou commits, se souber>.
+Público ou configuração que mudou: <se houver>.
+Novas capturas ou materiais: <arquivos locais/externos, se houver>.
+Revisão editorial adicional: <trechos cuja redação autorizo revisar sem mudar sentido, se houver>.
+
+Confirme o público quando não estiver claro no pedido ou no manual. Revalide o adaptador e atualize somente diferenças funcionais comprovadas no alcance, preservando conhecimento prévio sem rastro no código, inclusive dentro de parágrafos afetados. Para mudar ou excluir mérito contextual, jurídico, empírico ou externo, apresente uma proposta e aguarde minha decisão específica. Aplique as Regras de Escrita da mencionada skill ao texto novo ou alterado e à revisão editorial autorizada, sem mudar sentido nem citações. Reavalie os prints somente no alcance; preserve imagens, âncoras e trechos restantes. Relate necessidades externas, limites do legado e a origem de cada alteração no diff, fora do teor do manual. Articule o texto com as capturas disponíveis; onde faltar um print necessário, insira o aviso padronizado junto à explicação pertinente, com o caminho comprovado no sistema e o contexto para posterior coleta manual do print. Ao final, apresente as lacunas, os prints pendentes e diferencie a conferência no código da observação na interface.
+```
+
+### Verificar um manual de uso sem escrita
+
+```text
+Use a skill `manual-creator-scan-codebase` para verificar o manual em <docs/manuais/nome-do-manual.md> contra a codebase atual referente ao <sistema ou módulo> neste repositório e as convenções da skill.
+
+Confira público, tarefas e personas, campos, regras, mensagens, imagens, navegação e Regras de Escrita da mencionada skill. Distinga diferença funcional comprovada, conteúdo legítimo de outra origem e incerteza, sem tratar ausência no código como erro do manual. Confronte as telas com as posições dos prints e proponha os avisos necessários somente no relatório. Não altere nenhum arquivo, inclusive manual, imagens, adaptador e registro. Reporte critérios, evidências, propostas que exigem decisão e limites da conferência.
+```
+
+---
+
+## dicionario-dados-db-scan-codebase-docs
 
 A skill `dicionario-dados-db-scan-codebase-docs` investiga a codebase, os scripts de banco e qualquer documentação ou material complementar disponível para gerar e manter dicionários de dados. Ela nasceu de um [documento conceitual](../../.agents/skills/dicionario-dados-db-scan-codebase-docs/references/conceitos-e-instrucoes-tecnicas_descricao_tabelas_colunas.md) apoiado na família de normas ISO/IEC de qualidade de dados e metadados (ISO 8000-1, ISO/IEC 25012/25024 e ISO/IEC 11179). O alvo pode ser o sistema, um módulo, uma base de dados corporativa ou DW. Todo alvo reconhecido precisa de um adaptador registrado.
 
@@ -914,7 +1065,7 @@ O adaptador é o arquivo que ensina a skill a localizar, investigar e versionar 
 
 A skill gera três artefatos de saída: `dicionario_tabelas.md` e `dicionario_colunas.md`, com as descrições semânticas, e `CHANGELOG.md`, com o changelog estrutural.
 
-#### Criar o adaptador
+### Criar o adaptador
 
 Use este prompt no primeiro contato com um alvo que a skill ainda não reconhece, seja o sistema, um módulo ou uma base de dados corporativa. Ele cria só o adaptador. Gere o dicionário depois, em um pedido separado, com o prompt "Criar o dicionário de dados" a seguir. Informe as convenções que você já souber, para reduzir as perguntas que a skill vai precisar fazer. O que você não souber, ela tenta inferir da codebase antes de perguntar.
 
@@ -958,7 +1109,7 @@ Confira no código cada item que informei acima e me avise se encontrar divergê
 Pergunte objetivamente só sobre o que não puder ser inferido nem tiver sido informado acima.
 ```
 
-#### Criar o dicionário de dados
+### Criar o dicionário de dados
 
 Use este prompt na primeira vez que for gerar o dicionário de um sistema ou módulo, depois que ele já tiver um adaptador (crie primeiro com "Criar o adaptador", se ainda não existir). Anexar material complementar aumenta o contexto negocial disponível para a skill e tende a melhorar a qualidade do resultado. Pode ser qualquer formato: esquema de banco em outra ferramenta, dicionário anterior, prints de tela, manuais, vídeos ou transcrições. Cite os materiais que tiver e, se houver mais de um, indique qual é o material prioritário. A skill sempre confere as informações com base nas fontes estruturais disponíveis (codebase, esquema de banco ou DDL) antes de publicar qualquer descrição, com ou sem material complementar.
 
@@ -994,7 +1145,7 @@ Confira as informações dos materiais com base na fonte estrutural disponível 
 Ao final, informe explicitamente: 1) as tabelas ou colunas cuja semântica você não conseguiu confirmar nas fontes disponíveis; 2) o que faltou para confirmá-las; 3) os pontos em que algum material complementar divergiu da fonte estrutural, com a fonte que você adotou.
 ```
 
-#### Atualizar o dicionário
+### Atualizar o dicionário
 
 Use quando o dicionário já existir e você quiser sincronizá-lo com as mudanças estruturais do sistema ou do módulo (novas tabelas, colunas ou regras de negócio), inclusive depois de uma nova versão. Também serve para corrigir uma descrição anterior, mas só quando houver divergência estrutural ou domínio incompleto já confirmado, nunca por ajuste de estilo.
 
@@ -1031,29 +1182,29 @@ Confira as informações dos materiais com base na fonte estrutural disponível 
 Ao final, liste o que foi alterado e o que foi preservado intencionalmente.
 ```
 
-#### Revisar a qualidade do dicionário
+### Revisar a qualidade do dicionário
 
-Use quando quiser avaliar se um dicionário já existente segue os critérios de qualidade e as convenções da própria skill (completude, consistência, terminologia, distinções documentadas), sem alterar arquivos. A revisão olha só o dicionário, mesmo que o código tenha mudado depois da última atualização.
+Use quando quiser avaliar se um dicionário já existente segue os critérios de qualidade e as convenções da própria skill (completude, consistência, terminologia, distinções documentadas), sem alterar arquivos. A revisão também compara a estrutura documentada com a fonte estrutural e aponta as divergências sem corrigi-las; para incorporar mudanças do código, use "Atualizar o dicionário".
 
 **Prompt:**
 
 ```text
-Use a skill `dicionario-dados-db-scan-codebase-docs` para revisar a qualidade e a consistência do dicionário de dados do alvo abaixo, sem alterar nenhum arquivo.
+Use a skill `dicionario-dados-db-scan-codebase-docs` para revisar a qualidade e a consistência do dicionário de dados do alvo abaixo.
 - Alvo: <nome do sistema ou do módulo>
 
-Classifique cada achado como problema de qualidade documental (descrição incompleta, inconsistente, genérica ou fora das convenções da skill) ou como lacuna (elemento sem descrição). Liste claramente qualquer lacuna que impeça considerar a documentação como completa.
+Classifique cada achado como problema de qualidade documental (descrição incompleta, inconsistente, genérica ou fora das convenções da skill), como lacuna (elemento sem descrição) ou como divergência estrutural (tabela ou coluna documentada de forma diferente da fonte estrutural).
 ```
 
 **Exemplo preenchido, dicionário já publicado:**
 
 ```text
-Use a skill `dicionario-dados-db-scan-codebase-docs` para revisar a qualidade e a consistência do dicionário de dados do alvo abaixo, sem alterar nenhum arquivo.
+Use a skill `dicionario-dados-db-scan-codebase-docs` para revisar a qualidade e a consistência do dicionário de dados do alvo abaixo.
 - Alvo: litigioso
 
-Classifique cada achado como problema de qualidade documental (descrição incompleta, inconsistente, genérica ou fora das convenções da skill) ou como lacuna (elemento sem descrição). Liste claramente qualquer lacuna que impeça considerar a documentação como completa.
+Classifique cada achado como problema de qualidade documental (descrição incompleta, inconsistente, genérica ou fora das convenções da skill), como lacuna (elemento sem descrição) ou como divergência estrutural (tabela ou coluna documentada de forma diferente da fonte estrutural).
 ```
 
-#### Gerar prints de tela como insumo complementar
+### Gerar prints de tela como insumo complementar
 
 Use este exemplo quando o módulo já tiver um ambiente de teste no ar, local ou remoto, antes de rodar o prompt. Os prints gerados aqui podem ser apontados como material complementar no exemplo "Criar o dicionário de dados".
 
@@ -1066,14 +1217,14 @@ Gere os prints de tela do módulo abaixo para servirem de insumo complementar ao
 
 Módulo: <nome do módulo>.
 
-O ambiente de teste já está disponível em <endereço ou instrução para subir o ambiente>. Para autenticar, leia a credencial na <variável de ambiente ou arquivo local não versionado>; se não houver, peça a credencial no momento do uso. Nunca use credencial de produção.
+O ambiente de teste já está disponível em <endereço ou instrução para subir o ambiente>. Para autenticar, leia a credencial na <variável de ambiente ou arquivo local não versionado>; se não houver, pare e me peça para configurá-la nesse local, sem recebê-la pela conversa. Nunca use credencial de produção.
 
 Use a imagem Docker `mcr.microsoft.com/playwright:v1.60.0-noble` (baixe se ainda não tiver localmente) para rodar um script de automação que:
 
 1. Verifique se o módulo já está ativo nessa instância de teste, consultando o array `Modulos` em `fontes/sei/src/main/php/sei/config/ConfiguracaoSEI.php`. Se não estiver ativo, peça minha autorização para ativá-lo (edição local, sem comitar) antes de continuar; não edite sem essa confirmação.
 2. Faça login no ambiente de teste.
-3. Navegue por todas as telas relevantes do módulo, criando os dados de teste (seeds) necessários para preencher cada tela.
-4. Capture um print de cada tela relevante (listagem, formulário vazio, formulário preenchido, modal, estado intermediário).
+3. Navegue pelas telas que leem ou gravam as tabelas do módulo, criando os dados de teste (seeds) necessários para preencher cada tela. Se o ambiente for remoto ou compartilhado, confirme comigo antes de criar dados.
+4. Capture um print de cada uma dessas telas (listagem, formulário vazio, formulário preenchido, modal, estado intermediário).
 5. Salve os PNGs em <pasta de destino>/screenshots/, organizados por subpasta.
 6. Exporte os seeds e dados de teste usados no passo 3 (SQL de insert ou passo a passo reprodutível) em <pasta de destino>/seeds/, para reaproveitar em futuras implementações sem recriar a massa de teste do zero.
 
@@ -1087,21 +1238,23 @@ Gere os prints de tela do módulo abaixo para servirem de insumo complementar ao
 
 Módulo: relacionamento-institucional.
 
-O ambiente de teste já está disponível em http://localhost:8000/sei, com o Docker iniciado conforme o `README.md`. Para autenticar, leia a credencial no arquivo local não versionado fontes/sei/ops_sei-docker/.env; se não houver, peça a credencial no momento do uso. Nunca use credencial de produção.
+O ambiente de teste já está disponível em http://localhost:8000/sei, com o Docker iniciado conforme o `README.md`. Para autenticar, leia a credencial no arquivo local não versionado fontes/sei/ops_sei-docker/.env; se não houver, pare e me peça para configurá-la nesse local, sem recebê-la pela conversa. Nunca use credencial de produção.
 
 Use a imagem Docker `mcr.microsoft.com/playwright:v1.60.0-noble` (baixe se ainda não tiver localmente) para rodar um script de automação que:
 
 1. Verifique se o módulo já está ativo nessa instância de teste, consultando o array `Modulos` em `fontes/sei/src/main/php/sei/config/ConfiguracaoSEI.php`. Se não estiver ativo, peça minha autorização para ativá-lo (edição local, sem comitar) antes de continuar; não edite sem essa confirmação.
 2. Faça login no ambiente de teste.
-3. Navegue por todas as telas relevantes do módulo, criando os dados de teste (seeds) necessários para preencher cada tela.
-4. Capture um print de cada tela relevante (listagem, formulário vazio, formulário preenchido, modal, estado intermediário).
+3. Navegue pelas telas que leem ou gravam as tabelas do módulo, criando os dados de teste (seeds) necessários para preencher cada tela. Se o ambiente for remoto ou compartilhado, confirme comigo antes de criar dados.
+4. Capture um print de cada uma dessas telas (listagem, formulário vazio, formulário preenchido, modal, estado intermediário).
 5. Salve os PNGs em specs/dicionario-ri/relacionamento-institucional/screenshots/, organizados por subpasta.
 6. Exporte os seeds e dados de teste usados no passo 3 (SQL de insert ou passo a passo reprodutível) em specs/dicionario-ri/relacionamento-institucional/seeds/, para reaproveitar em futuras implementações sem recriar a massa de teste do zero.
 
 Ao final, liste as telas que não conseguiu capturar e o motivo de cada uma.
 ```
 
-### Modos Auxiliares (Skills Externas de Uso Geral)
+---
+
+## Modos Auxiliares (Skills Externas de Uso Geral)
 
 Esta seção é diferente das anteriores. As skills aqui não resolvem uma demanda de SEI: elas mudam o modo como o agente trabalha em qualquer prompt deste arquivo. O `caveman` muda como o agente escreve, e o `grill-me` muda como o agente entrevista você.
 
@@ -1111,7 +1264,7 @@ Nenhum desses modos afrouxa o `AGENTS.md`. Permissão e link assinado, transaç�
 
 Envie o comando sozinho, em uma mensagem separada, antes do prompt real. O `caveman` continua ativo nas respostas seguintes até você desligá-lo ou até a sessão acabar. O `grill-me` vale só para a resposta que ele gera.
 
-#### Interrogar um plano ou um pedido utilizando o grill-me
+### Interrogar um plano ou um pedido utilizando o grill-me
 
 Use antes de aprovar um plano ou antes de escrever um pedido. São três momentos típicos: antes do `/speckit-specify`, quando a tarefa ainda está só na sua cabeça e você não sabe como escrever o pedido; entre o `/speckit-specify` e o `/speckit-plan`, para interrogar a especificação antes de aprová-la; e antes de dar o OK no protocolo de execução dos prompts deste arquivo. Quando a entrevista vier antes do `/speckit-specify`, peça no fim o texto do pedido da fase, pronto para colar. Comece em uma janela nova.
 
@@ -1143,7 +1296,7 @@ Ainda em aberto: se o relatório entra como opção nova no menu do módulo ou c
 Me preocupa: recurso e perfil novos no SIP, desempenho da consulta quando um tema tem muitas demandas, e o que a tela mostra para demandas sem tema associado.
 ```
 
-#### Comprimir a resposta utilizando o caveman
+### Comprimir a resposta utilizando o caveman
 
 Use quando a sessão for gerar texto longo, como a revisão técnica de um módulo inteiro, e você quiser o conteúdo sem a prosa em volta. O `caveman` corta artigo, ressalva e frase de cortesia. Ele não corta conteúdo técnico: termo técnico, trecho de código, nome de classe ou de API e mensagem de erro saem literais, iguais ao modo normal. Código, mensagem de commit e descrição de PR também continuam em texto normal.
 

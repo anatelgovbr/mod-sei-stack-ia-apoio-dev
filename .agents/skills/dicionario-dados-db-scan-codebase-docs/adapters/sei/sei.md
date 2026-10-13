@@ -54,7 +54,7 @@ Leia `const SEI_VERSAO` em `fontes/sei/src/main/php/sei/web/SEI.php` a cada exec
 
 | Evidência | Caminhos |
 |---|---|
-| Documentação | `docs/manual_desenvolvimento_md/*.md` pertinente |
+| Documentação | `docs/manuais/sei/manual_md/sei_modulos_manual_dev_*.md` pertinente |
 | Estrutura | `sei/scripts/atualizar_versao_sei.php` |
 | Modelo, regra, consulta e escrita | `sei/web/dto/`, `rn/` e `bd/` |
 | Integração | `sei/web/api/`, `ws/` e `.wsdl` |

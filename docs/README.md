@@ -7,7 +7,7 @@ Documentação técnica do repositório, escrita para ser lida tanto por pessoas
 ## Sumário
 
 - [1. Dicionários de dados](#1-dicionários-de-dados)
-- [2. Manual de desenvolvimento](#2-manual-de-desenvolvimento)
+- [2. Manuais](#2-manuais)
 - [3. Prompts de exemplo](#3-prompts-de-exemplo)
 - [4. Documentação da stack de IA](#4-documentação-da-stack-de-ia)
 
@@ -31,11 +31,16 @@ Formato, fluxo de criação/atualização e geração de changelog são definido
 
 ---
 
-## 2. Manual de desenvolvimento
+## 2. Manuais
 
-[`manual_desenvolvimento_md/`](manual_desenvolvimento_md/) é o manual oficial de desenvolvimento de módulos SEI (`SEI-Modulos-v5.0`) dividido por capítulo em Markdown, com índice em `sei_modulos_manual_dev_0_indice.md`. É a fonte usada pelos catálogos das skills de integração (`catalogo-api.md`, `catalogo-eventos.md`, `catalogo-operacoes.md`).
+A pasta [`manuais/`](manuais/) tem uma subpasta por módulo, com o mesmo nome usado em `requisitos-ancorados/<modulo>/`, e a subpasta `sei/` para o núcleo SEI. Cada subpasta guarda os seus manuais e a pasta `imagens/` usada por eles.
 
-[`manual_desenvolvimento/`](manual_desenvolvimento/) guarda o mesmo manual nos formatos de origem (`.docx`, `.odt`, `.pdf` e um `.md` único), mais as imagens referenciadas no texto. Serve de base para regenerar `manual_desenvolvimento_md/` caso o manual oficial seja atualizado; não é o material consultado no dia a dia.
+| Subpasta | O que contém |
+|---|---|
+| [`apoio-plano-trabalho/`](manuais/apoio-plano-trabalho/) | Manual de uso do módulo Apoio a Plano de Trabalho, mantido pela skill [`manual-creator-scan-codebase`](../.agents/skills/manual-creator-scan-codebase/SKILL.md) |
+| [`sei/`](manuais/sei/) | Manual oficial de desenvolvimento de módulos SEI (`SEI-Modulos-v5.0`) |
+
+Em [`sei/manual_md/`](manuais/sei/manual_md/), o manual de desenvolvimento está dividido por capítulo em Markdown, com índice em `sei_modulos_manual_dev_0_indice.md`. Os capítulos são a fonte usada pelos catálogos das skills de integração (`catalogo-api.md`, `catalogo-eventos.md`, `catalogo-operacoes.md`). A pasta `sei/` guarda o manual nos formatos de origem (`SEI-Modulos-v5.0` em `.docx`, `.odt`, `.pdf` e um `.md` único) e a pasta `imagens/`, usada pelos capítulos e pelo `.md` único. Os formatos de origem servem de base para regenerar os capítulos caso o manual oficial seja atualizado e não são o material consultado no dia a dia.
 
 ---
 
@@ -49,7 +54,7 @@ Cada prompt já traz objetivo, fatos verificados versus hipóteses não confirma
 
 ## 4. Documentação da stack de IA
 
-O [`README.md`](../README.md) da raiz e a pasta [`stack_ai/`](stack_ai/) (`speckit.md`, `manutencao-da-stack.md` e `prompts-exemplo.md`) explicam a stack de IA do repositório para quem vai usá-la: o que é, quais ferramentas funcionam aqui, como usar o SpecKit, prompts prontos e como manter a stack atualizada.
+[`stack_ai/`](stack_ai/) explica a stack de IA do repositório para quem vai usá-la: o que é, quais ferramentas funcionam aqui, como usar o SpecKit, prompts prontos e como manter a stack atualizada.
 
 | Arquivo | O que contém |
 |---|---|
@@ -58,6 +63,6 @@ O [`README.md`](../README.md) da raiz e a pasta [`stack_ai/`](stack_ai/) (`speck
 | `manutencao-da-stack.md` | Como atualizar o SpecKit e os demais arquivos da stack |
 | `prompts-exemplo.md` | Prompts prontos para as demandas reais do SEI: bug, fluxo SpecKit, ajuste pontual, revisão técnica, dicionário de dados e modos auxiliares |
 
-As skills do repositório, de terceiros e do projeto, estão descritas em [`README.md`](../README.md). O `README.md` da raiz não detalha a stack: ele só aponta para essa pasta.
+As skills do repositório, de terceiros e do projeto, estão descritas em [`stack_ai/README.md`](stack_ai/README.md). O `README.md` da raiz não detalha a stack: ele só aponta para essa pasta.
 
 Regras de código, limites de escrita e padrões deste projeto não ficam nessa pasta: estão no [`AGENTS.md`](../AGENTS.md).
