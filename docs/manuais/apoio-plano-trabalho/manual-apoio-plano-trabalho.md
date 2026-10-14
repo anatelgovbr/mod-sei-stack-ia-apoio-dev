@@ -1,14 +1,14 @@
 ![Logotipo do SEI](imagens/logo-sei.svg)
 
-# Manual do módulo Apoio a Plano de Trabalho
+# Manual de Administração do módulo Apoio a Plano de Trabalho
 
-Público: administradores do SEI que associam documentos modelo a itens de etapa de plano de trabalho e usuários do SEI que geram documentos a partir desses itens.
+Público: Administradores do SEI que configuram documentos modelo para itens de etapa de planos de trabalho.
 
-Versão: módulo Apoio a Plano de Trabalho (APT) 1.0.0, com interface em português brasileiro. Conteúdo conferido no código do módulo em 8 de outubro de 2026.
+Versão declarada no código do módulo: Apoio a Plano de Trabalho (APT) 1.0.0. Interface em português brasileiro. Conteúdo conferido no código em 14 de outubro de 2026; implantação não verificada.
 
 ## Sumário
 
-- [Para que serve o módulo](#para-que-serve-o-módulo)
+- [Finalidade administrativa](#finalidade-administrativa)
     - [Termos usados neste manual](#termos-usados-neste-manual)
 - [Antes de começar](#antes-de-começar)
     - [Quem pode realizar cada tarefa](#quem-pode-realizar-cada-tarefa)
@@ -19,18 +19,16 @@ Versão: módulo Apoio a Plano de Trabalho (APT) 1.0.0, com interface em portugu
     - [Campos da janela de associação](#campos-da-janela-de-associação)
 - [Como trocar o documento modelo de um item](#como-trocar-o-documento-modelo-de-um-item)
 - [Como excluir a associação de um item](#como-excluir-a-associação-de-um-item)
-- [Como gerar um documento com o conteúdo do modelo](#como-gerar-um-documento-com-o-conteúdo-do-modelo)
-    - [O que o módulo copia para o documento gerado](#o-que-o-módulo-copia-para-o-documento-gerado)
-    - [Quando o documento fica sem o conteúdo do modelo](#quando-o-documento-fica-sem-o-conteúdo-do-modelo)
-- [Mensagens e como resolver](#mensagens-e-como-resolver)
+- [Funcionamento prático para usuários](#funcionamento-prático-para-usuários)
+- [Mensagens ao associar ou trocar o documento modelo](#mensagens-ao-associar-ou-trocar-o-documento-modelo)
     - [Mensagens ao salvar a associação](#mensagens-ao-salvar-a-associação)
     - [Mensagens de acesso negado](#mensagens-de-acesso-negado)
 
-## Para que serve o módulo
+## Finalidade administrativa
 
-O módulo Apoio a Plano de Trabalho (APT) permite escolher um documento modelo para cada item de etapa de um plano de trabalho. Depois disso, quando alguém gera pelo item um documento do editor do SEI, o corpo do texto do novo documento já vem com o texto do documento modelo.
+O módulo Apoio a Plano de Trabalho (APT) permite ao Administrador associar um documento modelo a cada item de etapa de um plano de trabalho. Quando alguém inclui pelo item um documento de editor interno, o módulo substitui o conteúdo principal do documento recém-gerado pelo conteúdo principal do modelo associado.
 
-O uso tem duas partes. O administrador associa o documento modelo ao item. O usuário gera o documento a partir do item, sem nenhum passo a mais.
+O usuário inclui o documento pelo item do plano de trabalho e não precisa escolher o modelo. A seção [Funcionamento prático para usuários](#funcionamento-prático-para-usuários) resume esse cenário.
 
 ### Termos usados neste manual
 
@@ -56,7 +54,6 @@ As permissões do SEI valem por unidade. Você só vê os menus e os ícones de 
 | Associar documento modelo a um item | Administrador | `md_apt_etapa_pl_doc_modelo_cadastrar`, `md_apt_etapa_pl_doc_modelo_listar`, `plano_trabalho_listar`, `plano_trabalho_consultar`, `etapa_trabalho_listar`, `item_etapa_listar`, `item_etapa_consultar`, `documento_consultar` e `protocolo_listar` |
 | Trocar o documento modelo de um item | Administrador | `md_apt_etapa_pl_doc_modelo_alterar`, `md_apt_etapa_pl_doc_modelo_listar`, `plano_trabalho_listar`, `plano_trabalho_consultar`, `etapa_trabalho_listar`, `item_etapa_listar`, `item_etapa_consultar`, `documento_consultar` e `protocolo_listar` |
 | Excluir a associação de um item | Administrador | `md_apt_etapa_pl_doc_modelo_excluir`, `md_apt_etapa_pl_doc_modelo_listar`, `plano_trabalho_listar`, `plano_trabalho_consultar`, `etapa_trabalho_listar` e `item_etapa_listar` |
-| Gerar documento a partir do item | Usuário do SEI | `plano_trabalho_detalhar`, `item_etapa_incluir_documento`, `documento_gerar` e `documento_consultar`. Não precisa das permissões do módulo |
 
 A instalação do módulo dá ao perfil **Administrador** as quatro permissões que começam com `md_apt_` e o item de menu do módulo. A instalação não concede as permissões do SEI sobre planos de trabalho, etapas, itens e documentos. Se faltar alguma, peça ao gestor de perfis do SIP.
 
@@ -174,57 +171,19 @@ O SEI mostra a mensagem `Operação realizada com sucesso.` e a coluna **Protoco
 
 A exclusão remove somente a associação. O documento modelo continua no processo dele, e os documentos já gerados não mudam. Os próximos documentos gerados a partir do item vêm com o conteúdo inicial do SEI.
 
-## Como gerar um documento com o conteúdo do modelo
+## Funcionamento prático para usuários
 
-Use esta tarefa para criar, a partir de um item de etapa, um documento que já começa com o texto do documento modelo. É preciso ter as permissões da tarefa "Gerar documento a partir do item" em [Quem pode realizar cada tarefa](#quem-pode-realizar-cada-tarefa).
+Para incluir um documento com o modelo, o usuário abre **Plano de Trabalho** no processo, localiza o item e seleciona **Incluir Documento**. Para que o modelo seja aplicado, a inclusão precisa gerar um documento interno; se a opção **Externo** aparecer, o usuário a deixa desmarcada. Quando o SEI solicitar, o usuário escolhe o tipo de documento e segue a inclusão até **Salvar**. Se o item só permitir um tipo e uma forma de inclusão, o SEI pode abrir diretamente o formulário do documento.
 
-Antes de começar, confira se:
+O usuário não seleciona o modelo. Depois que o SEI cria o documento inicial, o módulo confere se há associação para o item e se o modelo continua válido para a unidade atual. Se a validação passar, o módulo substitui somente o conteúdo principal do novo documento pelo conteúdo principal vigente do modelo. O SEI mantém as demais partes, como cabeçalho e rodapé, e registra a substituição como nova versão. Alterações posteriores no modelo não alteram documentos já gerados.
 
-- o processo tem plano de trabalho associado;
-- o processo está aberto na sua unidade;
-- o item prevê pelo menos um tipo de documento e sua unidade tem acesso ao item;
-- o administrador associou um documento modelo ao item.
+Se não houver associação, se o documento gerado não for de editor interno, ou se a validação do modelo para a unidade atual recusar o documento, o SEI mantém o conteúdo inicial. Uma recusa da validação ou uma falha na cópia é registrada no log do SEI; a falta de associação ou o tipo externo não gera cópia nem registro de recusa. O usuário não recebe aviso na tela quando o modelo não é aplicado.
 
-1. Abra o processo e, na barra de ações do processo, selecione o ícone **Plano de Trabalho**. Em processo sem plano de trabalho associado, o ícone não aparece, exceto para quem pode associar planos a processos; nesse caso, ele abre a associação de plano, e não a tela **Plano de Trabalho**.
-2. Na tela **Plano de Trabalho**, localize a etapa e o item. Se os itens da etapa estiverem ocultos, selecione o ícone **Exibir Itens da Etapa**.
+Inclua uma captura do editor aberto após a inclusão, com o conteúdo principal do documento igual ao do modelo e dados de homologação fictícios ou mascarados.
 
-> **[NECESSÁRIO INSERIR IMAGEM DE PRINT DA TELA DESTA FUNCIONALIDADE]** - **caminho no sistema**: Plano de Trabalho (ícone da barra de ações do processo) - **contexto da captura**: usuário com permissão de incluir documento no item, em unidade onde o processo está aberto; tela Plano de Trabalho com a etapa expandida e o ícone Incluir Documento visível na linha de um item que tem documento modelo associado; mascarar número do processo, nomes e siglas reais
+> **[NECESSÁRIO INSERIR IMAGEM DE PRINT DA TELA DESTA FUNCIONALIDADE]** - **caminho no sistema**: Plano de Trabalho > Incluir Documento > Salvar - **contexto da captura**: usuário inclui documento interno a partir de item associado a documento modelo; mostrar o editor aberto e o conteúdo principal copiado do modelo; usar texto de homologação fictício e mascarar número do processo, nomes e siglas reais
 
-3. Na coluna **Ações** do item, selecione o ícone **Incluir Documento**.
-
-> **[NECESSÁRIO INSERIR IMAGEM DE PRINT DA TELA DESTA FUNCIONALIDADE]** - **caminho no sistema**: Plano de Trabalho > Incluir Documento - **contexto da captura**: item que prevê mais de um tipo de documento; tela Gerar Documento do Plano de Trabalho com o campo Tipo do Documento preenchido, a opção Externo desmarcada quando aparecer e os botões Continuar e Cancelar
-
-4. Na tela **Gerar Documento do Plano de Trabalho**, selecione o **Tipo do Documento**. Se a opção **Externo** aparecer, deixe-a desmarcada. Depois, selecione **Continuar**. Se você selecionar **Continuar** sem escolher o tipo, o SEI mostra `Selecione um Tipo de Documento.`
-5. Na tela **Gerar Documento**, o tipo de documento já vem definido e a área **Texto Inicial** não aparece. Preencha os demais campos como em qualquer documento do SEI e selecione **Salvar**.
-
-Quando o item prevê um único tipo de documento e esse tipo só admite uma forma, interna ou externa, o SEI pula a tela do passo 4 e abre direto o formulário de inclusão.
-
-O SEI inclui o documento na árvore do processo e abre o editor. O corpo do texto do documento traz o texto do documento modelo associado ao item.
-
-> **[NECESSÁRIO INSERIR IMAGEM DE PRINT DA TELA DESTA FUNCIONALIDADE]** - **caminho no sistema**: Plano de Trabalho > Incluir Documento > Continuar > Salvar - **contexto da captura**: editor do SEI aberto logo depois de salvar, com o corpo do texto igual ao do documento modelo associado ao item e o cabeçalho do tipo de documento; documento modelo com texto fictício de homologação
-
-Se você tentar incluir, pelo caminho comum de inclusão de documento no processo, um tipo de documento previsto em item do plano, o SEI abre a tela **Plano de Trabalho** para que a inclusão seja feita pelo item.
-
-### O que o módulo copia para o documento gerado
-
-- O texto atual do corpo do documento modelo, no momento da geração.
-- Nada além do corpo do texto. Cabeçalho, rodapé e as demais partes do documento continuam como o SEI as criou para o tipo de documento.
-
-A cópia fica registrada como nova versão do documento. O documento gerado fica com duas versões: a primeira, criada pelo SEI, e a segunda, com o texto do modelo. A segunda versão fica em nome do usuário e da unidade que geraram o documento.
-
-Depois de gerado, o documento é independente do modelo. Alterações posteriores no documento modelo não mudam documentos já gerados.
-
-### Quando o documento fica sem o conteúdo do modelo
-
-Nos casos abaixo, o documento fica com o conteúdo inicial do SEI, sem aviso na tela:
-
-- o item não tem documento modelo associado;
-- o documento não é de editor interno, por exemplo quando você marca **Externo**;
-- o documento é incluído no processo sem passar pelo ícone **Incluir Documento** do item;
-- o documento modelo deixou de cumprir as condições de [Como escolher o documento modelo](#como-escolher-o-documento-modelo) para a unidade em que você está, por exemplo porque foi cancelado, ficou sigiloso ou sua unidade não pode consultá-lo. Nesse caso, o motivo fica registrado no log do SEI;
-- ocorre erro na cópia do texto do modelo. Nesse caso, o erro fica registrado no log do SEI, e a equipe de suporte pode consultá-lo.
-
-## Mensagens e como resolver
+## Mensagens ao associar ou trocar o documento modelo
 
 ### Mensagens ao salvar a associação
 
@@ -246,4 +205,3 @@ Estas mensagens aparecem em alerta na janela de associação ou de alteração. 
 | Mensagem | Quando aparece | Como resolver |
 |---|---|---|
 | `Acesso negado a este recurso nesta unidade (RECURSO / SIGLA).` | Seu perfil na unidade atual não tem a permissão RECURSO, exigida pela tela ou pela ação. | Peça ao gestor de perfis do SIP a permissão indicada ou acesse o SEI em uma unidade em que seu perfil já a tenha. |
-| `O tipo de documento "TIPO" somente pode ser incluído no processo por meio do Plano de Trabalho.` | Você tentou incluir pelo caminho comum um tipo de documento previsto no plano, sem a permissão `plano_trabalho_detalhar`. | Peça ao gestor de perfis do SIP a permissão `plano_trabalho_detalhar` e inclua o documento pelo item do plano. |
