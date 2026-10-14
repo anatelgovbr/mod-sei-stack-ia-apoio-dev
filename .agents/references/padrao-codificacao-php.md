@@ -176,6 +176,56 @@ Regras:
 
 ---
 
+## Early Return
+
+Em código PHP novo e nas linhas que a demanda já altera, prefira sair cedo da condição a aninhar `if`/`else`. Mantenha o `if`/`else` quando ele escolhe entre alternativas do mesmo nível e o código continua depois dele, como o SQL por SGBD nos scripts de release.
+
+| Situação | Forma preferida |
+|---|---|
+| Entrada inválida ou caso que encerra o método | Cláusula de guarda no início, com `return` ou `throw` |
+| Um resultado por caso | Um `return` por caso, com o caso final no fim do método |
+| `if` que envolve todo o corpo de um laço | `continue` no início do laço |
+| Instância única criada sob demanda | `return self::$instance ??= new Classe();` |
+
+Exemplos:
+
+```php
+public function obterRotulo(?string $strTipo): string
+{
+    if ($strTipo === null) {
+        return 'Sem tipo';
+    }
+    return 'Tipo ' . $strTipo;
+}
+
+foreach ($arrObjDTO as $objDTO) {
+    if ($objDTO->getNumIdUnidade() != $numIdUnidade) {
+        continue;
+    }
+    $arrObjResultado[] = $objDTO;
+}
+```
+
+Evitar:
+
+```php
+public function obterRotulo(?string $strTipo): string
+{
+    if ($strTipo === null) {
+        $strRotulo = 'Sem tipo';
+    } else {
+        $strRotulo = 'Tipo ' . $strTipo;
+    }
+    return $strRotulo;
+}
+```
+
+Regra de migração:
+
+- Código que a demanda não altera fica como está, mesmo com `if`/`else`.
+
+---
+
 ## Prefixos de Elementos HTML
 
 Elementos HTML em páginas SEI seguem a tabela abaixo:

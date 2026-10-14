@@ -178,10 +178,22 @@ Os padrões abaixo são obrigatórios no SEI/InfraPHP. Não substituir por equiv
 - **Sanitização**: saída HTML por `PaginaSEI::tratarHTML`, atributos e URLs por `formatarXHTML` e `assinarLink`, SQL só por DTO e classe BD; nunca concatenar entrada do usuário em HTML, JS, SQL ou URL
 - **PHP moderno**: em código PHP novo e nas linhas que a demanda já altera, usar `[]` em vez de `array()`
 - **Tipagem/PHPDoc**: em código PHP novo ou alterado, preferir type hints seguros e PHPDoc breve nos métodos alterados, preservando compatibilidade com assinaturas herdadas
+- **Early return**: em código PHP novo e nas linhas que a demanda já altera, preferir cláusula de guarda e retorno antecipado a `if`/`else`; detalhe em `.agents/references/padrao-codificacao-php.md`, seção "Early Return"
 - **Ferramentas opcionais**: quando disponíveis no projeto ou no módulo, rodar `composer test`, `phpcs` ou `phpstan`
 - **Análise estática**: PHPStan quando houver configuração no projeto ou no módulo. A configuração de `trf4/julgamento/.ci/phpstan.neon` depende de pacote privado e, quando não puder rodar, entra como verificação pendente. Procedimento em `sei-validacao-padrao`.
 - **Release/BD**: compatibilidade multi-SGBD; sincronismo de versão entre SEI, SIP e `*Integracao.php`
 - **Paralelismo**: operações independentes (leituras, buscas, comandos shell) devem ser agrupadas em uma única mensagem — nunca sequencialmente quando não há dependência entre elas.
+
+## Testes Unitários (PHPUnit)
+
+Vale para teste novo ou alterado em `tests/unit`.
+
+- **Mesmo caminho**: o arquivo de teste fica em `tests/unit` no mesmo caminho do arquivo testado em `fontes/sei/src/main/php`, com o nome do arquivo mais `Test`: `sei/web/modulos/apoio-plano-trabalho/rn/MdAptEtapaPlDocModeloRN.php` tem o teste em `tests/unit/sei/web/modulos/apoio-plano-trabalho/rn/MdAptEtapaPlDocModeloRNTest.php`. Teste que cobre uma pasta inteira fica no caminho dessa pasta, como o `SmokeTest`, em `tests/unit/sei/web/modulos`.
+- **AAA**: escrever cada teste no padrão AAA (Arrange, Act, Assert): preparar o cenário (Arrange), executar uma única ação sobre a unidade testada (Act) e verificar o resultado esperado (Assert), com os três blocos separados por linha em branco e visíveis no código, e o nome do teste descrevendo o comportamento verificado.
+- **DataProvider sempre**: todo método de teste recebe os casos por `#[DataProvider]`, mesmo quando há um caso só. O data provider é `public static`, o nome dele não começa com `test`, retorna `iterable` e entrega cada caso com `yield`, com chave em texto que descreve o cenário: `yield 'protocolo vazio' => [''];`.
+- **Caso de erro**: o data provider traz os casos aceitos e os recusados: entrada inválida, permissão negada, registro inexistente ou falha do banco, conforme o código testado.
+- **Red**: cada teste novo é visto falhando (red) antes da entrega. Quebre o comportamento testado em uma cópia do arquivo, monte a cópia por cima do original e rode o teste, na pasta `fontes/sei/ops_sei-docker/qa`: `docker compose run --rm -v <copia>:/opt/<caminho a partir de fontes/sei/src/main/php>:ro --entrypoint sh qa /qa/testar.sh --filter <teste>`. Confira que o teste falha pelo motivo certo. Teste que continua passando (green) com o defeito é falso positivo: corrija o teste. A resposta final traz o comando e a saída das execuções red e green.
+- **Demais práticas**: nome, data provider, assertions, exceções, test doubles, fakes e helpers, defeito conhecido, independência e determinismo em `.agents/references/padrao-testes-phpunit.md`. Como rodar: seção "Testes" do `README.md`.
 
 ## Regras de Decisão
 
