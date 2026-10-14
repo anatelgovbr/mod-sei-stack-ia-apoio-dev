@@ -4,6 +4,8 @@
 
 Reconheça o exemplo pela documentação na raiz e por `src/sistema.py` com `MENUS` e `ROTAS`. O alcance contém somente registrar e consultar solicitações. Não há outros módulos nesta fixture.
 
+Segundo o responsável, o módulo apoia a preparação da análise da equipe, sem substituir a decisão humana. Recomenda-se guardar cópia antes do envio; essa recomendação é facultativa e não corresponde a uma regra implementada. Preserve esse conhecimento de entrevista na revalidação, mesmo sem correspondência no código.
+
 ## Versão e variante
 
 Leia `VERSAO` em `src/sistema.py` em cada execução. A última conferência foi na versão 1.0.0; este valor histórico não substitui a fonte corrente. Interface em português brasileiro, sem flags ou implantação navegável.
@@ -30,6 +32,8 @@ Labels, ajuda e ações ficam nas strings de `formulario` e `tela_consulta`. Cr�
 ## Publicação e recursos
 
 Manual: `docs/manuais/manual-solicitacoes.md`. Imagens: `docs/manuais/imagens-manual-solicitacoes/`. Copie a logo fictícia aprovada de `recursos/logo.svg`. Leitura escolhida pelo responsável: GitHub Flavored Markdown, com o manual em Markdown puro. Use âncoras automáticas do GitHub e confira-as no renderizador. Não existem capturas reais nem dados pessoais.
+
+Idioma de redação do manual: português brasileiro, informado pelo responsável. Esse idioma é uma escolha independente do idioma da interface.
 
 ## Validação e limites
 

@@ -1,6 +1,6 @@
 # Adaptador: Módulo SEI Apoio a Plano de Trabalho (APT)
 
-Caminhos relativos à raiz do repositório SEI da Anatel. `<php>` abrevia `fontes/sei/src/main/php`. Última conferência: 2026-10-08, árvore de trabalho do branch `adr_spec_docs_stack_ia` sobre a revisão `3f3fdf1f4a`, com a revalidação do modelo na geração.
+Caminhos relativos à raiz do repositório SEI da Anatel. `<php>` abrevia `fontes/sei/src/main/php`. Última conferência do código: 2026-10-14, no checkout `adr_spec_docs_stack_ia`, commit `0693c3bfa402f0db09fecec741178eecd0536a25`; os fontes do módulo não têm alterações locais. Versão solicitada: `v1.0.0`; `getVersao()` e os scripts SEI/SIP declaram `1.0.0`. O checkout não confirma a revisão implantada.
 
 ## Reconhecimento e alcance
 
@@ -14,7 +14,7 @@ Caminhos relativos à raiz do repositório SEI da Anatel. `<php>` abrevia `fonte
 ## Versão e variante
 
 - Fontes de versão: `MdAptIntegracao::getVersao()` (`MdAptIntegracao.php:34-37`), `$versaoAtualDesteModulo` nos scripts SEI e SIP (linha 12 de cada um), README do módulo e parâmetro `VERSAO_MODULO_APT` em Infra > Parâmetros do SEI e do SIP.
-- Variante: a versão 1.0.0 não distingue revisões. O ramo `correcoes_apt` (`d214f8ea3d`) e a árvore de trabalho conferida em 2026-10-08 mantêm 1.0.0 e acrescentam a revalidação do modelo na geração (`MdAptIntegracao::gerarDocumento` chama `validarProtocoloModelo` em `MdAptIntegracao.php:202`); a revisão `3f3fdf1f4a` não tem essa revalidação. Para saber qual variante um manual descreve, confira se `gerarDocumento` chama `validarProtocoloModelo` na revisão examinada e pergunte ao responsável qual revisão está implantada.
+- Variante: a versão 1.0.0 não distingue revisões. A revisão `d214f8ea3d` do ramo `correcoes_apt` e a revisão corrente (`HEAD 0693c3bfa402f0db09fecec741178eecd0536a25`) mantêm 1.0.0 e chamam `validarProtocoloModelo` em `MdAptIntegracao.php:202`; a revisão `3f3fdf1f4a` não tem essa revalidação. Para saber qual variante um manual descreve, confira se `gerarDocumento` chama `validarProtocoloModelo` na revisão examinada e pergunte ao responsável qual revisão está implantada.
 - Requisito de plataforma: o README do módulo pede SEI 5.0.4 ou superior; o script SEI aceita `SEI_VERSAO >= 4.1.5` e ambos exigem `VERSAO_INFRA >= 2.29.0` (`sei_atualizar_versao_modulo_apt.php:129-136`). Divergência fora do alcance de manuais de uso.
 - Ativação: chave `Modulos` do `ConfiguracaoSEI.php` com `'MdAptIntegracao' => 'apoio-plano-trabalho'` (README do módulo). O que cada pessoa vê depende dos perfis do SIP da instalação.
 - Idioma: interface somente em português brasileiro, com textos literais no PHP e no JS. Não há arquivos de tradução.
@@ -24,9 +24,9 @@ Caminhos relativos à raiz do repositório SEI da Anatel. `<php>` abrevia `fonte
 - Raízes: as listadas em "Reconhecimento e alcance", mais `docs/requisitos-ancorados/apoio-plano-trabalho/`, `docs/dicionario_dados/apoio-plano-trabalho/` e o README do módulo.
 - Extensões: `.php`, `.js`, `.css` e `.md`.
 - Codificação: PHP do módulo, do core e da InfraPHP em ISO-8859-1 com CRLF (conferido com `file`). O JS do módulo é ASCII e usa escapes como `ã` em `alert` e `confirm`. Os `.md` são UTF-8.
-- Leitura: `iconv -f latin1 -t utf-8 <arquivo> | tr -d '\r' | cat -n`. Busca: `grep -a` sempre, porque sem `-a` o `grep` desta máquina (ugrep) trata o PHP Latin-1 como binário e devolve vazio. `rg` não está instalado.
-- Exclusões comprovadas: `<php>/sei/web/editor/` e demais módulos. O módulo não tem testes automatizados nesta revisão (`fontes/sei/src/test` não tem testes do módulo).
-- Ferramentas: `grep -a`, `iconv`, `file`, `git` e `python3`.
+- Leitura: no Windows, use `rg --files` e `rg -n` para localizar arquivos e referências. Para buscar PHP Latin-1, use `grep -a -n`; neste checkout, `grep.exe` fica em `C:\Program Files\Git\usr\bin\grep.exe`, fora do `PATH`. Leia PHP com `iconv -f latin1 -t utf-8 <arquivo> | tr -d '\r' | cat -n` ou Python com `encoding='latin-1'`.
+- Exclusões comprovadas: `<php>/sei/web/editor/` e demais módulos. Busca de arquivos no diretório do módulo não encontrou testes automatizados específicos nesta revisão.
+- Ferramentas: PowerShell, `rg`, Python 3.12 e Git. `grep.exe`, `iconv.exe` e `file.exe` estão no Git for Windows, fora do `PATH`; use PHP 8.2 pelo Docker quando o host não tiver PHP, conforme `.agents/memory/runbook.md`.
 
 ## Pontes de evidência
 
@@ -62,8 +62,8 @@ Caminhos relativos à raiz do repositório SEI da Anatel. `<php>` abrevia `fonte
 
 - Destino: pasta de publicação `docs/manuais/apoio-plano-trabalho/`, com o mesmo nome da pasta do módulo em `docs/requisitos-ancorados/`, e pasta de imagens `imagens/` ao lado do manual (`--pasta-imagens imagens` no verificador). Manual atual: `docs/manuais/apoio-plano-trabalho/manual-apoio-plano-trabalho.md`, slug `manual-apoio-plano-trabalho`, criado em 2026-10-06, sem manual anterior.
 - Logo: `<php>/sei/web/svg/sei_login.svg` (SVG 150 x 150, logotipo do SEI), escolhida pelo responsável e copiada sem alteração para a pasta de imagens do manual como `logo-sei.svg`.
-- Renderizador: GitLab da Anatel (`git.anatel.gov.br`, remoto `origin`). Manual em Markdown puro, sem HTML.
-- Âncoras: automáticas do GitLab (minúsculas, remove caracteres que não sejam letra, número, hífen ou sublinhado, troca espaço por hífen e mantém acentos). Evite títulos com pontuação entre espaços, como ` - `, que geram hífens seguidos e podem divergir entre GitLab e o verificador.
+- Renderizador: GitLab ou GitHub. Manual em Markdown puro, sem HTML.
+- Âncoras: automáticas do GitLab ou GitHub (minúsculas, remove caracteres que não sejam letra, número, hífen ou sublinhado, troca espaço por hífen e mantém acentos). Evite títulos com pontuação entre espaços, como ` - `, que geram hífens seguidos e podem divergir entre GitLab e o verificador.
 - Aviso de captura: citação de uma linha com negrito, conforme `references/formato-manual.md`.
 - Dados sensíveis: capturas em homologação, com plano, item, protocolo, usuário, unidade e processo fictícios ou mascarados.
 - Coleta manual: desenvolvedor ou usuário responsável, em ambiente com o módulo 1.0.0 na revisão documentada e com a persona indicada em cada aviso.
@@ -73,5 +73,4 @@ Caminhos relativos à raiz do repositório SEI da Anatel. `<php>` abrevia `fonte
 - Checks locais: verificador da skill, contagem de travessão com Python e conferência manual do sumário. `php -l` só quando houver PHP alterado.
 - Observação de interface: nenhum ambiente navegável autorizado em 2026-10-06. Em 2026-10-07, a sessão de testes `0de99f2b-3942-46ee-bbb5-de83c18531d8` observou o SEI 5.0.5 local com o módulo da árvore de trabalho, inclusive a geração sem o texto do modelo em unidade que não pode consultar o documento modelo; dela vem a captura `janela-associar-protocolo-modelo.png`. As demais afirmações do manual são comprovadas no código.
 - Evidência complementar: README do módulo, `docs/requisitos-ancorados/apoio-plano-trabalho/` e dicionário de dados.
-- Lacunas conhecidas: rótulo exibido do menu pai `Administração` (dado do SIP); perfis do SIP que concedem as permissões do core; variante implantada; procedimento e padrão de geração de prints da equipe, a indicar no grupo "Publicação e recursos"; renderização no GitLab não observada.
-- Bloqueio: nenhum para escrita. A leitura visual (M07) depende de acesso ao GitLab da Anatel.
+- Lacunas conhecidas: rótulo exibido do menu pai `Administração` (dado do SIP); perfis do SIP que concedem as permissões do core; variante implantada; procedimento e padrão de geração de prints da equipe, a indicar no grupo "Publicação e recursos".

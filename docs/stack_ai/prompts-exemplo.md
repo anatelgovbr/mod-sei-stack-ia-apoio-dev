@@ -994,65 +994,51 @@ Depois de entregar o plano, traga uma análise com:
 
 ## manual-creator-scan-codebase
 
-Cria e mantém manuais de uso no destino declarado pelo adaptador, que por padrão é `docs/manuais/<slug_do_manual>.md`, com imagens em `docs/manuais/imagens-<slug_do_manual>/`. Primeiro combina entrevista e inspeção da codebase para preparar o adaptador do sistema; depois conecta tarefas e personas às telas, campos, textos, regras e permissões para redigir o manual em linguagem simples. Qualquer prompt demanda primeiro ter adaptador necessário criado, sendo possível preparar somente o adaptador.
+Prepara adaptadores de sistemas ou módulos e cria, atualiza ou verifica manuais de uso em Markdown a partir da codebase. O adaptador registra convenções, contexto, idiomas e recursos; a skill investiga antes de perguntar pelas lacunas. Informe o caso de uso, o alvo e o que já souber nos campos abaixo. Informações previamente fornecidas são aproveitadas na entrevista.
 
-Informe o público-alvo e as tarefas que conhece. A skill investiga antes de perguntar pelas lacunas e não presume que um perfil de acesso define sozinho uma persona. O renderizador e a logo permitem verificar a apresentação do Markdown; ter acesso ao código não comprova a versão implantada nem substitui observação de conteúdo dinâmico.
+Na criação e atualização, a skill prepara ou revalida o adaptador, investiga as tarefas do público escolhido, aplica as Regras de Escrita e articula o texto com capturas disponíveis ou avisos para coleta manual dos prints. O destino padrão é `docs/manuais/<slug_do_manual>.md`, com imagens em `docs/manuais/imagens-<slug_do_manual>/`, salvo destino diferente registrado no adaptador.
 
-A varredura funcional também planeja onde os prints ajudam a explicar telas, campos e decisões. Quando faltar uma captura necessária, a skill deixa um aviso padronizado no ponto correspondente para depois incluir a imagem/print, com o caminho no sistema e o contexto de coleta. Os prints precisam ser obtidos manualmente depois. Na verificação sem escrita, essas posições são apenas reportadas.
+A criação, atualização e verificação exigem adaptador existente e atualizado frente à codebase do alvo; a skill avalia e executa sua preparação prévia quando necessário. A atualização preserva conhecimento prévio e inclui somente melhorias editoriais necessárias, com conferências próprias e revisão adversarial de necessidade e equivalência. Mudança de mérito exige decisão específica. Depois da preparação do adaptador, a verificação entrega somente o relatório, sem alterar manual e imagens. Código disponível não comprova versão implantada ou conteúdo dinâmico; lacunas e prints pendentes são reportados no chat.
 
-A entrevista da skill define o público-alvo antes da escrita; não depende de preencher este template. Grupos escolhidos com necessidades distintas recebem manuais separados por padrão, salvo escolha de manual conjunto. Na atualização, conteúdo jurídico, contextual, empírico ou externo já existente é preservado, inclusive em trechos mistos; a ausência dele no código não autoriza exclusão. Mudança de mérito exige proposta e decisão específica. Revisão de redação exige alcance autorizado, sem mudar sentido ou citações.
+### Preparar o adaptador do sistema/módulo
 
-### Preparar o adaptador do manual
-
-Use quando quiser preparar a investigação sem gerar o manual ainda. Apenas criar o adaptador necessário pertinente ao sistema ou módulo.
+Use para criar ou atualizar somente o adaptador, sem gerar manuais. A escolha dos destinatários e do alcance de cada futuro manual fica para sua criação.
 
 ```text
-Use a skill `manual-creator-scan-codebase` para criar ou atualizar somente o adaptador do <sistema ou módulo> neste repositório.
+Use a skill `manual-creator-scan-codebase` para **criar ou atualizar somente o adaptador** do <sistema ou módulo> neste repositório.
 
-Público e tarefas: <o que já souber sobre quem usa e o que precisa fazer>.
-Versão, idioma e configuração: <se souber>.
-Local de leitura e renderizador Markdown: <se souber>.
-Logo e materiais complementares: <arquivos locais, se houver>.
-
-Confira no código as convenções informadas, com atenção especial sobre como rastrear caminhos visíveis, telas, estados e personas, inclusive para orientar posterior coleta manual de prints. Entreviste-me sobre as lacunas relevantes e registre o adaptador completo. Não gere o manual nem insira avisos nele nesta etapa.
+- Versão: <se souber>.
+- Logo: <arquivo, anexo ou local onde encontrá-la, se houver>.
+- Idioma da interface: <idioma da interface do sistema/módulo>.
+- Idioma para o Manual: <idioma de redação dos futuros manuais>.
+- Contexto do sistema/módulo: <o que faz e quem o usa, se souber>.
+- Materiais complementares para o adaptador: <arquivos, anexos ou links de referência, se houver>.
 ```
 
 ### Criar um manual de uso
 
 ```text
-Use a skill `manual-creator-scan-codebase` para criar o manual de uso do <sistema ou módulo> neste repositório.
+Use a skill `manual-creator-scan-codebase` para **criar o manual** de uso do <sistema ou módulo> neste repositório.
 
-Público: <grupos que cada manual deve atender e seus objetivos>.
-Organização dos manuais: <se tiver preferência por arquivos separados ou um manual conjunto>.
-Tarefas no alcance: <tarefas ou funcionalidades>.
-Versão e idioma da interface: <se souber>.
-Local de leitura e renderizador Markdown: <onde o manual será lido>.
-Logo: <caminho do arquivo ou indicação da logo existente no projeto>.
-Materiais complementares: <documentos ou capturas locais, se houver>.
-Ambiente para conferência: <fonte e alcance autorizados, se houver>.
-
-Defina comigo o público e a intenção que continuarem indeterminados. Prepare primeiro o adaptador e só depois faça a varredura funcional completa de cada alcance e redija os manuais conforme as Regras de Escrita da mencionada skill. Articule o texto com as capturas disponíveis; onde faltar um print necessário, insira o aviso padronizado junto à explicação pertinente, com o caminho comprovado no sistema e o contexto para posterior coleta manual do print. Ao final, apresente as lacunas, os prints pendentes e diferencie a conferência no código da observação na interface.
+- Público-alvo: <persona ou grupo de personas e seus objetivos - p. ex. Administração, Usuário Interno e Usuário Externo>.
+- Materiais complementares: <arquivos, anexos ou links de referência, se houver>.
 ```
 
 ### Atualizar um manual de uso
 
 ```text
-Use a skill `manual-creator-scan-codebase` para atualizar o manual em <docs/manuais/nome-do-manual.md> conforme a codebase atual referente ao <sistema ou módulo> neste repositório.
+Use a skill `manual-creator-scan-codebase` para **atualizar o manual** em <docs/manuais/nome-do-manual.md> referente ao <sistema ou módulo> neste repositório.
 
-Mudança a documentar: <funcionalidades, versão ou commits, se souber>.
-Público ou configuração que mudou: <se houver>.
-Novas capturas ou materiais: <arquivos locais/externos, se houver>.
-Revisão editorial adicional: <trechos cuja redação autorizo revisar sem mudar sentido, se houver>.
-
-Confirme o público quando não estiver claro no pedido ou no manual. Revalide o adaptador e atualize somente diferenças funcionais comprovadas no alcance, preservando conhecimento prévio sem rastro no código, inclusive dentro de parágrafos afetados. Para mudar ou excluir mérito contextual, jurídico, empírico ou externo, apresente uma proposta e aguarde minha decisão específica. Aplique as Regras de Escrita da mencionada skill ao texto novo ou alterado e à revisão editorial autorizada, sem mudar sentido nem citações. Reavalie os prints somente no alcance; preserve imagens, âncoras e trechos restantes. Relate necessidades externas, limites do legado e a origem de cada alteração no diff, fora do teor do manual. Articule o texto com as capturas disponíveis; onde faltar um print necessário, insira o aviso padronizado junto à explicação pertinente, com o caminho comprovado no sistema e o contexto para posterior coleta manual do print. Ao final, apresente as lacunas, os prints pendentes e diferencie a conferência no código da observação na interface.
+- Público-alvo: <persona ou grupo de personas e seus objetivos - p. ex. Administração, Usuário Interno e Usuário Externo>.
+- Materiais complementares: <arquivos, anexos ou links de referência, se houver>.
 ```
 
 ### Verificar um manual de uso sem escrita
 
 ```text
-Use a skill `manual-creator-scan-codebase` para verificar o manual em <docs/manuais/nome-do-manual.md> contra a codebase atual referente ao <sistema ou módulo> neste repositório e as convenções da skill.
+Use a skill `manual-creator-scan-codebase` para **verificar o manual** em <docs/manuais/nome-do-manual.md> referente ao <sistema ou módulo> neste repositório, sem alterar o manual nem suas imagens.
 
-Confira público, tarefas e personas, campos, regras, mensagens, imagens, navegação e Regras de Escrita da mencionada skill. Distinga diferença funcional comprovada, conteúdo legítimo de outra origem e incerteza, sem tratar ausência no código como erro do manual. Confronte as telas com as posições dos prints e proponha os avisos necessários somente no relatório. Não altere nenhum arquivo, inclusive manual, imagens, adaptador e registro. Reporte critérios, evidências, propostas que exigem decisão e limites da conferência.
+- Materiais complementares: <arquivos, anexos ou links de referência, se houver>.
 ```
 
 ---

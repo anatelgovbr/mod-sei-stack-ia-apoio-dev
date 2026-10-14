@@ -43,7 +43,7 @@ Coloque a logo antes do título, como imagem Markdown simples, com texto alterna
 ![Logo do sistema Solicitações](imagens-manual-solicitacoes/logo.svg)
 ```
 
-O manual é Markdown puro: não use HTML em nenhuma parte dele, nem para a logo, nem para âncoras. Sem HTML, a logo não é centralizada nem tem largura definida, e o tamanho exibido é o do arquivo, limitado pelo renderizador; use logo e capturas no tamanho de exibição, conforme o padrão de geração de capturas declarado no adaptador. Não acrescente CSS, script, iframe ou extensão de publicação só para compor o manual. Declare no adaptador o renderizador e confira o resultado nele.
+O manual é Markdown puro: não use HTML em nenhuma parte dele, nem para a logo, nem para âncoras. Sem HTML, a logo não é centralizada nem tem largura definida, e o tamanho exibido é o do arquivo, limitado pelo renderizador; use logo e capturas no tamanho de exibição, conforme o padrão de geração de capturas declarado no adaptador. Não acrescente CSS, script, iframe ou extensão de publicação só para compor o manual. Aplique a [política interna de leitor e renderizador](contrato-de-adaptador.md#leitor-e-renderizador) e confira o resultado no ambiente de leitura disponível, respeitando a indicação específica quando houver.
 
 ## Título, sumário e seções
 
@@ -51,15 +51,15 @@ Use um único H1 (`#`) para o nome do manual. Informe logo abaixo público, alca
 
 Faça `## Sumário` como primeira seção H2 depois do título. Use uma lista de links explícitos para todos os títulos e subtítulos posteriores, na ordem do conteúdo, com quatro espaços adicionais de recuo por nível. O H1 e o próprio Sumário ficam fora da lista. Não dependa do menu de navegação de uma plataforma nem de diretivas como `[TOC]`, que dependem do renderizador.
 
-Escreva títulos ATX (`##`, `###` e assim por diante), sem saltar níveis. Prefira até H4 e títulos únicos, completos e sem formatação inline para facilitar a navegação. Se o renderizador seguir as âncoras do GitHub, converta o título para minúsculas, remova pontuação exceto `_` e `-`, preserve acentos e troque espaços por `-`. Confirme os fragmentos no renderizador, em especial títulos com acentos.
+Escreva títulos ATX (`##`, `###` e assim por diante), sem saltar níveis. Prefira até H4 e títulos únicos, completos e sem formatação inline para facilitar a navegação. Na referência básica, use âncoras para arquivos de repositório: converta o título para minúsculas, remova pontuação exceto `_` e `-`, preserve acentos e troque espaços por `-`. Evite extensões exclusivas de uma plataforma e confira os fragmentos no ambiente observado, em especial títulos com acentos. Para leitor específico, use o comportamento comprovado dele; preserve títulos e âncoras ainda válidos em atualizações.
 
-O verificador reconhece somente as âncoras automáticas do perfil GitHub. Se o renderizador gerar âncoras de outra forma, reporte a limitação e peça decisão sobre o local de leitura, porque âncora em HTML fica fora do perfil.
+O verificador reconhece somente as âncoras automáticas do perfil GitHub; seu resultado não prova compatibilidade visual com GitLab ou outro leitor. Se o leitor específico gerar âncoras de outra forma, mantenha a escolha já indicada, registre a saída bruta e isole as ocorrências causadas por essa diferença. Para concluir M06 nesse caso, comprove todos os destinos do sumário no leitor escolhido ou por ferramenta adequada ao comportamento comprovado dele, além das demais checagens estruturais. Outros erros continuam sendo falhas; sem evidência complementar, M06 fica pendente. Âncora em HTML continua fora do perfil, e a diferença de âncoras não exige nova escolha do local de leitura.
 
 ## Organização por tarefas
 
 Comece com propósito, público e pré-requisitos úteis. Organize o restante pelas tarefas que as personas realizam, respeitando dependências reais. Glossário, solução de problemas e referências entram quando houver conteúdo comprovado que ajude a pessoa, sem criar seções vazias.
 
-O esqueleto orienta criação, não regeneração de manual existente. Conhecimento contextual, jurídico ou empírico já publicado conserva seu lugar e significado conforme [atualização e preservação](atualizacao-preservacao.md). Regras de Escrita são obrigatórias no texto novo/alterado, com preservação dos literais citados; revisão geral de estilo, conversão de legado ou nova organização dependem do alcance autorizado.
+O esqueleto orienta criação, não regeneração de manual existente. Conhecimento contextual, jurídico ou empírico já publicado conserva seu lugar e significado conforme [atualização e preservação](atualizacao-preservacao.md). Regras de Escrita são obrigatórias no texto novo/alterado, no idioma de redação escolhido e com preservação dos literais citados. A atualização inclui somente correção editorial essencial que cumpra o controle de necessidade e equivalência dessa referência; revisão geral de estilo, conversão de legado ou nova organização dependem de alcance específico.
 
 Cada tarefa informa o objetivo, quem pode realizá-la, as condições necessárias e o caminho de acesso. Depois apresenta passos numerados, uma ação clara por passo e o resultado esperado comprovado. Explique efeitos de confirmação, cancelamento e outras decisões relevantes. Use verbos como “acesse”, “informe” e “selecione”, compatíveis com diferentes formas de interação.
 
@@ -161,8 +161,11 @@ O perfil não admite links ou imagens por referência, títulos Setext, títulos
 
 Pesquisa em 5 de outubro de 2026, usada para definir o perfil desta skill e revisitar a articulação entre texto e capturas. Logo no topo, Markdown puro e aviso de revisão destacado são escolhas deste contrato, não regras gerais dos guias.
 
+Em 13 de outubro de 2026, a conferência da documentação oficial de GitLab e GitHub fundamentou a referência básica para arquivos Markdown em repositórios. Ela não abrange renderizadores de sites gerados, documentação hospedada ou particularidades de snippets.
+
 | Fonte primária | Aplicação e limite |
 |---|---|
+| [GitLab: GitLab Flavored Markdown](https://docs.gitlab.com/user/markdown/) | Sintaxe básica, âncoras de títulos, imagens e tabelas em arquivos de repositório; snippets e sites de documentação têm particularidades e não definem o padrão do manual |
 | [GitHub: sintaxe de escrita e formatação](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) | Hierarquia de títulos, âncoras, links relativos, imagens com texto alternativo e listas; comportamento de navegação depende do renderizador |
 | [Google: guia de estilo Markdown](https://google.github.io/styleguide/docguide/style.html) | Um título H1, títulos únicos, espaços entre blocos, imagens úteis e tabelas legíveis; a diretiva de sumário daquele ambiente não é portátil |
 | [Google: imagens em documentação](https://developers.google.com/style/images) | Prints relevantes junto ao contexto, recorte útil, nomes descritivos, texto associado e proteção de dados; recomendações de CSS do site não definem o renderizador deste manual |
