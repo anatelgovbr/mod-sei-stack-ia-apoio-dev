@@ -108,7 +108,7 @@ PaginaSEI::getInstance()->abrirBody($strTitulo ?? false, 'onload="inicializar();
 PaginaSEI::getInstance()->montarBarraComandosSuperior($arrComandos ?? false);
 {{LIST_FILTER_FORM_BLOCK}}
 PaginaSEI::getInstance()->montarAreaTabela($strResultado ?? false,$numRegistros ?? false);
-PaginaSEI::getInstance()->montarBarraComandosInferior($arrComandos ?? false);
+PaginaSEI::getInstance()->montarBarraComandosInferior(preg_replace('/ accesskey="[^"]*"/', '', $arrComandos ?? []));
 ?>
 </form>
 <?php

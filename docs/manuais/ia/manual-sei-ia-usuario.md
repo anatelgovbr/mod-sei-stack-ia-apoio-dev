@@ -4,7 +4,7 @@
 
 Funcionalidades, Assistente, Prompts e Engenharia de Prompts
 
-Este manual pode ser acessado [neste link](https://docs.google.com/document/d/e/2PACX-1vRsKljzHcKwRfdW7IcnFA1EHNPIInog9Mqpu58xEFzRMfZ5avrLhYbwUjPkXuTDFKFEPnev4ASJ-5Dm/pub).
+Este manual pode ser acessado [neste link](https://github.com/anatelgovbr/mod-sei-stack-ia-apoio-dev/blob/main/docs/manuais/ia/manual-sei-ia-usuario.md).
 
 ## Sumário
 
@@ -56,9 +56,9 @@ Como foi desenvolvido dentro do SEI, o assistente garante os requisitos de segur
 
 Destacamos que as funcionalidades do SEI IA **são exclusivamente acessórias, auxiliares e assistenciais**, adicionando facilidades de uso opcional e seguindo boas práticas de desenvolvimento de soluções com base IA de forma responsável, com fluxo de uso que assegura a revisão humana e **não efetiva decisões administrativas que concedam ou restrinjam direitos de interessados tomadas unicamente por IA**.
 
-Diferentemente da iniciativa privada, no âmbito da Administração Pública brasileira **toda decisão** deve ser tomada por ato administrativo que atenda aos requisitos legais de validade, sob pena de ser considerada nula.
-
-Assim, é inviável existir solução na Administração Pública que, utilizando ou não IA, efetive decisões que afetem direitos de interessados tomadas **unicamente** com base em processamento automatizado. Decisões assim violariam requisitos essenciais dos atos administrativos, especialmente sobre **competência** (autoridade para a prática de atos é sempre atribuída legalmente a agentes públicos específicos) e **forma** (conjunto de procedimentos e formalidades necessários para a validade do ato, o que inclui assinatura de autoridade competente e formalização em processo administrativo regular).
+> Diferentemente da iniciativa privada, no âmbito da Administração Pública brasileira **toda decisão** deve ser tomada por ato administrativo que atenda aos requisitos legais de validade, sob pena de ser considerada nula.
+>  
+> Assim, é inviável existir solução na Administração Pública que, utilizando ou não IA, efetive decisões que afetem direitos de interessados tomadas **unicamente** com base em processamento automatizado. Decisões assim violariam requisitos essenciais dos atos administrativos, especialmente sobre **competência** (autoridade para a prática de atos é sempre atribuída legalmente a agentes públicos específicos) e **forma** (conjunto de procedimentos e formalidades necessários para a validade do ato, o que inclui assinatura de autoridade competente e formalização em processo administrativo regular).
 
 As funcionalidades podem ser acessadas por meio de botões sobre o processo e os documentos e o assistente fica disponível no canto inferior direito das principais telas do SEI e do Editor.
 
@@ -92,7 +92,7 @@ Ao clicar no ícone de cada ODS é possível visualizar a última classificaçã
 
 Quando o ícone estiver cinza sem destaque, significa que não existe histórico de classificação. Um ícone cinza com destaque, que simboliza histórico, significa que atualmente não possui classificação efetiva ou sugerida, mas tem histórico de classificações anteriores. Na janela de classificação aberta sobre cada Objetivo, caso disponível, é possível acessar o histórico de classificação correspondente.
 
-**Atenção**: Ainda não foi desenvolvida solução de IA para analisar o conteúdo dos documentos e sugerir automaticamente classificações pelos ODS. Atualmente, usuários internos estão fazendo classificações reais em volume representativo para viabilizar testes com diversas técnicas e algoritmos. A disponibilização de solução de IA para sugestões automáticas de classificações será lançada em versão futura do módulo.
+> **Atenção**: Ainda não foi desenvolvida solução de IA para analisar o conteúdo dos documentos e sugerir automaticamente classificações pelos ODS. Atualmente, usuários internos estão fazendo classificações reais em volume representativo para viabilizar testes com diversas técnicas e algoritmos. A disponibilização de solução de IA para sugestões automáticas de classificações será lançada em versão futura do módulo.
 
 ![](imagens-manual-sei-ia-usuario/image7.png)
 
@@ -108,31 +108,51 @@ Se houver sugestão de classificação realizada por Usuário Externo em um peti
 
 ## Assistente
 
-| O assistente do SEI IA representa uma inovação significativa para otimização e agilidade na Administração Pública. Ele foi concebido para oferecer funcionalidades essenciais que auxiliam os usuários na execução de tarefas variadas de forma eficiente e intuitiva, tanto no âmbito dos processos eletrônicos quanto em outras atividades diárias. Dotado de capacidades avançadas de interpretação e escrita, baseadas nos Grandes Modelos de Linguagem (LLMs), o assistente utiliza tecnologia de ponta para realizar análises, traduções, revisões de documentos, criação de resumos, elaboração de conteúdo jornalístico, entre outras tarefas demandadas pelo usuário. Sua interface acessível permite interações via chat, proporcionando uma experiência de usuário simplificada e produtiva, além de garantir a segurança da informação segundo as regras de acesso do SEI e demais requisitos tecnológicos. Embora seja uma ferramenta poderosa, é importante destacar que o assistente não foi treinado com dados específicos de qualquer órgão público. Assim, ele não substitui o conhecimento especializado dos usuários. A utilização consciente do assistente é fundamental para explorar todo o seu potencial, garantindo benefícios substanciais. Sobre ferramentas de IA Generativa gratuitas, destacam-se exemplos como o [ChatGPT](https://chatgpt.com/) (OpenAI), [Gemini](https://gemini.google.com/) (Google), [Claude](https://claude.ai/) (Anthropic) e [Copilot](https://copilot.microsoft.com/) (Microsoft). Essas plataformas demonstram o potencial da IA Generativa para fornecer respostas precisas e contextualmente relevantes em diversos cenários. Entretanto, é fundamental reconhecer que ferramentas gratuitas na internet não são adequadas para uso corporativo, devido aos riscos de segurança e privacidade envolvidos no manuseio de dados institucionais. [ChatGPT](https://chatgpt.com/) (OpenAI): é uma ferramenta versátil de IA Generativa, porém, ao utilizar a versão gratuita, o usuário deve ter em mente que os dados fornecidos (prompts e arquivos) podem ser utilizados para aprimorar os serviços e treinar novos modelos de IA da empresa, conforme descrito na [Política de Privacidade da OpenAI](https://openai.com/pt-BR/policies/privacy-policy/). [Gemini](https://gemini.google.com/) (Google): de acordo com a [Política de Privacidade do Google](https://policies.google.com/privacy?hl=pt-BR), os dados dos usuários são coletados para fornecer, manter e melhorar os serviços, bem como desenvolver novos. Isso significa que informações inseridas no Gemini gratuito podem ser utilizadas para treinamento e refinamento de modelos de IA. [Claude](https://claude.ai/) (Anthropic): também oferece suporte a diversas tarefas, mas, segundo a [Política de Privacidade da Anthropic](https://www.anthropic.com/legal/privacy), os dados fornecidos pelos usuários (prompts e respostas geradas) podem ser aplicados na melhoria dos serviços e no treinamento de seus modelos de IA. [Copilot](https://copilot.microsoft.com/) (Microsoft): projetado para facilitar tarefas diárias, utiliza dados fornecidos pelos usuários (prompts e interações) para melhorar os serviços da empresa e treinar modelos de IA, conforme disposto na [Política de Privacidade da Microsoft](https://www.microsoft.com/pt-br/privacy/privacystatement). No ambiente corporativo, a regra é a garantia de segurança e privacidade dos dados institucionais, algo que apenas serviços contratados sob política de privacidade própria podem oferecer. | ![](imagens-manual-sei-ia-usuario/image10.png) |
-| :---- | :---: |
+<table border="0">
+  <tr>
+    <td valign="top">
+O assistente do SEI IA representa uma inovação significativa para otimização e agilidade na Administração Pública. Ele foi concebido para oferecer funcionalidades essenciais que auxiliam os usuários na execução de tarefas variadas de forma eficiente e intuitiva, tanto no âmbito dos processos eletrônicos quanto em outras atividades diárias.<br><br>
+
+Dotado de capacidades avançadas de interpretação e escrita, baseadas nos Grandes Modelos de Linguagem (LLMs), o assistente utiliza tecnologia de ponta para realizar análises, traduções, revisões de documentos, criação de resumos, elaboração de conteúdo jornalístico, entre outras tarefas demandadas pelo usuário. Sua interface acessível permite interações via chat, proporcionando uma experiência de usuário simplificada e produtiva, além de garantir a segurança da informação segundo as regras de acesso do SEI e demais requisitos tecnológicos.
+ 
+Embora seja uma ferramenta poderosa, é importante destacar que o assistente não foi treinado com dados específicos de qualquer órgão público. Assim, ele não substitui o conhecimento especializado dos usuários. A utilização consciente do assistente é fundamental para explorar todo o seu potencial, garantindo benefícios substanciais.
+
+Sobre ferramentas de IA Generativa gratuitas, destacam-se exemplos como o [ChatGPT](https://chatgpt.com/) (OpenAI), [Gemini](https://gemini.google.com/) (Google), [Claude](https://claude.ai/) (Anthropic) e [Copilot](https://copilot.microsoft.com/) (Microsoft). Essas plataformas demonstram o potencial da IA Generativa para fornecer respostas precisas e contextualmente relevantes em diversos cenários. Entretanto, é fundamental reconhecer que **ferramentas gratuitas na internet não são adequadas para uso corporativo**, devido aos riscos de segurança e privacidade envolvidos no manuseio de dados institucionais.
+
+- [ChatGPT](https://chatgpt.com/) (OpenAI): é uma ferramenta versátil de IA Generativa, porém, ao utilizar a versão gratuita, o usuário deve ter em mente que os dados fornecidos (prompts e arquivos) podem ser utilizados para aprimorar os serviços e treinar novos modelos de IA da empresa, conforme descrito na [Política de Privacidade da OpenAI](https://openai.com/pt-BR/policies/privacy-policy/).
+- [Gemini](https://gemini.google.com/) (Google): de acordo com a [Política de Privacidade do Google](https://policies.google.com/privacy?hl=pt-BR), os dados dos usuários são coletados para fornecer, manter e melhorar os serviços, bem como desenvolver novos. Isso significa que informações inseridas no Gemini gratuito podem ser utilizadas para treinamento e refinamento de modelos de IA.
+- [Claude](https://claude.ai/) (Anthropic): também oferece suporte a diversas tarefas, mas, segundo a [Política de Privacidade da Anthropic](https://www.anthropic.com/legal/privacy), os dados fornecidos pelos usuários (prompts e respostas geradas) podem ser aplicados na melhoria dos serviços e no treinamento de seus modelos de IA.
+- [Copilot](https://copilot.microsoft.com/) (Microsoft): projetado para facilitar tarefas diárias, utiliza dados fornecidos pelos usuários (prompts e interações) para melhorar os serviços da empresa e treinar modelos de IA, conforme disposto na [Política de Privacidade da Microsoft](https://www.microsoft.com/pt-br/privacy/privacystatement).
+
+No ambiente corporativo, a regra é a garantia de segurança e privacidade dos dados institucionais, algo que apenas serviços contratados sob política de privacidade própria podem oferecer.
+    </td>
+    <td valign="top" style="padding-left: 15px;" width="350">
+      <img src="imagens-manual-sei-ia-usuario/image10.png" alt="Janela reduzida do Assistente do SEI IA">
+    </td>
+  </tr>
+</table>
 
 Atualmente, o assistente do SEI IA faz uso da API do GPT-4.1 por meio do Azure OpenAI Service da Microsoft. Por se tratar de um serviço comercial e regido por um contrato específico, assegura-se que os conteúdos transmitidos (prompts e respostas) sejam tratados com alta confidencialidade e segurança, sem serem utilizados para treinamento ou melhoria de modelos da Microsoft ou de terceiros. Esse compromisso, descrito em [Azure OpenAI Data Privacy](https://learn.microsoft.com/pt-br/legal/cognitive-services/openai/data-privacy?tabs=azure-portal), reforça que:
 
-*Your prompts (inputs) and completions (outputs), your embeddings, and your training data:*
-
-* *are NOT available to other customers.*  
-* *are NOT available to OpenAI.*  
-* *are NOT used to improve OpenAI models.*  
-* *are NOT used to train, retrain, or improve Azure OpenAI Service foundation models.*  
-* *are NOT used to improve any Microsoft or 3rd party products or services without your permission or instruction.*  
-* *Your fine-tuned Azure OpenAI models are available exclusively for your use.*
-
-  *The Azure OpenAI Service is operated by Microsoft as an Azure service; Microsoft hosts the OpenAI models in Microsoft’s Azure environment and the Service does NOT interact with any services operated by OpenAI (e.g. ChatGPT, or the OpenAI API).*
+> _Your prompts (inputs) and completions (outputs), your embeddings, and your training data:_
+> - _are NOT available to other customers._
+> - _are NOT available to OpenAI._
+> - _are NOT used to improve OpenAI models._
+> - _are NOT used to train, retrain, or improve Azure OpenAI Service foundation models._
+> - _are NOT used to improve any Microsoft or 3rd party products or services without your permission or instruction._
+> - _Your fine-tuned Azure OpenAI models are available exclusively for your use._
+> 
+> _The Azure OpenAI Service is operated by Microsoft as an Azure service; Microsoft hosts the OpenAI models in Microsoft’s Azure environment and the Service does NOT interact with any services operated by OpenAI (e.g. ChatGPT, or the OpenAI API)._
 
 Ainda, o [Privacy & Security Terms da Microsoft](https://www.microsoft.com/licensing/terms/product/PrivacyandSecurityTerms/EAEAS) reforça o compromisso de proteger os dados dos clientes, garantindo que todas as informações sejam mantidas em segurança. Órgãos públicos como AGU e TCU adotaram a mesma abordagem, desenvolvendo soluções com o LLM do Azure OpenAI Service.
 
 Conforme pode ser observado no tópico [Arquitetura do Assistente](#arquitetura-do-assistente) deste manual, para além de uma simples implementação de integração via API com um LLM, a eficácia do assistente é resultante de uma abordagem projetada para lidar com grandes volumes de conteúdos, garantindo que funcione de maneira precisa, eficiente, segura **e totalmente desacoplada da API de LLM utilizada**.
 
-O assistente do SEI IA permite a utilização de qualquer API de LLM que seja devidamente integrada à solução, não estando restrito ao Azure OpenAI Service da Microsoft.
-
-Apenas por motivos de viabilização do desenvolvimento inicial do assistente, de acesso imediato à API do GPT-4.1 por meio do Azure OpenAI Service da Microsoft, da segurança reconhecida sobre a referida API e da viablidade de sua contratação como serviço por meio de representante comercial no Brasil é que o referido LLM foi inicialmente integrado ao assistente do SEI IA.
-
-Desde que a Anatel tenha acesso a outras APIs de LLMs comerciais no Brasil para fins de desenvolvimento e uso, será possível integrar outras IAs Generativas ao assistente do SEI IA.
+> O assistente do SEI IA permite a utilização de qualquer API de LLM que seja devidamente integrada à solução, não estando restrito ao Azure OpenAI Service da Microsoft.
+> 
+> Apenas por motivos de viabilização do desenvolvimento inicial do assistente, de acesso imediato à API do GPT-4.1 por meio do Azure OpenAI Service da Microsoft, da segurança reconhecida sobre a referida API e da viablidade de sua contratação como serviço por meio de representante comercial no Brasil é que o referido LLM foi inicialmente integrado ao assistente do SEI IA.
+> 
+> Desde que a Anatel tenha acesso a outras APIs de LLMs comerciais no Brasil para fins de desenvolvimento e uso, será possível integrar outras IAs Generativas ao assistente do SEI IA.
 
 Em resumo, o assistente possibilita o acesso não apenas aos benefícios avançados da IA Generativa, mas permite seu uso organizacional de maneira segura e eficiente, integrado aos conteúdos dos processos eletrônicos, promovendo confiança e eficácia no ambiente corporativo.
 
@@ -216,7 +236,7 @@ Ao clicar no ícone, o assistente abre em modo reduzido. O usuário pode inserir
 
 No modo expandido, a coluna à esquerda mostra a lista de tópicos do usuário. Para melhor organização, recomenda-se renomear os tópicos por assunto ou tarefa e criar novos tópicos sempre que tratar de temas diferentes. As mensagens só podem ser vistas pelo próprio usuário e apenas na Unidade onde foram criadas. Se o usuário acessar outra Unidade, verá outro conjunto de tópicos e mensagens.
 
-**Aviso Importante**: O uso de qualquer resposta do assistente é de responsabilidade exclusiva do usuário. Verifique sempre as informações antes de usá-las. A tecnologia de inteligência artificial generativa pode parecer muito correta e convincente, mesmo quando está completamente errada.
+> **Aviso Importante**: O uso de qualquer resposta do assistente é de responsabilidade exclusiva do usuário. Verifique sempre as informações antes de usá-las. A tecnologia de inteligência artificial generativa pode parecer muito correta e convincente, mesmo quando está completamente errada.
 
 Assim como ocorre quando um usuário utiliza texto obtido de qualquer fonte, a responsabilidade sobre seu teor passa a ser exclusiva do usuário que copiou e colou o texto, ajustando-o ou não. O usuário assume como seu o texto, sob sua exclusiva responsabilidade, independentemente de ter sido assistido por quem quer que seja.
 
@@ -268,47 +288,49 @@ O assistente realiza validações rigorosas para garantir a conformidade das men
 
 **Validações realizadas pelo Assistente**
 
-1. **Citação de Documento**: Para citar documentos, utilize o símbolo de **\#**, seguido obrigatoriamente por um número de pelo menos 7 dígitos, incluindo zeros à esquerda, que é o padrão inicial para protocolos de documentos no SEI.  
-   1. Exemplo de mensagem citando um documento: “**Resumir o documento \#12261106**”  
-   2. Atenção: o número do protocolo do documento deve ser exato e colado ao símbolo de **\#**.  
-      1. Citação válida: \#12261106  
-      2. Citação inválida: \# 12261106, \#-12261106, \#\_12261106  
-   3. Qualquer uso de **\#** que não seguir este padrão, retornará a seguinte crítica:  
-      1. “O uso do caractere de "\#" é exclusivo para citação de protocolos do SEI, cujo número deve estar colado ao \# (no formato, por exemplo \#01234567). Assim, a mensagem possui citação de protocolo em formato irregular.”  
-2. **Citação de Documento Externo PDF com indicação de Intervalo de Páginas**: É possível citar documento externo indicando intervalo específico de páginas sobre o qual o assistente deve se ater para atender ao prompt do usuário.  
-   1. Inclua junto ao protocolo do documento citado o intervalo de páginas entre colchetes, da seguinte forma [**inteiro:inteiro**].  
-      1. Por exemplo: “**Resumir o documento \#12261106[1:7]**”  
-   2. Ou indique a página única de interesse, da seguinte forma **[inteiro]**.  
-   3. Qualquer uso de **\#** que contiver a abertura de colchetes colado ao número de protocolo de documento será considerado indicação de intervalo de páginas e exigirá o padrão definido. Se não estiver no padrão, retornará a seguinte crítica:  
-      1. “A indicação de intervalo de páginas sobre o Documento Externo está em formato irregular. Deve utilizar o formato [p:p] um intervalo ou [p] para indicar página única: \#12261106[10:15] ou \#12261106[13].”  
+1. **Citação de Documento**: Para citar documentos, utilize o símbolo de **#**, seguido obrigatoriamente por um número de pelo menos 7 dígitos, incluindo zeros à esquerda, que é o padrão inicial para protocolos de documentos no SEI.  
+   1. Exemplo de mensagem citando um documento: “**Resumir o documento #12261106**”
+   2. Atenção: o número do protocolo do documento deve ser exato e colado ao símbolo de **#**.
+      1. Citação válida: #12261106
+      2. Citação inválida: # 12261106, #-12261106, #_12261106
+
+   3. Qualquer uso de **#** que não seguir este padrão, retornará a seguinte crítica:
+      1. “**O uso do caractere de "#" é exclusivo para citação de protocolos do SEI, cujo número deve estar colado ao # (no formato, por exemplo #01234567). Assim, a mensagem possui citação de protocolo em formato irregular.**”
+
+2. **Citação de Documento Externo PDF com indicação de Intervalo de Páginas**: É possível citar documento externo indicando intervalo específico de páginas sobre o qual o assistente deve se ater para atender ao prompt do usuário.
+   1. Inclua junto ao protocolo do documento citado o intervalo de páginas entre colchetes, da seguinte forma [**inteiro:inteiro**].
+      1. Por exemplo: “**Resumir o documento \#12261106[1:7]**”
+   2. Ou indique a página única de interesse, da seguinte forma **[inteiro]**.
+   3. Qualquer uso de **\#** que contiver a abertura de colchetes colado ao número de protocolo de documento será considerado indicação de intervalo de páginas e exigirá o padrão definido. Se não estiver no padrão, retornará a seguinte crítica:
+      1. “**A indicação de intervalo de páginas sobre o Documento Externo está em formato irregular. Deve utilizar o formato [p:p] um intervalo ou [p] para indicar página única: \#12261106[10:15] ou \#12261106[13].**”
    4. A indicação de intervalo de páginas somente funciona para documento externo do tipo PDF. Caso contrário, retornará a seguinte crítica:  
-      1. “A indicação de intervalo de páginas sobre Documento Externo para interação com o Assistente de IA está restrita a documentos do tipo PDF.”  
+      1. “**A indicação de intervalo de páginas sobre Documento Externo para interação com o Assistente de IA está restrita a documentos do tipo PDF.**”
 3. **Caracteres especiais junto da citação de protocolo**: A citação de um protocolo pode terminar com um dos seguintes caracteres: ".", ",", ";", ":", "?", "\!", ")", ou "\]".  
    1. Após estes caracteres podem ocorrer espaços em branco, quebras de linha ou o final do prompt.  
 4. **Verificação de Existência**: Após as validações de formato, o assistente verifica se o protocolo existe no SEI.  
    1. Se não for encontrado, retornará a seguinte crítica:  
-      1. “O protocolo citado \#98089789 não existe no SEI.”  
+      1. “**O protocolo citado \#98089789 não existe no SEI.**”
 5. **Verificação de Acesso**: Citado protocolo válido de documento e apenas um por mensagem, o SEI verifica se a unidade possui acesso ao documento.  
    1. O assistente não acessa conteúdo de documento que o usuário não tenha acesso diretamente pelo próprio SEI.  
    2. Se o usuário não tiver acesso ao documento a partir da unidade onde esteja logado, retornará a seguinte crítica:  
-      1. “Unidade [sigla\_unidade] não possui acesso ao documento [11292302]”  
+      1. “**Unidade [sigla\_unidade] não possui acesso ao documento [11292302]**”
 6. **Restrições Adicionais na Citação Documentos:**  
    1. A citação de documento gerado não aceita indicação de intervalo de páginas, o que retornará a seguinte crítica:  
-      1. “O protocolo indicado se refere a Documento Gerado no SEI, que, por natureza, não aceita indicação de intervalo de páginas para interação sobre seu conteúdo com o Assistente de IA.”  
+      1. “**O protocolo indicado se refere a Documento Gerado no SEI, que, por natureza, não aceita indicação de intervalo de páginas para interação sobre seu conteúdo com o Assistente de IA.**”
    2. Para documentos externos, o assistente verifica se a extensão do arquivo é uma das permitidas (**pdf, html, htm, txt, ods, xlsx, csv, xml, odt, odp, doc, docx, json, ppt, pptx, rtf, xls, xlsm**). Caso contrário, retornará a seguinte crítica:  
-      1. “O protocolo indicado se refere a Documento Externo de arquivo com extensão não permitida para interação sobre seu conteúdo com o Assistente de IA.”  
+      1. “**O protocolo indicado se refere a Documento Externo de arquivo com extensão não permitida para interação sobre seu conteúdo com o Assistente de IA.**”
 7. **Citação de documentos de processos com nível de acesso Sigiloso**: A interação com documentos de processos Sigilosos somente ocorre dentro da tela do correspondente processo já aberto, ou seja, depois de confirmado que o Usuário possui Credencial de Acesso sobre o processo Sigiloso. Se o usuário citar um documento nesse cenário sem estar já dentro do processo Sigiloso, então o assistente retornará a seguinte crítica:  
-   1. “Para interagir com o Assistente IA em documentos de Processos com o nível de acesso Sigiloso é necessário que você tenha o acesso e esteja dentro do processo desejado.”  
+   1. “**Para interagir com o Assistente IA em documentos de Processos com o nível de acesso Sigiloso é necessário que você tenha o acesso e esteja dentro do processo desejado.**”
 8. **Restrição relacionada ao limite de tokens diários**: O assistente possui um limite diário por usuário para uso, este limite é parametrizado na administração do SEI. Caso o usuário exceda o limite definido, então o assistente retornará a seguinte crítica:  
-   1. “O volume de conteúdo permitido nas interações diárias foi excedido. Tente novamente amanhã, quando o volume de conteúdo permitido para interação terá sido renovado.”  
+   1. “**O volume de conteúdo permitido nas interações diárias foi excedido. Tente novamente amanhã, quando o volume de conteúdo permitido para interação terá sido renovado.**”
 9. **Restrição relacionada a interação com protocolo de processo e de documento no mesmo prompt**: A interação com protocolo de processo e de documento não é permitida ao mesmo tempo. Caso o usuário cite ambos no mesmo prompt, então o assistente retornará a seguinte crítica:  
-   1. “Não é permitida a interação com protocolo de processo e de documento ao mesmo tempo.”  
+   1. “**Não é permitida a interação com protocolo de processo e de documento ao mesmo tempo.**”
 10. **Restrição relacionada a interação com mais de um protocolo de processo**: A interação com mais de um protocolo de processo não é permitida no mesmo prompt. Caso o usuário cite mais de um no mesmo prompt, então o assistente retornará a seguinte crítica:  
-    1. “Não é permitida a interação com mais de um protocolo de processo.”  
+    1. “**Não é permitida a interação com mais de um protocolo de processo.**”
 11. **Citação de documento externo recente**: Caso o Assistente identifique que em um prompt foi citado um documento externo recente que ainda não foi indexado pelo Solr, então o assistente retornará a seguinte crítica:  
-    1. “O documento externo é recente e ainda está pendente de indexação interna pelo SEI. Espere de 1 a 2 minutos para poder interagir.”  
+    1. “**O documento externo é recente e ainda está pendente de indexação interna pelo SEI. Espere de 1 a 2 minutos para poder interagir.**”
 12. **Verificação de acesso em citação de processo**: Citado protocolo válido de processo, o SEI verifica se a unidade possui acesso a algum documento do processo citado. Se o usuário na unidade não tiver acesso a nenhum documento a partir da unidade onde esteja logado, retornará a seguinte crítica:  
-    1. “Unidade [sigla\_unidade] não possui acesso a nenhum documento do processo nº [53500.054323/2025-13] ”
+    1. “**Unidade [sigla\_unidade] não possui acesso a nenhum documento do processo nº [53500.054323/2025-13]** ”
 
 ### Receios, Resistência e Adaptação à Tecnologia
 
@@ -428,7 +450,7 @@ Engenharia de prompt é a prática de escrever instruções eficazes para que a 
 
   * Exemplo com persona:
 
-    Você é um coach de produtividade com vasta experiência em consultorias para CEOs e executivos de sucesso.
+    **Você é um coach de produtividade com vasta experiência em consultorias para CEOs e executivos de sucesso**.
 
     Forneça conselhos sobre gerenciamento do tempo e como lidar com tantas tarefas surgindo de toda parte e a todo tempo.
 
@@ -444,11 +466,11 @@ Engenharia de prompt é a prática de escrever instruções eficazes para que a 
 
     \- Antes, tenha em consideração os seguintes pontos ao realizar sua análise, passo a passo:
 
-    	\- O que é um recurso administrativo de impugnação?
+    - O que é um recurso administrativo de impugnação?
 
-    	\- Qual é a estrutura comum de um recurso administrativo de impugnação?
+    - Qual é a estrutura comum de um recurso administrativo de impugnação?
 
-    	\- Como identificar essa estrutura no Documento Referenciado?
+    - Como identificar essa estrutura no Documento Referenciado?
 
     …
 
@@ -456,11 +478,11 @@ Engenharia de prompt é a prática de escrever instruções eficazes para que a 
 
     Dado o seguinte documento jurídico, siga passo a passo o raciocínio para encontrar alegações:
 
-    1\. Pense quais são os principais passos para analisar um documento jurídico e precisamente identificar as alegações e suas informações importantes para um julgamento.
+    1\. **Pense quais são os principais passos** para analisar um documento jurídico e precisamente identificar as alegações e suas informações importantes para um julgamento.
 
-    2\. **Escreva** os principais passos identificados.
+    2\. **Escreva os principais passos identificados**.
 
-    3\. Siga os passos identificados de forma cautelosa, devendo sempre pensar em como melhorar os passos seguintes diante das informações dos passos já escritos.
+    3\. **Siga os passos identificados** de forma cautelosa, devendo sempre pensar em como melhorar os passos seguintes diante das informações dos passos já escritos.
 
     Documento: \#0242855[17:39]
 
@@ -473,56 +495,56 @@ Engenharia de prompt é a prática de escrever instruções eficazes para que a 
 
     Contexto: 
 
-    	\- Estudo Técnico Preliminar da Contratação de TI \#[6701662](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4LcLwIj4Zo2imEoIP_ppekcFSmhTlQGtHmHyVOhfJVJ-SnPsvyx5x_7c7GXUO2YPGCmSmatTvH24kgYkTyxhso)
+    - Estudo Técnico Preliminar da Contratação de TI \#[6701662](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4LcLwIj4Zo2imEoIP_ppekcFSmhTlQGtHmHyVOhfJVJ-SnPsvyx5x_7c7GXUO2YPGCmSmatTvH24kgYkTyxhso)
 
-    	\- Informe \#[7654511](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4TKq6ryIS2XK-ADIqmbh0MTZuu706rrOM75z9BXm6Xc2GD8cnTescKeTMQmsE5afHHq29CmEHAoMYPCjeEvANX)
+    - Informe \#[7654511](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4TKq6ryIS2XK-ADIqmbh0MTZuu706rrOM75z9BXm6Xc2GD8cnTescKeTMQmsE5afHHq29CmEHAoMYPCjeEvANX)
 
-    	\- Minuta de Termo de Referência \#[6701667](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO6RCrF5T58LO80G0AK1ZybNyGs3KlmjnKehqH1kmSy2XRQbK-gGVB5w1eLJEBdQWzUS3j2Zgy9UUVDPEe0EcFMu)
+    - Minuta de Termo de Referência \#[6701667](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO6RCrF5T58LO80G0AK1ZybNyGs3KlmjnKehqH1kmSy2XRQbK-gGVB5w1eLJEBdQWzUS3j2Zgy9UUVDPEe0EcFMu)
 
-    	\- Parecer \#[8106432](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4VhhQXdRs3pJCyz6LbTc7wXZp98-BBaxdPxZO6ZygXBeNby7pQmEhN57PRavWrXLQpVleNPNuQTHFVyBaUqzfi)
+    - Parecer \#[8106432](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4VhhQXdRs3pJCyz6LbTc7wXZp98-BBaxdPxZO6ZygXBeNby7pQmEhN57PRavWrXLQpVleNPNuQTHFVyBaUqzfi)
 
     O item 61 do Parecer define: Recomenda-se, ainda que o tipo de licitação seja menor preço global, que o administrador avalie a possibilidade de haver proposta por itens, sendo, assim, vencedora a licitante que cotar o menor preço global, considerando os valores individuais aplicados para cada item, conforme o caso. 
 
-    Avalie criteriosamente o item 61 do Parecer e os documentos citados acima, buscando elementos nos documentos que demonstrem que a recomendação já foi atendida, pensando em justificativas que podem ser apresentadas. 
+    Avalie criteriosamente o item 61 do Parecer e os documentos citados acima, buscando elementos nos documentos que **demonstrem que a recomendação já foi atendida, pensando em justificativas que podem ser apresentadas**.
 
-    Com base nos documentos e na sua análise, então escreva três respostas objetivas para o item 61.
+    Com base nos documentos e na sua análise, **então escreva três respostas objetivas para o item 61**.
 
   * Exemplo \- **Persona 2 (procurador)**:
 
-    Agora assuma que você é o **procurador** federal responsável pela escrita do Parecer.
+    **Agora** assuma que você é **o procurador federal responsável pela escrita do Parecer**.
 
     Contexto: 
 
-    	\- Estudo Técnico Preliminar da Contratação de TI \#[6701662](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4LcLwIj4Zo2imEoIP_ppekcFSmhTlQGtHmHyVOhfJVJ-SnPsvyx5x_7c7GXUO2YPGCmSmatTvH24kgYkTyxhso)
+    - Estudo Técnico Preliminar da Contratação de TI \#[6701662](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4LcLwIj4Zo2imEoIP_ppekcFSmhTlQGtHmHyVOhfJVJ-SnPsvyx5x_7c7GXUO2YPGCmSmatTvH24kgYkTyxhso)
 
-    	\- Informe \#[7654511](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4TKq6ryIS2XK-ADIqmbh0MTZuu706rrOM75z9BXm6Xc2GD8cnTescKeTMQmsE5afHHq29CmEHAoMYPCjeEvANX)
+    - Informe \#[7654511](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4TKq6ryIS2XK-ADIqmbh0MTZuu706rrOM75z9BXm6Xc2GD8cnTescKeTMQmsE5afHHq29CmEHAoMYPCjeEvANX)
 
-    	\- Minuta de Termo de Referência \#[6701667](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO6RCrF5T58LO80G0AK1ZybNyGs3KlmjnKehqH1kmSy2XRQbK-gGVB5w1eLJEBdQWzUS3j2Zgy9UUVDPEe0EcFMu)
+    - Minuta de Termo de Referência \#[6701667](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO6RCrF5T58LO80G0AK1ZybNyGs3KlmjnKehqH1kmSy2XRQbK-gGVB5w1eLJEBdQWzUS3j2Zgy9UUVDPEe0EcFMu)
 
-    	\- Parecer \#[8106432](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4VhhQXdRs3pJCyz6LbTc7wXZp98-BBaxdPxZO6ZygXBeNby7pQmEhN57PRavWrXLQpVleNPNuQTHFVyBaUqzfi)
+    - Parecer \#[8106432](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4VhhQXdRs3pJCyz6LbTc7wXZp98-BBaxdPxZO6ZygXBeNby7pQmEhN57PRavWrXLQpVleNPNuQTHFVyBaUqzfi)
 
-    Considerando as três respostas objetivas fornecidas acima, ao prompt anterior, escreva uma avaliação para cada resposta apresentada pelo advogado, avaliando se a resposta atende o item 61 do Parecer. 
+    Considerando as três respostas objetivas fornecidas acima, ao prompt anterior, escreva uma **avaliação para cada resposta apresentada pelo advogado**, avaliando **se a resposta atende o item 61 do Parecer**.
 
-    Caso a avaliação seja negativa, apresente críticas para cada resposta com avaliação negativa apresentada pelo advogado. Também apresente sugestões de melhorias.
+    **Caso a avaliação seja negativa, apresente críticas para cada resposta com avaliação negativa apresentada pelo advogado**. Também apresente **sugestões de melhorias**.
 
 * **Autocrítica**: Permite que o modelo critique seus próprios resultados, contribuindo para melhorar a qualidade da resposta. Foca na avaliação interna e **reflexão** do modelo sobre seu próprio processo ou resultado, buscando uma melhoria qualitativa de uma única linha de raciocínio. É como o modelo “pensando por si mesmo” antes de finalizar uma resposta.  
   * Exemplo:
 
     Dado o seguinte documento jurídico, siga passo a passo o raciocínio para encontrar alegações:
 
-    	1\. Identifique o tipo de documento e as partes envolvidas.
+    1. Identifique o tipo de documento e as partes envolvidas.
 
-    	2\. Extraia trechos contendo alegações feitas pelas partes.
+    2. Extraia trechos contendo alegações feitas pelas partes.
 
-    	3\. Classifique cada alegação.
+    3. Classifique cada alegação.
 
-    	4\. Verifique se há fundamentação legal ou probatória para cada alegação.
+    4. Verifique se há fundamentação legal ou probatória para cada alegação.
 
-    	5\. Gere um resumo das alegações encontradas, suas partes e a fundamentação legal apresentada.
+    5. Gere um resumo das alegações encontradas, suas partes e a fundamentação legal apresentada.
 
-    	6\. Avalie o resultado gerado, identifique possíveis melhorias, escreva um novo texto contendo apenas as melhorias identificadas. Mas, se não identificar melhorias, apenas informe que não foram identificadas.
+    6. **Avalie o resultado gerado, identifique possíveis melhorias, escreva um novo texto contendo apenas as melhorias identificadas. Mas, se não identificar melhorias, apenas informe que não foram identificadas.**
 
-    	7\. Se foram identificadas melhorias, reescreva o texto, aplicando as melhorias
+    7. **Se foram identificadas melhorias, reescreva o texto, aplicando as melhorias**
 
     Documento: \#[12261106](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?8-74Kn1tDR89f1Q7RjX8EYU46IzCFD26Q9Xx5QNDbqbg7QFK7XTqNvBs24TS0cgCJb3XW_oGkX7dGnG7ugdXFfdVsQTst0xwmLYS92QUS1aOiyRmtUqGPJvyu6fRKq1I)
 
@@ -531,21 +553,21 @@ Engenharia de prompt é a prática de escrever instruções eficazes para que a 
 * **Busca Hipotética**: Faz o modelo criar uma referência ou resposta plausível (ex.: jurisprudência, artigo, termo técnico) ainda não verificada, servindo como parâmetro de pesquisa em bases externas para localizar fontes reais correspondentes.  
   * Exemplo:
 
-    Você é um Ministro do TCU, com vasto conhecimento jurídico e sobre processos de contratação de mão de obra para prestação de serviços de business intelligence e ciência de dados.
+    Você é um **Ministro do TCU**, com vasto conhecimento jurídico e sobre processos de contratação de mão de obra para prestação de serviços de business intelligence e ciência de dados.
 
     Contexto: 
 
-    	\- Estudo Técnico Preliminar da Contratação de TI \#[6701662](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4LcLwIj4Zo2imEoIP_ppekcFSmhTlQGtHmHyVOhfJVJ-SnPsvyx5x_7c7GXUO2YPGCmSmatTvH24kgYkTyxhso)
+    - Estudo Técnico Preliminar da Contratação de TI \#[6701662](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4LcLwIj4Zo2imEoIP_ppekcFSmhTlQGtHmHyVOhfJVJ-SnPsvyx5x_7c7GXUO2YPGCmSmatTvH24kgYkTyxhso)
 
-    	\- Informe \#[7654511](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4TKq6ryIS2XK-ADIqmbh0MTZuu706rrOM75z9BXm6Xc2GD8cnTescKeTMQmsE5afHHq29CmEHAoMYPCjeEvANX)
+    - Informe \#[7654511](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4TKq6ryIS2XK-ADIqmbh0MTZuu706rrOM75z9BXm6Xc2GD8cnTescKeTMQmsE5afHHq29CmEHAoMYPCjeEvANX)
 
-    	\- Minuta de Termo de Referência \#[6701667](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO6RCrF5T58LO80G0AK1ZybNyGs3KlmjnKehqH1kmSy2XRQbK-gGVB5w1eLJEBdQWzUS3j2Zgy9UUVDPEe0EcFMu)
+    - Minuta de Termo de Referência \#[6701667](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO6RCrF5T58LO80G0AK1ZybNyGs3KlmjnKehqH1kmSy2XRQbK-gGVB5w1eLJEBdQWzUS3j2Zgy9UUVDPEe0EcFMu)
 
-    	\- Parecer \#[8106432](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4VhhQXdRs3pJCyz6LbTc7wXZp98-BBaxdPxZO6ZygXBeNby7pQmEhN57PRavWrXLQpVleNPNuQTHFVyBaUqzfi)
+    - Parecer \#[8106432](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?eEP-wqk1skrd8hSlk5Z3rN4EVg9uLJqrLYJw_9INcO4VhhQXdRs3pJCyz6LbTc7wXZp98-BBaxdPxZO6ZygXBeNby7pQmEhN57PRavWrXLQpVleNPNuQTHFVyBaUqzfi)
 
     O item 61 do Parecer define: Recomenda-se, ainda que o tipo de licitação seja menor preço global, que o administrador avalie a possibilidade de haver proposta por itens, sendo, assim, vencedora a licitante que cotar o menor preço global, considerando os valores individuais aplicados para cada item, conforme o caso. 
 
-    Escreva uma jurisprudência sobre a possibilidade de licitações com diversos itens, onde as propostas não são feitas por item e será vencedora a licitante que cotar o menor preço global, considerando os valores individuais aplicados para cada item.
+    **Escreva uma jurisprudência sobre a possibilidade de licitações com diversos itens, onde as propostas não são feitas por item e será vencedora a licitante que cotar o menor preço global, considerando os valores individuais aplicados para cada item**.
 
   * Com a “*jurisprudência*” **inventada** a partir do prompt acima é possível pesquisar na internet para localizar fontes reais. No exemplo real acima foram localizadas as fontes abaixo:  
     * [https\://licitacoesecontratos.tcu.gov.br/3-4-1-menor-preco/](https://licitacoesecontratos.tcu.gov.br/3-4-1-menor-preco/)  
@@ -569,7 +591,7 @@ Engenharia de prompt é a prática de escrever instruções eficazes para que a 
 10. **Divida tarefas complexas em subtarefas**: Em casos de tarefas complexas é aconselhável dividir em etapas menores, com instruções claras para cada parte.  
 11. **Definir formato de resposta**: Especifique formato, tamanho, tom e estilo da resposta que deseja receber.  
 12. **Formate em Markdown**: Use [Markdown](https://www.markdownguide.org/basic-syntax/#lists-1) para estruturar melhor o prompt, destacar partes importantes e indicar a formatação desejada para a resposta. Isso melhora a legibilidade para os usuários e ajuda o modelo a entender melhor a estrutura do prompt e da resposta.  
-13. **Delimitadores**: Use delimitadores no estilo de tags XML **&lt;nome\_da\_tag&gt;**conteúdo**&lt;/nome\_da\_tag&gt;** para identificar seções importantes do prompt. Isso ajuda o modelo a distinguir claramente diferentes partes do prompt.  
+13. **Delimitadores**: Use delimitadores no estilo de tags XML &lt;nome\_da\_tag&gt;conteúdo&lt;/nome\_da\_tag&gt; para identificar seções importantes do prompt. Isso ajuda o modelo a distinguir claramente diferentes partes do prompt.
 14. **Avaliação e ajuste constantes**: Avalie, teste e ajuste os prompts de modo contínuo para aperfeiçoar os resultados.
 
 **Erros comuns que devem ser evitados**
@@ -711,34 +733,36 @@ Analisar impugnação apresentada pelo interessado contra cobrança de crédito 
 \- Se baseie \*\*exclusivamente\*\* no conteúdo do Documento Referenciado.  
 \- Caso alguma informação não conste no Documento Referenciado, indique expressamente "Informação não encontrada".
 
-**\# Instruções**  
-\- O Documento Referenciado contém um recurso administrativo de impugnação apresentado pelo interessado em processo administrativo fiscal aberto contra ele.  
-\- Lembre-se que pode acontecer de você não identificar alguma informação no conteúdo do Documento Referenciado, devendo indicar expressamente "Informação não encontrada".  
-\- Antes, tenha em consideração os seguintes pontos ao realizar sua análise, passo a passo:  
-	\- O que é um recurso administrativo de impugnação?  
-	\- Qual é a estrutura comum de um recurso administrativo de impugnação?  
-	\- Como identificar essa estrutura no Documento Referenciado?  
-\- Realizar a análise sobre o recurso administrativo de impugnação constante no Documento Referenciado seguindo a seção "Formato" abaixo.  
-\- Reserve o tempo necessário para pensar bem e seja cuidadoso, sem pressa.  
-\- Isso é muito importante para mim e para meu órgão\!
+**\# Instruções**
 
-**\# Formato**  
-\- Liste os dados abaixo como itens dentro da seção "\# Principais Fatos do Recurso", explicitando sempre que possível os tipos de créditos que constam no recurso:  
-	\- Número da Notificação de Lançamento;  
-	\- Nome da Empresa;  
-	\- CNPJ;  
-	\- Sucessão Empresarial;  
-	\- Número do Relatório de Fiscalização;  
-	\- Valores Apurados para Contribuição ao FUST no Relatório de Fiscalização;  
-	\- Data do Recebimento da Notificação;  
-	\- Tempestividade;  
-	\- Data da Apresentação da Impugnação;  
-	\- Solicitação de Vistas ou Cópia;  
-	\- Alegações Apresentadas; e  
-	\- Documentos Citados, que comprovem as alegações apresentadas (por exemplo: Notas Fiscais, Contratos, DIPJ).  
-\- Liste dentro da seção "\# Transcrições do que Fundamenta cada Alegação Apresentada" as transcrições dos trechos que fundamentam cada uma das "Alegações Apresentadas".  
-\- Liste dentro da seção "\# Pedidos" os pedidos aduzidos pelo interessado.  
-\- Liste dentro da seção "\# Principais Pontos da Impugnação" os pontos mais relevantes constantes na impugnação.
+- O Documento Referenciado contém um recurso administrativo de impugnação apresentado pelo interessado em processo administrativo fiscal aberto contra ele.
+- Lembre-se que pode acontecer de você não identificar alguma informação no conteúdo do Documento Referenciado, devendo indicar expressamente "Informação não encontrada".
+- **Antes, tenha em consideração os seguintes pontos ao realizar sua análise, passo a passo:**
+  - **O que é um recurso administrativo de impugnação?**
+  - **Qual é a estrutura comum de um recurso administrativo de impugnação?**
+  - **Como identificar essa estrutura no Documento Referenciado?**
+- Realizar a análise sobre o recurso administrativo de impugnação constante no Documento Referenciado seguindo a seção "Formato" abaixo.
+- Reserve o tempo necessário para pensar bem e seja cuidadoso, sem pressa.
+- Isso é muito importante para mim e para meu órgão\!
+
+**\# Formato**
+
+- Liste os dados abaixo como itens dentro da seção "\# Principais Fatos do Recurso", explicitando sempre que possível os tipos de créditos que constam no recurso:
+  - Número da Notificação de Lançamento;
+  - Nome da Empresa;
+  - CNPJ;
+  - Sucessão Empresarial;
+  - Número do Relatório de Fiscalização;
+  - Valores Apurados para Contribuição ao FUST no Relatório de Fiscalização;
+  - Data do Recebimento da Notificação;
+  - Tempestividade;
+  - Data da Apresentação da Impugnação;
+  - Solicitação de Vistas ou Cópia;
+  - Alegações Apresentadas; e
+  - Documentos Citados, que comprovem as alegações apresentadas (por exemplo: Notas Fiscais, Contratos, DIPJ).
+- Liste dentro da seção "\# Transcrições do que Fundamenta cada Alegação Apresentada" as transcrições dos trechos que fundamentam cada uma das "Alegações Apresentadas".
+- Liste dentro da seção "\# Pedidos" os pedidos aduzidos pelo interessado.
+- Liste dentro da seção "\# Principais Pontos da Impugnação" os pontos mais relevantes constantes na impugnação.
 
 **\# Documento Referenciado**  
 \#[12261106](https://sei.anatel.gov.br/sei/modulos/pesquisa/md_pesq_documento_consulta_externa.php?8-74Kn1tDR89f1Q7RjX8EYU46IzCFD26Q9Xx5QNDbqbg7QFK7XTqNvBs24TS0cgCJb3XW_oGkX7dGnG7ugdXFfdVsQTst0xwmLYS92QUS1aOiyRmtUqGPJvyu6fRKq1I)
@@ -799,8 +823,31 @@ Com o prompt acima, veja a resposta completa do assistente:
 
 ### Aula - Assistente do SEI IA e Engenharia de Prompts
 
-| [Acesse a gravação](https://www.youtube.com/watch?v=Q4oIQBLHKXo) de uma aula completa sobre o assistente do SEI IA, uso responsável de IA generativa, técnicas de prompts e engenharia de prompts. [Acesse os slides da apresentação](https://www.canva.com/design/DAGqoXRJj2Y/GlvF7VPtDapQIIpa4H0hDA/view?utm_content=DAGqoXRJj2Y&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hcf1b9870ab). A aula abordou: explicação da interface do assistente breve explicação sobre IA generativa critérios de uso responsável definição de prompt exemplos de uso técnicas de prompts citação de processo e de documentos nos prompts diretrizes para construir prompts eficazes boas práticas em engenharia de prompts explicação do modelo de “Prompt Perfeito” exemplos de prompts avançados utilizando o modelo de “Prompt Perfeito” | [![](imagens-manual-sei-ia-usuario/image19.png)](https://www.youtube.com/watch?v=Q4oIQBLHKXo) |
-| :---- | :---: |
+<table border="0">
+  <tr>
+    <td valign="top">
+
+[Acesse a gravação](https://www.youtube.com/watch?v=Q4oIQBLHKXo) de uma aula completa sobre o assistente do SEI IA, uso responsável de IA generativa, técnicas de prompts e engenharia de prompts. [Acesse os slides da apresentação](https://www.canva.com/design/DAGqoXRJj2Y/GlvF7VPtDapQIIpa4H0hDA/view?utm_content=DAGqoXRJj2Y&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hcf1b9870ab).
+
+A aula abordou:
+- explicação da interface do assistente
+- breve explicação sobre IA generativa
+- critérios de uso responsável
+- definição de prompt
+- exemplos de uso
+- técnicas de prompts
+- citação de processo e de documentos nos prompts
+- diretrizes para construir prompts eficazes
+- boas práticas em engenharia de prompts
+- explicação do modelo de “Prompt Perfeito”
+- exemplos de prompts avançados utilizando o modelo de “Prompt Perfeito”
+
+    </td>
+    <td valign="top" style="padding-left: 15px;">
+      <img src="imagens-manual-sei-ia-usuario/image19.png" alt="Player para a aula">
+    </td>
+  </tr>
+</table>
 
 ### Materiais complementares sobre IA Generativa e engenharia de prompts
 

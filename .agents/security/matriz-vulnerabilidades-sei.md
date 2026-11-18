@@ -100,6 +100,10 @@ $strSQL = "SELECT * FROM md_ri_cadastro WHERE str_nome LIKE '%" . $strBusca . "%
 // SEGURO: normalizar e limitar antes de usar como criterio
 $strNome = substr(trim(PaginaSEI::GET('str_nome', 'string')), 0, 100);
 $objDTO->adicionarCriterio(array('StrNome'), array(InfraDTO::$OPER_IGUAL), array($strNome));
+
+// SEGURO: SQL proprio na BD, com cada valor formatado pelo banco
+$objBanco = $this->getObjInfraIBanco();
+$strSQL = 'SELECT id_md_ri_cadastro FROM md_ri_cadastro WHERE str_nome = ' . $objBanco->formatarGravacaoStr($objDTO->getStrNome());
 ```
 
 ---

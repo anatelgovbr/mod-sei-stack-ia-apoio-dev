@@ -1,0 +1,7 @@
+# Imagem dos testes e2e: a do Playwright, com Python e navegadores, mais os
+# pacotes do tests/e2e/requirements.txt. Construida pelo servico pw do
+# docker-compose.yml, com a pasta tests/e2e como contexto.
+FROM mcr.microsoft.com/playwright/python:v1.60.0-noble
+
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir --root-user-action=ignore --disable-pip-version-check -r /tmp/requirements.txt

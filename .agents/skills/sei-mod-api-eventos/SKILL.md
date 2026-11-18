@@ -1,9 +1,10 @@
 ---
 name: sei-mod-api-eventos
 description: >
-  Intercepta eventos do SEI via metodos na classe *Integracao (SeiIntegracao),
-  usando objetos da API, com foco em permissao/link assinado, consistencia
-  transacional e auditoria quando aplicavel.
+  Intercepta eventos do SEI em *Integracao (SeiIntegracao), usando objetos da API,
+  com permissao, consistencia transacional e auditoria quando aplicavel.
+  Acionar tambem ao criar ou alterar FK ou uso funcional de registros do core,
+  inclusive protocolos de processos e documentos, mesmo sem mudanca de DDL.
 
   Use quando:
   - O desenvolvedor precisa interceptar um evento do SEI (assinatura, envio,
@@ -34,19 +35,22 @@ e auditoria quando aplicavel.
 - O agente precisa rotear requisicoes AJAX ou WebServices dentro do modulo.
 - Promptlike: "interceptar assinatura de documento", "adicionar botao no controle de processos", "mostrar icone especial no processo", "implementar menu de publicacoes".
 
-Usar `sei-menu-pagina` como skill principal quando a necessidade for criar ou
-ajustar menu interno SIP, pagina ou acao do proprio modulo. Manter
-`sei-mod-api-eventos` como principal quando a extensao depender de hook no core,
-menu externo/publicacoes ou injecao de botoes/icones em telas do SEI.
+Quando o desenvolvedor escolher explicitamente `sei-gerador-crud`, o gerador e
+principal para o CRUD e esta skill cobre eventual hook. Caso contrario, usar
+`sei-menu-pagina` como principal para menu interno SIP, pagina ou acao do
+proprio modulo sem hook no core nem menu externo/publicacoes; para hook no core,
+menu externo/publicacoes ou injecao de botoes/icones, usar `sei-mod-api-eventos`
+como principal.
 
 ## Procedimento
 
+0. **Dependências de registros do core**: quando a mudança afetar referência física ou uso funcional, aplicar [proteção das dependências](references/protecao-dependencias-core.md) e concluir sua matriz; inclui Administração e protocolos, sem presumir que todo evento permita veto.
 1. **Escolher o hook** no catalogo `references/catalogo-eventos.md` pelo nome do evento.
-2. **Confirmar a assinatura** do metodo em `SeiIntegracao.php` (core) ou em modulos de referencia.
+2. **Confirmar a assinatura** do metodo em `SeiIntegracao.php` e confirmar o ponto de chamada na RN do core, posição perante escrita/commit e propagação da exceção na versão suportada. Módulos existentes são exemplos com limitações, não prova do contrato.
 3. **Implementar no `*Integracao.php`**: manter logica minima no hook; delegar para RN/servicos quando a logica crescer.
 4. **Seguranca**: negar por padrao em entradas nao confiaveis; validar permissao para qualquer efeito colateral; assinar links na geracao e validar na entrada.
 5. **Consistencia transacional**: se o evento gerar escrita relevante (BD/processo/documento), usar transacao manual ou metodo `*Controlado`.
-6. **Evidencias**: testes manuais guiados e negativos (sem permissao, link invalido, parametros invalidos); logs faceis sem PII/segredos.
+6. **Evidencias**: testes manuais guiados e negativos aplicaveis ao evento, conforme `sei-validacao-padrao`: sem permissao quando houver controle de acesso afetado, link invalido quando houver link e parametros invalidos quando houver parametros. Teste link invalido em sessao isolada; sem isolamento, registre pendencia. Mantenha logs sem PII/segredos. Se o hook criar ou alterar componente visual, aplicar `.agents/references/padrao-acessibilidade-cores-sei.md` no contexto onde ele aparece.
 
 ## Critérios de validação
 
@@ -55,7 +59,7 @@ menu externo/publicacoes ou injecao de botoes/icones em telas do SEI.
 - [ ] Permissao validada antes de qualquer efeito colateral.
 - [ ] Link assinado na geracao e validado na entrada quando aplicavel.
 - [ ] Transacao coerente quando ha escrita relevante.
-- [ ] Testes cobrindo caminho positivo e negativos (sem permissao, parametros invalidos).
+- [ ] Testes cobrindo caminho positivo e negativos aplicaveis ao evento, conforme o procedimento.
 - [ ] A skill nao assumiu como principal um caso que era apenas menu interno SIP/pagina de modulo sem hook no core.
 
 ## Referências

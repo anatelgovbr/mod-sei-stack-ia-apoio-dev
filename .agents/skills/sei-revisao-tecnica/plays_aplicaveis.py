@@ -17,6 +17,8 @@ Os `.php` do repositório são ISO-8859-1, entao a leitura decodifica em latin-1
 
 import argparse
 import json
+import re
+import shlex
 import sys
 from pathlib import Path
 
@@ -24,6 +26,62 @@ from pathlib import Path
 # `upstream/` e `vendor/` só contam para sca-audit.
 IGNORADOS = {".git", "node_modules", "__pycache__", ".venv", "_graficos", "_raster"}
 IGNORADOS_SALVO_SCA = {"vendor", "upstream"}
+
+# Cadastro de tarefa de andamento, com a mesma elegibilidade do auditor de sei-verificacao-tarefa.
+CADASTRO_TAREFA = re.compile(
+    r"insert\s+into\s+tarefa\s*\(|->cadastrar\s*\(\s*new\s+TarefaDTO\b", re.IGNORECASE
+)
+NOVO_TAREFA_DTO = re.compile(r"(\$\w+)\s*=\s*new\s+TarefaDTO\b", re.IGNORECASE)
+CADASTRAR_VARIAVEL = re.compile(r"->cadastrar\s*\(\s*(\$\w+)\s*\)", re.IGNORECASE)
+
+
+def cadastra_tarefa(texto):
+    """CADASTRO_TAREFA, ou `$x = new TarefaDTO` seguido de `->cadastrar($x)`, em tempo linear.
+
+    Guarda o fim da primeira criacao de cada variavel e confere se alguma chamada a
+    cadastrar com a mesma variavel vem depois. Nomes comparados sem caixa, como o resto
+    do padrao (IGNORECASE).
+    """
+    if CADASTRO_TAREFA.search(texto):
+        return True
+    primeira_criacao = {}
+    for novo in NOVO_TAREFA_DTO.finditer(texto):
+        primeira_criacao.setdefault(novo.group(1).lower(), novo.end())
+    return any(
+        chamada.start() >= primeira_criacao.get(chamada.group(1).lower(), len(texto) + 1)
+        for chamada in CADASTRAR_VARIAVEL.finditer(texto)
+    )
+
+
+def sem_comentarios_php(texto):
+    """Remove comentarios PHP fora de string, como mask_php_comments do auditor de tarefa."""
+    saida, indice, aspas = [], 0, None
+    while indice < len(texto):
+        char = texto[indice]
+        if aspas:
+            saida.append(char)
+            if char == "\\":
+                saida.append(texto[indice + 1:indice + 2])
+                indice += 2
+                continue
+            if char == aspas:
+                aspas = None
+        elif char in "'\"`":
+            aspas = char
+            saida.append(char)
+        elif texto.startswith("/*", indice):
+            fim = texto.find("*/", indice + 2)
+            indice = len(texto) if fim < 0 else fim + 2
+            saida.append(" ")
+            continue
+        elif texto.startswith("//", indice) or char == "#":
+            fim = texto.find("\n", indice)
+            indice = len(texto) if fim < 0 else fim
+            continue
+        else:
+            saida.append(char)
+        indice += 1
+    return "".join(saida)
 
 SEMPRE = [
     ("code-review-security", "qualquer arquivo de código-fonte no escopo"),
@@ -117,17 +175,17 @@ def detectar(todos, sem_dep):
             marca(gates, "sei-verificacao-rn", posix)
         if nome.endswith("BD.php") or nome.endswith("DTO.php"):
             marca(gates, "sei-verificacao-banco-dados", posix)
-        if nome.endswith("_tarefa.php"):
+        if nome.endswith("_tarefa.php") or (nome.endswith(".php") and cadastra_tarefa(sem_comentarios_php(corpo()))):
             marca(gates, "sei-verificacao-tarefa", posix)
 
-        if "/módulos/ia/" in posix or posix.startswith("módulos/ia/"):
+        if "/modulos/ia/" in posix or posix.startswith("modulos/ia/"):
             marca(plays, "llm-risk-assess", posix)
             marca(plays, "prompt-injection-testing (parte estatica)", posix)
 
         if nome == ".mcp.json" or (nome.endswith(".json") and "mcpServers" in corpo()):
             marca(plays, "mcp-server-review", posix)
 
-        if nome in ("Dockerfile", "docker-compose.yml", "docker-compose.yaml") \
+        if nome in ("Dockerfile", "docker-compose.yml", "docker-compose.yaml") or nome.startswith("Dockerfile.") \
                 or nome.endswith((".tf", ".tfvars")):
             marca(plays, "iac-security-review", posix)
 
@@ -212,7 +270,7 @@ def relatorio_markdown(caminhos, plays, gates, total):
         L.append("```bash")
         for nome in sorted(gates):
             for alvo in gates[nome]:
-                L.append(COMANDO_GATE[nome].format(alvo=alvo))
+                L.append(COMANDO_GATE[nome].format(alvo=shlex.quote(alvo)))
         L.append("```")
     else:
         L.append("Nenhum artefato de gate no escopo.")

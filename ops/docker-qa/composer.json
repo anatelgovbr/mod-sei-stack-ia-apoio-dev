@@ -1,0 +1,14 @@
+{
+    "description": "Ferramentas de analise estatica e de teste do SEI. Psalm fixado em 6.16.1, a mesma versao do pipeline sei-php-ds-pl-qa. PHPUnit 11, a ultima versao que roda no PHP 8.2 da imagem do SEI.",
+    "require-dev": {
+        "phpstan/phpstan": "^2.1",
+        "vimeo/psalm": "6.16.1",
+        "phpunit/phpunit": "^11.5"
+    },
+    "scripts": {
+        "test": "sh /qa/testar.sh"
+    },
+    "scripts-descriptions": {
+        "test": "Roda os testes unitarios no container qa. Opcoes do PHPUnit vao depois de --."
+    }
+}

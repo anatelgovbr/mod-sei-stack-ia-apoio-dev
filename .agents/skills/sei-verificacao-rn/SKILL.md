@@ -11,6 +11,7 @@ description: >
   Use quando:
   - Novo RN criado ou alterado no modulo
   - Code review de RN existente
+  - Refatoracao de RN, inclusive a revisao dela
   - Gate automatico disparado por `sei-guardrails-modulo`
   - Pergunta como "valide as transacoes desta RN" ou "check RN transaction"
 ---
@@ -24,7 +25,7 @@ Skill de gate para validar padroes de transacao em classes RN do SEI.
 | ID | Regra | Severidade | O que verifica |
 |----|-------|------------|----------------|
 | T1 | CRUD padronizado usa sufixo coerente | **Aviso** | `cadastrar/alterar/excluir` tendem a `Controlado`; `consultar/listar/contar` tendem a `Conectado` |
-| T2 | inicializarObjInfraIBanco() implementado | **Erro** | RN estende InfraRN e retorna BancoSEI::getInstance() |
+| T2 | inicializarObjInfraIBanco() implementado | **Erro** | RN estende InfraRN e retorna BancoSEI::getInstance(); com herança indireta, o método vem da classe-mãe, e o `audit.py` bloqueia a classe cuja cadeia não chega à InfraRN |
 | T3 | RN nao chama BD de outra classe | **Erro** | Cada RN acessa apenas sua propria BD |
 | T4 | Controle manual de conexao/transacao merece revisao | **Aviso** | `fecharConexao()`, `commitTransacao()` e similares exigem contexto claro |
 | T5 | try/catch com `InfraException` e encadeamento de erro e recomendavel | **Aviso** | padrao recorrente nos exemplos do manual |
@@ -32,6 +33,13 @@ Skill de gate para validar padroes de transacao em classes RN do SEI.
 | A1 | Metodo de escrita usa recurso auditado compatível | **Erro** | o recurso inicia com `md_` e termina com o sufixo da operação de escrita; `bloquear` compartilha o recurso `_consultar`, porque o SIP não gera recurso `bloquear` |
 | A2 | Wrapper publico de escrita sem verificacao | **Aviso** | revisar intencionalidade sem exigir sessao em helper `*Interno`, hook ou evento sem usuario |
 | A3 | Leitura publica usa o recurso da operacao | **Erro** | `consultar` e `bloquear` usam recurso terminado em `_consultar`; `listar` e `contar` usam recurso terminado em `_listar`; todos iniciados por `md_` |
+| T7 | `getIdConexao()` so testa conexao aberta | **Erro** | O retorno nunca vai para `mysqli_*`, `oci_*`, `pg_*` ou similar |
+| T8 | Contrato do metodo com sufixo | **Erro** | Metodo `protected`, com um unico parametro (DTO ou array), chamado pelo nome publico sem sufixo |
+| T9 | Uma transacao para o laco | **Erro** | Laco que chama operacao `Controlado` por item roda dentro de `Controlado`; lote que continua apos falha isolada justifica `Conectado` em comentario |
+| T10 | Controle manual com estado auxiliar | **Aviso** | Abertura e fechamento manual pelo `BancoSEI` sabem se a conexao ou a transacao ja esta aberta |
+| T11 | RN repete as validacoes da interface | **Erro** | Tamanho, obrigatoriedade e demais regras ja validadas na tela sao validadas tambem na RN |
+
+O `audit.py` avalia T1 a T6 e A1 a A3. T7 a T12 sao revisao manual, com exemplos em `references/padroes-transacao.md`.
 
 ## Observacao sobre sufixos
 
@@ -47,6 +55,10 @@ exemplo completo.
 
 O wrapper chama o nome público resolvido pela `InfraRN`. Chamar
 `$this->algumaOperacaoControlado()` diretamente não comprova commit e bloqueia T6.
+
+## Refatoração
+
+Escrita ou revisão de refatoração que extrai, move, divide ou renomeia método de RN aplica a T12 de `references/padroes-transacao.md`, com os limites de `*Controlado` e `*Conectado`. A verificação é manual: o `audit.py` não avalia a T12.
 
 ## Inicializacao correta
 
@@ -125,7 +137,7 @@ Ver `.agents/references/padrao-auditoria-sip-sei.md` para o padrao completo incl
 cd .agents/skills/sei-verificacao-rn && python3 -m unittest test_audit
 ```
 
-12 testes sobre `audit.py`. O arquivo e independente de proposito: nao importa helper de
+Testes sobre `audit.py`. O arquivo e independente de proposito: nao importa helper de
 outra skill nem de pasta compartilhada. A duplicacao de andaime e o preco de a skill
 poder ser levada inteira para outro lugar.
 
@@ -137,3 +149,7 @@ O resto se divide em dois grupos. Um fixa que cada regra realmente barra, com o 
 de saida e a linha certa. O outro impede falso positivo, e cada um desses e um caso que
 ja aconteceu. Falso positivo importa porque auditor que grita a toa e desligado pela
 equipe, e ai o gate para de proteger tudo, nao so o caso barulhento.
+
+## Dependências de registros do core
+
+Confira dependências afetadas pela regra da RN, inclusive sem DDL, e os caminhos inversos de ativação. Aplicar, com `sei-guardrails-modulo`, a [matriz de proteção](../sei-mod-api-eventos/references/protecao-dependencias-core.md) também a protocolos e dependências funcionais sem FK.

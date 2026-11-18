@@ -1,13 +1,13 @@
 ---
 name: sei-verificacao-tarefa
 description: |
-  Audita os identificadores de tarefa de modulo SEI/SIP: `id_tarefa` numerico
-  e `id_tarefa_modulo` textual. Valida range, excecao 65, prefixo, tamanho e
-  unicidade. Gate para qualquer script de tarefa
-  (*_tarefa.php) ou definicao de tarefas no modulo.
+  Audita o cadastro de tarefa de andamento de modulo SEI: `id_tarefa`
+  numerico, `id_tarefa_modulo` textual, origem do id em `seq_tarefa` e
+  sinalizadores S/N. Gate para script de release que cadastra tarefa
+  (`TarefaDTO` ou `INSERT INTO tarefa`) e para definicao `*_tarefa.php`.
 
   Use quando:
-  - Novo script de tarefa criado ou alterado
+  - Cadastro de tarefa criado ou alterado no script de release do modulo
   - Code review de tarefas de modulo
   - Gate automatico disparado por `sei-guardrails-modulo`
   - Pergunta como "valide as tarefas deste modulo" ou "check task IDs"
@@ -15,25 +15,27 @@ description: |
 
 # sei-verificacao-tarefa
 
-Skill de gate para validar IDs de tarefa de modulo SEI/SIP.
+Skill de gate para validar o cadastro de tarefa de andamento de modulo SEI. Regra completa, exemplos e escolha dos sinalizadores: `references/padroes-tarefa.md`.
 
 ## Regras de auditoria
 
 | ID | Regra | Severidade | O que verifica |
 |----|-------|------------|----------------|
-| K1 | `id_tarefa` >= 1000 | **Erro** | Valor numerico >= 1000, exceto ID=65 com atributo `DESCRICAO` |
-| K2 | `id_tarefa` < 1000 reservado | **Erro** | Bloqueia valor menor que 1000 que nao seja 65 |
+| K1 | `id_tarefa` >= 1000 | **Erro** | Valor numerico >= 1000; no cadastro, a 65 tambem e erro |
+| K2 | `id_tarefa` < 1000 reservado | **Erro** | Bloqueia valor menor que 1000 que nao seja o lancamento da 65 |
 | K3 | Prefixo de `id_tarefa_modulo` | **Erro** | Texto segue `MD_<SIGLA>_<NOME>` em maiusculas |
 | K4 | Maximo 50 caracteres | **Erro** | `id_tarefa_modulo` tem ate 50 caracteres |
 | K6 | Unicidade nas duas dimensoes | **Erro** | Nao repete `id_tarefa` nem `id_tarefa_modulo` no modulo |
-| K7 | ID=65 usado apenas com atributo DESCRICAO | **Erro** | Tarefa 65 e free-text andamentos, nao usar para outro fim |
+| K7 | Tarefa 65 so no lancamento, com DESCRICAO | **Erro** | Na definicao `*_tarefa.php`, a entrada 65 exige `DESCRICAO` nao vazio |
+| K8 | Id por `seq_tarefa` ou com realinhamento | **Erro** | Id fixo ou calculado fora de `getValorSequencia('seq_tarefa')` exige realinhar `seq_tarefa` no arquivo |
+| K9 | Cinco sinalizadores explicitos | **Erro** | Cadastro define os cinco `sin_*` da tabela `tarefa`, com `S` ou `N` quando literal |
 
 ## Ranges de ID
 
 | Range | Uso | Exemplo |
 |-------|-----|---------|
 | ID < 1000 | Reservado para SEI core | 1-999 |
-| ID = 65 | Livre para modulo (com DESCRICAO) | Tarefa free-text |
+| ID = 65 | Tarefa do core; o modulo so lanca, com DESCRICAO | Atualizacao de andamento |
 | ID >= 1000 | Livre para modulo | 1000+ |
 
 ## Exit codes (`--exit-code`)
@@ -46,15 +48,14 @@ Skill de gate para validar IDs de tarefa de modulo SEI/SIP.
 
 ## Uso
 
+Rode sobre o script de release do modulo. O script do core, `atualizar_versao_sei.php`, cadastra tarefas abaixo de 1000 e fica fora do alvo. Em diretorio, o auditor le o primeiro nivel e analisa os arquivos que cadastram tarefa ou tem `tarefa` no nome.
+
 ```bash
-# Arquivo unico
-python3 audit.py --input md_ri_tarefa.php --format markdown
+# Script de release do modulo
+python3 audit.py --input fontes/sei/src/main/php/sei/scripts/sei_atualizar_versao_modulo_<modulo>.php --format markdown
 
-# Diretorio scripts/
-python3 audit.py --input fontes/sei/src/main/php/sei/scripts --format json
-
-# Em todo o modulo
-python3 audit.py --input web/modulos/relacionamento-institucional/scripts --format markdown
+# Definicao *_tarefa.php
+python3 audit.py --input md_ri_tarefa.php --format json
 ```
 
 ## Output JSON
@@ -79,14 +80,23 @@ python3 audit.py --input web/modulos/relacionamento-institucional/scripts --form
 ## Parser patterns
 
 ```python
-# Formatos reconhecidos
+# Cadastro: TarefaDTO passado a cadastrar(); setters e unSetTodos() lidos em ordem ate a chamada
+$objTarefaDTO = new TarefaDTO();
+$objTarefaDTO->setNumIdTarefa($numIdTarefa)
+$objTarefaDTO->setStrIdTarefaModulo('MD_RI_RESTAURANTE_CADASTRAR')
+$objTarefaRN->cadastrar($objTarefaDTO)
+
+# Cadastro: cada tupla de INSERT; colunas literais ou em variavel (ultima atribuicao literal mais acrescimos .=)
+INSERT INTO tarefa ($strCampos) VALUES (<valores>)
+
+# Definicao *_tarefa.php
 'id_tarefa' => 1001
 'id_tarefa_modulo' => 'MD_RI_RESTAURANTE_CADASTRAR'
 $objTarefaDTO->setNumIdTarefa(1001)
 $objTarefaDTO->setStrIdTarefaModulo('MD_RI_RESTAURANTE_CADASTRAR')
 ```
 
-O parser reconhece `array()` e `[]`.
+O parser reconhece `array()` e `[]`. Devolvem BLOCK: `INSERT INTO tarefa` com lista de colunas ou de valores que o parser nao interpreta, inclusive lista alterada por expressao nao literal ou tupla seguinte nao lida, e `cadastrar(new TarefaDTO...)`. `TarefaDTO` guardado fora de variavel simples, como propriedade ou item de array, nao e lido: confira esse cadastro na revisao.
 
 ---
 
@@ -96,7 +106,7 @@ O parser reconhece `array()` e `[]`.
 cd .agents/skills/sei-verificacao-tarefa && python3 -m unittest test_audit
 ```
 
-6 testes sobre `audit.py`. O arquivo e independente de proposito: nao importa helper de
+14 testes sobre `audit.py`. O arquivo e independente de proposito: nao importa helper de
 outra skill nem de pasta compartilhada. A duplicacao de andaime e o preco de a skill
 poder ser levada inteira para outro lugar.
 

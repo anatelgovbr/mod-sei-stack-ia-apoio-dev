@@ -29,8 +29,8 @@ Chaves obrigatorias em todo contrato:
 | `entidade.singular`, `entidade.plural` | textos exibidos ao usuario, acentuados |
 | `entidade.artigo` | `o` ou `a`; define concordancia das mensagens da entidade |
 | `entidade.campoPrincipal` | coluna exibida na lista e usada no helper `montarSelect*` do INT; em N:N so passa pela validacao |
-| `entidade.comentario` | descricao negocial da tabela; vai para o docblock `@table` do DTO e para a release |
-| `colunas[].nome`, `colunas[].tipoBanco`, `colunas[].obrigatorio`, `colunas[].comentario` | tipos aceitos: `int`, `integer`, `varchar` (com `tamanho`), `char` (com `tamanho`), `date` (`dta_*`), `timestamp` (`dth_*`), `datetime`, `numeric` (`din_*` para dinheiro; `precisao` e `escala` opcionais, usados na release) |
+| `entidade.comentario` | descricao negocial da tabela; vai para o docblock `@table` do DTO |
+| `colunas[].nome`, `colunas[].tipoBanco`, `colunas[].obrigatorio`, `colunas[].comentario` | tipos aceitos: `int`, `integer`, `varchar` (com `tamanho` inteiro positivo), `char` (com `tamanho` inteiro positivo), `date` (`dta_*`), `timestamp` (`dth_*`), `datetime`, `numeric` (`din_*` para dinheiro; `precisao` e `escala` opcionais, usados na release) |
 | `colunas[].chavePrimaria` | `true` na PK; uma PK `id_<tabela>` no CRUD simples, duas PKs informadas na N:N |
 | `regrasGeracao.campoSinAtivo` | `"sin_ativo"` quando a entidade tem exclusao logica (exige a coluna `sin_ativo char(1)`), `null` quando nao tem; obrigatoria no CRUD simples |
 
@@ -39,8 +39,8 @@ Chaves opcionais:
 | Chave | Conteudo |
 | ----- | -------- |
 | `colunas[].chaveEstrangeira` | `true` em coluna FK (documental; o que gera a FK e `relacionamentos`) |
-| `relacionamentos[]` | uma entrada por FK: `coluna`, `tabelaReferencia`, `campoExibicao` (coluna do pai mostrada no select e na lista), `tipoFk` (`obrigatoria` ou `opcional`, coerente com `obrigatorio` da coluna), `filtroFk` (`on` ou `where`), `tipoExibicao` (tipo SQL de `campoExibicao` quando nao for texto) |
-| `relacionamentosNn[]` | exatamente duas entradas na N:N: `tabelaOrigem`, `classeInt`, `metodoInt`, `rotulo`, `artigo`, `teclaAtalho` |
+| `relacionamentos[]` | uma entrada por FK: `coluna`, `tabelaReferencia`, `campoExibicao` (nome fisico da coluna do pai mostrada no select e na lista), `tipoFk` (`obrigatoria` ou `opcional`, coerente com `obrigatorio` da coluna), `filtroFk` (`on` ou `where`), `tipoExibicao` (tipo SQL de `campoExibicao` quando nao for texto) |
+| `relacionamentosNn[]` | exatamente duas entradas na N:N: `tabelaOrigem`, `classeInt` (`<Classe>INT`), `metodoInt` (`montarSelect<Campo>`), `rotulo`, `artigo`, `teclaAtalho` |
 | `ui.ordemFormulario` | ordem dos campos no cadastro; quando presente, precisa conter toda coluna que nao seja PK nem `sin_ativo` |
 | `ui.campos.<coluna>` | `rotulo` (acentuado), `teclaAtalho` (letra do rotulo), `artigo` (`o` ou `a`, concordancia das mensagens da coluna) |
 | `regrasGeracao.paginacao` | `true` (padrao) ativa `prepararPaginacao` e `processarPaginacao` na lista; `false` deixa as linhas comentadas |
@@ -56,7 +56,7 @@ Chaves opcionais:
 - N:N: `regrasGeracao.campoSinAtivo` deve ser `null`; o nome `md_<sigla>_rel_<a>_<b>` e preferido e gera alerta quando ausente.
 - FK que nao repete o nome da PK de origem e aceita (papeis distintos como origem e destino) e gera alerta; duas FKs para a mesma tabela recebem alias SQL no DTO.
 - O helper `<Classe>INT::montarSelect<CampoExibicao>` de cada FK precisa existir em `web/int/` (tabela do core) ou no `int/` do modulo; classe encontrada sem o metodo falha com mensagem, classe ausente gera alerta.
-- `teclaAtalho` nao pode ser `S`, `C` ou `F` (botoes do cadastro) e, em coluna FK, tambem nao pode ser `N`, `E`, `T` ou `R` (botoes da lista).
+- `teclaAtalho` (em `ui.campos`, uma unica letra ou digito) nao pode ser `C`, `D`, `E` ou `F` (o navegador as consome) nem `S` ou `A` (botoes do cadastro); em coluna FK e em N:N, tambem nao pode ser `N`, `X`, `T` ou `R` (botoes da lista). Em `relacionamentosNn[]`, sem `teclaAtalho`, vale a primeira letra do `rotulo`, sob a mesma regra.
 - `sta_*` (status multivalorado) e rejeitado.
 - `timestamp` exige prefixo `dth_`; `date` nao pode usar `dth_`.
 - Entidades com `sin_ativo` geram INT filtrando ativos por padrao e incluindo o item selecionado mesmo inativo.

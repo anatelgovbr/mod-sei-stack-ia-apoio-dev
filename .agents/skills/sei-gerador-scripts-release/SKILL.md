@@ -12,6 +12,7 @@ Ative esta skill quando a demanda envolver o banco ou o script de release do SEI
 - novas colunas, PKs, FKs ou indices
 - sequences de PK nativa
 - seed tecnico ou negocial no SEI
+- cadastro de tarefa de andamento (`TarefaDTO` ou `INSERT INTO tarefa`)
 - ajuste de `instalarv*`, `switch`, historico de versoes ou `getVersao()`
 
 ## Quando nao ativar
@@ -106,6 +107,7 @@ Leia nesta ordem:
 
 - Rode `php -l` no script SEI alterado.
 - Rode `python3 .agents/skills/sei-verificacao-banco-dados/audit.py --input <script_sei> --mode release_check` no script PHP gerado/alterado.
+- Rode `python3 .agents/skills/sei-verificacao-tarefa/audit.py --input <script_sei> --exit-code` quando o script cadastrar tarefa de andamento.
 - Rode os gates de modelagem aplicaveis sobre o artefato gerado, nao sobre arquivos de documentacao da skill.
 - Confirme que o script continua compativel com MySQL, SQL Server, Oracle e PostgreSQL.
 - Confirme que o script final continua no padrao estrutural da referencia escolhida.
@@ -125,5 +127,10 @@ Leia nesta ordem:
 - [ ] sequence coerente com `TIPO_PK_NATIVA`
 - [ ] seed idempotente
 - [ ] `sei-verificacao-banco-dados` executado no script SEI gerado/alterado
+- [ ] `sei-verificacao-tarefa` executado quando o script cadastrar tarefa de andamento
 - [ ] `switch`, historico e `getVersao()` sincronizados
 - [ ] literais e checagens de bootstrap validados contra a referencia escolhida
+
+## Dependências de registros do core
+
+Ao criar ou alterar referência ao core no script de release, encaminhe sua política de ciclo de vida antes da entrega. Aplicar, com `sei-guardrails-modulo`, a [matriz de proteção](../sei-mod-api-eventos/references/protecao-dependencias-core.md) também a protocolos e dependências funcionais sem FK.

@@ -65,7 +65,7 @@ def contrato_projeto():
         ],
         "relacionamentos": [],
         "regrasGeracao": {"campoSinAtivo": "sin_ativo"},
-        "ui": ui(["identificacao", "descricao", "dta_cadastramento"], {"identificacao": ("Identificação", "I", "a"), "descricao": ("Descrição", "D", "a"), "dta_cadastramento": ("Data de Cadastramento", "M", "a")}),
+        "ui": ui(["identificacao", "descricao", "dta_cadastramento"], {"identificacao": ("Identificação", "I", "a"), "descricao": ("Descrição", "R", "a"), "dta_cadastramento": ("Data de Cadastramento", "M", "a")}),
     }
 
 
@@ -81,7 +81,7 @@ def contrato_aquisicao():
         ],
         "relacionamentos": [relacao("id_md_abc_projeto", "md_abc_projeto", "identificacao")],
         "regrasGeracao": {"campoSinAtivo": None},
-        "ui": ui(["id_md_abc_projeto", "descricao", "din_custo"], {"id_md_abc_projeto": ("Projeto", "P", "o"), "descricao": ("Descrição", "D", "a"), "din_custo": ("Custo", "U", "o")}),
+        "ui": ui(["id_md_abc_projeto", "descricao", "din_custo"], {"id_md_abc_projeto": ("Projeto", "P", "o"), "descricao": ("Descrição", "R", "a"), "din_custo": ("Custo", "U", "o")}),
     }
 
 
@@ -100,7 +100,7 @@ def contrato_rel():
             {"tabelaOrigem": "md_abc_projeto", "classeInt": "MdAbcProjetoINT", "metodoInt": "montarSelectIdentificacao", "rotulo": "Projeto", "artigo": "o", "teclaAtalho": "P"},
         ],
         "regrasGeracao": {"campoSinAtivo": None},
-        "ui": ui(["dta_associacao"], {"dta_associacao": ("Data de Associação", "D", "a")}),
+        "ui": ui(["dta_associacao"], {"dta_associacao": ("Data de Associação", "I", "a")}),
     }
 
 
@@ -124,7 +124,7 @@ def contrato_sonda():
         "regrasGeracao": {"campoSinAtivo": None},
         "ui": ui(
             ["nome", "dth_entrega", "percentual", "num_ordem", "id_unidade_origem", "id_unidade_destino"],
-            {"nome": ("Nome", "N", "o"), "dth_entrega": ("Entrega", "G", "a"), "percentual": ("Percentual", "P", "o"), "num_ordem": ("Ordem", "O", "a"), "id_unidade_origem": ("Unidade de Origem", "I", "a"), "id_unidade_destino": ("Unidade de Destino", "D", "a")},
+            {"nome": ("Nome", "N", "o"), "dth_entrega": ("Entrega", "G", "a"), "percentual": ("Percentual", "P", "o"), "num_ordem": ("Ordem", "O", "a"), "id_unidade_origem": ("Unidade de Origem", "I", "a"), "id_unidade_destino": ("Unidade de Destino", "U", "a")},
         ),
     }
 
@@ -256,6 +256,14 @@ class GeradorCrudTest(unittest.TestCase):
         process, payload = self.run_auditor("banco", output, "--mode", "audit", "--type", "php")
         self.assertNotEqual(2, process.returncode, payload)
 
+    def assert_teclas_de_atalho(self, output):
+        """Letras e barra inferior conforme .agents/references/padrao-interacao-telas-sei.md."""
+        for page in output.glob("*.php"):
+            text = self.read(page)
+            letras = {k.lower() for k in re.findall(r'accesskey="([^"]*)"', text)}
+            self.assertFalse(letras & {"c", "d", "e", "f"}, f"{page.name}: {sorted(letras)}")
+            self.assertIn("montarBarraComandosInferior(preg_replace('/ accesskey=\"[^\"]*\"/', '', $arrComandos ?? []));", text, page.name)
+
     # ---------- geracao completa ----------
     def test_entidade_com_sin_ativo_gera_seis_arquivos_conformes(self):
         output, report = self.generate(contrato_projeto(), "projeto", "--niveis", "3")
@@ -299,8 +307,18 @@ class GeradorCrudTest(unittest.TestCase):
         self.assertIn("vertical-align: middle", lista)
         self.assertNotIn("vertical-align: center", lista)
         self.assertIn("A\xe7\xe3o '\".$strAcao.\"' n\xe3o reconhecida.", lista)
+        self.assertNotIn('id="sbmPesquisar"', lista)
+        self.assertIn("document.getElementById('btnFechar').focus();", lista)
+        self.assertIn('accesskey="x" id="btnExcluir" value="Excluir" onclick="acaoExclusaoMultipla();" class="infraButton">E<span class="infraTeclaAtalho">x</span>cluir</button>', lista)
+        self.assertIn('<button type="button" accesskey="a" id="btnFechar" value="Fechar"', lista)
 
         cadastro = self.read(output / "md_abc_projeto_cadastro.php")
+        self.assertIn('accesskey="a" name="btnCancelar" id="btnCancelar" value="Cancelar"', cadastro)
+        self.assertIn('class="infraButton">C<span class="infraTeclaAtalho">a</span>ncelar</button>', cadastro)
+        self.assertIn('class="infraButton">Fech<span class="infraTeclaAtalho">a</span>r</button>', cadastro)
+        self.assertIn("=== 'md_abc_projeto_alterar') {\n    document.getElementById('txtIdentificacao').focus();", cadastro)
+        self.assertIn("infraDesabilitarCamposAreaDados();\n    document.getElementById('btnFechar').focus();", cadastro)
+        self.assertIn('id="btnFechar" name="btnFechar"', cadastro)
         self.assertIn("if (PaginaSEI::POST('sbmCadastrarMdAbcProjeto') !== null) {", cadastro)
         self.assertIn("setNumIdMdAbcProjeto((int)PaginaSEI::GET('id_md_abc_projeto'));", cadastro)
         self.assertIn("setNumIdMdAbcProjeto((int)PaginaSEI::POST('hdnIdMdAbcProjeto'));", cadastro)
@@ -339,6 +357,8 @@ class GeradorCrudTest(unittest.TestCase):
         self.assertIn("<?php /* if ($bolAcaoDesativar??false) { ?>", lista)
         self.assertIn("<?php } */ ?>", lista)
         self.assertIn("      $bolAcaoDesativar = false;", lista)
+        self.assertLess(lista.index('<button type="submit" id="sbmPesquisar"'), lista.index('id="btnTransportarSelecao"'))
+        self.assertEqual(2, lista.count("document.getElementById('selMdAbcProjeto').focus();"))
         self.assertIn("salvarCamposPost(['selMdAbcProjeto']);", lista)
         self.assertIn("setNumIdMdAbcProjeto((int)$numIdMdAbcProjeto);", lista)
         self.assertIn("MdAbcProjetoINT::montarSelectIdentificacao('', 'Todos', $numIdMdAbcProjeto);", lista)
@@ -370,10 +390,14 @@ class GeradorCrudTest(unittest.TestCase):
         self.assertIn("count($arrStrIdComposto)!=2 || !ctype_digit($arrStrIdComposto[0])", lista)
         self.assertIn("PaginaSEI::GET('id_md_abc_contrato') !== null && PaginaSEI::GET('id_md_abc_projeto') !== null", lista)
         self.assertIn("getThOrdenacao($objMdAbcRelContratoProjDTO,'Contrato','NumeroMdAbcContrato'", lista)
+        self.assertLess(lista.index('<button type="submit" id="sbmPesquisar"'), lista.index('id="btnTransportarSelecao"'))
+        self.assertEqual(2, lista.count("document.getElementById('selMdAbcContrato').focus();"))
+        self.assertIn('accesskey="o" class="infraLabelOpcional">C<span class="infraTeclaAtalho">o</span>ntrato:</label>', lista)
         self.assertNotIn("abrirAreaDados('5em');\n  ?>\n  <?php\n  PaginaSEI::getInstance()->fecharAreaDados();", lista)
 
         cadastro = self.read(output / "md_abc_rel_contrato_proj_cadastro.php")
-        self.assertIn('id="lblAssociacao" for="txtAssociacao" accesskey="d"', cadastro)
+        self.assertIn("=== 'md_abc_rel_contrato_proj_alterar') {\n    document.getElementById('txtAssociacao').focus();", cadastro)
+        self.assertIn('id="lblAssociacao" for="txtAssociacao" accesskey="i"', cadastro)
         self.assertIn("Data de Associa\xe7\xe3o", cadastro)
         self.assertIn("#imgCalAssociacao", cadastro)
         self.assertIn('title="Selecionar Data de Associa\xe7\xe3o"', cadastro)
@@ -419,13 +443,14 @@ class GeradorCrudTest(unittest.TestCase):
         self.assertIn("setNumIdUnidadeDestino(PaginaSEI::POST('selUnidadeDestino'));", cadastro)
         self.assertIn("alert('Selecione uma Unidade de Origem.');", cadastro)
         self.assertNotIn("alert('Selecione uma Unidade de Destino.');", cadastro)
-        self.assertIn('id="lblUnidadeDestino" for="selUnidadeDestino" accesskey="d" class="infraLabelOpcional"', cadastro)
+        self.assertIn('id="lblUnidadeDestino" for="selUnidadeDestino" accesskey="u" class="infraLabelOpcional"', cadastro)
 
         lista = self.read(output / "md_abc_sonda_lista.php")
         self.assertIn("setNumIdUnidadeOrigem((int)$numIdUnidadeOrigem);", lista)
         self.assertIn("setNumIdUnidadeDestino((int)$numIdUnidadeDestino);", lista)
         self.assertIn("UnidadeINT::montarSelectSigla('', 'Todos', $numIdUnidadeDestino);", lista)
         self.assertNotIn("setNumIdUnidade(", lista)
+        self.assertIn('<button type="submit" accesskey="P" id="sbmPesquisar"', lista)
 
     def test_exemplos_da_skill_geram_e_passam_nos_gates(self):
         for example in sorted(EXAMPLES.glob("*.json")):
@@ -434,6 +459,7 @@ class GeradorCrudTest(unittest.TestCase):
                 output, _ = self.generate(contract, example.stem)
                 self.assert_lint_and_encoding(output)
                 self.assert_gates(output)
+                self.assert_teclas_de_atalho(output)
 
     # ---------- profundidade do require ----------
     def test_profundidade_do_require_e_derivada_do_diretorio_em_web_modulos(self):
@@ -458,6 +484,8 @@ class GeradorCrudTest(unittest.TestCase):
         c = copy.deepcopy(base); del c["entidade"]["plural"]; casos.append(("sem plural", c, "entidade.plural"))
         c = copy.deepcopy(base); c["ui"]["ordemFormulario"] = ["identificacao"]; casos.append(("ordemFormulario", c, "faltam: descricao, dta_cadastramento"))
         c = copy.deepcopy(base); c["ui"]["campos"]["descricao"]["teclaAtalho"] = "S"; casos.append(("tecla reservada", c, "colide com tecla reservada"))
+        c = copy.deepcopy(base); c["ui"]["campos"]["descricao"]["teclaAtalho"] = "E"; casos.append(("tecla do navegador", c, "colide com tecla reservada"))
+        c = copy.deepcopy(contrato_rel()); del c["relacionamentosNn"][0]["teclaAtalho"]; casos.append(("tecla N:N pela primeira letra", c, "relacionamentosNn.md_abc_contrato.teclaAtalho 'c' colide"))
         c = copy.deepcopy(base); c["colunas"][3]["tipoBanco"] = "timestamp"; casos.append(("timestamp sem dth_", c, "prefixo dth_"))
         c = copy.deepcopy(base); c["entidade"]["tabela"] = "md_abc_rel_contrato_projeto"; c["colunas"][0]["nome"] = "id_md_abc_rel_contrato_projeto"; casos.append(("27 caracteres", c, "exceeds 26"))
         c = copy.deepcopy(base); c["regrasGeracao"]["campoSinAtivo"] = "ativo"; casos.append(("campoSinAtivo", c, "deve ser 'sin_ativo' ou null"))
@@ -466,6 +494,15 @@ class GeradorCrudTest(unittest.TestCase):
         c = copy.deepcopy(base); c["entidade"]["tabela"] = "projeto"; c["colunas"][0]["nome"] = "id_projeto"; casos.append(("sem md_", c, "md_<sigla>_<entidade>"))
         c = copy.deepcopy(contrato_aquisicao()); c["relacionamentos"][0]["tipoFk"] = "opcional"; casos.append(("tipoFk x obrigatorio", c, "tipoFk opcional mas a coluna e obrigatoria"))
         c = copy.deepcopy(contrato_aquisicao()); c["relacionamentos"][0]["tabelaReferencia"] = "usuario"; c["relacionamentos"][0]["campoExibicao"] = "nome"; casos.append(("helper INT inexistente no core", c, "UsuarioINT::montarSelectNome nao existe"))
+        c = copy.deepcopy(base); c["ui"]["campos"]["descricao"]["teclaAtalho"] = "<?php system('id'); ?>"; casos.append(("tecla com codigo PHP", c, "ui.campos.descricao.teclaAtalho deve ser uma unica letra ou digito"))
+        c = copy.deepcopy(base); c["ui"]["campos"]["descricao"]["teclaAtalho"] = 'r" onfocus="alert(1)'; casos.append(("tecla com atributo HTML", c, "uma unica letra ou digito"))
+        c = copy.deepcopy(base); c["ui"]["campos"]["descricao"]["teclaAtalho"] = 7; casos.append(("tecla que nao e texto", c, "uma unica letra ou digito: 7"))
+        c = copy.deepcopy(base); c["colunas"][2]["tamanho"] = '255 || system("id")'; casos.append(("tamanho com codigo PHP", c, "'tamanho' que nao e inteiro positivo: descricao"))
+        c = copy.deepcopy(base); c["colunas"][4]["tamanho"] = True; casos.append(("tamanho booleano", c, "'tamanho' que nao e inteiro positivo: sin_ativo"))
+        c = copy.deepcopy(base); c["colunas"][1]["tamanho"] = 0; casos.append(("tamanho zero", c, "'tamanho' que nao e inteiro positivo: identificacao"))
+        c = copy.deepcopy(contrato_rel()); c["relacionamentosNn"][0]["classeInt"] = "system('id'); MdAbcContratoINT"; casos.append(("classeInt com codigo PHP", c, "classeInt deve seguir <Classe>INT"))
+        c = copy.deepcopy(contrato_rel()); c["relacionamentosNn"][0]["metodoInt"] = "montarSelectNumero('', 'Todos', null); system('id'); MdAbcContratoINT::montarSelectNumero"; casos.append(("metodoInt com codigo PHP", c, "metodoInt deve seguir montarSelect<Campo>"))
+        c = copy.deepcopy(contrato_aquisicao()); c["relacionamentos"][0]["campoExibicao"] = "nome'.system('id').'"; casos.append(("campoExibicao com codigo PHP", c, "column name contains unsupported characters"))
 
         for nome, contract, trecho in casos:
             with self.subTest(caso=nome):

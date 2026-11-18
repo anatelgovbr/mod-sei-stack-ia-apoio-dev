@@ -18,6 +18,12 @@
   - **Índices**
     - **Novo `i01_md_ia_proc_indexaveis`**: sobre `sin_indexado`, `id_procedimento`.
 
+### Excluído
+
+- **Tabela `md_ia_adm_config_assist_ia`**
+  - **Colunas**
+    - **Excluída `sin_refletir`**
+
 ## [1.4.0]
 
 ### Alterado

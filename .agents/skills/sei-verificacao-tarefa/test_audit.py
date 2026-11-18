@@ -11,6 +11,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 
 
@@ -203,6 +204,271 @@ return [
         process, payload = self.run_auditor("tarefa", id65)
         self.assertEqual(2, process.returncode)
         self.assertIn("K007", self.codes(payload))
+
+    SINALIZADORES_SN = """$objTarefaDTO->setStrSinHistoricoResumido('S');
+$objTarefaDTO->setStrSinHistoricoCompleto('S');
+$objTarefaDTO->setStrSinLancarAndamentoFechado('N');
+$objTarefaDTO->setStrSinPermiteProcessoFechado('N');
+$objTarefaDTO->setStrSinFecharAndamentosAbertos('S');
+"""
+    COLUNAS = (
+        "id_tarefa,nome,sin_historico_resumido,sin_historico_completo,sin_lancar_andamento_fechado,"
+        "sin_permite_processo_fechado,sin_fechar_andamentos_abertos,id_tarefa_modulo"
+    )
+
+    def test_release_script_registering_tasks_is_eligible_by_content(self):
+        """Script de release cadastra tarefa sem 'tarefa' no nome; o gate le o conteudo.
+
+        RN que so consulta TarefaDTO no mesmo diretorio fica fora, para o gate nao
+        bloquear arquivo que nao cadastra tarefa.
+        """
+        script = self.write(
+            "release/sei_atualizar_versao_modulo_ts.php",
+            """<?php
+$numIdTarefa = BancoSEI::getInstance()->getValorSequencia('seq_tarefa');
+$objTarefaDTO = new TarefaDTO();
+$objTarefaDTO->setNumIdTarefa($numIdTarefa);
+$objTarefaDTO->setStrIdTarefaModulo('MD_TS_ITEM_RECEBIDO');
+$objTarefaDTO->setStrNome('Item recebido (@UNIDADE@)');
+""" + self.SINALIZADORES_SN + """$objTarefaRN->cadastrar($objTarefaDTO);
+
+$strCampos = 'id_tarefa,nome,sin_historico_resumido,sin_historico_completo,sin_lancar_andamento_fechado,sin_permite_processo_fechado,sin_fechar_andamentos_abertos,id_tarefa_modulo';
+BancoSEI::getInstance()->executarSql("INSERT INTO tarefa ($strCampos) VALUES (" . BancoSEI::getInstance()->getValorSequencia('seq_tarefa') . ",'Item devolvido (@UNIDADE@, @MOTIVO@)','S','S','N','S','S','MD_TS_ITEM_DEVOLVIDO')");
+""",
+        )
+        self.write(
+            "release/MdTsConsultaRN.php",
+            "<?php $objTarefaDTO = new TarefaDTO(); $objTarefaDTO->retNumIdTarefa(); $objTarefaRN->listar($objTarefaDTO);",
+        )
+        process, payload = self.run_auditor("tarefa", script.parent)
+        self.assertEqual(0, process.returncode, payload)
+        self.assertEqual(["sei_atualizar_versao_modulo_ts.php"], [result["file"] for result in payload["results"]])
+        self.assertEqual(
+            ["MD_TS_ITEM_RECEBIDO", "MD_TS_ITEM_DEVOLVIDO"],
+            [tarefa["nome"] for tarefa in payload["results"][0]["tarefas"]],
+        )
+
+    def test_task_registration_requires_explicit_s_or_n_flags(self):
+        script = self.write(
+            "sei_atualizar_versao_modulo_ts.php",
+            """<?php
+$numIdTarefa = BancoSEI::getInstance()->getValorSequencia('seq_tarefa');
+$objTarefaDTO = new TarefaDTO();
+$objTarefaDTO->setNumIdTarefa($numIdTarefa);
+$objTarefaDTO->setStrIdTarefaModulo('MD_TS_ITEM_RECEBIDO');
+$objTarefaDTO->setStrSinHistoricoResumido('S');
+$objTarefaDTO->setStrSinHistoricoCompleto('X');
+$objTarefaDTO->setStrSinLancarAndamentoFechado('N');
+$objTarefaDTO->setStrSinFecharAndamentosAbertos('S');
+$objTarefaBD->cadastrar($objTarefaDTO);
+""",
+        )
+        process, payload = self.run_auditor("tarefa", script)
+        self.assertEqual(2, process.returncode)
+        self.assertEqual({"K009"}, self.codes(payload))
+        mensagens = [issue["mensagem"] for issue in payload["results"][0]["erros"]]
+        self.assertIn("sin_permite_processo_fechado", mensagens[0])
+        self.assertIn("sin_historico_completo", mensagens[1])
+
+    def test_calculated_task_id_requires_seq_tarefa_realignment(self):
+        """Id calculado por max()+1 sem realinhar seq_tarefa colide com a proxima tarefa da sequencia."""
+        cadastro = """<?php
+$arrMax = BancoSEI::getInstance()->consultarSql('select max(id_tarefa) as max from tarefa');
+$numIdTarefa = max(1000, $arrMax[0]['max'] + 1);
+REALINHAMENTO
+$objTarefaDTO = new TarefaDTO();
+$objTarefaDTO->setNumIdTarefa($numIdTarefa);
+$objTarefaDTO->setStrIdTarefaModulo('MD_TS_ITEM_RECEBIDO');
+""" + self.SINALIZADORES_SN + """$objTarefaRN->cadastrar($objTarefaDTO);
+"""
+        sem_realinhar = self.write("sem/sei_atualizar_versao_modulo_ts.php", cadastro.replace("REALINHAMENTO", ""))
+        process, payload = self.run_auditor("tarefa", sem_realinhar)
+        self.assertEqual(2, process.returncode)
+        self.assertEqual({"K008"}, self.codes(payload))
+
+        realinhado = self.write(
+            "com/sei_atualizar_versao_modulo_ts.php",
+            cadastro.replace("REALINHAMENTO", "BancoSEI::getInstance()->executarSql('INSERT INTO seq_tarefa (id) VALUES (' . $numIdTarefa . ')');"),
+        )
+        process, payload = self.run_auditor("tarefa", realinhado)
+        self.assertEqual(0, process.returncode, payload)
+
+        script_rn = self.write(
+            "script_rn/sei_atualizar_versao_modulo_ts.php",
+            cadastro.replace("REALINHAMENTO", "$objScriptRN = new ScriptRN();\n$objScriptRN->atualizarSequencias();"),
+        )
+        process, payload = self.run_auditor("tarefa", script_rn)
+        self.assertEqual(0, process.returncode, payload)
+
+    def test_registration_blocks_task_65_and_unresolved_insert_and_reads_literal_insert(self):
+        """A 65 e tarefa do core: o modulo lanca andamento com ela, nunca a cadastra."""
+        id65 = self.write(
+            "id65/sei_atualizar_versao_modulo_ts.php",
+            """<?php
+$objTarefaDTO = new TarefaDTO();
+$objTarefaDTO->setNumIdTarefa(65);
+$objTarefaDTO->setStrIdTarefaModulo('MD_TS_ANDAMENTO_LIVRE');
+""" + self.SINALIZADORES_SN + """$objTarefaRN->cadastrar($objTarefaDTO);
+""",
+        )
+        process, payload = self.run_auditor("tarefa", id65)
+        self.assertEqual(2, process.returncode)
+        self.assertEqual({"K001"}, self.codes(payload))
+
+        sem_colunas = self.write(
+            "sem_colunas/sei_atualizar_versao_modulo_ts.php",
+            "<?php BancoSEI::getInstance()->executarSql(\"INSERT INTO tarefa ($strCampos) VALUES (1001,'Item','S','S','N','S','S','MD_TS_ITEM')\");",
+        )
+        process, payload = self.run_auditor("tarefa", sem_colunas)
+        self.assertEqual(2, process.returncode)
+        self.assertEqual({"K000"}, self.codes(payload))
+
+        insert_literal = (
+            "<?php BancoSEI::getInstance()->executarSql('insert into tarefa (id_tarefa,nome,sin_historico_resumido,"
+            "sin_historico_completo,sin_lancar_andamento_fechado,sin_permite_processo_fechado,sin_fechar_andamentos_abertos,"
+            "id_tarefa_modulo) values (1001,\\'Item arquivado\\',\\'S\\',\\'S\\',\\'N\\',\\'S\\',\\'S\\',\\'MD_TS_ITEM_ARQUIVADO\\')');"
+        )
+        sem_realinhar = self.write("literal/sei_atualizar_versao_modulo_ts.php", insert_literal)
+        process, payload = self.run_auditor("tarefa", sem_realinhar)
+        self.assertEqual(2, process.returncode)
+        self.assertEqual({"K008"}, self.codes(payload))
+
+        realinhado = self.write(
+            "literal_realinhado/sei_atualizar_versao_modulo_ts.php",
+            insert_literal + "\nBancoSEI::getInstance()->executarSql('alter table seq_tarefa AUTO_INCREMENT = 1001');",
+        )
+        process, payload = self.run_auditor("tarefa", realinhado)
+        self.assertEqual(0, process.returncode, payload)
+        self.assertEqual(1001, payload["results"][0]["tarefas"][0]["id"])
+
+    def test_registration_parser_does_not_hide_invalid_records(self):
+        """Cada forma abaixo ja escondeu cadastro invalido e recebeu PASS."""
+        valido = """$objTarefaDTO->setNumIdTarefa(BancoSEI::getInstance()->getValorSequencia('seq_tarefa'));
+$objTarefaDTO->setStrIdTarefaModulo('MD_TS_ITEM_RECEBIDO');
+""" + self.SINALIZADORES_SN + "$objTarefaRN->cadastrar($objTarefaDTO);\n"
+        casos = {
+            "construtor sem parenteses": ("$objTarefaDTO = new TarefaDTO;\n" + valido.replace(
+                "BancoSEI::getInstance()->getValorSequencia('seq_tarefa')", "65"), "K001"),
+            "unSetTodos limpa os sinalizadores": ("$objTarefaDTO = new TarefaDTO();\n" + valido + """$objTarefaDTO->unSetTodos();
+$objTarefaDTO->setNumIdTarefa(BancoSEI::getInstance()->getValorSequencia('seq_tarefa'));
+$objTarefaDTO->setStrIdTarefaModulo('MD_TS_ITEM_DEVOLVIDO');
+$objTarefaRN->cadastrar($objTarefaDTO);
+""", "K009"),
+            "segunda tupla do INSERT": ("""BancoSEI::getInstance()->executarSql("INSERT INTO tarefa (id_tarefa,nome,sin_historico_resumido,sin_historico_completo,sin_lancar_andamento_fechado,sin_permite_processo_fechado,sin_fechar_andamentos_abertos,id_tarefa_modulo) VALUES (" . BancoSEI::getInstance()->getValorSequencia('seq_tarefa') . ",'Item','S','S','N','S','S','MD_TS_ITEM'),(65,'Livre','S','S','N','S','S','MD_TS_LIVRE')");
+""", "K001"),
+            "variavel reatribuida depois da sequencia": ("""$numIdTarefa = BancoSEI::getInstance()->getValorSequencia('seq_tarefa');
+$numIdTarefa = 1001;
+$objTarefaDTO = new TarefaDTO();
+""" + valido.replace("BancoSEI::getInstance()->getValorSequencia('seq_tarefa')", "$numIdTarefa"), "K008"),
+            "conta sobre a sequencia": ("$objTarefaDTO = new TarefaDTO();\n" + valido.replace(
+                "getValorSequencia('seq_tarefa')", "getValorSequencia('seq_tarefa') * 0 + 65"), "K008"),
+            "identificador concatenado": ("$objTarefaDTO = new TarefaDTO();\n" + valido.replace(
+                "'MD_TS_ITEM_RECEBIDO'", "'MD_TS_ITEM' . $strSufixo"), "K003"),
+            "id negativo": ("$objTarefaDTO = new TarefaDTO();\n" + valido.replace(
+                "BancoSEI::getInstance()->getValorSequencia('seq_tarefa')", "-1"), "K001"),
+            "retorno de cadastrar reatribuido": ("$objTarefaDTO = new TarefaDTO();\n" + valido.replace(
+                "BancoSEI::getInstance()->getValorSequencia('seq_tarefa')", "65").replace(
+                "$objTarefaRN->cadastrar(", "$objTarefaDTO = $objTarefaRN->cadastrar("), "K001"),
+            "segunda tupla concatenada": ("""BancoSEI::getInstance()->executarSql("INSERT INTO tarefa (""" + self.COLUNAS + """) VALUES (" . BancoSEI::getInstance()->getValorSequencia('seq_tarefa') . ",'Item','S','S','N','S','S','MD_TS_ITEM'),"
+    . "(65,'Livre','S','S','N','S','S','MD_TS_LIVRE')");
+""", "K001"),
+            "lista de colunas reatribuida sem literal": ("$strCampos = '" + self.COLUNAS + """';
+$strCampos = str_replace('sin_historico_completo', 'sin_consulta_processual', $strCampos);
+BancoSEI::getInstance()->executarSql("INSERT INTO tarefa ($strCampos) VALUES (" . BancoSEI::getInstance()->getValorSequencia('seq_tarefa') . ",'Item','S','S','N','S','S','MD_TS_ITEM')");
+""", "K000"),
+            "realinha outra sequencia": ("$objTarefaDTO = new TarefaDTO();\n" + valido.replace(
+                "BancoSEI::getInstance()->getValorSequencia('seq_tarefa')", "1001")
+                + "BancoSEI::getInstance()->executarSql('INSERT INTO seq_tarefa_sessao (id) VALUES (1001)');\n", "K008"),
+            "DTO reaproveitado apos cadastrar": ("$objTarefaDTO = new TarefaDTO();\n" + valido.replace(
+                "$objTarefaRN->cadastrar(", "$objTarefaDTO = $objTarefaRN->cadastrar(") + "$objTarefaDTO->unSetTodos();\n"
+                + valido.replace("BancoSEI::getInstance()->getValorSequencia('seq_tarefa')", "65"), "K001"),
+            "segunda tupla em aspas simples": ("""BancoSEI::getInstance()->executarSql("INSERT INTO tarefa (""" + self.COLUNAS + """) VALUES (" . BancoSEI::getInstance()->getValorSequencia('seq_tarefa') . ",'Item','S','S','N','S','S','MD_TS_ITEM')"
+    . ',(65,\\'Livre\\',\\'S\\',\\'S\\',\\'N\\',\\'S\\',\\'S\\',\\'MD_TS_LIVRE\\')');
+""", "K001"),
+            "colunas com interpolacao": ('$strCampos = "' + self.COLUNAS.replace(",id_tarefa_modulo", "") + """,$strExtra";
+BancoSEI::getInstance()->executarSql("INSERT INTO tarefa ($strCampos) VALUES (" . BancoSEI::getInstance()->getValorSequencia('seq_tarefa') . ",'Item','S','S','N','S','S','MD_TS_ITEM')");
+""", "K000"),
+        }
+        for indice, (nome, (corpo, codigo)) in enumerate(casos.items()):
+            with self.subTest(caso=nome):
+                path = self.write(f"caso{indice}/sei_atualizar_versao_modulo_ts.php", "<?php\n" + corpo)
+                process, payload = self.run_auditor("tarefa", path)
+                self.assertEqual(2, process.returncode, payload)
+                self.assertIn(codigo, self.codes(payload))
+
+    def test_insert_reads_appended_columns_and_quoted_values(self):
+        """Falsos positivos ja vistos: coluna acrescentada por .=, virgula entre aspas duplas e apostrofo escapado."""
+        script = self.write(
+            "sei_atualizar_versao_modulo_ts.php",
+            """<?php
+$strCampos = 'id_tarefa,nome,sin_historico_resumido,sin_historico_completo,sin_lancar_andamento_fechado,sin_permite_processo_fechado,id_tarefa_modulo';
+$strCampos .= ',sin_fechar_andamentos_abertos';
+BancoSEI::getInstance()->executarSql('INSERT INTO tarefa (' . $strCampos . ') VALUES (' . BancoSEI::getInstance()->getValorSequencia('seq_tarefa') . ',"Reuniao, inicio",\\'S\\',\\'S\\',\\'N\\',\\'S\\',\\'MD_TS_REUNIAO\\',\\'S\\')');
+BancoSEI::getInstance()->executarSql("INSERT INTO tarefa (""" + self.COLUNAS + """) VALUES (" . BancoSEI::getInstance()->getValorSequencia('seq_tarefa') . ",'Registro d\\'agua, atualizado','S','S','N','S','S','MD_TS_AGUA')");
+BancoSEI::getInstance()->executarSql("INSERT INTO tarefa (""" + self.COLUNAS + """) VALUES (" . BancoSEI::getInstance()->getValorSequencia('seq_tarefa') . ",'Registro d\\\\'oleo, atualizado','S','S','N','S','S','MD_TS_OLEO')");
+""",
+        )
+        process, payload = self.run_auditor("tarefa", script)
+        self.assertEqual(0, process.returncode, payload)
+        self.assertEqual(
+            ["MD_TS_REUNIAO", "MD_TS_AGUA", "MD_TS_OLEO"],
+            [tarefa["nome"] for tarefa in payload["results"][0]["tarefas"]],
+        )
+
+    def test_registration_blocks_id_below_1000_from_variable_even_with_realignment(self):
+        """Id abaixo de 1000 por variavel e K1 mesmo quando o arquivo realinha seq_tarefa; id >= 1000 segue no K8."""
+        cadastro = """<?php
+$numIdTarefa = NUMERO;
+$objTarefaDTO = new TarefaDTO();
+$objTarefaDTO->setNumIdTarefa($numIdTarefa);
+$objTarefaDTO->setStrIdTarefaModulo('MD_TS_ITEM_RECEBIDO');
+""" + self.SINALIZADORES_SN + """$objTarefaRN->cadastrar($objTarefaDTO);
+REALINHAMENTO
+"""
+        insert = """<?php
+$numIdTarefa = NUMERO;
+BancoSEI::getInstance()->executarSql("INSERT INTO tarefa (""" + self.COLUNAS + """) VALUES (" . $numIdTarefa . ",'Item','S','S','N','S','S','MD_TS_ITEM')");
+REALINHAMENTO
+"""
+        script_rn = "$objScriptRN = new ScriptRN();\n$objScriptRN->atualizarSequencias();"
+        casos = {
+            "TarefaDTO com atualizarSequencias": (cadastro, "500", script_rn, 2, {"K001"}),
+            "TarefaDTO com seq_tarefa realinhada": (cadastro, "999", "BancoSEI::getInstance()->executarSql('INSERT INTO seq_tarefa (id) VALUES (999)');", 2, {"K001"}),
+            "tarefa 65 por variavel": (cadastro, "65", script_rn, 2, {"K001"}),
+            "INSERT com atualizarSequencias": (insert, "500", script_rn, 2, {"K001"}),
+            "id 1500 por variavel com realinhamento": (cadastro, "1500", script_rn, 0, set()),
+            "id 1500 por variavel sem realinhamento": (cadastro, "1500", "", 2, {"K008"}),
+        }
+        for indice, (nome, (modelo, numero, realinhamento, retorno, codigos)) in enumerate(casos.items()):
+            with self.subTest(caso=nome):
+                path = self.write(
+                    f"variavel{indice}/sei_atualizar_versao_modulo_ts.php",
+                    modelo.replace("NUMERO", numero).replace("REALINHAMENTO", realinhamento),
+                )
+                process, payload = self.run_auditor("tarefa", path)
+                self.assertEqual(retorno, process.returncode, payload)
+                self.assertEqual(codigos, self.codes(payload))
+
+    def test_registration_parser_time_is_linear(self):
+        """8.000 TarefaDTO sem cadastrar levavam segundos por leitura do arquivo; o limite e 1 s na execucao inteira."""
+        script = self.write(
+            "sei_atualizar_versao_modulo_ts.php",
+            """<?php
+$numIdTarefa = BancoSEI::getInstance()->getValorSequencia('seq_tarefa');
+$objTarefaDTO = new TarefaDTO();
+$objTarefaDTO->setNumIdTarefa($numIdTarefa);
+$objTarefaDTO->setStrIdTarefaModulo('MD_TS_ITEM_RECEBIDO');
+""" + self.SINALIZADORES_SN + "$objTarefaRN->cadastrar($objTarefaDTO);\n"
+            + "".join(f"$objTarefa{indice}DTO = new TarefaDTO();\n" for indice in range(8000)),
+        )
+
+        inicio = time.perf_counter()
+        process, payload = self.run_auditor("tarefa", script)
+        duracao = time.perf_counter() - inicio
+
+        self.assertEqual(0, process.returncode, payload)
+        self.assertEqual(["MD_TS_ITEM_RECEBIDO"], [tarefa["nome"] for tarefa in payload["results"][0]["tarefas"]])
+        self.assertLess(duracao, 1.0)
 
 
 if __name__ == "__main__":

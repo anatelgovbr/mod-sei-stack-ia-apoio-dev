@@ -1,6 +1,6 @@
 ---
 name: sei-menu-pagina
-description: Cria/ajusta menus internos via SIP e implementa a acao/pagina correspondente dentro do modulo, com permissao e link assinado. Para menu externo/publicacoes ou extensoes por hook no core, use `sei-mod-api-eventos`.
+description: Cria ou ajusta paginas e acoes de modulo e menus internos via SIP, com permissao e link assinado. Para menu externo/publicacoes ou extensoes por hook no core, use tambem `sei-mod-api-eventos`; siga a precedencia da matriz de roteamento.
 ---
 
 # Skill: Menu + Página/Ação do módulo
@@ -13,7 +13,7 @@ description: Cria/ajusta menus internos via SIP e implementa a acao/pagina corre
 ## Checklist de implementação (sem duplicar detalhes)
 1) **Decidir origem do menu**
 - Menu interno do SEI: configurado no **SIP** (recurso/menu/perfil/permissão).
-- Menu de usuario externo/publicacoes: skill principal `sei-mod-api-eventos`; usar esta skill apenas para a pagina/acao do modulo consumida por esse menu.
+- Menu de usuario externo/publicacoes: usar `sei-mod-api-eventos`; usar esta skill para a pagina/acao do modulo consumida por esse menu.
 
 2) **Permissão**
 - Definir o recurso no SIP (ex.: `md_<instituicao/modulo>_<acao>`) e validar na ação.
@@ -24,6 +24,10 @@ description: Cria/ajusta menus internos via SIP e implementa a acao/pagina corre
 - Entrar sempre por `controlador.php?acao=...` (ou padrão equivalente do módulo).
 - No início: `validarLink()` e `validarPermissao()`.
 - Parâmetros: normalizar tipos e aplicar whitelist/regex (negar por padrão).
+- Se a apresentação visual for criada ou alterada, aplicar `.agents/references/padrao-acessibilidade-cores-sei.md` e validar os esquemas afetados.
+- Em tela com filtro, formulário, barra de comandos ou grid, aplicar `.agents/references/padrao-interacao-telas-sei.md`: foco inicial, botão padrão do Enter, barra inferior, teclas de atalho e ordenação padrão do grid.
+- Campo de autocompletar: pesquisar pelo campo de indexação, conforme `.agents/references/padrao-metodos-crud-infraphp.md`, seção "Pesquisa textual em autocompletar".
+- Campo de arquivo (`fil*`): respeitar os limites de upload de `.agents/references/padrao-ambiente-modulo.md`.
 
 4) **Ícone (menu interno)**
 - Implementar `obterDiretorioIconesMenu` e usar SVG no diretório retornado.
@@ -33,6 +37,5 @@ description: Cria/ajusta menus internos via SIP e implementa a acao/pagina corre
 
 ## Limite de escopo
 
-- Esta skill e principal para menu interno SIP, pagina do modulo, acao do modulo, link de acao e permissao da pagina.
-- Quando a entrega depender de hook em `*Integracao.php`, injecao de botao/icone em tela do core ou menu externo/publicacoes, a skill principal passa a ser `sei-mod-api-eventos`.
-
+- Esta skill e principal para menu interno SIP, pagina do modulo, acao do modulo, link de acao e permissao da pagina quando nao houver escolha explicita de `sei-gerador-crud`, hook no core ou menu externo/publicacoes.
+- Quando a entrega depender de hook em `*Integracao.php`, injecao de botao/icone em tela do core ou menu externo/publicacoes, `sei-mod-api-eventos` e principal, salvo se o desenvolvedor escolheu explicitamente `sei-gerador-crud`; nesse caso, o gerador e principal e a skill de eventos cobre o hook.

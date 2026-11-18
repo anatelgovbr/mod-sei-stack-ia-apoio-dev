@@ -122,7 +122,7 @@ de modulo sem hook no core, a skill principal passa a ser `sei-menu-pagina`.
 | montarTextoInformativoPublicacao | Adiciona texto informativo na publicacao | `objPublicacaoAPI` com IdPublicacao, IdVeiculoPublicacao, StaTipoVeiculo e IdDocumento | Texto adicional na publicacao; aviso |
 | alterarVeiculoPublicacao | Aps alteracao de veiculo de publicacao | VeiculoPublicacaoAPI | Reagir a alteracao de veiculo |
 | cadastrarVeiculoPublicacao | Aps cadastro de novo veiculo | VeiculoPublicacaoAPI | Reagir a cadastro de veiculo |
-| desativarVeiculoPublicacao | Aps desativacao de veiculo | VeiculoPublicacaoAPI | Reagir a desativacao; remover |
+| desativarVeiculoPublicacao | Evento de manutenção; conferir momento abaixo | `VeiculoPublicacaoAPI[]` | Avaliar dependência e eficácia da interceptação |
 
 ## Validação e Complemento
 
@@ -138,7 +138,7 @@ de modulo sem hook no core, a skill principal passa a ser `sei-menu-pagina`.
 | Nome | Descrição | Trigger / Entrada | Quando usar |
 |---|---|---|---|
 | validarContato | Valida dados de contato antes de gravar | ContatoAPI | Validar contato; regras de negocio |
-| validarEliminacaoDocumento | Valida eliminacao de documento | DocumentoAPI | Bloquear eliminacao; validacao customizada |
+| validarEliminacaoDocumento | Valida eliminacao de documento | `DocumentoAPI[]` | Bloquear eliminacao; validacao customizada |
 | validarEliminacaoProcesso | Valida eliminacao de processo | ProcedimentoAPI | Bloquear eliminacao; validacao customizada |
 | processarVariaveisEditor | Intercepta variaveis do editor de texto | Sem parametro especifico no catalogo; confirmar no manual | Adicionar variaveis customizadas ao editor |
 | obterRelacaoVariaveisEditor | Retorna lista de variaveis disponiveis no editor | Sem parametro especifico no catalogo; confirmar no manual | Definir variaveis do editor; contexto |
@@ -150,34 +150,34 @@ de modulo sem hook no core, a skill principal passa a ser `sei-menu-pagina`.
 |---|---|---|---|
 | cadastrarContato | Aps cadastro de contato | ContatoAPI | Reagir a novo contato; sincronizar |
 | alterarContato | Aps alteracao de contato | ContatoAPI | Reagir a alteracao de contato; atualizar |
-| excluirContato | Aps exclusao de contato | IdContato | Reagir a exclusao; remover vinculos |
-| desativarContato | Aps desativacao de contato | ContatoAPI | Reagir a desativacao; inativar |
-| reativarContato | Aps reativacao de contato | ContatoAPI | Reagir a reativacao; reativar |
+| excluirContato | Evento de manutenção; conferir momento abaixo | `ContatoAPI[]` | Avaliar dependência e eficácia da interceptação |
+| desativarContato | Evento de manutenção; conferir momento abaixo | `ContatoAPI[]` | Avaliar dependência e eficácia da interceptação |
+| reativarContato | Evento de manutenção; conferir momento abaixo | `ContatoAPI[]` | Avaliar dependência e eficácia da interceptação |
 | substituirContato | Aps substituicao de contato | ContatoAPI | Reagir a substituicao; migrar vinculos |
 | cadastrarHipoteseLegal | Aps cadastro de hipotese legal | HipoteseLegalAPI | Reagir a nova hipotese; sincronizar |
 | alterarHipoteseLegal | Aps alteracao de hipotese legal | HipoteseLegalAPI | Reagir a alteracao; atualizar |
-| desativarHipoteseLegal | Aps desativacao de hipotese legal | HipoteseLegalAPI | Reagir a desativacao; inativar |
-| reativarHipoteseLegal | Aps reativacao de hipotese legal | HipoteseLegalAPI | Reagir a reativacao |
+| desativarHipoteseLegal | Evento de manutenção; conferir momento abaixo | `HipoteseLegalAPI[]` | Avaliar dependência e eficácia da interceptação |
+| reativarHipoteseLegal | Evento de manutenção; conferir momento abaixo | `HipoteseLegalAPI[]` | Avaliar dependência e eficácia da interceptação |
 | cadastrarArquivoExtensao | Aps cadastro de extensao de arquivo | ArquivoExtensaoAPI | Reagir a nova extensao; permitir |
-| desativarArquivoExtensao | Aps desativacao de extensao | ArquivoExtensaoAPI | Reagir a desativacao; bloquear |
-| reativarArquivoExtensao | Aps reativacao de extensao | ArquivoExtensaoAPI | Reagir a reativacao; permitir |
-| excluirArquivoExtensao | Aps exclusao de extensao | IdArquivoExtensao | Reagir a exclusao; remover |
+| desativarArquivoExtensao | Evento de manutenção; conferir momento abaixo | `ArquivoExtensaoAPI[]` | Avaliar dependência e eficácia da interceptação |
+| reativarArquivoExtensao | Evento de manutenção; conferir momento abaixo | `ArquivoExtensaoAPI[]` | Avaliar dependência e eficácia da interceptação |
+| excluirArquivoExtensao | Evento de manutenção; conferir momento abaixo | `ArquivoExtensaoAPI[]` | Avaliar dependência e eficácia da interceptação |
 | cadastrarTipoDocumento | Aps cadastro de tipo de documento | TipoDocumentoAPI | Reagir a novo tipo; ativar |
-| desativarTipoDocumento | Aps desativacao de tipo de documento | `arrObjSerieAPI` com IdSerie, Nome e Aplicabilidade | Reagir a desativacao; inativar |
-| reativarTipoDocumento | Aps reativacao de tipo de documento | `arrObjSerieAPI` com IdSerie, Nome e Aplicabilidade | Reagir a reativacao |
+| desativarTipoDocumento | Evento de manutenção; conferir momento abaixo | `SerieAPI[]` | Avaliar dependência e eficácia da interceptação |
+| reativarTipoDocumento | Evento de manutenção; conferir momento abaixo | `SerieAPI[]` | Avaliar dependência e eficácia da interceptação |
 | cadastrarTipoProcesso | Aps cadastro de tipo de processo | TipoProcedimentoAPI | Reagir a novo tipo; configurar |
-| desativarTipoProcesso | Aps desativacao de tipo de processo | TipoProcedimentoAPI | Reagir a desativacao; inativar |
-| reativarTipoProcesso | Aps reativacao de tipo de processo | TipoProcedimentoAPI | Reagir a reativacao |
+| desativarTipoProcesso | Evento de manutenção; conferir momento abaixo | `TipoProcedimentoAPI[]` | Avaliar dependência e eficácia da interceptação |
+| reativarTipoProcesso | Evento de manutenção; conferir momento abaixo | `TipoProcedimentoAPI[]` | Avaliar dependência e eficácia da interceptação |
 | cadastrarUnidade | Aps cadastro de unidade | UnidadeAPI | Reagir a nova unidade; inicializar |
-| desativarUnidade | Aps desativacao de unidade | UnidadeAPI | Reagir a desativacao; inativar |
-| reativarUnidade | Aps reativacao de unidade | UnidadeAPI | Reagir a reativacao |
+| desativarUnidade | Evento de manutenção; conferir momento abaixo | `UnidadeAPI[]` | Avaliar dependência e eficácia da interceptação |
+| reativarUnidade | Evento de manutenção; conferir momento abaixo | `UnidadeAPI[]` | Avaliar dependência e eficácia da interceptação |
 | cadastrarUsuario | Aps cadastro de usuario | UsuarioAPI | Reagir a novo usuario; inicializar |
-| desativarUsuario | Aps desativacao de usuario | UsuarioAPI | Reagir a desativacao; bloquear acesso |
-| reativarUsuario | Aps reativacao de usuario | UsuarioAPI | Reagir a reativacao; desbloquear |
+| desativarUsuario | Evento de manutenção; conferir momento abaixo | `UsuarioAPI[]` | Avaliar dependência e eficácia da interceptação |
+| reativarUsuario | Evento de manutenção; conferir momento abaixo | `UsuarioAPI[]` | Avaliar dependência e eficácia da interceptação |
 | cadastrarVeiculoPublicacao | Aps cadastro de veiculo | VeiculoPublicacaoAPI | Reagir a novo veiculo; configurar |
-| desativarVeiculoPublicacao | Aps desativacao de veiculo | VeiculoPublicacaoAPI | Reagir a desativacao; inativar |
-| reativarVeiculoPublicacao | Aps reativacao de veiculo | VeiculoPublicacaoAPI | Reagir a reativacao |
-| excluirVeiculoPublicacao | Aps exclusao de veiculo | IdVeiculoPublicacao | Reagir a exclusao; remover |
+| desativarVeiculoPublicacao | Evento de manutenção; conferir momento abaixo | `VeiculoPublicacaoAPI[]` | Avaliar dependência e eficácia da interceptação |
+| reativarVeiculoPublicacao | Evento de manutenção; conferir momento abaixo | `VeiculoPublicacaoAPI[]` | Avaliar dependência e eficácia da interceptação |
+| excluirVeiculoPublicacao | Evento de manutenção; conferir momento abaixo | `VeiculoPublicacaoAPI[]` | Avaliar dependência e eficácia da interceptação |
 | alterarVeiculoPublicacao | Aps alteracao de veiculo | VeiculoPublicacaoAPI | Reagir a alteracao; atualizar |
 | listarUnidadesEnvioProcesso | Lista unidades disponiveis para envio | entrada `arrObjProcedimentoAPI`, saida `arrObjUnidadeAPI` com IdUnidade | Filtrar unidades de envio; customizar |
 | inicializar | Executa ao inicializar o modulo (boot) | Sem parametro | Inicializar recursos; configurar ambiente |
@@ -190,9 +190,9 @@ de modulo sem hook no core, a skill principal passa a ser `sei-menu-pagina`.
 
 ## Notas sobre ambiguidades do manual
 
-1. Varios eventos de ciclo de vida (alterarProcesso, alterarDocumento, etc.) nao deixam claro se a trigger ocorre ANTES ou DEPOIS da operacao no core. Em caso de necessidade de interceptacao antes da escrita, verificar a assinatura real em `SeiIntegracao.php`.
+1. Varios eventos de ciclo de vida (alterarProcesso, alterarDocumento, etc.) nao deixam claro se a trigger ocorre ANTES ou DEPOIS da operacao no core. Em caso de necessidade de interceptacao antes da escrita, verificar a assinatura em `SeiIntegracao.php` e o ponto de chamada na RN do core, incluindo transação e propagação da exceção.
 
-2. Eventos de cadastro/manutencao (cadastrar*, desativar*, reativar*, excluir*) parecem ser todos do tipo POS-operacao (apos a escrita no banco). Nao foram encontrados eventos PRE-operacao para essas ações.
+2. O momento varia por operação. Consulte a tabela de manutenção verificada abaixo e confirme o callsite da versão suportada. Pós-escrita dentro da transação não é pós-commit; evento posterior a um DELETE que falha por FK não chega a executar. A assinatura isolada não comprova eficácia.
 
 3. `listarUnidadesEnvioProcesso` tem assinatura minima não especificada no manual — verificar no fonte antes de implementar.
 
@@ -377,3 +377,25 @@ Quando o acesso for concedido exclusivamente pelo modulo, a arvore do processo e
 | `verificarAcessoProtocoloExterno` | `$arrObjProcedimentoAPI`: Instâncias representando os processos anexados preenchidas com IdProcedimento, IdTipoProcedimento, IdUnidadeGeradora e NivelAcesso.; `$arrObjDocumentoAPI`: Instâncias preenchidas com IdDocumento, IdProcedimento, IdSerie, IdUnidadeGeradora, SinAssinado, SinPublicado, Tipo, SubTipo e NivelAcesso. | `$arrLiberacoes`: Retornar um array indexado pelo número do protocolo onde cada item possui o valor P (Permitido) ou N (Negado) indicando o tipo de acesso ao processo ou documento. Também podem ser utilizadas as constantes abaixo da classe SeiIntegracao: //TAM = Tipo Acesso Modulo public static $TAM_PERMITIDO = 'P'; public static $TAM_NEGADO = 'N'; |
 | `verificarAcessoTipoContato` | `$arrObjTipoContatoAPI`: Instâncias preenchidas com IdTipoContato. | `$arrLiberacoes`: Retornar um array indexado pelo ID do tipo de contato onde cada item possui os valores: N = nenhum acesso concedido pelo módulo A = permissão para alteração de dados C = Consulta Completa R = Consulta Resumida Também podem ser utilizadas as constantes abaixo da classe TipoContatoRN: public static $TA_NENHUM = 'N'; public static $TA_ALTERACAO = 'A'; public static $TA_CONSULTA_COMPLETA = 'C'; public static $TA_CONSULTA_RESUMIDA = 'R'; |
 | `verificarLoginExterno` | `$objUsuarioAPI`: Instâncias preenchidas com IdUsuario, Sigla, Nome e StaTipo. | `booleano`: Retornar true ou false. |
+
+## Manutenção: pontos de chamada conferidos no checkout
+
+Esta tabela orienta a busca; reconfirme método, linhas e transação na versão suportada. Todas as nove famílias administrativas recebem arrays de objetos API; exclusão de processo/documento recebe objeto único. Examine escritas anteriores de registros filhos e os caminhos alternativos.
+
+| Entidade/evento de exclusão | RN do core: evento → DELETE principal | Desativação: escrita → evento, dentro de Controlado |
+|---|---|---|
+| TipoProcesso | TipoProcedimentoRN:482 → 487 | 517 → 537 |
+| TipoDocumento | SerieRN:447 → 452 | 591 → 613 |
+| Unidade | UnidadeRN:455 → 463 | 586 → 617 |
+| Usuario | UsuarioRN:904 → 931 | 1080 → 1118 |
+| Contato | ContatoRN:989 → 994 | 1032 → 1060 |
+| TipoContato | TipoContatoRN:256 → 268 | 364 → 384 |
+| ArquivoExtensao | ArquivoExtensaoRN:251 → 256 | 351 → 371 |
+| HipoteseLegal | HipoteseLegalRN:300, depois do DELETE:286; tarde para FK restritiva | 406 → 420 |
+| VeiculoPublicacao | VeiculoPublicacaoRN:446, depois do DELETE:440; tarde para FK restritiva | 536 → 542 |
+| excluirProcesso(ProcedimentoAPI) | ProcedimentoRN:976 → 982 | não se aplica |
+| excluirDocumento(DocumentoAPI) | DocumentoRN:1570 → 1642; protocolo:1648 | não se aplica |
+
+`validarEliminacaoDocumento(DocumentoAPI[])` é chamado em DocumentoRN:6278; `validarEliminacaoProcesso(ProcedimentoAPI)` em ProcedimentoRN:1396 e 1418, incluindo processos anexados. Exclusão e eliminação são caminhos distintos: não presumir cobertura de um pelo outro ou usar `eliminar*` como veto antecipado sem examinar o chamador. Não foi encontrado hook específico para excluir/desativar o cadastro de Assinantes das Unidades em SeiIntegracao; AssinanteRN:163-194 exclui sem evento. A presença de eventos de assinatura de documento não cobre esse cadastro.
+
+Para qualquer outro evento de SeiIntegracao que afete registro persistido referenciado pelo módulo, aplique [proteção das dependências](protecao-dependencias-core.md); esta tabela não é lista fechada de entidades elegíveis.

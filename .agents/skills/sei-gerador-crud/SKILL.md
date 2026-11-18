@@ -143,6 +143,7 @@ Conferencia manual complementar:
 - identificadores de GET, POST e selecao passam por `ctype_digit` ou `(int)`; listas N:N validam o ID composto com `count(...)==2` e `ctype_digit(...)`.
 - helpers INT de entidades com `sin_ativo` filtram ativos por padrao (via `configurarExclusaoLogica`) e incluem o item selecionado mesmo inativo.
 - `numeric` com `din_` valida com `InfraUtil::validarDin` sem alterar o valor; `dth_` valida com `InfraData::validarDataHora` e usa `infraMascaraDataHora` no cadastro.
+- foco, Enter, barras de comandos, teclas de atalho e ordenacao seguem `.agents/references/padrao-interacao-telas-sei.md`: lista com filtro sai com `sbmPesquisar` como primeiro submit (sem tecla P quando um filtro ja a usa) e foco no primeiro filtro; lista sem filtro foca Fechar; cadastro foca o primeiro campo editavel em cadastrar e alterar, foca Fechar em consultar e tem Salvar como primeiro submit; Fechar e Cancelar usam `a` e Excluir usa `x`; a barra inferior repete os comandos sem `accesskey`; grid ordena por `campoPrincipal` em ordem ascendente. Ao acrescentar coluna, filtro ou comando na saida gerada, aplicar a mesma referencia.
 
 ---
 
@@ -167,7 +168,7 @@ Propor a proxima versao (bump de **minor** por padrao para nova entidade) e agua
 Apos confirmacao, gerar e inserir nos scripts existentes:
 
 1. `case '<versaoAtual>': $this->instalarv<XYZ>();` no switch de ambos os scripts (sem `break`; fallthrough intencional; `break` migra para o novo ultimo case).
-2. Metodo `instalarv<XYZ>()` no SEI com DDL multi-SGBD: tabela (comentarios de tabela e coluna a partir do contrato), sequence `seq_<tabela>` no CRUD simples (N:N nao tem sequence), FKs via `adicionarChaveEstrangeira` (inclusive a FK para `unidade` quando houver `escopoUnidade`), que ja cria o indice com o nome da FK (manual cap. 5), e chamada a `atualizarNumeroVersao()`.
+2. Metodo `instalarv<XYZ>()` no SEI com DDL multi-SGBD: tabela, sequence `seq_<tabela>` no CRUD simples (N:N nao tem sequence), FKs via `adicionarChaveEstrangeira` (inclusive a FK para `unidade` quando houver `escopoUnidade`), que ja cria o indice com o nome da FK (manual cap. 5), e chamada a `atualizarNumeroVersao()`.
 3. Metodo `instalarv<XYZ>()` no SIP com lookup antes de cada cadastro (idempotencia), `adicionarRecursoPerfil()` por recurso, item de menu para a acao `<tabela>_listar` (sem ele a lista fica inacessivel) e chamada a `atualizarNumeroVersao()`.
 4. Sincronizar `getVersao()` na classe `*Integracao.php` do modulo com a mesma versao aplicada nos scripts.
 5. Criar ou atualizar regra de auditoria no SIP: incluir apenas os recursos de escrita (`_cadastrar`, `_alterar`, `_excluir`; adicionar `_desativar`/`_reativar` quando `temSinAtivo == true`). Recursos de leitura nunca entram na regra. Chamar `replicarRegraAuditoria` ao final. Ver `.agents/references/padrao-auditoria-sip-sei.md`.
@@ -216,15 +217,15 @@ Scripts novos completos estao fora do escopo desta skill. Orientar o desenvolved
 O motor aplica todas com mensagem clara (sem traceback). Esquema completo em `examples/README.md`.
 
 1. JSON sintaticamente valido, com `entidade` (`tabela`, `singular`, `plural`, `artigo` em `o` ou `a`, `campoPrincipal`, `comentario`) e `colunas` nao vazia.
-2. CRUD simples: exatamente uma coluna com `chavePrimaria: true`, chamada `id_<tabela>`, e `regrasGeracao.campoSinAtivo` presente (`"sin_ativo"` ou `null`); N:N: exatamente duas PKs e `relacionamentosNn` com 2 entradas.
+2. CRUD simples: exatamente uma coluna com `chavePrimaria: true`, chamada `id_<tabela>`, e `regrasGeracao.campoSinAtivo` presente (`"sin_ativo"` ou `null`); N:N: exatamente duas PKs e `relacionamentosNn` com 2 entradas, cada uma com `classeInt` no formato `<Classe>INT` e `metodoInt` no formato `montarSelect<Campo>`.
 3. `entidade.campoPrincipal` referencia uma coluna existente em `colunas`.
 4. Nomes fisicos: lowercase + digits + underscore, max 26 chars; tabela com prefixo `md_<sigla>_`.
 5. Tabela e todas as colunas possuem `comentario` negocial preenchido; toda coluna tem `obrigatorio` booleano.
    Textos exibidos (`singular`, `plural`, `comentario`, `rotulo`) aceitam apostrofo, que o motor escapa nos literais PHP e JavaScript; `"`, `\`, `<`, `>`, `&`, caractere de controle e `*/` sao rejeitados com mensagem.
 6. Tipos no subconjunto suportado: `int`, `integer`, `varchar`, `datetime`, `date`, `timestamp`, `char`, `numeric`. `timestamp` exige `dth_`; `date` nao aceita `dth_`; `sta_*` e rejeitado.
 7. `campoSinAtivo`, quando informado, e `sin_ativo` e a coluna existe com tipo `char`.
-8. Relacionamentos: `coluna` existe em `colunas`, `campoExibicao` informado, `tipoFk` coerente com `obrigatorio` da coluna; o helper `<Classe>INT::montarSelect<CampoExibicao>` existe em `web/int/` ou no `int/` do modulo (classe encontrada sem o metodo bloqueia; classe ausente gera alerta).
-9. `ui.ordemFormulario`, quando presente, contem toda coluna de formulario; `ui.campos.<coluna>.teclaAtalho` nao usa tecla reservada (`S`, `C`, `F`; em FK tambem `N`, `E`, `T`, `R`).
+8. Relacionamentos: `coluna` existe em `colunas`, `campoExibicao` informado como nome fisico de coluna, `tipoFk` coerente com `obrigatorio` da coluna; o helper `<Classe>INT::montarSelect<CampoExibicao>` existe em `web/int/` ou no `int/` do modulo (classe encontrada sem o metodo bloqueia; classe ausente gera alerta).
+9. `ui.ordemFormulario`, quando presente, contem toda coluna de formulario; `ui.campos.<coluna>.teclaAtalho` e uma unica letra ou digito e nao usa tecla reservada (`C`, `D`, `E`, `F` do navegador e `S`, `A` do cadastro; em FK e em N:N tambem `N`, `X`, `T`, `R` da lista); a tecla de `relacionamentosNn[]`, informada ou primeira letra do `rotulo`, segue a mesma regra.
 10. Nenhum dos 6 arquivos-alvo ja existe no diretorio de saida (no-overwrite).
 
 ---
@@ -314,7 +315,7 @@ Detectado automaticamente quando existem 2 colunas com `chavePrimaria: true`. O 
 ```json
 "relacionamentosNn": [
   { "tabelaOrigem": "md_ri_filme", "classeInt": "MdRiFilmeINT", "metodoInt": "montarSelectTitulo", "rotulo": "Filme", "artigo": "o", "teclaAtalho": "I" },
-  { "tabelaOrigem": "md_ri_ator",  "classeInt": "MdRiAtorINT",  "metodoInt": "montarSelectNome",   "rotulo": "Ator", "artigo": "o", "teclaAtalho": "A" }
+  { "tabelaOrigem": "md_ri_ator",  "classeInt": "MdRiAtorINT",  "metodoInt": "montarSelectNome",   "rotulo": "Ator", "artigo": "o", "teclaAtalho": "O" }
 ]
 ```
 
@@ -465,3 +466,7 @@ As operacoes basicas podem ser geradas pelo gerador de codigo disponivel no ende
 **Campo principal.** Configurar o campo principal da tabela antes de gerar. Com ele definido, o campo e retornado automaticamente na tela de lista junto com o ID, e e gerado um metodo de montagem de combo na classe INT buscando por esse campo.
 
 **Saida do gerador oficial.** A partir da versao 1.44 ele emite `bloquearConectado` e `array()`, deixa `montarSelect???????` para o desenvolvedor resolver e nao gera `configurarFK`; ajustar esses pontos para o padrao do projeto antes de integrar (ver `references/gabarito-trf4.md`, "Desvios conscientes").
+
+## Dependências de registros do core
+
+Quando o gerador for escolhido explicitamente, avalie as novas referências ao core antes de gerar e entregar o CRUD; não gere vetos automaticamente. Aplicar, com `sei-guardrails-modulo`, a [matriz de proteção](../sei-mod-api-eventos/references/protecao-dependencias-core.md) também a protocolos e dependências funcionais sem FK.

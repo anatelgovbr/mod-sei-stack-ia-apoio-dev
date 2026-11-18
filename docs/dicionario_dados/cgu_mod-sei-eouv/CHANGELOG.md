@@ -1,5 +1,17 @@
 # Changelog do Módulo de Integração entre o sistema SEI e o FalaBR
 
+## [4.2.0]
+
+### Alterado
+
+- **Tabela `md_eouv_depara_importacao`**
+  - **Colunas**
+    - **Nova `id_hipotese_legal`**: adicionada como `tipoNumero() NULL`.
+    - **Nova `id_unidade_destino`**: adicionada como `tipoNumero() NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk2_md_eouv_depara_importacao_hipotese_legal`**: `id_hipotese_legal` → `hipotese_legal.id_hipotese_legal`.
+    - **Nova `fk3_md_eouv_depara_importacao_unidade_destino`**: `id_unidade_destino` → `unidade.id_unidade`.
+
 ## [4.1.0]
 
 ### Alterado

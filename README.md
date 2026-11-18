@@ -155,7 +155,7 @@ As skills do projeto nascem neste repositório e são versionadas junto com ele:
 | `sei-mod-api-operacoes` | Orienta operações oficiais do SEI via API e `SeiRN` |
 | `sei-mod-api-eventos` | Orienta interceptação de eventos do SEI via integração de módulo |
 | `sei-menu-pagina` | Orienta criação ou ajuste de menus internos e páginas correspondentes |
-| `sei-validacao-padrao` | Centraliza checagens e validações após alterações PHP |
+| `sei-validacao-padrao` | Centraliza checagens após alterações PHP ou de interface visual, inclusive esquemas de cores |
 | `sei-tipagem-phpdoc` | Apoia modernização segura de tipagem PHP e PHPDoc quando solicitada explicitamente |
 | `sei-report-todos` | Gera relatório de pendências `TODO:` em módulos escolhidos explicitamente |
 | `sei-revisao-tecnica` | Revisa diretamente segurança, conformidade, gates e qualidade técnica de diffs, arquivos ou módulos SEI, sem exigir spec |
@@ -383,6 +383,8 @@ Não substitua arquivos da stack por conta própria. A atualização é coordena
 | [`docs/dicionario_dados/`](docs/dicionario_dados/) | Dicionário de dados por módulo (uma pasta por módulo: SEI, SIP, Litigioso, ...) |
 | [`.agents/references/roteamento-de-skills.md`](.agents/references/roteamento-de-skills.md) | Qual skill usar para cada tipo de demanda |
 | [`.agents/references/gates-de-implementacao.md`](.agents/references/gates-de-implementacao.md) | Pontos de verificação obrigatórios que impedem a implementação de avançar com problemas não resolvidos |
+| [`.agents/references/padrao-acessibilidade-cores-sei.md`](.agents/references/padrao-acessibilidade-cores-sei.md) | Orientação de contraste e verificação dos esquemas de cores em interfaces SEI |
+| [`.agents/references/padrao-interacao-telas-sei.md`](.agents/references/padrao-interacao-telas-sei.md) | Foco inicial, botão padrão do Enter, barras de comandos, teclas de atalho e ordenação de grid em telas SEI |
 
 **Ferramentas e padrões externos:**
 

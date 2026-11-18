@@ -90,8 +90,8 @@ Dimensione o armazenamento com a equipe técnica conforme o volume de processos 
 
 Realize esta conferência com as equipes responsáveis pelo SEI, pelo SIP e pelo Servidor de Soluções de IA antes de divulgar o uso institucional.
 
-1. Confirme a versão do SEI. O requisito mínimo informado pelos projetos é 4.1.5; versões anteriores não têm compatibilidade e versões mais recentes exigem conferência prévia.
-2. Solicite a confirmação da instalação e configuração do módulo no SEI e dos recursos no SIP. O módulo deve estar instalado e configurado no ambiente correspondente antes da instalação do servidor de IA.
+1. Confirme a versão do SEI. O requisito mínimo informado pelo README local do módulo é 5.0.5; versões anteriores não têm compatibilidade e versões mais recentes exigem conferência prévia.
+2. Solicite a confirmação da instalação e configuração do módulo no SEI e dos recursos no SIP. O módulo deve estar instalado e configurado no ambiente correspondente antes da instalação do servidor de IA. O README local exige o Servidor de Soluções de IA na versão v1.3.0 e a instalação do PyMuPDF no Python 3.12 em todos os servidores ou contêineres que executam o SEI.
 3. Confira o reconhecimento do módulo em **Infra > Módulos** no SEI e o parâmetro **VERSAO_MODULO_IA** em **Infra > Parâmetros** do SEI e do SIP. Confronte os valores com a versão que a equipe informa para o código instalado.
 4. Faça novo login após a instalação e confira os submenus de **Administração > Inteligência Artificial**. Prepare as orientações, os limites, os documentos relevantes e os tipos alvo conforme as tarefas deste manual.
 5. Solicite à equipe técnica a confirmação do funcionamento do servidor e da comunicação nos dois sentidos: do SEI para os serviços de IA e do servidor de IA para os serviços do módulo no SEI.
@@ -147,7 +147,7 @@ Para a captura, abra o formulário com os indicadores de conexão, as opções d
 
 1. Confira o resultado da verificação de conexão que a tela apresenta.
 2. Selecione **Exibir** ou **Não Exibir** em **Exibir Funcionalidade**.
-3. Selecione as opções de **Refletir** e **Buscar na Web**, considerando as condições abaixo.
+3. Selecione **Ativar** ou **Desativar** em **Buscar na Web**, considerando as condições abaixo.
 4. Preencha **Orientações Gerais** com as instruções que os usuários devem consultar ao usar o Assistente.
 5. Ajuste os limites e a lista de usuários conforme o próximo tópico.
 6. Acione **Salvar**.
@@ -157,12 +157,11 @@ O sistema grava a configuração e apresenta uma mensagem de sucesso. Ao abrir a
 | Campo | Como utilizar |
 |---|---|
 | Exibir Funcionalidade | **Exibir** habilita a oferta do Assistente nas telas admitidas pelo módulo, para usuários com a permissão necessária. **Não Exibir** desabilita essa oferta. |
-| Refletir | **Ativar** ou **Desativar** a configuração de reflexão. A ajuda informa que o serviço precisa oferecer um modelo de linguagem com esse recurso. Confirme com a equipe do serviço o suporte e o efeito na versão instalada antes de orientar os usuários sobre seu uso. |
-| Buscar na Web | **Ativar** ou **Desativar** a configuração de busca na web. O recurso depende de uma interface de programação de aplicações (API) de busca configurada no Servidor de Soluções de IA. A ajuda da tela registra indisponibilidade na versão 1.1 desse servidor; confirme a versão e a capacidade atuais com a equipe responsável. |
+| Buscar na Web | **Ativar** ou **Desativar** a configuração de busca na web. O recurso depende de uma interface de programação de aplicações (API) de busca configurada no Servidor de Soluções de IA. Confirme a versão e a capacidade atuais com a equipe responsável. |
 | Orientações Gerais | Campo obrigatório, com editor de texto. O Assistente apresenta essas orientações para consulta do usuário. |
 | Prompt System para o LLM | Texto de instruções do sistema para o modelo de linguagem de grande porte, identificado pela sigla LLM. A tela apresenta esse conteúdo somente para leitura e informa que não deve ser alterado. |
 
-Os guias atuais do servidor descrevem **WebSearch**, busca externa com Bing Grounding, como recurso opcional, inclusive na atualização de 1.1.x para 1.2.x. Sua configuração exige serviços e credenciais no Azure e um modelo compatível. Essa orientação não comprova que a instalação do órgão oferece o recurso nem elimina o aviso histórico da ajuda local. Antes de ativar **Buscar na Web**, confirme com a equipe técnica a versão instalada, a configuração e o funcionamento da busca. Quando o órgão não usar esse serviço, mantenha a opção **Desativar**; o guia informa que o Assistente pode funcionar sem consultas externas.
+Os guias do servidor consultados em 14 de outubro de 2026 descrevem **WebSearch**, busca externa com Bing Grounding, como recurso opcional, inclusive na atualização de 1.1.x para 1.2.x. Sua configuração exige serviços e credenciais no Azure e um modelo compatível. Essa orientação não comprova que a instalação do órgão oferece o recurso. Antes de ativar **Buscar na Web**, confirme com a equipe técnica a versão instalada, a configuração e o funcionamento da busca. Quando o órgão não usar esse serviço, mantenha a opção **Desativar**; o guia informa que o Assistente pode funcionar sem consultas externas.
 
 Confirme também os modelos que o servidor realmente executa. Os guias do servidor descrevem a centralização das conexões no LiteLLM Proxy; os nomes apresentados em materiais de usuário ou na interface, por si só, não comprovam o modelo implantado nem o suporte à reflexão.
 
@@ -178,9 +177,15 @@ Token é uma unidade de processamento de texto do modelo. Os campos desta tela u
 
 | Campo | Preenchimento e efeito |
 |---|---|
-| Limite Geral de Tokens por Usuário/Dia (milhões de tokens) | Informe um valor de 1 a 15 milhões de tokens. O limite geral atende os usuários que não constam da lista de limite maior. A ajuda indica 3 milhões como padrão de instalação, que pode diferir do valor atual. |
-| Limite maior para Usuários específicos | Informe um valor de 1 a 15 milhões de tokens. Esse valor substitui o limite geral para os usuários da lista. A ajuda indica 6 milhões como padrão de instalação. Para conceder um limite maior, escolha um valor superior ao geral. |
+| Limite Geral de Tokens por Usuário/Dia (milhões de tokens) | Informe um valor de 1 a 50 milhões de tokens. O limite geral atende os usuários que não constam da lista de limite maior. A ajuda indica 3 milhões como padrão de instalação, que pode diferir do valor atual. |
+| Limite maior para Usuários específicos | Informe um valor de 1 a 99 milhões de tokens, superior ao limite geral. Esse valor substitui o limite geral para os usuários da lista. A ajuda indica 6 milhões como padrão de instalação. |
 | Usuários que terão limite maior | Inclua somente as pessoas que devem receber o limite diferenciado. Remover uma pessoa da lista faz com que ela passe a usar o limite geral após salvar. |
+
+O limite maior deve superar o limite geral, mesmo quando a lista de usuários estiver vazia. Se os valores forem iguais ou o limite maior ficar abaixo do geral, o sistema apresenta **O limite maior para usuários específicos deve ser maior que o limite geral de tokens.** Ajuste os valores antes de salvar.
+
+Caso essa crítica ocorra no ambiente de conferência, registre o alerta e os valores dos dois limites. Não inclua dados pessoais da lista de usuários na captura.
+
+> **[NECESSÁRIO INSERIR IMAGEM DE PRINT DA TELA DESTA FUNCIONALIDADE]** - **caminho no sistema**: Administração > Inteligência Artificial > Assistente IA > Configurações do Assistente IA
 
 1. Informe os dois limites.
 2. Digite pelo menos três caracteres no campo de usuário e selecione uma sugestão para incluí-la na lista.
@@ -711,6 +716,7 @@ O guia também alerta para a remoção de volumes do Airflow na migração de 1.
 | Menu ou ação administrativa ausente | Confira o perfil Administrador e as permissões da ação com a administração de acesso do SEI. A exibição de uma seção ao usuário é uma configuração diferente da permissão de administrar o módulo. |
 | Campo obrigatório vazio | Preencha o campo indicado. Para similaridade, pesquisa, Assistente e ODS, confira também as Orientações Gerais. |
 | Limite ou percentual recusado | Confira a unidade e o intervalo do campo. Na similaridade, mantenha a soma dos pesos de metadados em 100%; nos segmentos, mantenha a soma em até 100%. Para arquivos avulsos, respeite o máximo da ajuda da extensão. |
+| Limite maior de tokens igual ou inferior ao geral | Informe um limite maior superior ao geral, mesmo sem usuários na lista de limite diferenciado. Respeite os intervalos de 1 a 50 milhões para o geral e de 1 a 99 milhões para o maior. |
 | Nome ou item já cadastrado | Localize o registro existente. Evite repetir nomes de grupos, tipos já incluídos em listas e combinações de documentos relevantes. |
 | Reativação de documento relevante recusada | Pesquise os vínculos ativos da mesma aplicabilidade e tipo de documento. Revise a sobreposição entre todos os tipos de processo e os tipos específicos antes de repetir a ação. |
 | Comando coletivo sem linhas selecionadas | Marque os registros na lista e repita a ação. Confira a seleção na confirmação. |

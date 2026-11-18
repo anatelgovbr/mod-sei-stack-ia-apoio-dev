@@ -1,6 +1,6 @@
 ---
 name: sei-guardrails-modulo
-description: Guardrails obrigatorios para qualquer trabalho em modulos SEI — verifica scripts de instalacao existentes, impede criacao de arquivos duplicados (scripts, CSS, JS), garante escopo, permissao/link assinado, transacao/auditoria e aciona skills especializadas quando necessario.
+description: Guardrails obrigatorios para qualquer trabalho em modulos SEI — verifica scripts de instalacao existentes, impede criacao de arquivos duplicados (scripts, CSS, JS), avalia dependências com registros do core (inclusive protocolos), garante escopo, permissao/link assinado, transacao/auditoria e aciona skills especializadas quando necessario.
 ---
 
 # Skill: Guardrails de Modulo SEI
@@ -30,11 +30,15 @@ description: Guardrails obrigatorios para qualquer trabalho em modulos SEI — v
    - Se `css/` ja contiver arquivos: **nao criar novos arquivos CSS**. Editar os existentes.
    - Se `js/` ja contiver arquivos: **nao criar novos arquivos JS**. Editar os existentes.
    - Regra identica para arquivos PHP de asset (`*_css.php`, `*_js.php`) na raiz do modulo.
-4. Identificar os pontos de impacto do módulo: menu/página, eventos, botões/ícones, operações/WS, BD/scripts.
+4. Antes de implementar, inventariar dependências módulo → core afetadas, inclusive protocolos e mudança apenas em RN. Aplicar a matriz de [proteção das dependências](../sei-mod-api-eventos/references/protecao-dependencias-core.md), distinguir FK física de metadado DTO e política funcional, e encaminhar a interceptação a `sei-mod-api-eventos`. Cobertura depende do callsite eficaz e dos testes, não apenas da existência de hook.
+
+   Identificar os pontos de impacto do módulo: menu/página, eventos, botões/ícones, operações/WS, BD/scripts.
 5. Garantir **bases obrigatórias** antes de implementar:
    - link assinado + permissão por ação
    - transação quando houver escrita relevante
    - auditoria quando aplicável
+   - interface visual criada ou alterada, inclusive CSS/JS sem PHP: aplicar `.agents/references/padrao-acessibilidade-cores-sei.md` e acionar `sei-validacao-padrao`
+   - página com filtro, formulário, barra de comandos ou grid criada ou alterada: aplicar `.agents/references/padrao-interacao-telas-sei.md`
 6. Acionar as skills específicas quando necessário:
    - **Implementacao**: `sei-menu-pagina`, `sei-mod-api-eventos`, `sei-mod-api-operacoes`,
       `sei-gerador-scripts-release`, `sip-gerador-scripts-release`, `sei-validacao-padrao`
@@ -53,4 +57,3 @@ description: Guardrails obrigatorios para qualquer trabalho em modulos SEI — v
 
 ## Saída esperada
 - Uma implementação (ou revisão) que respeita escopo, camadas, guardrails de segurança e impacto de release do módulo, com evidências de validação.
-

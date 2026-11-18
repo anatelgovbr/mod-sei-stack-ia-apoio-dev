@@ -1,5 +1,31 @@
 # Changelog do Módulo SEI Litigioso
 
+## [2.6.0]
+
+### Alterado
+
+- **Tabela `md_lit_lancamento`**
+  - **Colunas**
+    - **Nova `id_md_lit_lancamento_inicial`**: adicionada como `tipoNumero() NULL`.
+    - **Alterada `sequencial`**: `tipoTextoVariavel(45) NOT NULL` para `tipoTextoVariavel(45) NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk11_md_lit_lancamento`**: `id_md_lit_lancamento_inicial` → `md_lit_lancamento.id_md_lit_lancamento`.
+- **Tabela `md_lit_historic_lancamento`**
+  - **Colunas**
+    - **Nova `id_md_lit_lancamento_inicial`**: adicionada como `tipoNumero() NULL`.
+    - **Alterada `sequencial`**: `tipoTextoVariavel(45) NOT NULL` para `tipoTextoVariavel(45) NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk11_md_lit_historic_lancamento`**: `id_md_lit_lancamento_inicial` → `md_lit_lancamento.id_md_lit_lancamento`.
+- **Tabela `md_lit_decisao`**
+  - **Colunas**
+    - **Nova `id_md_lit_decisao_origem`**: adicionada como `tipoNumero() NULL`.
+  - **Chaves estrangeiras**
+    - **Nova `fk6_md_lit_decisao`**: `id_md_lit_decisao_origem` → `md_lit_decisao.id_md_lit_decisao`.
+- **Tabela `md_lit_tipo_controle`**
+  - **Colunas**
+    - **Nova `prazo_dias_sug_venc`**: adicionada como `tipoNumero() NULL`.
+    - **Nova `prazo_dias_crit_venc_min`**: adicionada como `tipoNumero() NULL`.
+
 ## [2.2.0]
 
 ### Adicionado

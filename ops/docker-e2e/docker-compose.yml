@@ -1,0 +1,127 @@
+# Testes e2e com Playwright num SEI proprio, separado do ambiente de desenvolvimento, em
+# ../docker-sei-localhost, e do QA, em ../docker-qa. Sobe pelo iniciar_ambiente_e2e.bat e para pelo parar_ambiente_e2e.bat,
+# nesta pasta. O executar_testes_e2e.bat, em ops, roda os testes e, no fim, recria seed, banco,
+# memcached e httpd: cada rodada parte de um banco novo.
+# As variaveis vem do .env do ambiente: docker compose --env-file ../docker-sei-localhost/.env
+name: sei-e2e
+
+services:
+  # Banco da mesma imagem do ambiente, que ja traz os dados iniciais do SEI e do SIP. Sem volume
+  # nomeado: o reset do executar_testes_e2e.bat e o parar_ambiente_e2e.bat apagam o banco junto com o container.
+  database:
+    image: ${DOCKER_REGISTRY}/${DATABASE_IMAGE}:${ENVIRONMENT_VERSION}
+    networks:
+      default:
+        # Mesmo nome de host do ambiente: a ConfiguracaoSEI.php e a ConfiguracaoSip.php leem DATABASE_HOST.
+        aliases:
+          - ${DATABASE_HOST}
+    # A porta so abre quando o banco aceita conexao. Sem espaco no comando: o Podman 4.9 quebra o
+    # argumento nos espacos, e o bash rodaria so o echo, que sempre passa.
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo>/dev/tcp/127.0.0.1/${DATABASE_PORT}"]
+      interval: 3s
+      retries: 60
+
+  memcached:
+    image: ${DOCKER_REGISTRY}/memcached:${ENVIRONMENT_VERSION}
+
+  # Servidor de e-mail da mesma imagem do ambiente: recebe os e-mails que o SEI do e2e envia, como o do cadastro do
+  # usuario externo do seed e os do Peticionamento. Porta 1081 para nao colidir com a 1080 do ambiente.
+  smtp:
+    image: ${DOCKER_REGISTRY}/mailcatcher:${ENVIRONMENT_VERSION}
+    ports:
+      - "127.0.0.1:1081:1080"
+
+  # SEI do e2e: mesma imagem do httpd do ambiente, sem porta publicada. O pw usa a rede deste servico.
+  httpd:
+    image: ops_sei-docker-httpd
+    pull_policy: never
+    env_file: ../docker-sei-localhost/.env
+    environment:
+      HOST_URL: http://localhost:8000
+    volumes:
+      # Leitura e escrita: o /command.sh da imagem escreve em /opt ao subir, como no ambiente.
+      - ../../fontes/sei/src/main/php:/opt
+      # Configuracao propria do e2e por cima da configuracao do SEI da maquina. O /command.sh tenta
+      # renomear a ConfiguracaoSEI.php para ConfiguracaoSEI.php~ e avisa que a pasta e somente leitura.
+      - ../../tests/e2e/sei/config:/opt/sei/config:ro
+    # Temporarios do SEI e do SIP fora da montagem do Windows: no Podman, o apache nao e dono do arquivo que cria ali
+    # e o chmod do upload da InfraPHP (InfraPagina::processarUpload) falha com "Operation not permitted".
+    tmpfs:
+      - /opt/sei/temp:mode=1777
+      - /opt/sip/temp:mode=1777
+    depends_on:
+      database:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+      smtp:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-sfL", "-o", "/dev/null", "http://localhost:8000/sei/"]
+      interval: 3s
+      retries: 60
+
+  # Seed, sobe sozinho antes do pw: instala os modulos e grava no banco do e2e os dados que os
+  # testes leem (tests/e2e/seed.php). Mesma imagem e configuracao do httpd do e2e.
+  seed:
+    image: ops_sei-docker-httpd
+    pull_policy: never
+    entrypoint: ["php", "/testes/e2e/seed.php"]
+    env_file: ../docker-sei-localhost/.env
+    environment:
+      HOST_URL: http://localhost:8000
+    volumes:
+      - ../../fontes/sei/src/main/php:/opt:ro
+      - ../../tests/e2e/sei/config:/opt/sei/config:ro
+      - ../../tests:/testes:ro
+    # Gerar processo grava o codigo de barras do protocolo na pasta temp do SEI.
+    tmpfs:
+      - /opt/sei/temp
+    # Depois que o /command.sh do httpd termina: o SIP ja esta com o endereco do e2e.
+    depends_on:
+      httpd:
+        condition: service_healthy
+
+  # Testes de integracao: PHPUnit do qa, que parte da imagem do httpd, com o banco e o servidor de e-mail do e2e, para
+  # provar com banco real o que o teste unitario nao alcanca. O make executar_testes_integracao constroi a imagem do qa.
+  integracao:
+    image: sei-qa:local
+    pull_policy: never
+    entrypoint: ["php", "/usr/local/qa/vendor/bin/phpunit", "-c", "/testes/integracao/phpunit.xml"]
+    env_file: ../docker-sei-localhost/.env
+    environment:
+      HOST_URL: http://localhost:8000
+    volumes:
+      - ../../fontes/sei/src/main/php:/opt:ro
+      - ../../tests/e2e/sei/config:/opt/sei/config:ro
+      - ../../tests:/testes:ro
+    tmpfs:
+      - /opt/sei/temp:mode=1777
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+
+  # Imagem do Dockerfile.pw: a do Playwright mais os pacotes do tests/e2e/requirements.txt.
+  # O iniciar_ambiente_e2e.bat constroi a imagem; rode de novo quando o requirements.txt mudar.
+  pw:
+    build:
+      context: ../../tests/e2e
+      dockerfile: ../../ops/docker-e2e/Dockerfile.pw
+    image: sei-pw:local
+    # Rede do httpd do e2e: localhost:8000 e o SEI do e2e, endereco para o qual o SEI redireciona o login.
+    network_mode: service:httpd
+    # Recomendado pela documentacao do Playwright para o Chromium no Docker.
+    ipc: host
+    init: true
+    environment:
+      # Sem .pyc: o container roda como root e deixaria arquivos de root na pasta dos testes.
+      PYTHONDONTWRITEBYTECODE: "1"
+    working_dir: /testes/e2e
+    entrypoint: ["python3", "-m", "pytest"]
+    volumes:
+      - ../../tests:/testes
+    # O pytest so comeca depois que o seed termina sem erro.
+    depends_on:
+      seed:
+        condition: service_completed_successfully

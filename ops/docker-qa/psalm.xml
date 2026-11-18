@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+  Configuracao do Psalm do pipeline sei-php-ds-pl-qa, copiada em 10/09/2026.
+  UNICA diferenca: resolveFromConfigFile="false". No pipeline este arquivo fica na raiz do
+  codigo. Aqui ele fica em /qa, e o Psalm roda a partir de /src, a copia do codigo no disco Linux do
+  container. Assim os caminhos relativos abaixo continuam identicos aos do pipeline.
+-->
+<psalm xmlns="https://getpsalm.org/schema/config" errorLevel="4" resolveFromConfigFile="false" xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" findUnusedBaselineEntry="true" findUnusedCode="true" errorBaseline="psalm-baseline.xml">
+  <projectFiles>
+    <directory name="sei/web/modulos"/>
+    <ignoreFiles/>
+    <directory name="sei/web/modulos"/>
+    <directory name="sei/scripts"/>
+    <directory name="sip/scripts"/>
+  </projectFiles>
+  <extraFiles>
+    <directory name="sei"/>
+    <directory name="sip"/>
+    <directory name="infra"/>
+  </extraFiles>
+  <issueHandlers>
+    <UndefinedClass errorLevel="suppress"/>
+    <UndefinedMagicMethod errorLevel="suppress"/>
+  </issueHandlers>
+</psalm>

@@ -1,0 +1,84 @@
+# SonarQube local e container de analise estatica, separados do docker-compose.yml do ambiente,
+# em ../docker-sei-localhost, que vem do pengovbr. Sobe e para pelos iniciar_ambiente_qa.bat e parar_ambiente_qa.bat, nesta pasta.
+name: sei-sonar
+
+services:
+  sonar-db:
+    image: postgres:16.15-alpine
+    container_name: sonar-db
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_DB: sonar
+      # Sem senha: o banco so e acessivel pela rede interna deste compose, sem porta publicada.
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - sei-sonar-db:/var/lib/postgresql/data
+
+  sonarqube:
+    # Mesma versao do Sonar da Anatel.
+    image: sonarqube:26.5.0.122743-community
+    container_name: sonarqube
+    depends_on:
+      - sonar-db
+    ports:
+      - "127.0.0.1:9000:9000"
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://sonar-db:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+      # Memoria reduzida para caber junto com o ambiente SEI e o Psalm na memoria do Docker.
+      SONAR_WEB_JAVAOPTS: -Xmx256m -Xms128m
+      SONAR_CE_JAVAOPTS: -Xmx512m -Xms128m
+      SONAR_SEARCH_JAVAOPTS: -Xmx256m -Xms256m
+    volumes:
+      - sei-sonar-data:/opt/sonarqube/data
+      - sei-sonar-extensions:/opt/sonarqube/extensions
+      - sei-sonar-logs:/opt/sonarqube/logs
+
+  qa:
+    build:
+      context: .
+    image: sei-qa:local
+    container_name: qa
+    entrypoint: ["tail", "-f", "/dev/null"]
+    # Abre em /qa, onde o composer test roda os testes unitarios.
+    working_dir: /qa
+    # O Psalm chega perto de 3 GB; cabe porque o executar_analise_codigo_alterado.bat para o Sonar enquanto ele roda.
+    mem_limit: 3584m
+    memswap_limit: 3584m
+    volumes:
+      - ../../fontes/sei/src/main/php:/opt:ro
+      - .:/qa
+      - ./sonar:/sonar
+      # Copia do codigo no disco Linux: lendo do disco do Windows, o Psalm quebra.
+      - sei-qa-src:/src
+      # Testes: a pasta tests do repositorio, com unit e e2e, e a ConfiguracaoSEI.php dos testes por cima
+      # da ConfiguracaoSEI.php da maquina, em /opt. A analise tambem le esta configuracao; mod-pen e mod-ia continuam.
+      # O arquivo da maquina precisa existir: o ambiente do SEI cria na primeira vez que sobe. Sem ele, o qa nao sobe.
+      - ../../tests:/testes:ro
+      - ../../tests/unit/sei/config/ConfiguracaoSEI.php:/opt/sei/config/ConfiguracaoSEI.php:ro
+
+  scanner:
+    image: sonarsource/sonar-scanner-cli:12.1.0.3233_8.0.1
+    profiles: ["analise"]
+    entrypoint: ["sh", "/sonar/enviar.sh"]
+    environment:
+      SONAR_HOST_URL: http://sonarqube:9000
+      # Sem limite, o scanner chega a 1,5 GB e aperta a memoria do Docker junto com o Sonar.
+      SONAR_SCANNER_OPTS: -Xmx768m
+    volumes:
+      - sei-qa-src:/src:ro
+      - ./relatorios:/relatorios:ro
+      - ./sonar:/sonar:ro
+
+volumes:
+  sei-sonar-db:
+    name: sei-sonar-db
+  sei-sonar-data:
+    name: sei-sonar-data
+  sei-sonar-extensions:
+    name: sei-sonar-extensions
+  sei-sonar-logs:
+    name: sei-sonar-logs
+  sei-qa-src:
+    name: sei-qa-src

@@ -270,19 +270,11 @@ snake_case quando qualificado, por exemplo `item.nome`.
 
 ---
 
-### DB12: Comentários / Docblock
+### DB12: Docblock `@table`/`@column` no DTO
 **Severidade:** Aviso
-**Base:** Manual SEI MD §Regras Gerais (linha 18-19)
+**Base:** Manual SEI MD §Regras Gerais
 
-Todas as tabelas e colunas devem possuir descrição negocial no campo de
-metadado `comment`, informando sua finalidade funcional.
-Se a coluna for de status multivalorado, informar também opções e finalidades.
-
-**Exemplo de COMMENT:**
-```sql
-COMMENT ON TABLE md_ri_restaurante IS 'Restaurantes participantes do programa de alimentação';
-COMMENT ON COLUMN md_ri_restaurante.sin_ativo IS 'Indica se o restaurante está ativo no programa. Valores: S=Ativo, N=Inativo';
-```
+Todas as tabelas e colunas têm descrição negocial que informa sua finalidade funcional. Se a coluna for de status multivalorado, a descrição informa também as opções e finalidades. O `InfraMetaBD` não grava `comment` de tabela nem de coluna, então a descrição fica no docblock do DTO.
 
 **No DTO (InfraPHP), usar docblock:**
 ```php
@@ -294,11 +286,10 @@ class MdRiRestauranteDTO extends InfraDTO {
 ```
 
 **Conforme:**
-- COMMENT ON em todas as tabelas e colunas
 - Docblock no DTO com @table e @column
 
 **Não conforme:**
-- Tabela sem nenhum comentário
+- DTO sem docblock `@table`
 - Coluna de status sem indicar opções
 
 ---
@@ -353,7 +344,7 @@ Todas as tabelas e colunas devem estar no singular.
 | DB09 | Índice em FK | **Aviso** | §Índices |
 | DB10 | Sequence `seq_<nome>` | **Aviso** | §Sequências |
 | DB11 | AK constraint `ak_<nome>_<campos>` | **Aviso** | §Chave Alternativa |
-| DB12 | COMMENT ON / docblock | **Aviso** | §Regras Gerais |
+| DB12 | Docblock `@table`/`@column` no DTO | **Aviso** | §Regras Gerais |
 | DB13 | Sem verbos | **Aviso** | §Tabela |
 | DB14 | Singular | **Aviso** | §Regras Gerais |
 | DB15 | Formato minúsculas + sublinhado | **Aviso** | §Regras Gerais |

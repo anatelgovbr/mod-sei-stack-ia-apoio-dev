@@ -1,5 +1,34 @@
 # Changelog do Módulo SEI Peticionamento e Intimação Eletrônicos
 
+## [5.0.0]
+
+### Adicionado
+
+- **Tabela `md_pet_adm_whitelist`**
+- **Tabela `md_pet_pi_anexo_obrig`**
+- **Tabela `md_pet_pi_doc_auto`**
+- **Tabela `md_pet_pi_doc_princ`**
+- **Tabela `md_pet_pi_orientacao`**
+- **Tabela `md_pet_pi_peticao`**
+- **Tabela `md_pet_pi_rel_orgao`**
+- **Tabela `md_pet_pi_rel_peticao_doc`**
+- **Tabela `md_pet_pi_rel_peticao_usu`**
+- **Tabela `md_pet_pi_rel_unidade`**
+- **Tabela `md_pet_pi_tp_processo`**
+- **Tabela `seq_md_pet_adm_whitelist`** (nos bancos que representam o sequencial nativo em tabela)
+- **Tabela `seq_md_pet_pi_anexo_obrig`** (nos bancos que representam o sequencial nativo em tabela)
+- **Tabela `seq_md_pet_pi_doc_auto`** (nos bancos que representam o sequencial nativo em tabela)
+- **Tabela `seq_md_pet_pi_peticao`** (nos bancos que representam o sequencial nativo em tabela)
+- **Tabela `seq_md_pet_pi_tp_processo`** (nos bancos que representam o sequencial nativo em tabela)
+
+### Excluído
+
+- **Tabela `md_pet_adm_pro_repres_whit`** (se existente)
+- **Tabela `md_pet_tipo_processo`**
+  - **Colunas**
+    - **Excluída `id_tipo_formulario`**
+- **Tabela `seq_md_pet_adm_pro_repres_whit`** (se existente nos bancos que representam o sequencial nativo em tabela)
+
 ## [4.6.0]
 
 ### Adicionado

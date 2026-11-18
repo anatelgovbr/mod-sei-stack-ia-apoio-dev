@@ -108,10 +108,6 @@ RE_CREATE_INDEX_SQL = re.compile(
     r'CREATE\s+(?:UNIQUE\s+)?INDEX\s+(?:(\w+)\s+)?ON\s+(\w+)\s*\(([^)]+)\)',
     re.DOTALL | re.IGNORECASE
 )
-RE_COMMENT_ON = re.compile(
-    r'COMMENT\s+ON\s+(?:TABLE\s+\w+|COLUMN\s+\w+\.\w+)\s+IS\s+(["\'])(.+?)\1',
-    re.IGNORECASE
-)
 RE_SEQ_NATIVE = re.compile(r'criarSequencialNativa\s*\(\s*[\'"]seq_(\w+)', re.IGNORECASE)
 RE_SEQ_MYSQL = re.compile(
     r'create\s+table\s+seq_(\w+)\s*\(',
@@ -216,7 +212,7 @@ REGRAS = [
     },
     {
         "id": "DB12",
-        "nome": "Comentarios/Docblock",
+        "nome": "Docblock @table/@column no DTO",
         "severidade": "aviso",
         "base": "Manual SEI MD §Regras Gerais",
     },
@@ -1154,7 +1150,7 @@ def validar_entity(entity: Entity) -> tuple[list, list]:
             issue.update(entity.obter_evidencia("constraint", ak))
             avisos.append(issue)
 
-    # DB12: comentarios/docblock
+    # DB12: docblock @table/@column no DTO
     if not entity.tem_docblock and not entity.arquivos[0].endswith('.sql'):
         avisos.append({
             "codigo": "W004", "regra": "DB12",

@@ -60,6 +60,7 @@ Esta referencia cobre apenas `fontes/sei/src/main/php/sei/scripts/*`.
 - prefira RN/DTO/BD do core e do modulo para seed inicial
 - use `InfraParametroBD` ou RN correspondente para atualizar versao e parametros
 - evite `INSERT` ou `UPDATE` bruto quando a camada de negocio ja existir
+- parametro funcional, configurado pelo orgao: criar com o valor padrao so quando ele nao existe, com `isSetValor` e `setValor` da `InfraParametro` e as constantes da RN; detalhe em `.agents/references/padrao-classes-sistema-sei.md`, secao "InfraParametro"
 - em `instalarv100()`, o padrao principal aceita insercao inicial explicita em `infra_parametro`, conforme o modulo IA
 - em upgrades posteriores, so use helper local de atualizacao de versao se ele existir e estiver alinhado ao script de referencia
 

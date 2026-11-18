@@ -58,6 +58,12 @@ do `switch` cobre todas as acoes; quando ela nao existe, o auditor verifica cada
 P7 permanece contextual. Em P9, um sink sem fluxo dinamico confirmado gera
 `WARN`; fonte dinamica ligada ao sink gera `BLOCK`.
 
+## Verificação visual complementar
+
+Quando a página tiver apresentação visual criada ou alterada, aplique `.agents/references/padrao-acessibilidade-cores-sei.md`. O `audit.py` não mede contraste nem verifica esquemas no navegador; seu `PASS` não cobre essa verificação.
+
+Quando a página tiver filtro, formulário, barra de comandos ou grid criado ou alterado, aplique também `.agents/references/padrao-interacao-telas-sei.md` e registre o resultado da seção "Verificação" dessa referência. O `audit.py` não verifica foco inicial, botão padrão do Enter, barras de comandos, teclas de atalho nem ordenação de grid.
+
 ## Referencias Autoritativas
 
 - `references/padroes-seguranca.md` (cobre P1-P10; curado dos cap. 3, 4 e 9 do manual)
@@ -148,4 +154,4 @@ P8 e o padrao aplicado quando a flag nao vem.
 
 **Classes CSS.** A montagem da interface usa as classes CSS do proprio SEI, com prefixo `infra`. Nao criar classe equivalente no CSS do modulo quando a do core existir; ver o `AGENTS.md` sobre nao criar `css/` novo quando ja houver.
 
-**`InfraPagina`.** A classe monta os elementos padronizados de interface. Preferir os metodos dela a HTML escrito a mao, porque garantem o comportamento e a acessibilidade esperados do sistema.
+**`InfraPagina`.** A classe monta elementos padronizados de interface. Prefira seus metodos a HTML escrito a mao e verifique a apresentação renderizada, inclusive o contraste, sem presumir que o componente do core esteja acessível em todo esquema.

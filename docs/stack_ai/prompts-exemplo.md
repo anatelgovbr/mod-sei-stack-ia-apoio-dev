@@ -28,7 +28,7 @@
 	- [Projeto sem Docker](#projeto-sem-docker)
 	- [Analisar o repositório e planejar os testes unitários](#analisar-o-repositório-e-planejar-os-testes-unitários)
 - [manual-creator-scan-codebase](#manual-creator-scan-codebase)
-	- [Preparar o adaptador do manual](#preparar-o-adaptador-do-manual)
+	- [Preparar o adaptador do sistema/módulo](#preparar-o-adaptador-do-sistemamódulo)
 	- [Criar um manual de uso](#criar-um-manual-de-uso)
 	- [Atualizar um manual de uso](#atualizar-um-manual-de-uso)
 	- [Verificar um manual de uso sem escrita](#verificar-um-manual-de-uso-sem-escrita)
@@ -94,9 +94,9 @@ Consulte esta seção antes de usar qualquer prompt deste arquivo que peça Play
 
 Qualquer prompt com automação de navegador exige o ambiente de desenvolvimento do SEI rodando localmente (`README.md`, seção "Ambiente de Desenvolvimento"). Se o alvo for um módulo específico, confirme que ele está ativo nesse ambiente antes de usar o prompt: veja o array `Modulos` em `fontes/sei/src/main/php/sei/config/ConfiguracaoSEI.php`. Se o módulo não estiver ativo, peça ao agente que o ative (edição local, sem comitar) antes de continuar; não deixe o agente editar esse arquivo sem a sua confirmação.
 
-**Playwright:** não vem configurado neste repositório. Você precisa trazer a sua própria automação de navegador, por exemplo a imagem Docker `mcr.microsoft.com/playwright` na tag que você for usar; os prompts deste arquivo usam a tag `v1.60.0-noble` como ilustração. Confirme que a ferramenta de IA da sua sessão consegue executá-la. Qualquer ajuste de configuração feito só para habilitá-la é local e não deve ser comitado.
+**Playwright:** o pré-requisito é ter o Playwright configurado, por exemplo com a imagem Docker `mcr.microsoft.com/playwright` na tag que você for usar; os prompts deste arquivo usam a tag `v1.60.0-noble` como ilustração. Confirme que a ferramenta de IA da sua sessão consegue executá-la. Qualquer ajuste de configuração feito só para habilitá-la é local e não deve ser comitado.
 
-**Selenium:** ao contrário do Playwright, já vem configurado via Docker em `fontes/sei/ops_sei-docker/tests/`, com o container `selenium/standalone-chrome` e um runner pytest. Para rodar a suíte de exemplo (login, criação de processo, logout), use `make test_selenium_basico1` dentro de `fontes/sei/ops_sei-docker/tests/`. Essa suíte serve de referência para você adaptá-la a outros cenários. Essa configuração funciona só em Linux, com o ambiente em localhost.
+**Selenium:** já vem configurado via Docker em `ops/docker-sei-localhost/tests/`, com o container `selenium/standalone-chrome` e um runner pytest. Para rodar a suíte de exemplo (login, criação de processo, logout), use `make test_selenium_basico1` dentro de `ops/docker-sei-localhost/tests/`. Essa suíte serve de referência para você adaptá-la a outros cenários. Essa configuração funciona só em Linux, com o ambiente em localhost.
 
 ---
 
@@ -335,11 +335,11 @@ Critério de aceite:
 Acesso ao ambiente de teste:
 - endereço: <URL do ambiente de teste, ex.: http://localhost:8000/sei>
 - autenticação: use as credenciais de teste já documentadas no `README.md` (usuário `teste`); se precisar de outro perfil, pare e me peça para configurar a credencial dele em um arquivo local não versionado, sem recebê-la pela conversa
-- driver e navegador: container `selenium/standalone-chrome` já configurado em `fontes/sei/ops_sei-docker/tests/`, com os comandos no `Makefile` dessa mesma pasta
+- driver e navegador: container `selenium/standalone-chrome` já configurado em `ops/docker-sei-localhost/tests/`, com os comandos no `Makefile` dessa mesma pasta
 
 Passos:
-1. Copie `fontes/sei/ops_sei-docker/tests/Selenium/PythonExported/test_suiteBasics.py` para um script novo, com nome diferente de `test_suiteBasics-executar.py`, e substitua os marcadores `<<PROTOCOLO>>`, `<<HOST>>` e `<<SENHA>>` pelos valores do ambiente de teste. Adapte-o para reproduzir o bug na seguinte tela ou fluxo: <tela ou fluxo onde o bug ocorre>.
-2. Suba o container com o comando `CMDSELENIUMCHROMELOCAL` do `fontes/sei/ops_sei-docker/tests/Makefile` e rode o script novo com o comando `CMDSELENIUMTEST` do mesmo Makefile, trocando o nome do arquivo no `pytest`. Capture um print do estado com o bug, antes da correção, e salve em <pasta de destino>.
+1. Copie `ops/docker-sei-localhost/tests/Selenium/PythonExported/test_suiteBasics.py` para um script novo, com nome diferente de `test_suiteBasics-executar.py`, e substitua os marcadores `<<PROTOCOLO>>`, `<<HOST>>` e `<<SENHA>>` pelos valores do ambiente de teste. Adapte-o para reproduzir o bug na seguinte tela ou fluxo: <tela ou fluxo onde o bug ocorre>.
+2. Suba o container com o comando `CMDSELENIUMCHROMELOCAL` do `ops/docker-sei-localhost/tests/Makefile` e rode o script novo com o comando `CMDSELENIUMTEST` do mesmo Makefile, trocando o nome do arquivo no `pytest`. Capture um print do estado com o bug, antes da correção, e salve em <pasta de destino>.
 3. Apresente a causa, se confirmada, com evidências (arquivo e linha) e o plano de correção. Se a investigação for inconclusiva, informe o que falta verificar. Aguarde meu OK antes de corrigir.
 4. Corrija a causa raiz no local informado acima.
 5. Repita a navegação, capture um novo print de cada critério de aceite confirmado e salve os arquivos na mesma pasta.
@@ -375,11 +375,11 @@ Critério de aceite:
 Acesso ao ambiente de teste:
 - endereço: http://localhost:8000/sei
 - autenticação: use as credenciais de teste já documentadas no `README.md` (usuário `teste`); se precisar de outro perfil, pare e me peça para configurar a credencial dele em um arquivo local não versionado, sem recebê-la pela conversa
-- driver e navegador: container `selenium/standalone-chrome` já configurado em `fontes/sei/ops_sei-docker/tests/`, com os comandos no `Makefile` dessa mesma pasta
+- driver e navegador: container `selenium/standalone-chrome` já configurado em `ops/docker-sei-localhost/tests/`, com os comandos no `Makefile` dessa mesma pasta
 
 Passos:
-1. Copie `fontes/sei/ops_sei-docker/tests/Selenium/PythonExported/test_suiteBasics.py` para um script novo, com nome diferente de `test_suiteBasics-executar.py`, e substitua os marcadores `<<PROTOCOLO>>`, `<<HOST>>` e `<<SENHA>>` pelos valores do ambiente de teste. Adapte-o para reproduzir o bug na seguinte tela ou fluxo: Indisponibilidades do SEI, no menu do módulo Peticionamento.
-2. Suba o container com o comando `CMDSELENIUMCHROMELOCAL` do `fontes/sei/ops_sei-docker/tests/Makefile` e rode o script novo com o comando `CMDSELENIUMTEST` do mesmo Makefile, trocando o nome do arquivo no `pytest`. Capture um print do estado com o bug, antes da correção, e salve em specs/bug-filtro-indisponibilidade/prints/.
+1. Copie `ops/docker-sei-localhost/tests/Selenium/PythonExported/test_suiteBasics.py` para um script novo, com nome diferente de `test_suiteBasics-executar.py`, e substitua os marcadores `<<PROTOCOLO>>`, `<<HOST>>` e `<<SENHA>>` pelos valores do ambiente de teste. Adapte-o para reproduzir o bug na seguinte tela ou fluxo: Indisponibilidades do SEI, no menu do módulo Peticionamento.
+2. Suba o container com o comando `CMDSELENIUMCHROMELOCAL` do `ops/docker-sei-localhost/tests/Makefile` e rode o script novo com o comando `CMDSELENIUMTEST` do mesmo Makefile, trocando o nome do arquivo no `pytest`. Capture um print do estado com o bug, antes da correção, e salve em specs/bug-filtro-indisponibilidade/prints/.
 3. Apresente a causa, se confirmada, com evidências (arquivo e linha) e o plano de correção. Se a investigação for inconclusiva, informe o que falta verificar. Aguarde meu OK antes de corrigir.
 4. Corrija a causa raiz no local informado acima.
 5. Repita a navegação, capture um novo print de cada critério de aceite confirmado e salve os arquivos na mesma pasta.
@@ -1224,7 +1224,7 @@ Gere os prints de tela do módulo abaixo para servirem de insumo complementar ao
 
 Módulo: relacionamento-institucional.
 
-O ambiente de teste já está disponível em http://localhost:8000/sei, com o Docker iniciado conforme o `README.md`. Para autenticar, leia a credencial no arquivo local não versionado fontes/sei/ops_sei-docker/.env; se não houver, pare e me peça para configurá-la nesse local, sem recebê-la pela conversa. Nunca use credencial de produção.
+O ambiente de teste já está disponível em http://localhost:8000/sei, com o Docker iniciado conforme o `README.md`. Para autenticar, leia a credencial no arquivo local não versionado ops/docker-sei-localhost/.env; se não houver, pare e me peça para configurá-la nesse local, sem recebê-la pela conversa. Nunca use credencial de produção.
 
 Use a imagem Docker `mcr.microsoft.com/playwright:v1.60.0-noble` (baixe se ainda não tiver localmente) para rodar um script de automação que:
 

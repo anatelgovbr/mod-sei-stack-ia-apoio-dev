@@ -54,7 +54,7 @@ Caminhos relativos à raiz do repositório SEI da Anatel. `<php>` abrevia `fonte
 
 | Persona ou público | Objetivo e tarefas | Conhecimento relevante | Perfil e restrições | Fonte e confirmação |
 |---|---|---|---|---|
-| Desenvolvedor de módulos SEI | Criar, ativar e manter módulos: classe de integração, eventos, controladores, classes da API, operações da `SeiRN`, InfraPHP e scripts de versão | PHP, InfraPHP, padrões do projeto e banco de dados com suporte a mais de um SGBD | Trabalha no repositório e no ambiente Docker local (`fontes/sei/ops_sei-docker`). A ativação exige editar a chave `Modulos` do `ConfiguracaoSEI.php`, e os scripts de atualização exigem acesso ao servidor da instalação | Resposta do responsável em 2026-10-08 ("desenvolvimento") |
+| Desenvolvedor de módulos SEI | Criar, ativar e manter módulos: classe de integração, eventos, controladores, classes da API, operações da `SeiRN`, InfraPHP e scripts de versão | PHP, InfraPHP, padrões do projeto e banco de dados com suporte a mais de um SGBD | Trabalha no repositório e no ambiente Docker local (`ops/docker-sei-localhost`). A ativação exige editar a chave `Modulos` do `ConfiguracaoSEI.php`, e os scripts de atualização exigem acesso ao servidor da instalação | Resposta do responsável em 2026-10-08 ("desenvolvimento") |
 
 ## Publicação e recursos
 

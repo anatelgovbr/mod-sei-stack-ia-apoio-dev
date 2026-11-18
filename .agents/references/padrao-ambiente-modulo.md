@@ -12,6 +12,8 @@ Limites de ambiente que o modulo precisa respeitar.
 
 O modulo mantem **coerencia com o `SEI_TAM_MB_DOC_EXTERNO`** configurado no SEI como um todo. Nao adotar limite proprio maior que o do sistema.
 
+Cada extensao pode ter limite proprio, em Mb, no menu **Administracao > Extensoes de Arquivos Permitidas** (`ArquivoExtensaoDTO`, atributo `TamanhoMaximo`). O modulo aplica a mesma regra do core em `AnexoRN::validarNumTamanhoRN0867`: vale o limite da extensao e, sem ele, o `SEI_TAM_MB_DOC_EXTERNO`.
+
 Sintoma tipico da incoerencia: a tela do modulo aceita o arquivo, o servidor rejeita, e o usuario recebe erro sem mensagem util. A validacao do modulo precisa acontecer antes do envio, com o mesmo limite do sistema.
 
 ## Como consultar o parametro

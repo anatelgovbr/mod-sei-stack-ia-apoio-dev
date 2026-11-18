@@ -13,7 +13,7 @@ Combina o manual SEI-Módulos v5.0 com orientações adicionais do projeto.
 - **Limite para índices, FKs e sequences**: **30 caracteres** (cap Oracle).
 - Usar apenas letras minúsculas, números e sublinhado.
 - Usar singular; suprimir preposições; separar termos por sublinhado.
-- Toda tabela e toda coluna devem ter `comment` com descrição negocial.
+- Toda tabela e toda coluna têm descrição negocial no docblock do DTO: `@table` para a tabela e `@column` para cada coluna.
   - Colunas de status multi-valorado: documentar as opções (ex.: `P=Processo, G=Doc. Gerado`).
 
 ---
@@ -168,7 +168,6 @@ $objInfraMetaBD = new InfraMetaBD(BancoSEI::getInstance());
 - Não gere sequence para tabela N:N com PK composta.
 - Não duplique índice de FK quando `adicionarChaveEstrangeira()` já o cria por padrão.
 - Não gere chamadas com assinatura divergente do core atual, como `tipoNumero(2)` ou `tipoNumeroGrande(20)`, sem confirmação explícita.
-- Não trate `comment` de tabela/coluna como automatizado por padrão antes de confirmar a estratégia multibanco do projeto.
 - Para efeitos colaterais e transação, seguir `AGENTS.md` na seção `Padrão Transacional Obrigatório`.
 
 ### Responsabilidade por lado
@@ -199,7 +198,6 @@ $objInfraMetaBD = new InfraMetaBD(BancoSEI::getInstance());
 
 ### Pontos a confirmar antes de automatizar mais
 
-- Estratégia oficial do projeto para `comment` de tabela/coluna em ambiente multibanco.
 - Existência de helper superior ao SQL direto para vinculação de auditoria no SIP.
 
 > Para padrões completos de código dos métodos `instalarv*` (DDL, FKs, boilerplate SIP),

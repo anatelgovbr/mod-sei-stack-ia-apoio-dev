@@ -48,6 +48,7 @@ Zero artefatos analisados nao equivale a `PASS`.
 | D2 | Contrato | Evento/hook com efeito colateral ambiguo | Documentar efeito esperado e condicoes de disparo | `sei-mod-api-eventos` |
 | D3 | Contrato | Operacao API usando classe interna sem justificativa | Substituir por `Entrada*API`/`Saida*API`/`SeiRN` ou documentar excecao | `sei-mod-api-operacoes` |
 | D4 | Contrato | Alteracao de indexacao/pesquisa sem declarar momento e reprocessamento | Documentar estrategia de indexacao antes de implementar | `sei-guardrails-modulo` |
+| D6 | Dependências | Dependência módulo → core nova ou ampliada sem política e eficácia demonstradas na matriz de proteção | Aplicar `sei-mod-api-eventos/references/protecao-dependencias-core.md`, comprovar caminho real e resolver a lacuna antes de declarar proteção concluída | `sei-guardrails-modulo`, `sei-mod-api-eventos` |
 | D5 | Contrato | Criterio de aceite ausente antes de uma implementacao | Definir ao menos um cenario de sucesso testavel antes de implementar | Nao aplicavel |
 
 ## Escopo de G6

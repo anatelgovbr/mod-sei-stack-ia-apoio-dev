@@ -457,6 +457,31 @@ Motivo: a interface nao e o unico caminho de entrada. A mesma RN e alcancada por
 
 ---
 
+## T12 - Refatoração preserva o limite da transação
+
+**Severidade:** Erro
+**Base:** método `__call` de `fontes/sei/src/main/php/infra/infra_php/InfraRN.php`
+
+Vale para refatoração que extrai, move, divide ou renomeia método de RN. Conexão e transação abrem, confirmam e cancelam nos mesmos pontos de antes. Mudar esse limite exige pedido explícito do desenvolvedor.
+
+O `__call` só atua na chamada de nome público que não existe como método da classe. Método `private` roda na conexão e na transação de quem o chama.
+
+| Mudança | Como fazer | Efeito na `InfraRN` |
+|---|---|---|
+| Extrair trecho de método com sufixo | Método `private` sem sufixo, chamado com `$this->metodo()` | Roda na mesma conexão e na mesma transação e aceita vários parâmetros |
+| Usar classe BD em método extraído | Chamar o método extraído só de dentro de método com sufixo | Chamado de fora, roda sem conexão e sem transação |
+| Mover escrita de lugar | Manter a escrita dentro de `*Controlado` | `*Conectado` e método sem sufixo não abrem transação |
+| Dividir um `*Controlado` em etapas | Manter um `*Controlado` que chama as etapas | Etapas `*Controlado` chamadas por wrapper confirmam cada uma a sua transação, e falha na segunda deixa a primeira gravada |
+| Mover `try/catch` em volta de chamada de RN | Manter o `try/catch` no mesmo ponto | Só o `__call` que abriu a transação a cancela; exceção capturada dentro de `*Controlado` deixa o que foi gravado seguir para o commit |
+| Criar wrapper de operação | Usar nome diferente do nome público da operação | Método público com o nome da operação impede o `__call`, e a operação roda sem conexão e sem transação |
+| Renomear método com sufixo | Procurar os consumidores pelo nome sem sufixo, em todas as classes | Nome antigo só falha em execução, com `Erro processando operação <nome>.` |
+| Adicionar método com sufixo | Usar um só sufixo por nome de operação | `xConectado` e `xControlado` juntos fazem toda chamada de `x()` falhar |
+| Criar RN usada pelo método | Usar `new`, em qualquer ponto do método | A RN não recebe dependência pelo construtor, e todo `new` usa o mesmo `BancoSEI`; a posição do `new` não muda a transação e não é achado de revisão |
+
+Aplicar também T6 (efeitos externos), T8 (contrato do método com sufixo) e T9 (laço) ao código refatorado.
+
+**Verificação:** a resposta lista cada método com sufixo criado, removido, renomeado ou dividido e cada `try/catch` movido, com o limite da transação antes e depois; sem nenhum deles, a resposta informa isso. Teste de caracterização da refatoração confere também a abertura, a confirmação e o cancelamento da transação.
+
 ---
 
 ## Matriz de severidade
@@ -474,6 +499,7 @@ Motivo: a interface nao e o unico caminho de entrada. A mesma RN e alcancada por
 | T9 | Uma transacao por elemento do laco | **Erro** |
 | T10 | Controle manual sem mecanismo auxiliar de estado | **Aviso** |
 | T11 | RN sem as validacoes ja feitas na interface | **Erro** |
+| T12 | Refatoração que muda o limite da transação | **Erro** |
 | A1 | Escrita com validarPermissao sem auditoria | **Erro** |
 | A2 | Escrita sem verificacao de permissao/auditoria | **Aviso** |
 | A3 | Recurso de leitura errado por operacao | **Erro** |

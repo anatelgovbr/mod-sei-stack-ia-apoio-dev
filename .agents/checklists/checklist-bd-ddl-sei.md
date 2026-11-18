@@ -45,7 +45,7 @@ Checklist operacional para revisar `*BD.php`, DDL e scripts de release SEI/SIP.
 - [ ] A classe de terceira camada herda de `InfraBD` e repassa ao construtor a instancia de banco recebida.
 - [ ] **Uma BD persiste ou atualiza dados em uma unica tabela.** Nao gravar em duas tabelas na mesma classe.
 - [ ] **Nao ha comunicacao direta entre BDs.** Se a operacao precisar de duas tabelas, quem orquestra e a RN.
-- [ ] Comportamento especifico implementado pelos pontos de extensao do `InfraBD`, e nao por SQL solto no meio do metodo.
+- [ ] SQL proprio na BD monta cada valor com `formatarGravacao<Tipo>`, pede cada campo com `formatarSelecao<Tipo>` e le o resultado com `formatarLeitura<Tipo>` (`Dta`, `Dth`, `Str`, `Bol`, `Num`, `Din`, `Dbl`, `Bin`), recebendo e devolvendo DTO. Valor concatenado sem `formatarGravacao*` e o vetor `V05`.
 - [ ] `getObjInfraIBanco()` usado para recuperar o objeto de banco passado ao construtor, em vez de instanciar um novo.
 
 A regra de uma tabela por BD e o que permite ao gate identificar acoplamento indevido entre entidades. Quebra-la costuma indicar que a modelagem precisa de uma entidade nova, e nao de uma BD maior.

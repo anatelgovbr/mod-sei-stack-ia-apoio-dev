@@ -13,7 +13,7 @@ import os
 import re
 import sys
 
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 SKILL_NAME = "sei-verificacao-rn"
 
 CRUD_WRITE = ["cadastrar", "alterar", "excluir", "desativar", "reativar", "bloquear", "incluir", "remover"]
@@ -23,6 +23,7 @@ CRUD_READ = ["consultar", "listar", "contar"]
 READ_RESOURCE_SUFFIX = {"consultar": "_consultar", "bloquear": "_consultar", "listar": "_listar", "contar": "_listar"}
 
 RE_CLASS_EXTENDS = re.compile(r"class\s+\w+\s+extends\s+InfraRN")
+RE_CLASS_PARENT = re.compile(r"\bclass\s+\w+\s+extends\s+\\?(\w+)")
 RE_INIT_METHOD = re.compile(r"protected\s+function\s+inicializarObjInfraIBanco\s*\(\s*\)(\s*:\s*[\w\\]+)?\s*\{[^}]*return\s+BancoSEI\s*::\s*getInstance\s*\(\s*\)", re.DOTALL)
 RE_METHOD_SUFFIX = re.compile(r"function\s+(\w+)(Controlado|Conectado)\s*\(")
 RE_METHOD_DEF = re.compile(r"function\s+(\w+)\s*\(")
@@ -115,7 +116,7 @@ def crud_operation(method_name, operations):
 
 
 def infer_module_prefix(content):
-    match = re.search(r"class\s+(Md\w+RN)\s+extends\s+InfraRN", content)
+    match = re.search(r"class\s+(Md\w+RN)\s+extends\b", content)
     if not match:
         return None
     stem = match.group(1)[2:-2]
@@ -155,8 +156,9 @@ def validar_t1(content):
 
 
 def validar_t2(content):
+    # Heranca indireta: o metodo vem da classe-mae, auditada no proprio arquivo.
     if not RE_CLASS_EXTENDS.search(content):
-        return build_issue("T200", "T2", "classe nao extende InfraRN", content)
+        return None
     if RE_INIT_METHOD.search(content):
         return None
     return build_issue("T002", "T2", "inicializarObjInfraIBanco() ausente ou sem BancoSEI::getInstance()", content)
@@ -364,6 +366,32 @@ def determinar_verdict(file_results):
     return "PASS"
 
 
+def find_parent_file(parent, path):
+    """Procura a classe-mae na pasta da classe e nas pastas rn/ acima dela, como o core em sei/web/rn."""
+    directory = os.path.dirname(os.path.abspath(path))
+    while True:
+        for candidate in (os.path.join(directory, f"{parent}.php"), os.path.join(directory, "rn", f"{parent}.php")):
+            if os.path.isfile(candidate):
+                return candidate
+        above = os.path.dirname(directory)
+        if above == directory:
+            return None
+        directory = above
+
+
+def inherits_infra_rn(code, path):
+    """Segue a heranca ate InfraRN. Classe-mae sem arquivo e ciclo nao contam: a auditoria bloqueia."""
+    visited = {os.path.abspath(path)}
+    while not RE_CLASS_EXTENDS.search(code):
+        parent = RE_CLASS_PARENT.search(code)
+        path = find_parent_file(parent.group(1), path) if parent else None
+        if path is None or path in visited:
+            return False
+        visited.add(path)
+        code = mask_php_comments(open(path, "r", encoding="utf-8", errors="replace").read())
+    return True
+
+
 def audit_file(path):
     try:
         content = open(path, "r", encoding="utf-8", errors="replace").read()
@@ -371,7 +399,7 @@ def audit_file(path):
         return {"file": os.path.basename(path), "erros": [{"codigo": "T000", "regra": "?", "mensagem": f"Erro ao ler arquivo: {error}"}], "avisos": [], "status": "BLOCK"}
 
     code = mask_php_comments(content)
-    if not RE_CLASS_EXTENDS.search(code):
+    if not inherits_infra_rn(code, path):
         return {"file": os.path.basename(path), "erros": [{"codigo": "T200", "regra": "?", "mensagem": "nao e uma classe RN (nao extende InfraRN)"}], "avisos": [], "status": "BLOCK"}
 
     errors = []

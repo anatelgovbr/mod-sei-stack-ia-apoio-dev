@@ -1,0 +1,34 @@
+# Configuracao do PHPStan do pipeline sei-php-ds-pl-qa.
+# O Jenkinsfile gera este arquivo a cada execucao, com echo, em $WORKSPACE/temp-phpstan.neon.
+# Os padroes abaixo sao copiados byte a byte do arquivo que esse echo produz: o texto do
+# Jenkinsfile passa pelo Groovy e pelo shell, e cada 4 barras invertidas viram 1.
+# Diferencas, todas por necessidade:
+#   1. Recuo: no Jenkinsfile o bloco fica dentro de codigo indentado, e ignoreErrors e
+#      scanDirectories saem dentro de parameters. Aqui o recuo esta explicito.
+#   2. scanDirectories: no pipeline sao relativos a raiz do repositorio. No container, /src, a copia do codigo no disco Linux dele (ver qa/analisar.sh).
+#   3. level: o pipeline passa na linha de comando. NIVEL 8 ESTIMADO pelas mensagens no Sonar.
+#   4. tmpDir acrescentado, para o cache sobreviver entre execucoes.
+#   5. Padrao "Call to an undefined method" corrigido so aqui. No pipeline e
+#      '#Call to an undefined method ^(?!Md).*#', que nunca casa (o ^ no meio exige inicio de texto).
+#   6. excludePaths acrescentado: bibliotecas em vendor/ com sintaxe antiga (ex.: correios/lib/qrcode)
+#      fazem o PHPStan relatar so os erros de sintaxe e esconder o resto do modulo.
+parameters:
+    level: 8
+    tmpDir: /qa/cache/phpstan
+    excludePaths:
+        analyse:
+            - '*/vendor/*'
+    ignoreErrors:
+        - '#.*unknown class.*#'
+        - '#Class [a-zA-Z0-9\_]+ not found#'
+        - '#Call to method [a-zA-Z0-9\_]+\(\) on an unknown class [a-zA-Z0-9\_]+#'
+        - '#Instantiated class [a-zA-Z0-9\_]+ not found.#'
+        - '#Throwing object of an unknown class [a-zA-Z0-9\_]+.#'
+        - '#Access to static property \$\[a-zA-Z0-9\_]+ on an unknown class [a-zA-Z0-9\_]+.#'
+        - '#Call to static method [a-zA-Z0-9\_]+\(\) on an unknown class [a-zA-Z0-9\_]+#'
+        - '#^Call to an undefined method (?!Md)#'
+        - '#Class .+ extends unknown class .+[.]#'
+    scanDirectories:
+        - /src/sei
+        - /src/sip
+        - /src/infra

@@ -2,6 +2,12 @@
 
 ## [3.7.0]
 
+### Observações
+
+A tabela abaixo permanece no banco, mas é legada e não é usada pelo módulo. A instalação base cria a estrutura vazia com nome abreviado desde a versão 1.1.7, enquanto a migração do mapeamento original de recebimento procura somente o nome antigo `md_pen_rel_tipo_documento_mapeamento_recebido` e transfere o conteúdo para `md_pen_rel_doc_map_recebido`. Nenhuma rotina grava, lê ou remove a tabela abreviada. A remoção física fica pendente para versão futura.
+
+- **Tabela `md_pen_rel_tipo_doc_map_rec`**
+
 ### Adicionado
 
 - **Tabela `md_pen_uni_restr`**

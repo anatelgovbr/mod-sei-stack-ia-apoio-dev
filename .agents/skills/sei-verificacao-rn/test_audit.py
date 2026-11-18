@@ -103,6 +103,66 @@ class MdTsItemRN extends InfraRN
         self.assertEqual(2, process.returncode)
         self.assertEqual("BLOCK", payload["verdict"])
 
+    def test_rn_follows_inheritance_to_infra_rn_in_same_folder(self):
+        self.write("MdTsBaseRN.php", self.rn_base().replace("MdTsItemRN", "MdTsBaseRN"))
+        child = self.write("MdTsFilhoRN.php", """<?php
+class MdTsFilhoRN extends MdTsBaseRN
+{
+    protected function listarItens() {
+        return [];
+    }
+}
+""")
+
+        process, payload = self.run_auditor("rn", child)
+
+        self.assertEqual(payload["verdict"], "PASS", payload)
+        self.assertEqual(process.returncode, 0)
+
+    def test_rn_applies_rules_to_class_with_indirect_inheritance(self):
+        self.write("MdTsBaseRN.php", self.rn_base().replace("MdTsItemRN", "MdTsBaseRN"))
+        child = self.write("MdTsFilhoRN.php", """<?php
+class MdTsFilhoRN extends MdTsBaseRN
+{
+    protected function cadastrarControlado($objDTO) {
+        return $objDTO;
+    }
+}
+""")
+
+        process, payload = self.run_auditor("rn", child)
+
+        self.assertEqual(self.codes(payload), {"A001"})
+        self.assertEqual(process.returncode, 2)
+
+    def test_rn_finds_parent_in_rn_folder_above_the_module(self):
+        self.write("sei/web/rn/AtividadeRN.php", self.rn_base().replace("MdTsItemRN", "AtividadeRN"))
+        child = self.write("sei/web/modulos/teste/rn/MdTsAtividadeRN.php", """<?php
+class MdTsAtividadeRN extends AtividadeRN
+{
+}
+""")
+
+        process, payload = self.run_auditor("rn", child)
+
+        self.assertEqual(payload["verdict"], "PASS", payload)
+        self.assertEqual(process.returncode, 0)
+
+    def test_rn_blocks_inheritance_that_does_not_reach_infra_rn(self):
+        cases = {
+            "classe do PHP": ("MdTsSoapRN.php", "<?php\nclass MdTsSoapRN extends Exception {}\n"),
+            "classe-mae sem arquivo": ("MdTsSemMaeRN.php", "<?php\nclass MdTsSemMaeRN extends MdTsAusenteRN {}\n"),
+            "ciclo": ("MdTsCicloARN.php", "<?php\nclass MdTsCicloARN extends MdTsCicloBRN {}\n"),
+        }
+        self.write("MdTsCicloBRN.php", "<?php\nclass MdTsCicloBRN extends MdTsCicloARN {}\n")
+
+        for case, (name, content) in cases.items():
+            with self.subTest(case):
+                process, payload = self.run_auditor("rn", self.write(name, content))
+
+                self.assertEqual(self.codes(payload), {"T200"})
+                self.assertEqual(process.returncode, 2)
+
     def test_rn_accepts_external_effect_after_controlled_return(self):
         methods = """
     public function salvarComNotificacao($objDTO)

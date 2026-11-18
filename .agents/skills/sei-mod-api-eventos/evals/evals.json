@@ -1,0 +1,50 @@
+{
+  "skill_name": "sei-mod-api-eventos",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Vou associar documento modelo e processo do SEI a registros do módulo por FK. Planeje a implementação, incluindo a exclusão no core. Para o modelo o vínculo deve permanecer; para o processo a regra autoriza remover o registro dependente. Não altere PHP.",
+      "expected_output": "Plano contextual com evidências e limites, sem alterar código.",
+      "files": [],
+      "expectations": [
+        "Inclui excluirDocumento e excluirProcesso e distingue objeto único de lote.",
+        "Não impõe veto à limpeza autorizada do vínculo do processo.",
+        "Exige prova do callsite e teste pelo core com FK física."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "O módulo precisa referenciar hipóteses legais e assinantes de unidade por FK restritiva. Basta implementar excluirHipoteseLegal e um evento de assinatura? Dê a avaliação antes de implementar.",
+      "expected_output": "Plano contextual com evidências e limites, sem alterar código.",
+      "files": [],
+      "expectations": [
+        "Reconhece que excluirHipoteseLegal ocorre após DELETE e não previne FK que falhe antes.",
+        "Reconhece ausência de evento específico de manutenção de assinante, sem confundir assinatura documental.",
+        "Não declara cobertura nem propõe patch automático no core."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Sem alterar DTO ou DDL, vou mudar RN para exigir unidade ativa apenas nas configurações em operação. Histórico deve aceitar unidade inativa. Defina verificações e formato de crítica para operação em lote.",
+      "expected_output": "Plano contextual com evidências e limites, sem alterar código.",
+      "files": [],
+      "expectations": [
+        "Aciona análise mesmo sem novo DDL e separa histórico de dependência operacional.",
+        "Inclui fluxo inverso e lote com livre antes de usado.",
+        "Lista simples de nomes, módulo/funcionalidade, sem exigir ID ou Utilização por item.",
+        "Considera administrador core sem recurso do módulo, sigilo e concorrência."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Uma configuração usa unidade do core por parâmetro, sem FK. O evento de desativação vem após UPDATE, mas antes do commit. Outra relação tem ON DELETE SET NULL ou CASCADE e histórico que precisa ser preservado. Planeje a proteção, sem implementar nem presumir que cascata autorize perda de histórico.",
+      "expected_output": "Distingue referência funcional, veto transacional eficaz e retenção; exige evidências.",
+      "files": [],
+      "expectations": [
+        "Inclui dependência funcional sem FK na matriz.",
+        "Distingue pós-escrita pré-commit de pós-commit e exige prova de rollback.",
+        "Cascata ou nulificação não autorizam perda de histórico sem regra documentada."
+      ]
+    }
+  ]
+}

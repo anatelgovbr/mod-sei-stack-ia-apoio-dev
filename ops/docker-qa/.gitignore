@@ -1,0 +1,4 @@
+# Instalacao e saida sao de cada maquina, nao vao para o repositorio.
+cache/
+vendor/
+relatorios/

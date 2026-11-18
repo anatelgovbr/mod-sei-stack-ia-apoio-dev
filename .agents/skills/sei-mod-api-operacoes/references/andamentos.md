@@ -14,5 +14,6 @@
 ## Cadastro de tarefa do módulo (quando necessário)
 - Inserir registro em `tarefa` com `id_tarefa >= 1000`.
 - Atualizar a sequência `seq_tarefa` conforme SGBD (MySQL/SQLServer/Oracle/PostgreSQL) se for “manual”.
+- Regras completas, inclusive a escolha dos sinalizadores `sin_*`: `.agents/skills/sei-verificacao-tarefa/references/padroes-tarefa.md`. O cadastro passa pelo gate `sei-verificacao-tarefa`.
 
 > Para detalhes completos e exemplos, consulte o manual SEI‑Módulos v5.0 (seção Andamentos).

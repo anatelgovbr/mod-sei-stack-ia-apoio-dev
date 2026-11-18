@@ -38,3 +38,14 @@ O recurso SIP de cada metodo esta em `.agents/references/padrao-auditoria-sip-se
 ## Geracao dos recursos no SIP
 
 No SIP, pelo menu **Recursos / Gerar Padrao PHP**, e possivel gerar automaticamente os recursos correspondentes a esses metodos, em vez de cadastrar um a um.
+
+## Pesquisa textual em autocompletar
+
+Em autocompletar, normalmente montado em `*INT.php`, a pesquisa evita `OPER_LIKE` direto sobre as colunas textuais principais, como nome, e-mail, CPF e CNPJ. Quando a entidade tem campo de indexacao textual (`Idx<Entidade>`), a pesquisa usa esse campo, com o valor digitado preparado pela mesma funcao que monta o indice:
+
+```php
+$strPalavrasPesquisa = InfraString::prepararIndexacao($strPalavrasPesquisa, true);
+$objContatoDTO->setStrIdxContato('%' . $strPalavrasPesquisa . '%', InfraDTO::$OPER_LIKE);
+```
+
+Modulo que mantem o proprio indice preenche `idx_<entidade>` na RN, a cada cadastro e alteracao, com `InfraString::prepararIndexacao`, como `montarIndexacaoControlado` em `fontes/sei/src/main/php/sei/web/modulos/trf4/julgamento/rn/AutuacaoRN.php`.

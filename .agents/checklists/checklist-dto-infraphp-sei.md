@@ -24,7 +24,7 @@ Checklist operacional para revisar `*DTO.php` em modulos SEI/SIP.
 | 4 | `adicionarAtributoTabelaRelacionada(...)` vem acompanhado da FK correspondente quando a relacao depende de join declarado pelo DTO | `B5` | MEDIA |
 | 5 | `InfraDTO::$TIPO_FK_OBRIGATORIA` e `InfraDTO::$TIPO_FK_OPCIONAL` refletem a nulabilidade real | `padrao-modelagem-dados.md` secao `DTO, PK e FK` | MEDIA |
 | 6 | DTO com exclusao logica declara `sin_ativo` de forma coerente | `DB06` | BLOQUEANTE |
-| 7 | Docblock com `@table` e `@column` pode ser usado como evidencia auxiliar, mas nao substitui a descricao negocial em `comment` no modelo de dados | manual cap. 5 `Regras Gerais`, `DB12` | AVISO |
+| 7 | Docblock com `@table` e `@column` traz a descricao negocial da tabela e de cada coluna, com as opcoes de cada coluna de status | manual cap. 5 `Regras Gerais`, `DB12` | AVISO |
 | 8 | DTO nao mascara problema estrutural de release; se o nome da tabela estoura limite ou exige novo objeto de banco, o script correspondente precisa refletir isso | `DB01`, `DB03`, `DB06` | BLOQUEANTE |
 
 ## Observacoes praticas

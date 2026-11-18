@@ -27,6 +27,8 @@ Repositório de customizações e módulos do SEI com release versionada e padr�
 - `docs/**`
 - `specs/**`
 - `.agents/**`
+- `ops/**`
+- `tests/**`
 
 **Proibido sem autorização:**
 - `fontes/sei/src/main/php/sei/web/**` fora de `modulos/`
@@ -44,10 +46,10 @@ O rigor cresce com a complexidade e o risco; guardrails, gates e regras do proje
 **Não presumir. Não esconder dúvida. Expor tradeoffs.**
 
 Antes de qualquer alteração:
-- Declarar as premissas adotadas. Em dúvida, perguntar.
+- Declarar as premissas adotadas. Em dúvida que mude o resultado, perguntar.
 - Se existem várias interpretações, apresentar todas e nomear o ponto que falta; escolher em silêncio não é opção.
 - Se existe caminho mais simples dentro dos padrões documentados, apresentar o caminho e a diferença e aguardar a escolha do desenvolvedor.
-- Se algo não está claro, parar, nomear o que confunde e perguntar.
+- Se algo não está claro, parar, nomear o que confunde e perguntar. Enquanto aguarda a resposta, seguir com o trabalho que não depende dela.
 - Em conflito entre documentos, seguir "Regras de Decisão".
 
 ### 2. Simplicidade primeiro
@@ -100,6 +102,8 @@ Antes da primeira edição, declarar plano com `Impacto Arquitetural` definido e
 Ao verificar:
 - Executar os gates obrigatórios e os critérios de sucesso verificáveis.
 - Repetir correção e verificação até todos passarem.
+- Erro, tempo esgotado, arquivo travado por outro processo, resultado vazio ou ferramenta com falha: diagnosticar e contornar com o acesso disponível (repetir, corrigir a chamada, usar outra ferramenta) antes de declarar impedimento. Bloqueio deliberado fica intocado e entra na resposta: área proibida sem autorização, guardrail, permissão negada pelo desenvolvedor ou pela ferramenta, sandbox, hook e arquivo sem permissão de escrita. O contorno usa o mesmo nível de acesso, sem `sudo` e sem contêiner para ganhar permissão.
+- Exceto o que depende do desenvolvedor, cada verificação deve ter prova de funcionamento!
 - Verificação que depende do desenvolvedor, como smoke manual, entra na resposta como pendente.
 - Informar impedimentos e pendências sem declarar a entrega concluída.
 
@@ -118,9 +122,10 @@ Teste de saída: cada item do checklist aparece na resposta final marcado, com o
    | Página PHP (`*_lista.php`, `*_cadastro.php`) | `sei-verificacao-pagina` |
    | Classe RN (`*RN.php`) | `sei-verificacao-rn` |
    | Classe BD (`*BD.php`) | `sei-verificacao-banco-dados` |
-   | Script de tarefa (`*_tarefa.php`) | `sei-verificacao-tarefa` |
+   | Cadastro de tarefa de andamento (`TarefaDTO` ou `INSERT INTO tarefa`) | `sei-verificacao-tarefa` |
    | Controlador em `*Integracao.php` (Ajax/WS) | `sei-verificacao-controladores` |
    | Demanda ambígua ou novo padrão | `sei-guardrails-modulo` |
+   | Interface visual criada ou alterada, inclusive CSS/JS e hooks | `sei-validacao-padrao` |
    | Qualquer entrega PHP | `sei-validacao-padrao` após implementação |
 
 4. Release sem `sei-gerador-crud`: rotear para `sei-gerador-scripts-release` e/ou `sip-gerador-scripts-release` conforme o lado afetado.
@@ -128,6 +133,8 @@ Teste de saída: cada item do checklist aparece na resposta final marcado, com o
 Teste de saída: a resposta nomeia a skill principal e os gates acionados.
 
 ## Guardrails Universais
+
+- **Dependências módulo → core**: ao criar ou alterar FK ou uso funcional de registro do core, inclusive protocolos de processos/documentos e mudança apenas em RN, acionar `sei-guardrails-modulo` para avaliar o ciclo de vida e `sei-mod-api-eventos` quando houver interceptação. Exigir matriz e evidência de eficácia conforme `.agents/skills/sei-mod-api-eventos/references/protecao-dependencias-core.md`.
 
 - Ambiguidade relevante → não assumir, não adivinhar; explicitar ou perguntar
 - **Permissão/link assinado (página)**: `validarLink` + `validarPermissao` em toda ação; `verificarPermissao` em UI condicional; `assinarLink` em links de ação
@@ -141,6 +148,9 @@ Teste de saída: a resposta nomeia a skill principal e os gates acionados.
 - **API**: preferir `Entrada*API` / `Saida*API` / `SeiRN`; evitar objetos internos
 - **Consulta em lote (N+1)**: relacionados de um resultado de `listar` são carregados antes do laço, em uma consulta só, com `setNumId...($arrIds, InfraDTO::$OPER_IN)` no DTO de pesquisa ou com os retornos já configurados no `listar` de origem (`ret...`). `consultar` ou `listar` por item dentro do laço só com justificativa explícita na resposta (volume pequeno e limitado, ou API sem filtro em lote). Vale também para hooks que recebem arrays de objetos da API
 - **Entrada HTTP**: proibido `$_REQUEST`; usar `PaginaSEI::POST/GET` com normalização de tipo (`int`, `int[]`, enum)
+- **Parâmetro de módulo**: o nome do parâmetro na `infra_parametro` usa o prefixo `MODULO_<NOME_DO_MODULO>_`. No parâmetro que o órgão configura, definir no plano e nos requisitos técnicos o comportamento para parâmetro ausente, valor vazio, cada valor aceito e valor não aceito; sem essa definição na demanda, perguntar ao desenvolvedor. Detalhe em `.agents/references/padrao-classes-sistema-sei.md`, seção "InfraParametro".
+- **Esquemas de cores e contraste**: em interface visual criada ou alterada, inclusive CSS/JS, tooltips, `iframe` e componentes por hook, aplicar `.agents/references/padrao-acessibilidade-cores-sei.md`. A verificação visual é separada do auditor estático de página.
+- **Foco, Enter, atalhos e ordenação**: em página com filtro, formulário, barra de comandos ou grid criada ou alterada, aplicar `.agents/references/padrao-interacao-telas-sei.md`: foco inicial, botão padrão do Enter, barra de comandos repetida no rodapé, teclas de atalho que funcionam no Chrome, no Edge e no Firefox e grid com coluna e direção padrão nas setas do core.
 - **Camadas de módulo**: `dto/`, `rn/`, `bd/`, `int/`, paginas, `css/`, `js/`, `svg/`, `imagens/`, `menu/`
 - **Integração**: SEI estende `SeiIntegracao`; `SipIntegracao` só quando houver suporte explícito no contexto SIP; não extrapolar regras de ativação do SEI para scripts SIP
 - **Assets**: se `css/` ou `js/` já existirem, editar; nunca criar novos
@@ -178,6 +188,7 @@ Os padrões abaixo são obrigatórios no SEI/InfraPHP. Não substituir por equiv
 - **Sanitização**: saída HTML por `PaginaSEI::tratarHTML`, atributos e URLs por `formatarXHTML` e `assinarLink`, SQL só por DTO e classe BD; nunca concatenar entrada do usuário em HTML, JS, SQL ou URL
 - **PHP moderno**: em código PHP novo e nas linhas que a demanda já altera, usar `[]` em vez de `array()`
 - **Tipagem/PHPDoc**: em código PHP novo ou alterado, preferir type hints seguros e PHPDoc breve nos métodos alterados, preservando compatibilidade com assinaturas herdadas
+- **SOLID com bom senso**: em código PHP novo ou alterado, aplicar os princípios SOLID onde couberem, na medida do problema. Exemplo: dependência por parâmetro tipado, com a instância criada por quem chama. Detalhe e limites da InfraPHP em `.agents/references/padrao-codificacao-php.md`, seção "SOLID".
 - **Early return**: em código PHP novo e nas linhas que a demanda já altera, preferir cláusula de guarda e retorno antecipado a `if`/`else`; detalhe em `.agents/references/padrao-codificacao-php.md`, seção "Early Return"
 - **Ferramentas opcionais**: quando disponíveis no projeto ou no módulo, rodar `composer test`, `phpcs` ou `phpstan`
 - **Análise estática**: PHPStan quando houver configuração no projeto ou no módulo. A configuração de `trf4/julgamento/.ci/phpstan.neon` depende de pacote privado e, quando não puder rodar, entra como verificação pendente. Procedimento em `sei-validacao-padrao`.
@@ -192,7 +203,7 @@ Vale para teste novo ou alterado em `tests/unit`.
 - **AAA**: escrever cada teste no padrão AAA (Arrange, Act, Assert): preparar o cenário (Arrange), executar uma única ação sobre a unidade testada (Act) e verificar o resultado esperado (Assert), com os três blocos separados por linha em branco e visíveis no código, e o nome do teste descrevendo o comportamento verificado.
 - **DataProvider sempre**: todo método de teste recebe os casos por `#[DataProvider]`, mesmo quando há um caso só. O data provider é `public static`, o nome dele não começa com `test`, retorna `iterable` e entrega cada caso com `yield`, com chave em texto que descreve o cenário: `yield 'protocolo vazio' => [''];`.
 - **Caso de erro**: o data provider traz os casos aceitos e os recusados: entrada inválida, permissão negada, registro inexistente ou falha do banco, conforme o código testado.
-- **Red**: cada teste novo é visto falhando (red) antes da entrega. Quebre o comportamento testado em uma cópia do arquivo, monte a cópia por cima do original e rode o teste, na pasta `fontes/sei/ops_sei-docker/qa`: `docker compose run --rm -v <copia>:/opt/<caminho a partir de fontes/sei/src/main/php>:ro --entrypoint sh qa /qa/testar.sh --filter <teste>`. Confira que o teste falha pelo motivo certo. Teste que continua passando (green) com o defeito é falso positivo: corrija o teste. A resposta final traz o comando e a saída das execuções red e green.
+- **Red**: cada teste novo é visto falhando (red) antes da entrega. Quebre o comportamento testado em uma cópia do arquivo, monte a cópia por cima do original e rode o teste, na pasta `ops/docker-qa`: `docker compose run --rm -v <copia>:/opt/<caminho a partir de fontes/sei/src/main/php>:ro --entrypoint sh qa /qa/testar.sh --filter <teste>`. Confira que o teste falha pelo motivo certo. Teste que continua passando (green) com o defeito é falso positivo: corrija o teste. A resposta final traz o comando e a saída das execuções red e green.
 - **Demais práticas**: nome, data provider, assertions, exceções, test doubles, fakes e helpers, defeito conhecido, independência e determinismo em `.agents/references/padrao-testes-phpunit.md`. Como rodar: seção "Testes" do `README.md`.
 
 ## Regras de Decisão
@@ -256,6 +267,8 @@ Use termos técnicos quando forem necessários à precisão ou forem a denomina�
 Apresente primeiro a informação mais importante e evite introduções ou resumos que apenas repitam o conteúdo. Use subtítulos, listas e tabelas quando melhorarem a leitura, especialmente em textos longos ou sequências extensas, sem fragmentar artificialmente o texto. Siga a norma-padrão do português brasileiro e não crie flexões incompatíveis com ela.
 
 Preserve literalmente citações diretas e outros conteúdos que precisem permanecer exatos, salvo solicitação expressa de revisão. Apresente URLs como links associados a expressões descritivas quando o formato permitir.
+
+Link relativo em Markdown aponta só para arquivo versionado: antes de criar o link, confira com `git ls-files <caminho>`. Quando a saída vier vazia, como nos arquivos de `specs/`, ignorados pelo Git, ou em arquivo ainda inexistente, cite o caminho em código, sem link.
 
 ## Fontes de Contexto
 

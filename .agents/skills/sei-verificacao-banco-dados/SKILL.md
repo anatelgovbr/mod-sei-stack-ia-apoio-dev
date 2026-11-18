@@ -39,7 +39,7 @@ Skill autônoma de code review para modelagem de dados SEI/SIP.
 | DB09 | Índice em FK | Aviso | §Índices |
 | DB10 | Sequence `seq_<nome>` | Aviso | §Sequências |
 | DB11 | AK constraint `ak_<nome>_<campos>` | Aviso | §Chave Alternativa |
-| DB12 | COMMENT ON / docblock | Aviso | §Regras Gerais |
+| DB12 | Docblock `@table`/`@column` no DTO | Aviso | §Regras Gerais |
 | DB13 | Sem verbos | Aviso | §Tabela |
 | DB14 | Singular | Aviso | §Regras Gerais |
 | DB15 | Formato minúsculas + sublinhado | Aviso | §Regras Gerais |
@@ -197,3 +197,11 @@ O resto se divide em dois grupos. Um fixa que cada regra realmente barra, com o 
 de saida e a linha certa. O outro impede falso positivo, e cada um desses e um caso que
 ja aconteceu. Falso positivo importa porque auditor que grita a toa e desligado pela
 equipe, e ai o gate para de proteger tudo, nao so o caso barulhento.
+
+## SQL proprio na BD (revisao manual)
+
+O `audit.py` cobre a modelagem e nao le SQL escrito a mao em `*BD.php`. Nesse SQL, cada valor entra por `formatarGravacao<Tipo>`, cada campo selecionado sai por `formatarSelecao<Tipo>` e cada leitura passa por `formatarLeitura<Tipo>`, com o banco de `getObjInfraIBanco()`. Checklist: `.agents/checklists/checklist-bd-ddl-sei.md`, secao "Isolamento e extensao da camada BD"; vetor `V05` em `.agents/security/matriz-vulnerabilidades-sei.md`.
+
+## Dependências de registros do core
+
+Identifique referências candidatas em DTO/DDL e confirme a FK física; aprovação estrutural não prova eficácia de interceptação. Aplicar, com `sei-guardrails-modulo`, a [matriz de proteção](../sei-mod-api-eventos/references/protecao-dependencias-core.md) também a protocolos e dependências funcionais sem FK.

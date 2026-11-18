@@ -101,7 +101,7 @@ Ao receber um diretório de módulo, inclua:
 - todos os `*Integracao.php` e seus controladores, eventos e contratos externos
 - páginas PHP, JS e CSS que participem de entrada ou saída
 - RN, INT, DTO, BD e DDL
-- scripts de tarefa do módulo
+- cadastro de tarefa de andamento nos scripts do módulo
 - testes e validadores locais
 - scripts SEI e SIP indicados em
   `.agents/references/mapa-modulos-scripts.md`, quando existirem
@@ -120,6 +120,13 @@ Ao receber um diretório de módulo, inclua:
    previstos pelo gate e disponíveis. Use `release_check` somente para controles
    DB01-DB15 sobre objetos de dados extraídos de scripts.
 6. Complete automação com inspeção manual dos controles que ela não cobre.
+   Quando o escopo afetar apresentação visual, aplique
+   `.agents/references/padrao-acessibilidade-cores-sei.md` aos componentes e
+   estados afetados; sem evidência visual suficiente, registre `NOT_EXECUTED`.
+   O `PASS` do auditor de página não comprova contraste.
+   Quando o escopo criar ou alterar filtro, formulário, barra de comandos ou grid,
+   aplique a seção "Verificação" de `.agents/references/padrao-interacao-telas-sei.md`; sem
+   evidência suficiente, registre `NOT_EXECUTED`.
 7. Avalie as doze dimensões técnicas e rastreie entradas até SQL, HTML/JS, log,
    arquivo, desserialização, redirect, chamada externa ou execução. Na dimensão
    de segurança, acione `owasp-playbook` em chamada por skill, nomeando os
@@ -165,11 +172,11 @@ Ao receber um diretório de módulo, inclua:
 | Artefato no escopo | Gate a acionar | Cobertura mínima |
 |---|---|---|
 | `*_lista.php`, `*_cadastro.php` ou página PHP de ação | `sei-verificacao-pagina` | controles P aplicáveis, link, permissão, entrada, saída e encoding |
-| `*RN.php` | `sei-verificacao-rn` | T1-T6 e A1-A3 aplicáveis, auditoria, transação e pos-commit |
+| `*RN.php` | `sei-verificacao-rn` | T1-T12 e A1-A3 aplicáveis, auditoria, transação e pos-commit |
 | `*BD.php`, DTO ou DDL | `sei-verificacao-banco-dados` | controles DB aplicáveis, mapeamento, SQL e multi-SGBD |
 | controlador Ajax/WS ou `tratarLinkSemAssinatura` em `*Integracao.php` | `sei-verificacao-controladores` | controles CI aplicáveis e autorização por ação ou serviço |
-| `*_tarefa.php` ou definição de tarefa | `sei-verificacao-tarefa` | controles K aplicáveis e unicidade |
-| qualquer PHP no delta | `sei-validacao-padrao` | `php -l`, encoding e checks locais disponíveis |
+| cadastro de tarefa (`TarefaDTO` ou `INSERT INTO tarefa`) ou definição `*_tarefa.php` | `sei-verificacao-tarefa` | controles K aplicáveis e unicidade |
+| qualquer PHP no delta ou interface visual criada/alterada, inclusive CSS/JS e hook | `sei-validacao-padrao` | `php -l` quando houver PHP, encoding, checks locais e contraste quando aplicável |
 | DDL ou alteração de modelo em script SEI/SIP | `sei-verificacao-banco-dados` com `release_check` | somente DB01-DB15 aplicáveis aos objetos extraídos |
 | script SEI/SIP mapeado ou impacto de versão/recurso | inspeção técnica de release desta skill | R1, R3, R4, R5 e R6, histórico, switch e `getVersao()` aplicáveis |
 | módulo completo ou padrão técnico ambíguo | `sei-guardrails-modulo` | inventário, escopo e gates especializados acionados |
@@ -243,7 +250,7 @@ Avalie e reporte estas dimensões separadamente:
 | Banco | DTO/BD/DDL, SQL, chaves, nomes e multi-SGBD |
 | Release | scripts existentes, versões, recursos, parâmetros e tarefas |
 | Integrações | API oficial, eventos, operações, contratos e efeitos externos |
-| Qualidade | clareza, coesão, acoplamento, complexidade, duplicação e desempenho |
+| Qualidade | clareza, coesão, acoplamento, complexidade, duplicação, desempenho e contraste visual quando aplicável |
 | Testes | lint, checks locais e cobertura técnica do caminho alterado |
 
 Qualidade limita-se a propriedades técnicas observáveis. Não julgue se o
@@ -462,7 +469,7 @@ de forma continuam manuais.
 ### Testes
 
 ```bash
-cd .agents/skills/sei-revisao-tecnica && python3 -m unittest test_validar_relatorio
+cd .agents/skills/sei-revisao-tecnica && python3 -m unittest test_validar_relatorio test_plays_aplicaveis
 ```
 
 O teste `test_exemplo_aprovado_passa` fixa o padrão acordado. Regra nova que
@@ -490,3 +497,7 @@ relatório.
 - Não invente controles; cite a fonte e a seção ou ID aplicável.
 - Não dependa de serviço externo para concluir. Se evidência externa for
   indispensável e indisponível, use `NOT_EXECUTED`.
+
+## Dependências de registros do core
+
+Confira a matriz das dependências afetadas, sua política funcional, eficácia do evento e evidências; não confunda presença de hook com cobertura. Aplicar, com `sei-guardrails-modulo`, a [matriz de proteção](../sei-mod-api-eventos/references/protecao-dependencias-core.md) também a protocolos e dependências funcionais sem FK.

@@ -4,6 +4,7 @@ import json
 import os
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -637,6 +638,18 @@ class ChangelogTest(unittest.TestCase):
         self.assertEqual(codigo, 1)
         self.assertIn("schema.tabela-a", saida)
 
+    def test_sequencial_adicionado_pode_ficar_fora_do_dicionario(self):
+        texto = """# Changelog de Teste
+
+## [release-B]
+
+### Adicionado
+
+- **Tabela `seq_tabela`**
+"""
+        codigo, saida = self.executar(texto, DICIONARIO_COLUNAS)
+        self.assertEqual(codigo, 0, saida)
+
 
 class DiffTest(unittest.TestCase):
     def executar(self, antigo, novo, extra=None):
@@ -821,6 +834,24 @@ class LacunasTest(unittest.TestCase):
         self.assertEqual(dados["objetos_afetados"], 1)
         self.assertEqual(dados["itens"][0]["coluna"], "nome.exibicao")
         self.assertEqual(dados["itens"][0]["motivo"], "sem escritor")
+
+    def test_marcador_seguido_de_muitos_espacos_responde_em_tempo_linear(self):
+        """1.200 espacos depois de TODO: levavam 5 s; o reconhecimento do marcador continua o mesmo."""
+        casos = {
+            "sem termo antes de .x": ("Nome exibido de TODO:" + " " * 1200 + ".x", 0, "sem marcadores de lacuna"),
+            "com termo e motivo": ("Nome exibido de TODO:" + " " * 1200 + "significado e critério - sem escritor.", 1, "significado e criterio"),
+        }
+        for nome, (descricao, codigo_esperado, trecho) in casos.items():
+            with self.subTest(caso=nome):
+                texto = DICIONARIO_COLUNAS.replace("Nome exibido.", descricao)
+
+                inicio = time.perf_counter()
+                codigo, saida = self.executar(texto)
+                duracao = time.perf_counter() - inicio
+
+                self.assertEqual(codigo, codigo_esperado, saida)
+                self.assertIn(trecho, saida)
+                self.assertLess(duracao, 1.0)
 
     def test_arquivo_de_outro_nome_e_entrada_invalida(self):
         codigo, saida = self.executar(DICIONARIO_COLUNAS, nome="outro.md")

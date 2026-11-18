@@ -1,0 +1,28 @@
+# Esquemas de cores e contraste em interfaces SEI
+
+## Aplicação
+
+Aplique esta referência quando a entrega criar ou alterar apresentação visual em página, componente, HTML, CSS, JavaScript ou hook de módulo. Inclua conteúdo e estados afetados em telas próprias ou do core, inclusive orientações, tabelas, formulários, mensagens, tooltips, modais e `iframe`. Uma mudança apenas de lógica sem efeito visual não aciona esta verificação.
+
+## Antes de implementar
+
+1. Identifique as telas, componentes, estados e fontes de conteúdo afetados. Confira a versão e o contexto SEI ou SIP, os esquemas oferecidos pela configuração e o tratamento equivalente no core. Consulte `listarEsquemas()`, `PaginaSEI::getStrEsquemaCores()` e os estilos efetivamente carregados quando aplicáveis; não presuma que uma lista fixa ou os diretórios CSS representem todos os esquemas de outra versão.
+2. Prefira os componentes, classes e variáveis de cor existentes no contexto. Confira o par texto e fundo do componente específico: uma variável de texto da página pode não servir ao fundo de um tooltip ou cartão. Ao usar `frontend-design`, trate os esquemas e o contraste do SEI como restrições do plano de cores, em vez de escolher uma paleta fixa que os ignore. Se o core não oferecer contraste adequado, corrija no escopo autorizado do módulo; mudança no core segue os limites de `AGENTS.md`.
+3. Para conteúdo HTML de editor, preserve o texto salvo, a estrutura, os links e o significado da formatação. Avalie cores, fundos e estilos em linha, inclusive em descendentes de tooltips. Um `iframe` tem documento e estilos próprios; a cor da página externa não é herdada automaticamente. Decida a adaptação de apresentação para o conteúdo afetado, sem remover cores ou fundos indiscriminadamente.
+4. Preserve a identificação de links e controles sem depender apenas de cor. Verifique foco, hover e demais estados relevantes quando o componente os apresentar. Para conteúdo adicional de tooltip criado pela aplicação, considere também a disponibilidade por teclado e as condições de dispensa, permanência e deslocamento do ponteiro do critério 1.4.13; não presuma que o componente do core cumpra essas condições.
+
+## Verificação
+
+1. Na versão e no contexto afetados, inventarie os esquemas efetivamente oferecidos. Exercite todos os esquemas disponíveis e registre a lista, inclusive Preto (Alto Contraste), Cinza Escuro e esquemas claros quando existirem. Se algum esquema ou superfície não puder ser exercitado, registre-o como pendente, não como aprovado.
+2. Use o navegador para observar o conteúdo real e medir os pares de cor efetivamente renderizados em cada superfície e estado afetado. Inclua texto comum e grande, links, conteúdo aninhado de tooltips, conteúdo de editor em `iframe` e indicadores visuais necessários ao uso, quando existirem. Uma amostra sintética complementa a verificação do conteúdo real; não a substitui. Confira também se o tooltip correto está visível.
+3. Use como referência os critérios AA da WCAG 2.2: [1.4.3 Contraste mínimo](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) exige 4,5:1 para texto normal e 3:1 para texto grande, com as exceções do critério; [1.4.11 Contraste de elementos não textuais](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) exige 3:1 entre informações visuais necessárias de controles, estados e gráficos e as cores adjacentes relevantes, com as exceções aplicáveis. Compare sem arredondar: 4,499:1 não atinge 4,5:1. Verificar esses critérios não certifica conformidade integral com a WCAG.
+4. Considere a composição real de cores transparentes e camadas de fundo. Para imagens, gradientes ou outros fundos que não possam ser medidos com confiança, use ferramenta adequada ou registre a medição como pendente; não substitua o fundo por branco presumido nem trate `getComputedStyle` isoladamente como prova da composição. Compare as cores renderizadas, não pixels de borda suavizados do texto.
+5. Registre esquema, tela, componente, estado, par de cores ou método de medição, razão sem arredondamento e resultado. Cite o comando ou procedimento e se a evidência é de conteúdo real, amostra sintética ou inspeção estática. Uma captura visual ajuda a revisão, mas não prova sozinha a razão de contraste. Falta de navegador, dados, acesso, esquema ou medição confiável fica pendente.
+
+## Ambiente e dados
+
+Use ambiente e identidade de teste isolados quando disponíveis. Alterar e salvar o esquema em `usuario_configurar` pode gravar a preferência e outras configurações do usuário: não faça isso em sessão compartilhada sem autorização. Ao receber autorização para alteração, registre o esquema e as demais configurações enviadas pela tela, restaure-os mesmo em falha e confirme a restauração; uma interrupção ou sessão expirada pode impedi-la e deve ser informada. Não exponha credenciais, dados pessoais ou links assinados nas evidências.
+
+Para testes em `tests/e2e`, a [ADR-SEI-005 aceita](../../docs/architecture/adr/sei/ADR-SEI-005-seed-de-dados-testes-e2e.md) descreve testes somente de leitura, enquanto o [README, seção Testes e2e](../../README.md#testes-e2e), admite criação e remoção de dados. Se a verificação exigir escrita em teste e2e, apresente a divergência e aguarde a decisão do desenvolvedor conforme `AGENTS.md`. O teste de esquemas existente no Peticionamento altera preferências persistidas: não o copie como padrão de teste somente leitura nem presuma que restaurar a preferência torne a escrita segura.
+
+O auditor `sei-verificacao-pagina/audit.py` verifica controles estáticos de página, não mede contraste nem exercita o navegador. Seu `PASS` não substitui esta verificação visual.

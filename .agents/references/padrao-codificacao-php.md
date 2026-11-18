@@ -90,14 +90,16 @@ a mesma convenção):
 
 ---
 
-## Variáveis de Sessão
+## Atributos de Sessão
 
-Variáveis de sessão usam prefixo `S_` em maiúsculas, termos compostos separados por sublinhado:
+O módulo grava e lê dados de sessão pelo `SessaoSEI`, sem acessar o array `$_SESSION`. O nome do atributo fica em maiúsculas, com o prefixo `MD_<SIGLA>_`, para não colidir com atributo de outro módulo:
 
+```php
+SessaoSEI::getInstance()->setAtributo('MD_ABC_ATRIBUTO_SESSAO', $strValor);
+$strValor = SessaoSEI::getInstance()->getAtributo('MD_ABC_ATRIBUTO_SESSAO');
 ```
-S_USUARIO
-S_NOME_SISTEMA
-```
+
+`isSetAtributo` e `removerAtributo` completam o conjunto. Os atributos gravados aparecem em **Infra > Atributos de Sessão**.
 
 ---
 
@@ -225,6 +227,22 @@ Regra de migração:
 - Código que a demanda não altera fica como está, mesmo com `if`/`else`.
 
 ---
+
+## SOLID
+
+Em código PHP novo e nas linhas que a demanda já altera, aplique os princípios SOLID onde couberem, na medida do problema e dentro da regra "Simplicidade primeiro" do `AGENTS.md`.
+
+Exemplo: dependência por parâmetro tipado (inversão de dependência).
+
+- A função recebe por parâmetro tipado a dependência que usa, como `InfraParametro` ou `LogSEI`.
+- Quem chama cria a instância no ponto da chamada, com `getInstance()` nos singletons:
+
+```php
+MdPetIntimacaoRN::deveOcultarAcessoIntegral(new InfraParametro(BancoSEI::getInstance()), LogSEI::getInstance());
+```
+
+- Método `*Conectado` ou `*Controlado`: a `InfraRN` repassa a ele um argumento só, ou um segundo do tipo `InfraException`. A dependência nasce dentro do método e desce por parâmetro aos métodos auxiliares.
+- Hook do `*Integracao` chamado pelo core e página PHP: a assinatura é fixa ou ninguém chama por cima. A dependência nasce dentro deles e desce por parâmetro.
 
 ## Prefixos de Elementos HTML
 

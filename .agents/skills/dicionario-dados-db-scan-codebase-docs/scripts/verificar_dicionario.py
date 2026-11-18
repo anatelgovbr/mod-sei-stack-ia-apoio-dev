@@ -772,7 +772,9 @@ def cmd_changelog(args):
         )
         adicionadas_ausentes = sorted(
             tabela for tabela, estado in estado_tabela.items()
-            if estado == "adicionada" and tabela not in tabelas
+            if estado == "adicionada"
+            and not tabela.startswith("seq_")
+            and tabela not in tabelas
         )
         colunas_ausentes = []
         colunas_excedentes = []
@@ -849,7 +851,8 @@ def casar_termo(bruto, vocabulario):
 def extrair_lacunas(descricao, vocabulario):
     """Retorna [(termo_normalizado, termo_exibido, motivo, reconhecido)] dos marcadores."""
     achados = []
-    for bruto, motivo in RE_MARCADOR_LACUNA.findall(descricao or ""):
+    # Espacos em sequencia viram um so antes do regex, que tem custo cubico em sequencia longa de espacos.
+    for bruto, motivo in RE_MARCADOR_LACUNA.findall(re.sub(r"\s+", " ", descricao or "")):
         normalizado, canonico = casar_termo(bruto, vocabulario)
         achados.append(
             (

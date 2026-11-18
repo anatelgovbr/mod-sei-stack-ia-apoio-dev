@@ -98,8 +98,11 @@ CLASS_LAYER_DIRS = {
 # Profundidade da pagina em relacao a web/SEI.php: modulos/<inst>/<modulo>/ = 3; modulos/<modulo>/ = 2.
 DEFAULT_PAGE_LEVELS = 3
 PAGE_LEVELS = DEFAULT_PAGE_LEVELS
-RESERVED_ACCESSKEYS_CADASTRO = {"s", "c", "f"}
-RESERVED_ACCESSKEYS_LISTA = {"n", "e", "f", "t", "r"}
+# Letras de .agents/references/padrao-interacao-telas-sei.md, secao "Teclas de atalho".
+RESERVED_ACCESSKEYS_NAVEGADOR = {"c", "d", "e", "f"}
+RESERVED_ACCESSKEYS_CADASTRO = {"s", "a"}
+RESERVED_ACCESSKEYS_LISTA = {"n", "x", "a", "t", "r"}
+RESERVED_ACCESSKEYS_MSG = "(navegador: C, D, E, F; cadastro: S, A; lista: N, X, A, T, R)"
 
 
 def set_page_levels(levels: int) -> None:
@@ -214,6 +217,9 @@ def validate_supported_input(data: dict) -> None:
             for key in ("precisao", "escala"):
                 if key in column and not isinstance(column[key], int):
                     raise ValueError(f"Coluna numeric com '{key}' nao inteiro: {name}")
+        tamanho = column.get("tamanho")
+        if tamanho is not None and not (isinstance(tamanho, int) and not isinstance(tamanho, bool) and tamanho > 0):
+            raise ValueError(f"Coluna com 'tamanho' que nao e inteiro positivo: {name}")
         if column.get("chavePrimaria"):
             pk_count += 1
             pk_columns.append(column)
@@ -260,9 +266,19 @@ def validate_supported_input(data: dict) -> None:
                 raise ValueError(f"relacionamentosNn entry missing 'metodoInt': {rel}")
             if not rel.get("classeInt"):
                 raise ValueError(f"relacionamentosNn entry missing 'classeInt': {rel}")
+            if not isinstance(rel["classeInt"], str) or not re.fullmatch(r"[A-Z][A-Za-z0-9_]*INT", rel["classeInt"]):
+                raise ValueError(f"relacionamentosNn.{rel.get('tabelaOrigem')}.classeInt deve seguir <Classe>INT: {rel['classeInt']!r}")
+            if not isinstance(rel["metodoInt"], str) or not re.fullmatch(r"montarSelect[A-Za-z0-9_]+", rel["metodoInt"]):
+                raise ValueError(f"relacionamentosNn.{rel.get('tabelaOrigem')}.metodoInt deve seguir montarSelect<Campo>: {rel['metodoInt']!r}")
             validate_physical_name(rel.get("tabelaOrigem", ""), "table")
             if rel.get("rotulo") is not None:
                 validate_display_text(rel["rotulo"], f"relacionamentosNn.{rel.get('tabelaOrigem')}.rotulo")
+            tecla = nn_accesskey(rel)
+            if tecla in RESERVED_ACCESSKEYS_NAVEGADOR | RESERVED_ACCESSKEYS_CADASTRO | RESERVED_ACCESSKEYS_LISTA:
+                raise ValueError(
+                    f"relacionamentosNn.{rel.get('tabelaOrigem')}.teclaAtalho '{tecla}' colide com tecla reservada da pagina "
+                    + RESERVED_ACCESSKEYS_MSG
+                )
 
     for relation in data.get("relacionamentos", []):
         if relation.get("coluna") not in field_names:
@@ -272,6 +288,7 @@ def validate_supported_input(data: dict) -> None:
         validate_physical_name(relation.get("tabelaReferencia", ""), "table")
         if not relation.get("campoExibicao"):
             raise ValueError(f"Relationship sem campoExibicao: {relation.get('coluna')}")
+        validate_physical_name(relation["campoExibicao"], "column")
         fk_column = next(c for c in columns if c.get("nome") == relation.get("coluna"))
         tipo_fk = (relation.get("tipoFk") or "").lower()
         if tipo_fk == "obrigatoria" and not fk_column.get("obrigatorio"):
@@ -336,16 +353,18 @@ def validate_supported_input(data: dict) -> None:
     for name, campo_ui in (ui.get("campos") or {}).items():
         if (campo_ui or {}).get("rotulo") is not None:
             validate_display_text(campo_ui["rotulo"], f"ui.campos.{name}.rotulo")
-        tecla = (campo_ui or {}).get("teclaAtalho") or ""
-        if not tecla:
+        tecla = (campo_ui or {}).get("teclaAtalho")
+        if tecla is None or tecla == "":
             continue
-        reserved = set(RESERVED_ACCESSKEYS_CADASTRO)
+        if not isinstance(tecla, str) or not re.fullmatch(r"[A-Za-z0-9]", tecla):
+            raise ValueError(f"ui.campos.{name}.teclaAtalho deve ser uma unica letra ou digito: {tecla!r}")
+        reserved = RESERVED_ACCESSKEYS_NAVEGADOR | RESERVED_ACCESSKEYS_CADASTRO
         if name in relation_columns or pk_count == 2:
             reserved |= RESERVED_ACCESSKEYS_LISTA
         if tecla.lower() in reserved:
             raise ValueError(
                 f"ui.campos.{name}.teclaAtalho '{tecla}' colide com tecla reservada da pagina "
-                f"(cadastro: S, C, F; filtros da lista: N, E, F, T, R)"
+                + RESERVED_ACCESSKEYS_MSG
             )
 
 
@@ -1064,7 +1083,7 @@ def render_lista_nn(data: dict) -> str:
         rel_base = class_base(rel["tabelaOrigem"])
         rel_var = f"$numId{rel_base}"
         label = rel.get("rotulo", rel_base)
-        ak = label[0].lower()
+        ak = nn_accesskey(rel)
         filter_apply += (
             f"  {rel_var} = PaginaSEI::getInstance()->recuperarCampo('sel{rel_base}');\n"
             f"  if ({rel_var}!=='') {{\n"
@@ -1075,7 +1094,7 @@ def render_lista_nn(data: dict) -> str:
         filter_form += (
             f"  <?php\n  PaginaSEI::getInstance()->abrirAreaDados('5em');\n  ?>\n"
             f'  <label id="lbl{rel_base}" for="sel{rel_base}" accesskey="{ak}" class="infraLabelOpcional">'
-            f"{label}:</label>\n"
+            f"{_label_with_accesskey(label, ak)}:</label>\n"
             f'  <select id="sel{rel_base}" name="sel{rel_base}" onchange="this.form.submit();" '
             f'class="infraSelect" tabindex="<?=PaginaSEI::getInstance()->getProxTabDados()?>" >\n'
             f"  <?=$strItensSel{rel_base}??false?>\n  </select>\n"
@@ -1138,6 +1157,7 @@ def render_lista_nn(data: dict) -> str:
         + "      throw new InfraException(\"Ação '\".$strAcao.\"' não reconhecida.\");\n"
         + "  }\n\n"
         + "  $arrComandos = [];\n"
+        + f"  {list_search_command(nn_accesskey(rel) for rel in nn_rels)}\n\n"
         + f"  if ($strAcao==='{table_name}_selecionar') {{\n"
         + f'    $arrComandos[] = \'<button type="button" accesskey="T" id="btnTransportarSelecao" value="Transportar" onclick="infraTransportarSelecao();" class="infraButton"><span class="infraTeclaAtalho">T</span>ransportar</button>\';\n'
         + "  }\n\n"
@@ -1171,7 +1191,7 @@ def render_lista_nn(data: dict) -> str:
         + "    }\n\n"
         + "    if ($bolAcaoExcluir) {\n"
         + "      $bolCheck = true;\n"
-        + f'      $arrComandos[] = \'<button type="button" accesskey="E" id="btnExcluir" value="Excluir" onclick="acaoExclusaoMultipla();" class="infraButton"><span class="infraTeclaAtalho">E</span>xcluir</button>\';\n'
+        + f'      $arrComandos[] = \'<button type="button" accesskey="x" id="btnExcluir" value="Excluir" onclick="acaoExclusaoMultipla();" class="infraButton">E<span class="infraTeclaAtalho">x</span>cluir</button>\';\n'
         + f"      $strLinkExcluir = SessaoSEI::getInstance()->assinarLink('controlador.php?acao={table_name}_excluir&acao_origem='.$strAcao);\n"
         + "    }\n\n"
         + "    $strResultado = '';\n"
@@ -1212,9 +1232,9 @@ def render_lista_nn(data: dict) -> str:
         + "    $strResultado .= '</table>';\n"
         + "  }\n"
         + f"  if ($strAcao==='{table_name}_selecionar') {{\n"
-        + '    $arrComandos[] = \'<button type="button" accesskey="F" id="btnFecharSelecao" value="Fechar" onclick="window.close();" class="infraButton"><span class="infraTeclaAtalho">F</span>echar</button>\';\n'
+        + '    $arrComandos[] = \'<button type="button" accesskey="a" id="btnFecharSelecao" value="Fechar" onclick="window.close();" class="infraButton">Fech<span class="infraTeclaAtalho">a</span>r</button>\';\n'
         + "  } else {\n"
-        + '    $arrComandos[] = \'<button type="button" accesskey="F" id="btnFechar" value="Fechar" onclick="location.href=\\\'\'.SessaoSEI::getInstance()->assinarLink(\'controlador.php?acao=\'.PaginaSEI::getInstance()->getAcaoRetorno().\'&acao_origem=\'.$strAcao).\'\\\';" class="infraButton"><span class="infraTeclaAtalho">F</span>echar</button>\';\n'
+        + '    $arrComandos[] = \'<button type="button" accesskey="a" id="btnFechar" value="Fechar" onclick="location.href=\\\'\'.SessaoSEI::getInstance()->assinarLink(\'controlador.php?acao=\'.PaginaSEI::getInstance()->getAcaoRetorno().\'&acao_origem=\'.$strAcao).\'\\\';" class="infraButton">Fech<span class="infraTeclaAtalho">a</span>r</button>\';\n'
         + "  }\n\n"
         + filter_selects
         + "} catch (Exception $e) {\n"
@@ -1238,13 +1258,8 @@ def render_lista_nn(data: dict) -> str:
         + "?>\n"
         + '<?php if(0){?><script type="text/javascript"><?php }?>\n\n'
         + "function inicializar()\n{\n"
-        + f"  if ('<?=$strAcao??false?>' === '{table_name}_selecionar') {{\n"
-        + "    infraReceberSelecao();\n"
-        + "    document.getElementById('btnFecharSelecao').focus();\n"
-        + "  } else {\n"
-        + "    document.getElementById('btnFechar').focus();\n"
-        + "  }\n"
-        + "  infraEfeitoTabelas(true);\n}\n\n"
+        + indent(list_initialize_lines(table_name, "sel" + class_base(nn_rels[0]["tabelaOrigem"])), "  ")
+        + "\n}\n\n"
         + "<?php if ($bolAcaoExcluir??false) { ?>\n"
         + "function acaoExcluir(id,desc)\n{\n"
         + f"  if (confirm('Confirma exclus\u00e3o d{article} {singular} \"' + desc + '\"?')) {{\n"
@@ -1275,7 +1290,7 @@ def render_lista_nn(data: dict) -> str:
         + filter_form
         + "  <?php\n"
         + "  PaginaSEI::getInstance()->montarAreaTabela($strResultado??false,$numRegistros??false);\n"
-        + "  PaginaSEI::getInstance()->montarBarraComandosInferior($arrComandos??false);\n"
+        + "  PaginaSEI::getInstance()->montarBarraComandosInferior(preg_replace('/ accesskey=\"[^\"]*\"/', '', $arrComandos ?? []));\n"
         + "  ?>\n"
         + "</form>\n"
         + "<?php\n"
@@ -1320,7 +1335,7 @@ def render_cadastro_nn(data: dict) -> str:
         rel_base = class_base(rel["tabelaOrigem"])
         pk_attr_here = pk1_attr if rel == nn_rels[0] else pk2_attr
         label = rel.get("rotulo", rel_base)
-        ak = (rel.get("teclaAtalho") or label[0]).lower()
+        ak = nn_accesskey(rel)
         select_vars += (
             f"  $numId{rel_base} = PaginaSEI::getInstance()->recuperarCampo('sel{rel_base}');\n"
             f"  if ($numId{rel_base} !=='') {{\n"
@@ -1355,11 +1370,13 @@ def render_cadastro_nn(data: dict) -> str:
     extra_form = ""
     extra_js_validation = ""
     extra_post_block = ""
+    extra_ids = []
     for col in extra_cols:
         col_attr = attribute_name(col)
         col_label = ui_label(col)
         col_suffix = attr_suffix_from_attr(col_attr)
         html_name = "txt" + col_suffix
+        extra_ids.append(html_name)
         col_ui = col.get("_ui") or {}
         ak = (col_ui.get("teclaAtalho") or "").lower()
         ak_attr = f' accesskey="{ak}"' if ak else ""
@@ -1469,7 +1486,7 @@ def render_cadastro_nn(data: dict) -> str:
         + f"    case '{table_name}_cadastrar':\n"
         + f"      $strTitulo = 'Nov{article} {singular}';\n"
         + f'      $arrComandos[] = \'<button type="submit" accesskey="S" name="sbmCadastrar{base}" value="Salvar" class="infraButton"><span class="infraTeclaAtalho">S</span>alvar</button>\';\n'
-        + f'      $arrComandos[] = \'<button type="button" accesskey="C" name="btnCancelar" id="btnCancelar" value="Cancelar" onclick="location.href=\\\'\'.SessaoSEI::getInstance()->assinarLink(\'controlador.php?acao=\'.PaginaSEI::getInstance()->getAcaoRetorno().\'&acao_origem=\'.$strAcao).\'\\\';" class="infraButton"><span class="infraTeclaAtalho">C</span>ancelar</button>\';\n\n'
+        + f'      $arrComandos[] = \'<button type="button" accesskey="a" name="btnCancelar" id="btnCancelar" value="Cancelar" onclick="location.href=\\\'\'.SessaoSEI::getInstance()->assinarLink(\'controlador.php?acao=\'.PaginaSEI::getInstance()->getAcaoRetorno().\'&acao_origem=\'.$strAcao).\'\\\';" class="infraButton">C<span class="infraTeclaAtalho">a</span>ncelar</button>\';\n\n'
         + select_vars
         + extra_post_block
         + f"\n      if (PaginaSEI::POST('sbmCadastrar{base}') !== null) {{\n"
@@ -1501,7 +1518,7 @@ def render_cadastro_nn(data: dict) -> str:
         + select_post_blocks
         + extra_post_block
         + "      }\n\n"
-        + f'      $arrComandos[] = \'<button type="button" accesskey="C" name="btnCancelar" id="btnCancelar" value="Cancelar" onclick="location.href=\\\'\'.SessaoSEI::getInstance()->assinarLink(\'controlador.php?acao=\'.PaginaSEI::getInstance()->getAcaoRetorno().\'&acao_origem=\'.$strAcao.PaginaSEI::getInstance()->montarAncora($obj{base}DTO->get{pk1_attr}().\'-\'.$obj{base}DTO->get{pk2_attr}())).\'\\\';" class="infraButton"><span class="infraTeclaAtalho">C</span>ancelar</button>\';\n\n'
+        + f'      $arrComandos[] = \'<button type="button" accesskey="a" name="btnCancelar" id="btnCancelar" value="Cancelar" onclick="location.href=\\\'\'.SessaoSEI::getInstance()->assinarLink(\'controlador.php?acao=\'.PaginaSEI::getInstance()->getAcaoRetorno().\'&acao_origem=\'.$strAcao.PaginaSEI::getInstance()->montarAncora($obj{base}DTO->get{pk1_attr}().\'-\'.$obj{base}DTO->get{pk2_attr}())).\'\\\';" class="infraButton">C<span class="infraTeclaAtalho">a</span>ncelar</button>\';\n\n'
         + f"      if (PaginaSEI::POST('sbmAlterar{base}') !== null) {{\n"
         + f"        try {{\n"
         + f"          $obj{base}RN = new {base}RN();\n"
@@ -1516,7 +1533,7 @@ def render_cadastro_nn(data: dict) -> str:
         + "      break;\n\n"
         + f"    case '{table_name}_consultar':\n"
         + f"      $strTitulo = 'Consultar {singular}';\n"
-        + f"      $arrComandos[] = '<button type=\"button\" accesskey=\"F\" name=\"btnFechar\" value=\"Fechar\" onclick=\"location.href=\\''.SessaoSEI::getInstance()->assinarLink('controlador.php?acao='.PaginaSEI::getInstance()->getAcaoRetorno().'&acao_origem='.$strAcao.PaginaSEI::getInstance()->montarAncora(PaginaSEI::GET('{pk1_param}').'-'.PaginaSEI::GET('{pk2_param}'))).'\\';\" class=\"infraButton\"><span class=\"infraTeclaAtalho\">F</span>echar</button>';\n"
+        + f"      $arrComandos[] = '<button type=\"button\" accesskey=\"a\" id=\"btnFechar\" name=\"btnFechar\" value=\"Fechar\" onclick=\"location.href=\\''.SessaoSEI::getInstance()->assinarLink('controlador.php?acao='.PaginaSEI::getInstance()->getAcaoRetorno().'&acao_origem='.$strAcao.PaginaSEI::getInstance()->montarAncora(PaginaSEI::GET('{pk1_param}').'-'.PaginaSEI::GET('{pk2_param}'))).'\\';\" class=\"infraButton\">Fech<span class=\"infraTeclaAtalho\">a</span>r</button>';\n"
         + f"      $obj{base}DTO->set{pk1_attr}((int)PaginaSEI::GET('{pk1_param}'));\n"
         + f"      $obj{base}DTO->set{pk2_attr}((int)PaginaSEI::GET('{pk2_param}'));\n"
         + f"      $obj{base}DTO->setBolExclusaoLogica(false);\n"
@@ -1552,16 +1569,15 @@ def render_cadastro_nn(data: dict) -> str:
         + "?>\n"
         + '<?php if(0){?><script type="text/javascript"><?php }?>\n\n'
         + "function inicializar()\n{\n"
-        + f"  if ('<?=$strAcao??false?>' === '{table_name}_cadastrar') {{\n"
-        + "    document.getElementById('sel"
-        + class_base(nn_rels[0]["tabelaOrigem"])
-        + "').focus();\n"
-        + f"  }} else if ('<?=$strAcao??false?>' === '{table_name}_consultar') {{\n"
-        + "    infraDesabilitarCamposAreaDados();\n"
-        + "  } else {\n"
-        + "    document.getElementById('btnCancelar').focus();\n"
-        + "  }\n"
-        + "  infraEfeitoTabelas(true);\n}\n\n"
+        + indent(
+            cadastro_initialize_lines(
+                table_name,
+                "sel" + class_base(nn_rels[0]["tabelaOrigem"]),
+                extra_ids[0] if extra_ids else "btnCancelar",
+            ),
+            "  ",
+        )
+        + "\n}\n\n"
         + "function validarCadastro()\n{\n"
         + js_sel_validation
         + extra_js_validation
@@ -1581,12 +1597,52 @@ def render_cadastro_nn(data: dict) -> str:
         + extra_form
         + hidden_pks
         + "  <?php\n"
-        + "  PaginaSEI::getInstance()->montarBarraComandosInferior($arrComandos??false);\n"
+        + "  PaginaSEI::getInstance()->montarBarraComandosInferior(preg_replace('/ accesskey=\"[^\"]*\"/', '', $arrComandos ?? []));\n"
         + "  ?>\n"
         + "</form>\n"
         + "<?php\n"
         + "PaginaSEI::getInstance()->fecharBody();\n"
         + "PaginaSEI::getInstance()->fecharHtml();\n"
+    )
+
+
+def nn_accesskey(rel: dict) -> str:
+    """Tecla do rotulo de uma entrada de relacionamentosNn: teclaAtalho ou primeira letra do rotulo."""
+    return (rel.get("teclaAtalho") or rel.get("rotulo") or class_base(rel["tabelaOrigem"]))[0].lower()
+
+
+def list_search_command(filter_accesskeys) -> str:
+    """Pesquisar como primeiro submit da lista com filtro; sem tecla P quando um filtro ja a usa."""
+    if "p" in {key.lower() for key in filter_accesskeys}:
+        return "$arrComandos[] = '<button type=\"submit\" id=\"sbmPesquisar\" name=\"sbmPesquisar\" value=\"Pesquisar\" class=\"infraButton\">Pesquisar</button>';"
+    return "$arrComandos[] = '<button type=\"submit\" accesskey=\"P\" id=\"sbmPesquisar\" name=\"sbmPesquisar\" value=\"Pesquisar\" class=\"infraButton\"><span class=\"infraTeclaAtalho\">P</span>esquisar</button>';"
+
+
+def list_initialize_lines(table_name: str, first_filter_id: str = "") -> str:
+    """Foco inicial da lista conforme .agents/references/padrao-interacao-telas-sei.md."""
+    return (
+        f"if ('<?=$strAcao??false?>' === '{table_name}_selecionar') {{\n"
+        "  infraReceberSelecao();\n"
+        f"  document.getElementById('{first_filter_id or 'btnFecharSelecao'}').focus();\n"
+        "} else {\n"
+        f"  document.getElementById('{first_filter_id or 'btnFechar'}').focus();\n"
+        "}\n"
+        "infraEfeitoTabelas(true);"
+    )
+
+
+def cadastro_initialize_lines(table_name: str, cadastrar_focus: str, alterar_focus: str) -> str:
+    """Foco inicial do cadastro conforme .agents/references/padrao-interacao-telas-sei.md."""
+    return (
+        f"if ('<?=$strAcao??false?>' === '{table_name}_consultar') {{\n"
+        "  infraDesabilitarCamposAreaDados();\n"
+        "  document.getElementById('btnFechar').focus();\n"
+        f"}} else if ('<?=$strAcao??false?>' === '{table_name}_alterar') {{\n"
+        f"  document.getElementById('{alterar_focus}').focus();\n"
+        "} else {\n"
+        f"  document.getElementById('{cadastrar_focus}').focus();\n"
+        "}\n"
+        "infraEfeitoTabelas(true);"
     )
 
 
@@ -1682,6 +1738,8 @@ def render_lista(data: dict) -> str:
     filter_apply_parts = []
     filter_select_parts = []
     filter_form_parts = []
+    filter_ids = []
+    filter_accesskeys = []
     style_parts = []
     if relations:
         sel_names = []
@@ -1697,6 +1755,8 @@ def render_lista(data: dict) -> str:
             rel_var = f"$numId{sel_key}"
             rel_helper = f"montarSelect{pascal_case(strip_common_prefixes(rel['campoExibicao']))}"
             sel_names.append(f"'sel{sel_key}'")
+            filter_ids.append(f"sel{sel_key}")
+            filter_accesskeys.append(rel_accesskey)
 
             filter_apply_parts.append(
                 f"{rel_var} = PaginaSEI::getInstance()->recuperarCampo('sel{sel_key}');\n"
@@ -1809,7 +1869,7 @@ def render_lista(data: dict) -> str:
         + "\n\n"
         "if ($bolAcaoExcluir) {\n"
         "  $bolCheck = true;\n"
-        "  $arrComandos[] = '<button type=\"button\" accesskey=\"E\" id=\"btnExcluir\" value=\"Excluir\" onclick=\"acaoExclusaoMultipla();\" class=\"infraButton\"><span class=\"infraTeclaAtalho\">E</span>xcluir</button>';\n"
+        "  $arrComandos[] = '<button type=\"button\" accesskey=\"x\" id=\"btnExcluir\" value=\"Excluir\" onclick=\"acaoExclusaoMultipla();\" class=\"infraButton\">E<span class=\"infraTeclaAtalho\">x</span>cluir</button>';\n"
         f"  $strLinkExcluir = SessaoSEI::getInstance()->assinarLink('controlador.php?acao={table_name}_excluir&acao_origem='.$strAcao);\n"
         "}"
     )
@@ -1900,21 +1960,15 @@ def render_lista(data: dict) -> str:
 
     bottom_commands = (
         f"if ($strAcao==='{table_name}_selecionar') {{\n"
-        "  $arrComandos[] = '<button type=\"button\" accesskey=\"F\" id=\"btnFecharSelecao\" value=\"Fechar\" onclick=\"window.close();\" class=\"infraButton\"><span class=\"infraTeclaAtalho\">F</span>echar</button>';\n"
+        "  $arrComandos[] = '<button type=\"button\" accesskey=\"a\" id=\"btnFecharSelecao\" value=\"Fechar\" onclick=\"window.close();\" class=\"infraButton\">Fech<span class=\"infraTeclaAtalho\">a</span>r</button>';\n"
         "} else {\n"
-        "  $arrComandos[] = '<button type=\"button\" accesskey=\"F\" id=\"btnFechar\" value=\"Fechar\" onclick=\"location.href=\\''.SessaoSEI::getInstance()->assinarLink('controlador.php?acao='.PaginaSEI::getInstance()->getAcaoRetorno().'&acao_origem='.$strAcao).'\\'\" class=\"infraButton\"><span class=\"infraTeclaAtalho\">F</span>echar</button>';\n"
+        "  $arrComandos[] = '<button type=\"button\" accesskey=\"a\" id=\"btnFechar\" value=\"Fechar\" onclick=\"location.href=\\''.SessaoSEI::getInstance()->assinarLink('controlador.php?acao='.PaginaSEI::getInstance()->getAcaoRetorno().'&acao_origem='.$strAcao).'\\'\" class=\"infraButton\">Fech<span class=\"infraTeclaAtalho\">a</span>r</button>';\n"
         "}"
     )
 
-    initialize_lines = (
-        f"if ('<?=$strAcao??false?>' === '{table_name}_selecionar') {{\n"
-        "  infraReceberSelecao();\n"
-        "  document.getElementById('btnFecharSelecao').focus();\n"
-        "} else {\n"
-        "  document.getElementById('btnFechar').focus();\n"
-        "}\n"
-        "infraEfeitoTabelas(true);"
-    )
+    if filter_ids:
+        top_commands = list_search_command(filter_accesskeys) + "\n\n" + top_commands
+    initialize_lines = list_initialize_lines(table_name, filter_ids[0] if filter_ids else "")
 
     template_path = Path(__file__).resolve().parent / "templates/lista.php.tpl"
     template = read_latin1(template_path)
@@ -2320,7 +2374,7 @@ def render_cadastro(data: dict) -> str:
         f'      $arrComandos[] = \'<button type="submit" accesskey="S" name="sbmCadastrar{base}" value="Salvar" class="infraButton"><span class="infraTeclaAtalho">S</span>alvar</button>\';\n'
     )
     out.append(
-        f'      $arrComandos[] = \'<button type="button" accesskey="C" name="btnCancelar" id="btnCancelar" value="Cancelar" onclick="location.href=\\\'\'.SessaoSEI::getInstance()->assinarLink(\'controlador.php?acao=\'.PaginaSEI::getInstance()->getAcaoRetorno().\'&acao_origem=\'.$strAcao).\'\\\';" class="infraButton"><span class="infraTeclaAtalho">C</span>ancelar</button>\';\n\n'
+        f'      $arrComandos[] = \'<button type="button" accesskey="a" name="btnCancelar" id="btnCancelar" value="Cancelar" onclick="location.href=\\\'\'.SessaoSEI::getInstance()->assinarLink(\'controlador.php?acao=\'.PaginaSEI::getInstance()->getAcaoRetorno().\'&acao_origem=\'.$strAcao).\'\\\';" class="infraButton">C<span class="infraTeclaAtalho">a</span>ncelar</button>\';\n\n'
     )
     out.append(render_cadastrar_fields())
     out.append(f"\n      if (PaginaSEI::POST('sbmCadastrar{base}') !== null) {{\n")
@@ -2360,7 +2414,7 @@ def render_cadastro(data: dict) -> str:
     out.append(render_alterar_post_fields())
     out.append("      }\n\n")
     out.append(
-        f'      $arrComandos[] = \'<button type="button" accesskey="C" name="btnCancelar" id="btnCancelar" value="Cancelar" onclick="location.href=\\\'\'.SessaoSEI::getInstance()->assinarLink(\'controlador.php?acao=\'.PaginaSEI::getInstance()->getAcaoRetorno().\'&acao_origem=\'.PaginaSEI::GET(\'acao\').PaginaSEI::getInstance()->montarAncora($obj{base}DTO->get{pk_attr}())).\'\\\';" class="infraButton"><span class="infraTeclaAtalho">C</span>ancelar</button>\';\n\n'
+        f'      $arrComandos[] = \'<button type="button" accesskey="a" name="btnCancelar" id="btnCancelar" value="Cancelar" onclick="location.href=\\\'\'.SessaoSEI::getInstance()->assinarLink(\'controlador.php?acao=\'.PaginaSEI::getInstance()->getAcaoRetorno().\'&acao_origem=\'.PaginaSEI::GET(\'acao\').PaginaSEI::getInstance()->montarAncora($obj{base}DTO->get{pk_attr}())).\'\\\';" class="infraButton">C<span class="infraTeclaAtalho">a</span>ncelar</button>\';\n\n'
     )
     out.append(f"      if (PaginaSEI::POST('sbmAlterar{base}') !== null) {{\n")
     out.append(f"        try {{\n")
@@ -2383,7 +2437,7 @@ def render_cadastro(data: dict) -> str:
     out.append(f"    case '{table_name}_consultar':\n")
     out.append(f"      $strTitulo = 'Consultar {singular}';\n")
     out.append(
-        f"      $arrComandos[] = '<button type=\"button\" accesskey=\"F\" name=\"btnFechar\" value=\"Fechar\" onclick=\"location.href=\\''.SessaoSEI::getInstance()->assinarLink('controlador.php?acao='.PaginaSEI::getInstance()->getAcaoRetorno().'&acao_origem='.PaginaSEI::GET('acao').PaginaSEI::getInstance()->montarAncora(PaginaSEI::GET('{pk_param}'))).'\\';\" class=\"infraButton\"><span class=\"infraTeclaAtalho\">F</span>echar</button>';\n"
+        f"      $arrComandos[] = '<button type=\"button\" accesskey=\"a\" id=\"btnFechar\" name=\"btnFechar\" value=\"Fechar\" onclick=\"location.href=\\''.SessaoSEI::getInstance()->assinarLink('controlador.php?acao='.PaginaSEI::getInstance()->getAcaoRetorno().'&acao_origem='.PaginaSEI::GET('acao').PaginaSEI::getInstance()->montarAncora(PaginaSEI::GET('{pk_param}'))).'\\';\" class=\"infraButton\">Fech<span class=\"infraTeclaAtalho\">a</span>r</button>';\n"
     )
     out.append(f"      $obj{base}DTO->set{pk_attr}((int)PaginaSEI::GET('{pk_param}'));\n")
     out.append(scope_set_line)
@@ -2435,18 +2489,7 @@ def render_cadastro(data: dict) -> str:
 
     # JS inicializar
     out.append("function inicializar()\n{\n")
-    out.append(
-        f"  if ('<?=$strAcao??false?>' === '{table_name}_cadastrar') {{\n"
-    )
-    out.append(f"    document.getElementById('{first_focus}').focus();\n")
-    out.append(
-        f"  }} else if ('<?=$strAcao??false?>' === '{table_name}_consultar') {{\n"
-    )
-    out.append("    infraDesabilitarCamposAreaDados();\n")
-    out.append("  } else {\n")
-    out.append("    document.getElementById('btnCancelar').focus();\n")
-    out.append("  }\n")
-    out.append("  infraEfeitoTabelas(true);\n")
+    out.append(indent(cadastro_initialize_lines(table_name, first_focus, first_focus), "  ") + "\n")
     out.append("}\n\n")
 
     # JS validarCadastro
@@ -2485,7 +2528,7 @@ def render_cadastro(data: dict) -> str:
     out.append("  <?php\n")
     out.append("  //PaginaSEI::getInstance()->montarAreaDebug();\n")
     out.append(
-        "  PaginaSEI::getInstance()->montarBarraComandosInferior($arrComandos??false);\n"
+        "  PaginaSEI::getInstance()->montarBarraComandosInferior(preg_replace('/ accesskey=\"[^\"]*\"/', '', $arrComandos ?? []));\n"
     )
     out.append("  ?>\n")
     out.append("</form>\n")

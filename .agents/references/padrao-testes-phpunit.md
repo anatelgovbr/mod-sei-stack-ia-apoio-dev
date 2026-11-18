@@ -26,16 +26,18 @@ Práticas para teste novo ou alterado em `tests/unit`. Como rodar: seção "Test
 
 ## Test doubles
 
-- Banco e sessão: `BancoSEIFake` e `SessaoSEIFake`, que a `BaseTest` coloca no lugar dos reais antes de cada teste.
+- Banco, sessão e log: `BancoSEIFake`, `SessaoSEIFake` e `LogSEIFake`, que a `BaseTest` coloca no lugar dos reais antes de cada teste.
 - Outra dependência que só fornece dados ao código testado: `createStub`.
 - `createMock` com `expects` fica para o teste que verifica uma chamada que o código faz para fora, como um envio. Nos demais casos, verifique o resultado.
 
 ## Fakes e helpers
 
 - `$this->objBanco` (`BancoSEIFake`): `responder('/ FROM nome_da_tabela /', [[...]])` devolve as linhas para a consulta cujo SQL casa com a expressão regular, com a chave de cada coluna igual ao nome do atributo do DTO em minúsculas, como `iditemetapa`. `afetarLinhas(...)` define quantas linhas cada comando seguinte afeta, e `falharCom($objExcecao)` faz toda consulta e todo comando seguinte lançarem a exceção. O fake registra `arrConsultas`, `arrComandos`, `arrSequencias` e `arrTransacoes`.
-- `$this->objSessao` (`SessaoSEIFake`): usuário logado com todas as permissões, menos as negadas com `negarPermissao('md_xxx_recurso')`. Registra cada recurso validado em `arrRecursosValidados`.
-- `BancoHelper`: `lerComando($this->objBanco->arrComandos[0])` devolve a tabela, as colunas gravadas e o filtro de um INSERT, UPDATE ou DELETE; `listarComandos()` e `listarConsultas()` devolvem o SQL na ordem; `listarValoresLigados($arrRegistro)` devolve os valores ligados.
+- `$this->objSessao` (`SessaoSEIFake`): usuário logado com todas as permissões, menos as negadas com `negarPermissao('md_xxx_recurso')`. Registra cada recurso validado em `arrRecursosValidados` e, em `arrAuditorias`, o recurso, a operação e uma cópia do parâmetro de cada `validarAuditarPermissao`, como estavam nesse momento.
+- `BancoHelper`: `lerComando($this->objBanco->arrComandos[0])` devolve a tabela, as colunas gravadas e o filtro de um INSERT, UPDATE ou DELETE; `listarComandos()` e `listarConsultas()` devolvem o SQL na ordem; `listarValoresLigados($arrRegistro)` devolve os valores ligados; `listarApelidosNoSelect($strSql)` e `listarApelidosNoFrom($strSql)` devolvem os apelidos de tabela citados nas colunas do SELECT e os ligados no FROM, para conferir que a consulta não cita tabela fora do FROM.
 - `ValidacaoHelper`: `capturarInfraException(fn() => ...)` devolve a `InfraException` lançada e falha o teste se nada for lançado; `listarValidacoes($e)` devolve as mensagens de validação, na ordem.
+- `$this->objLog` (`LogSEIFake`): guarda em `arrRastro` as linhas do rastro do Peticionamento, sem passar pelo banco, e deixa as demais linhas seguirem o caminho real do log. `falharCom` faz a gravação do rastro lançar a exceção informada.
+- `RastroHelper`: `listarRastro` devolve as linhas do rastro sem o UUID, a hora e a linha do arquivo, que mudam a cada execução; `responderParametrosDeEmail` programa os parâmetros de e-mail do SEI, que o aviso de rollback lê. O envio de e-mail fica desligado na configuração dos testes.
 - `PropriedadeEstaticaHelper`: `definirEstatico` e `lerEstatico` alteram e leem uma propriedade estática, mesmo privada.
 
 ## Requisito e defeito conhecido
@@ -46,6 +48,10 @@ Práticas para teste novo ou alterado em `tests/unit`. Como rodar: seção "Test
 ## Fora do teste unitário
 
 - Páginas (`*_lista.php`, `*_cadastro.php`), JavaScript do módulo e caminhos que dependem de dados reais do núcleo, como documento com acesso da unidade e versões do editor, ficam para o teste e2e ou para o teste manual.
+
+## Integração
+
+Comportamento que depende de transação real, do core ou do envio de e-mail, como o desfazimento depois de uma falha, tem teste em `tests/integracao`, com banco e servidor de e-mail reais. Fake de banco não cancela gravação, e por isso não pega recibo ou documento que voltou com a transação cancelada. O teste de falha confere a causa com `lerCausas` e termina com a nova tentativa sem falha.
 
 ## Independência e determinismo
 

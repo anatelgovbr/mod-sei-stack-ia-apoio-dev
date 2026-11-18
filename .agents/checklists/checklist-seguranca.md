@@ -76,7 +76,7 @@ e o resultado passa a `BLOCK`.
 | E1 | Sem efeito colateral irreversivel sem log de auditoria | ALTA |
 | E2 | Efeitos colaterais (email, Solr, sistemas externos) no wrapper publico somente apos o retorno de `*Controlado`; `*Controlado` contem apenas persistencia | ALTA |
 | E3 | Se houver acoplamento a internals do core, confirmar compatibilidade com as versoes suportadas do modulo; so reportar quando houver risco atual nao tratado ou alternativa publica claramente mais adequada no mesmo contexto | MEDIA |
-| E4 | Excecoes do evento tratadas sem derrubar o fluxo principal do SEI | ALTA |
+| E4 | Críticas esperadas do evento propagadas ao tratamento transacional para veto e rollback; falhas inesperadas preservam diagnóstico e não são suprimidas ou convertidas genericamente em recusa de negócio | ALTA |
 | E5 | Condicao de disparo documentada, sem efeito silencioso em toda acao do sistema | MEDIA |
 
 ### 1.4 API / WebService (`Entrada*API`, `Saida*API`, `SeiRN`)

@@ -95,7 +95,7 @@ python3 .agents/skills/sei-verificacao-pagina/audit.py --input <pagina> --pagina
 python3 .agents/skills/sei-verificacao-rn/audit.py --input <rn/ ou RN.php> --format markdown
 python3 .agents/skills/sei-verificacao-controladores/audit.py --input <Integracao.php> --format markdown
 python3 .agents/skills/sei-verificacao-banco-dados/audit.py --input <modulo/ ou DTO.php> --format markdown
-python3 .agents/skills/sei-verificacao-tarefa/audit.py --input <*_tarefa.php> --format markdown
+python3 .agents/skills/sei-verificacao-tarefa/audit.py --input <script de release que cadastra tarefa> --format markdown
 ```
 
 `sei-verificacao-pagina/audit.py` aceita um arquivo por execução: rode uma vez por página.
