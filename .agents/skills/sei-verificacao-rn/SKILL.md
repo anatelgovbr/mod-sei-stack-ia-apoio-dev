@@ -41,6 +41,8 @@ Skill de gate para validar padroes de transacao em classes RN do SEI.
 
 O `audit.py` avalia T1 a T6 e A1 a A3. T7 a T12 sao revisao manual, com exemplos em `references/padroes-transacao.md`.
 
+Na revisão manual de `bloquear`, `excluir`, `desativar` ou `reativar`, confira os chamadores, os DTOs e o limite da transação conforme os [contratos de bloqueio e lote](../../references/padrao-metodos-crud-infraphp.md#regras-por-metodo).
+
 ## Observacao sobre sufixos
 
 Aplicar T1 apenas a metodos CRUD padronizados. Nao inferir sufixo de qualquer

@@ -46,7 +46,7 @@ como principal.
 
 0. **Dependências de registros do core**: quando a mudança afetar referência física ou uso funcional, aplicar [proteção das dependências](references/protecao-dependencias-core.md) e concluir sua matriz; inclui Administração e protocolos, sem presumir que todo evento permita veto.
 1. **Escolher o hook** no catalogo `references/catalogo-eventos.md` pelo nome do evento.
-2. **Confirmar a assinatura** do metodo em `SeiIntegracao.php` e confirmar o ponto de chamada na RN do core, posição perante escrita/commit e propagação da exceção na versão suportada. Módulos existentes são exemplos com limitações, não prova do contrato.
+2. **Confirmar a assinatura** do método em `SeiIntegracao.php` e o ponto de chamada no core da versão suportada. Para eventos de negócio, verifique a posição perante escrita/commit e a propagação da exceção. Para `montarBotaoControleProcessos`, `montarBotaoProcesso` ou `montarBotaoDocumento`, aplique o [contrato do filtro de botões por acesso recente](references/catalogo-eventos.md#filtro-de-botões-por-acesso-recente) e execute sua verificação. Módulos existentes são exemplos com limitações, não prova do contrato.
 3. **Implementar no `*Integracao.php`**: manter logica minima no hook; delegar para RN/servicos quando a logica crescer.
 4. **Seguranca**: negar por padrao em entradas nao confiaveis; validar permissao para qualquer efeito colateral; assinar links na geracao e validar na entrada.
 5. **Consistencia transacional**: se o evento gerar escrita relevante (BD/processo/documento), usar transacao manual ou metodo `*Controlado`.

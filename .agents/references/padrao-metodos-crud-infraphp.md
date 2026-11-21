@@ -10,9 +10,9 @@ O recurso SIP de cada metodo esta em `.agents/references/padrao-auditoria-sip-se
 |---|---|---|
 | `cadastrar` | DTO da entidade | O proprio DTO, com a chave primaria preenchida |
 | `alterar` | DTO da entidade | Nenhum DTO, porque nao ha acrescimo de informacao |
-| `excluir` | Lista de DTOs na RN, um DTO por vez na BD | Nada |
+| `excluir`, `desativar`, `reativar` | Lista de DTOs com chaves primárias completas na RN, um DTO por vez na BD | Nada |
 | `consultar` | DTO com os filtros | Um DTO ou nulo |
-| `bloquear` | DTO com os filtros | Um DTO ou nulo, com o registro em lock |
+| `bloquear` | DTO com a chave primária completa | DTO com o registro bloqueado ou `null` |
 | `listar` | DTO com retorno, pesquisa e ordenacao | Lista de DTOs |
 | `contar` | DTO com os filtros | Numero de ocorrencias |
 | `selecionar` | DTO com os filtros | Lista para tela de escolha |
@@ -25,13 +25,13 @@ O recurso SIP de cada metodo esta em `.agents/references/padrao-auditoria-sip-se
 
 **`consultar`**. Se mais de uma ocorrencia atender aos filtros, e gerado erro. Consultar e para registro unico; para varios, usar `listar`.
 
-**`bloquear`**. Alem de devolver o registro, mantem **lock ate o fim da transacao corrente**. So faz sentido dentro de um metodo `Controlado`. Usar fora de transacao segura o lock por tempo indeterminado.
+**`bloquear`**. Preencha todos os campos da chave primária no DTO, inclusive em chave composta. A consulta de bloqueio usa somente a chave primária. Verifique autorização e condições de escopo na RN. Por padrão, o retorno inclui todos os atributos da tabela principal. Se precisar de uma projeção, use `ret` para selecionar atributos dessa tabela. Se o registro não existir, o método retorna `null`. Reúna o bloqueio e a operação que depende dele na mesma transação, em um método `*Controlado`. O bloqueio dura até o fim dessa transação.
 
 **`listar`**. Enviar um DTO com os atributos de retorno preenchidos por `ret`, os de pesquisa por `set` e os de ordenacao por `setOrd`.
 
 **`contar`**. Devolve o numero de ocorrencias que atenderam aos criterios, sem trazer os registros.
 
-**`excluir`**. Assimetria proposital entre camadas: o metodo da RN recebe uma lista de DTOs, e o metodo da BD recebe um DTO especifico. A RN percorre a lista.
+**`excluir`, `desativar` e `reativar`**. A RN recebe uma lista de DTOs com as chaves primárias completas e percorre a lista dentro de um método `*Controlado`, passando um DTO por chamada à BD. Use `desativar` e `reativar` em entidades com exclusão lógica.
 
 **`selecionar`**. Usado em telas de escolha de registro, as lupas. Tem recurso SIP proprio, `_selecionar`, que nunca entra na regra de auditoria.
 
