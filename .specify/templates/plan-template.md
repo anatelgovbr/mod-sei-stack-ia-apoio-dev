@@ -130,14 +130,14 @@ fontes/sei/src/main/php/sip/scripts/
 ## Impacto em Indexacao e Pesquisa
 
 <!--
-  Preencher apenas se houver impacto em pesquisa, feed, Solr, publicacao ou
-  metadados pesquisaveis.
+  Preencher apenas para os mecanismos de pesquisa afetados, conforme o roteamento de skills.
+  Para coluna derivada, consultar .agents/references/padrao-metodos-crud-infraphp.md.
 -->
 
-- **Origem dos dados indexados**: [processo/documento/tabela/evento ou N/A]
-- **Momento da indexacao**: [apos commit/evento/lote/manual ou N/A]
-- **Reprocessamento/reindexacao**: [necessario? como executar?]
-- **Risco transacional**: [indexacao fora de transacao critica?]
+- **Origem dos dados**: [campos da entidade, processo, documento ou evento]
+- **Consulta**: [busca existente a reutilizar ou semântica do novo filtro]
+- **Momento da atualização**: [na mesma transação dos dados de origem para coluna `idx_` ou após o commit para indexação externa]
+- **Preenchimento ou reprocessamento**: [necessidade, método e momento em relação ao uso pela busca]
 
 ## Criterios de Entrega
 

@@ -54,6 +54,7 @@ Exemplos:
 - **FK**: repetir exatamente o nome da PK de origem (ex.: `id_md_ri_restaurante` na tabela filha)
 - **N:N**: preferir tabela `md_<sigla>_rel_<entidade_a>_<entidade_b>` com PK composta pelas duas FKs de origem
 - **Exclusão lógica padrão**: `sin_ativo` com valores `S`/`N`
+- **Busca textual**: para modelar ou alterar uma coluna `idx_<entidade>`, aplique a seção [Coluna derivada para busca textual](padrao-metodos-crud-infraphp.md#coluna-derivada-para-busca-textual).
 
 ## DTO, PK e FK
 

@@ -27,7 +27,7 @@
 - **Impacto em BD**: [novas tabelas/colunas? sim/nao — se sim, descrever brevemente]
 - **Impacto em menus/recursos/perfis (SIP)**: [novo recurso? novo menu? novo perfil?]
 - **Impacto em processo/documento/unidade**: [andamentos? tipo de documento? unidade?]
-- **Impacto em indexacao/pesquisa**: [Solr/feed/reindexacao? sim/nao — se sim, descrever]
+- **Impacto em indexação/pesquisa**: [muda o comportamento da busca, os dados pesquisáveis em coluna `idx_` ou a indexação externa no Solr/feed? Descreva apenas os casos aplicáveis.]
 
 ## Restricoes e Riscos Tecnicos
 

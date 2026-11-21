@@ -202,6 +202,10 @@ equipe, e ai o gate para de proteger tudo, nao so o caso barulhento.
 
 O `audit.py` cobre a modelagem e nao le SQL escrito a mao em `*BD.php`. Nesse SQL, cada valor entra por `formatarGravacao<Tipo>`, cada campo selecionado sai por `formatarSelecao<Tipo>` e cada leitura passa por `formatarLeitura<Tipo>`, com o banco de `getObjInfraIBanco()`. Checklist: `.agents/checklists/checklist-bd-ddl-sei.md`, secao "Isolamento e extensao da camada BD"; vetor `V05` em `.agents/security/matriz-vulnerabilidades-sei.md`.
 
+## Coluna derivada para busca textual (revisão complementar)
+
+Quando a mudança afetar uma coluna `idx_`, confira no DDL e no DTO os itens de modelagem da [referência de busca textual](../../references/padrao-metodos-crud-infraphp.md#coluna-derivada-para-busca-textual). Em base existente, confirme no plano de release como o preenchimento será concluído antes de a busca depender da coluna. Registre a evidência separadamente do resultado estrutural de `audit.py`.
+
 ## Dependências de registros do core
 
 Identifique referências candidatas em DTO/DDL e confirme a FK física; aprovação estrutural não prova eficácia de interceptação. Aplicar, com `sei-guardrails-modulo`, a [matriz de proteção](../sei-mod-api-eventos/references/protecao-dependencias-core.md) também a protocolos e dependências funcionais sem FK.
