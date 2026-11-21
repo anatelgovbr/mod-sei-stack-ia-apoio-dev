@@ -154,10 +154,10 @@ protected function cadastrarControlado($objDTO) {
 ## T6 - Efeitos externos somente apos o retorno transacional
 
 **Severidade:** Erro
-Um metodo `*Controlado` contem somente persistencia em banco. E-mail, Solr,
-indexacao e integracoes externas ficam em um wrapper publico, depois do retorno
-da operacao transacional. O retorno marca o ponto em que a `InfraRN` ja concluiu
-o commit.
+
+Um método `*Controlado` contém somente persistência em banco. O wrapper público dispara e-mail, indexação no Solr e demais integrações externas após o commit. O retorno confirma o commit quando a operação encerra a transação que abriu. Se a operação reutilizar uma transação já aberta, o fluxo que a encerra dispara o efeito.
+
+A gravação de uma coluna textual derivada `idx_` faz parte da mesma transação dos dados que a alimentam. Veja a [referência de busca textual](../../../references/padrao-metodos-crud-infraphp.md#coluna-derivada-para-busca-textual).
 
 Motivo: efeito colateral que falha dentro da transacao pode acionar `cancelarTransacao()`
 e desfazer silenciosamente a persistencia critica. Alem disso, efeito lento dentro da

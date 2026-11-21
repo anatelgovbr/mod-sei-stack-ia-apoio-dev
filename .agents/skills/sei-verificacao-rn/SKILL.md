@@ -29,7 +29,7 @@ Skill de gate para validar padroes de transacao em classes RN do SEI.
 | T3 | RN nao chama BD de outra classe | **Erro** | Cada RN acessa apenas sua propria BD |
 | T4 | Controle manual de conexao/transacao merece revisao | **Aviso** | `fecharConexao()`, `commitTransacao()` e similares exigem contexto claro |
 | T5 | try/catch com `InfraException` e encadeamento de erro e recomendavel | **Aviso** | padrao recorrente nos exemplos do manual |
-| T6 | `*Controlado` contem somente persistencia | **Erro** | e-mail, Solr, indexacao e integracao externa devem ocorrer em wrapper publico depois de todos os acessos de persistencia |
+| T6 | `*Controlado` contém somente persistência | **Erro** | E-mail, indexação no Solr e demais integrações externas são disparados após o commit. |
 | A1 | Metodo de escrita usa recurso auditado compatível | **Erro** | o recurso inicia com `md_` e termina com o sufixo da operação de escrita; `bloquear` compartilha o recurso `_consultar`, porque o SIP não gera recurso `bloquear` |
 | A2 | Wrapper publico de escrita sem verificacao | **Aviso** | revisar intencionalidade sem exigir sessao em helper `*Interno`, hook ou evento sem usuario |
 | A3 | Leitura publica usa o recurso da operacao | **Erro** | `consultar` e `bloquear` usam recurso terminado em `_consultar`; `listar` e `contar` usam recurso terminado em `_listar`; todos iniciados por `md_` |
@@ -48,13 +48,11 @@ metodo legado por heuristica lexical ampla.
 
 ## Efeitos apos commit
 
-O metodo `*Controlado` persiste e retorna. Um wrapper publico chama a operacao
-transacional e somente depois de seu retorno envia e-mail, indexa no Solr ou
-aciona integracao externa. Consulte `references/padroes-transacao.md` para o
-exemplo completo.
+O wrapper chama a operação pelo nome público resolvido pela `InfraRN`. O fluxo que confirma o commit dispara o efeito externo, conforme a [regra T6](references/padroes-transacao.md#t6---efeitos-externos-somente-apos-o-retorno-transacional). Chamar `$this->algumaOperacaoControlado()` diretamente não comprova commit e bloqueia T6.
 
-O wrapper chama o nome público resolvido pela `InfraRN`. Chamar
-`$this->algumaOperacaoControlado()` diretamente não comprova commit e bloqueia T6.
+## Coluna derivada para busca textual (revisão complementar)
+
+Quando a mudança afetar a coluna `idx_`, seus campos de origem ou sua consulta, aplique a [referência de busca textual](../../references/padrao-metodos-crud-infraphp.md#coluna-derivada-para-busca-textual). Confira se a escrita da coluna usa o estado completo e participa da mesma transação dos dados de origem. Atualizá-la após o commit é não conforme. Na consulta, verifique a montagem dos critérios e a preservação dos filtros do fluxo. Registre a evidência dos caminhos verificados além do resultado de `audit.py`.
 
 ## Refatoração
 

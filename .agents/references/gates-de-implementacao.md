@@ -47,7 +47,7 @@ Zero artefatos analisados nao equivale a `PASS`.
 | D1 | Contrato | Novo menu/pagina sem recurso SIP e permissao definidos | Definir recurso `md_<inst/mod>_<acao>` antes de implementar | `sei-menu-pagina` |
 | D2 | Contrato | Evento/hook com efeito colateral ambiguo | Documentar efeito esperado e condicoes de disparo | `sei-mod-api-eventos` |
 | D3 | Contrato | Operacao API usando classe interna sem justificativa | Substituir por `Entrada*API`/`Saida*API`/`SeiRN` ou documentar excecao | `sei-mod-api-operacoes` |
-| D4 | Contrato | Alteracao de indexacao/pesquisa sem declarar momento e reprocessamento | Documentar estrategia de indexacao antes de implementar | `sei-guardrails-modulo` |
+| D4 | Contrato | Alteração de indexação ou pesquisa com estratégia indefinida, inclusive mudança em coluna `idx_`, nos campos de origem ou na consulta correspondente | Definir antes de implementar a origem dos dados, a consulta e, conforme o impacto, o momento e o reprocessamento. Para `idx_`, a atualização ocorre na mesma transação dos dados de origem e o preenchimento necessário precede o uso da coluna na busca. Para indexação externa, o disparo ocorre após o commit. | `sei-guardrails-modulo` |
 | D6 | Dependências | Dependência módulo → core nova ou ampliada sem política e eficácia demonstradas na matriz de proteção | Aplicar `sei-mod-api-eventos/references/protecao-dependencias-core.md`, comprovar caminho real e resolver a lacuna antes de declarar proteção concluída | `sei-guardrails-modulo`, `sei-mod-api-eventos` |
 | D5 | Contrato | Criterio de aceite ausente antes de uma implementacao | Definir ao menos um cenario de sucesso testavel antes de implementar | Nao aplicavel |
 

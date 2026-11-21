@@ -297,6 +297,10 @@ Padrao: `{tabela}_{operacao}`; ex: `md_abc_projeto_cadastrar`, `md_abc_projeto_a
 - lista: filtro persistido com dropdown por FK.
 - FK para tabela do core (`usuario`, `unidade`, `procedimento`): o helper precisa existir em `web/int/` com o nome derivado de `campoExibicao` (ex.: `UnidadeINT::montarSelectSigla`); o motor confere.
 
+### Quando o contrato prevê uma coluna de busca textual
+
+Aplique a [referência de busca textual](../../references/padrao-metodos-crud-infraphp.md#coluna-derivada-para-busca-textual). Inclua a coluna derivada no escopo confirmado. Passe ao motor um JSON com as colunas do CRUD base, pois ele trata `varchar` como campo editável. Depois de validar essa saída, integre a coluna derivada no DTO, na gravação da RN, na consulta e no release. Repita os gates aplicáveis sobre a entrega integrada.
+
 ### Regras opcionais em `regrasGeracao` e nas colunas
 
 | Chave | Efeito no CRUD gerado | Idioma de referencia |
@@ -346,7 +350,7 @@ Diferencas em relacao ao CRUD simples:
 - uma RN nao pode chamar a BD de outra classe
 - nao deve haver comunicacao direta entre BDs
 - uma BD nao pode persistir ou atualizar mais de uma tabela
-- e-mail, integracao externa, indexacao e processamento demorado devem ficar fora da transacao principal
+- Dispare e-mail, indexação no Solr e demais integrações externas após o commit. Mantenha processamento demorado fora da transação principal.
 
 ---
 
