@@ -62,9 +62,9 @@ de modulo sem hook no core, a skill principal passa a ser `sei-menu-pagina`.
 | montarIconeAcompanhamentoEspecial | Adiciona icone na tela de Acompanhamento Especial | ProcedimentoAPI | Badge de acompanhamento especial |
 | montarIconeOrdenarArvore | Adiciona controle de ordenacao na árvore | `objProcedimentoAPI` com IdProcedimento, mais `strIcone` | Botao de ordenacao personalizado |
 | alterarIconeArvoreDocumento | Altera icone de documento na arvore | `objProcedimentoAPI`, `arrObjDocumentoAPI`, `arrIcones` indexado por id de documento | Substituir icone padrao por customizado |
-| montarBotaoControleProcessos | Adiciona botoes na tela de Controle de Processos | `arrBotoes`, array PHP com um item por botao, SVG 24x24 | Adicionar botao de acao rapida; shortcut |
-| montarBotaoProcesso | Adiciona botoes na tela de visualizacao de processo | ProcedimentoAPI | Botao de acao no processo; ferramenta |
-| montarBotaoDocumento | Adiciona botoes na arvore de documentos | DocumentoAPI | Botao de acao no documento; download, info |
+| montarBotaoControleProcessos | Adiciona botões no Controle de Processos | Sem parâmetros | Retornar uma lista de botões da barra de ações, com SVG de 24×24 recomendado |
+| montarBotaoProcesso | Adiciona botões na barra do processo na árvore | `ProcedimentoAPI` | Retornar uma lista de botões do processo |
+| montarBotaoDocumento | Adiciona botões na barra do documento na árvore | `ProcedimentoAPI` e lista de `DocumentoAPI` | Retornar uma lista de botões por ID de documento |
 | montarBotaoCadastroDocumento | Adiciona botoes na tela de cadastro de documento | `objDocumentoAPI` com IdProcedimento, IdDocumento, IdSerie, Data, IdUnidadeGeradora, Numero, NomeArvore, DinValor, IdPlanoTrabalho e Tipo, mais `arrBotoes` | Acoes na tela de inclusao de documento |
 | montarBotaoChatIA | Adiciona botao de chat IA na interface | Sem parametro | Botao de interacao com IA; integração |
 | montarBotaoLoginExterno | Adiciona botao na tela de login externo | Sem parametro | Botao customizado no login externo |
@@ -73,6 +73,19 @@ de modulo sem hook no core, a skill principal passa a ser `sei-menu-pagina`.
 | montarBotaoAssinaturaInterno | Adiciona botoes na area de assinatura interno | `objUsuarioAPI` com IdUsuario, Sigla, Nome e StaTipo, mais `strHtml` | Acoes complementares na assinatura interna |
 | montarBotaoAssinaturaExterno | Adiciona botoes na area de assinatura externo | `objUsuarioAPI` com IdUsuario, Sigla, Nome e StaTipo, mais `strHtml` | Acoes complementares na assinatura externa |
 | montarBotaoVeiculoPublicacao | Adiciona botoes na tela de veiculo de publicacao | VeiculoPublicacaoAPI | Acoes no veiculo de publicacao |
+
+### Filtro de botões por acesso recente
+
+A preferência **Filtrar botões acessados recentemente**, em **Alterar Configuração**, vale para o Controle de Processos e para as barras do processo e do documento na árvore. O core mantém histórico distinto para cada um dos três contextos.
+
+- Devolva uma string HTML por botão, com um `<a>` como filho direto da barra e o `<img>` como filho direto do link, no formato `<a ...><img ... alt="Nome da ação" title="Nome da ação"></a>`. Para documentos, indexe a lista de botões pelo ID do documento recebido no evento.
+- Use um `title` no próprio `<img>`, estável entre acessos e distinto para ações diferentes na mesma barra. Use o nome da ação, sem número de processo, ID de documento ou estado variável. O core usa o CRC32 desse título para decidir a visibilidade do link e registrar o clique no histórico.
+- Entregue todos os botões permitidos no contexto. O core decide quais ficam visíveis e monta **Exibir mais Botões** quando há ações visíveis e ocultas. A barra fica completa quando a preferência está desligada ou o filtro ocultaria todos os botões. Mantenha a autorização na ação e a assinatura nos links.
+- Na árvore, prefira o link assinado no `href` e aspas duplas nos atributos, como em `julgamento`. O core incorpora os fragmentos a um literal JavaScript e remonta a barra ao trocar de nó. Preserve o escape do HTML nesse contexto e mantenha o clique funcional após a remontagem.
+
+**Verificação.** Na superfície alterada, teste a preferência desligada e ligada, com uma ação recente e outra fora do histórico. Expanda, recolha e execute a ação do módulo após expandir. Ao reabrir a mesma superfície, confirme que o clique foi registrado. Na árvore, alterne entre processo e documento para conferir a montagem e o destino dos links.
+
+Fontes no checkout do SEI: filtro e registro no core (`fontes/sei/src/main/php/sei/web/js/sei.js`), Controle de Processos (`fontes/sei/src/main/php/sei/web/procedimento_controlar.php`), processo (`fontes/sei/src/main/php/sei/web/int/ProcedimentoINT.php`), documento (`fontes/sei/src/main/php/sei/web/int/ProtocoloINT.php`) e exemplos do módulo julgamento (`fontes/sei/src/main/php/sei/web/modulos/trf4/julgamento/MdJulgarIntegracao.php`).
 
 ## UI — Menus e Ações
 
