@@ -9,7 +9,7 @@ Combina o manual SEI-Módulos v5.0 com orientações adicionais do projeto.
 ## Naming e limites
 
 - **Limite para tabelas e colunas**: **26 caracteres** (limite absoluto — os 4 chars restantes
-  até o cap Oracle de 30 são reservados para prefixos de objetos derivados: `seq_`, `fk_`, `iXX_`).
+  até o cap Oracle de 30 são reservados para prefixos de objetos derivados: `seq_`, `fk_`, `iNN_`).
 - **Limite para índices, FKs e sequences**: **30 caracteres** (cap Oracle).
 - Usar apenas letras minúsculas, números e sublinhado.
 - Usar singular; suprimir preposições; separar termos por sublinhado.
@@ -86,7 +86,8 @@ Preferir tipos SQL-99 comuns; evitar tipos proprietários sem equivalente:
 | Chave primária | `pk_<tabela>` | `pk_md_ri_filme` |
 | Chave estrangeira | `fk_<tabela_filha>_<ref_curta>` | `fk_md_ri_rel_fa_filme` |
 | Chave alternativa | `ak_<tabela>_<campo(s)>` | `ak_md_ri_filme_titulo` |
-| Índice | `iXX_<tabela>_<campo(s)>` | `i01_md_ri_filme_titulo` |
+| Índice que não representa FK | `iNN_<tabela>`, com `NN` de `01` a `99` | `i01_md_ri_filme` |
+| Índice que representa FK | o nome da FK | `fk_md_ri_rel_fa_filme` |
 
 - Nomes de FK e índice também respeitam o limite de 30 caracteres — use abreviações quando necessário.
 
@@ -103,34 +104,13 @@ DTOs que usam `seq_<tabela_funcional>` devem configurar a PK com
 `infra_sequencia` pelo nome da tabela sem o prefixo `seq_`, portanto nao e o
 tipo correto para o padrao `seq_<tabela>`.
 
-Padrão de criação multi-SGBD no script SEI:
-
-```php
-$this->logar('CRIANDO A SEQUENCE seq_md_xx_entidade');
-if (BancoSEI::getInstance() instanceof InfraMySql) {
-    BancoSEI::getInstance()->executarSql('create table seq_md_xx_entidade (id bigint not null primary key AUTO_INCREMENT, campo char(1) null) AUTO_INCREMENT = 1');
-} else if (BancoSEI::getInstance() instanceof InfraSqlServer) {
-    BancoSEI::getInstance()->executarSql('create table seq_md_xx_entidade (id bigint identity(1,1), campo char(1) null)');
-} else if (BancoSEI::getInstance() instanceof InfraOracle || BancoSEI::getInstance() instanceof InfraPostgreSql) {
-    BancoSEI::getInstance()->criarSequencialNativa('seq_md_xx_entidade', 1);
-}
-```
+No script SEI, a sequence é criada com `BancoSEI::getInstance()->criarSequencialNativa('seq_md_xx_entidade', 1)`, que funciona nos quatro bancos. Criar, remover e ajustar o próximo valor: `.agents/references/padrao-scripts-release.md`, seções "Sequence / auto-incremento", "Remover sequence" e "Ajustar o próximo valor de uma sequence".
 
 ---
 
 ## Tipos InfraMetaBD (para DDL em scripts)
 
-```php
-$objInfraMetaBD = new InfraMetaBD(BancoSEI::getInstance());
-```
-
-| Método | Equivalente SQL |
-|--------|----------------|
-| `tipoNumero()` | `integer` / `number` |
-| `tipoTextoVariavel(n)` | `varchar(n)` |
-| `tipoTextoFixo(n)` | `char(n)` |
-| `tipoNumeroDecimal(p,s)` | `numeric(p,s)` |
-| `tipoDataHora()` | `datetime` / `timestamp` |
+Os métodos `tipo*()` da `InfraMetaBD`, o tipo que cada um gera em cada banco e o limite de tamanho de cada um estão em `.agents/references/padrao-scripts-release.md`, seções "Objeto obrigatório" e "Criar tabela".
 
 ---
 
@@ -145,17 +125,15 @@ $objInfraMetaBD = new InfraMetaBD(BancoSEI::getInstance());
 
 ### Naming aplicado a scripts
 
-- A seção `Naming e limites` acima é a fonte única para nomes de tabela, coluna, índice, FK e sequence.
-- `26` caracteres é válido para tabela/coluna; `> 26` bloqueia.
-- `30` caracteres é o limite para índice, FK e sequence.
+- As seções `Naming e limites` e `Chaves e índices (naming)` acima são a fonte única para nomes e limites de tabela, coluna, índice, FK e sequence.
 
 ### Regras multibanco e helpers do core
 
 - Prefira os tipos de `InfraMetaBD::tipo*()` para manter portabilidade entre MySQL, SQL Server, Oracle e PostgreSQL.
 - Use `InfraMetaBD` para alterar colunas, criar/remover PK, FK e índices.
 - Use SQL bruto apenas quando o core não oferecer abstração equivalente. O caso principal é `CREATE TABLE`.
-- Prefira `criarSequencialNativa()` para sequences quando o script-alvo não exigir preservar outro estilo local.
-- Preserve o estilo do script existente quando o módulo já usar branching explícito por SGBD para sequence.
+- Crie sequence com `criarSequencialNativa()`, inclusive em script que já ramifica por banco para sequence.
+- Siga os padrões multibanco de `.agents/references/padrao-scripts-release.md` para tipo da coluna de FK, FK nas colunas da PK, coluna `NOT NULL` em tabela com dados, alteração ou exclusão de coluna com FK ou índice, troca de tipo de coluna com dados, remoção e ajuste de sequence, checagem de existência, índice único, opção de nulidade em minúsculas, `setBolValidarIdentificador(true)` e leitura e gravação de dados no script.
 
 ### Preferência por funções do core
 
@@ -168,7 +146,7 @@ $objInfraMetaBD = new InfraMetaBD(BancoSEI::getInstance());
 - Não use SQL bruto para `ALTER TABLE`, PK, FK ou índice quando houver helper do core.
 - Não gere sequence para tabela N:N com PK composta.
 - Não duplique índice de FK quando `adicionarChaveEstrangeira()` já o cria por padrão.
-- Não gere chamadas com assinatura divergente do core atual, como `tipoNumero(2)` ou `tipoNumeroGrande(20)`, sem confirmação explícita.
+- Gere `tipoNumero()` e `tipoNumeroGrande()` sem argumento: os dois métodos não recebem parâmetro.
 - Para efeitos colaterais e transação, seguir `AGENTS.md` na seção `Padrão Transacional Obrigatório`.
 
 ### Responsabilidade por lado
@@ -195,7 +173,7 @@ $objInfraMetaBD = new InfraMetaBD(BancoSEI::getInstance());
 - Revisar se o `switch` incremental ficou correto.
 - Revisar se `atualizarNumeroVersao()` é a última ação funcional.
 - Validar naming e modelagem com as ferramentas do projeto.
-- Revisar se o script manteve compatibilidade multibanco.
+- Conferir o DDL gerado contra cada padrão multibanco de `.agents/references/padrao-scripts-release.md` que se aplica a ele.
 
 ### Pontos a confirmar antes de automatizar mais
 
@@ -212,17 +190,17 @@ $objInfraMetaBD = new InfraMetaBD(BancoSEI::getInstance());
 
 Regras do manual que valem para todo script de instalação e atualização. Erro aqui passa no banco de desenvolvimento e quebra o release no banco do cliente.
 
-- **Comprimento de coluna**: evitar comprimentos superiores a **1000 caracteres**. Acima disso a portabilidade entre os bancos suportados deixa de ser garantida.
+- **Comprimento de coluna**: `tipoTextoVariavel(n)` vai até **4000** e `tipoTextoFixo(n)` até **255**; texto maior usa `tipoTextoGrande()`. Acima desses valores, pelo menos um dos quatro bancos recusa a coluna; o limite de cada banco está em `.agents/references/padrao-scripts-release.md`, seção "Criar tabela".
 - **Sequences**: são usadas quando o DTO declara o tipo de chave primária nativa. Dependendo do banco, a sequence é implementada como tabela ou como sequence real, então o script não pode assumir uma das duas formas.
-- **Funções de banco**: em script de instalação e atualização, usar as funções disponíveis em `/infra/InfraBD.php` em vez de DDL solto. O catálogo dessas funções é a referência a consultar antes de escrever DDL própria.
+- **Funções de banco**: em script de instalação e atualização, usar os métodos da `InfraMetaBD` e o `criarSequencialNativa` do `BancoSEI` em vez de DDL escrita à mão, conforme a seção "Regras multibanco e helpers do core". O manual (cap. 5) cita `/infra/InfraBD.php`, mas os métodos de DDL ficam na `InfraMetaBD`; a `InfraBD` é a classe base das BDs, com o acesso por DTO.
 
 ### Bind de campos CLOB em `executarSql`
 
-A assinatura completa e `executarSql($strSql, $arrCamposBind = null)`, e devolve o numero de registros afetados.
+A assinatura é `executarSql($strSql, $arrCamposBind = null)` nos quatro bancos, e devolve o número de registros afetados. O formato do segundo parâmetro e a marcação do campo no SQL mudam de um banco para outro: no Oracle, o array é indexado pelo nome do marcador, como `[':txt' => $strTexto]` para `values (:txt)`.
 
-O segundo parametro existe **apenas para Oracle**: e um array indexado pelos nomes dos campos CLOB, usado para bind. Em outros bancos ele nao se aplica e fica nulo.
+No Oracle, texto com mais de 4000 bytes escrito direto no SQL falha (ORA-01704), e a gravação em coluna `tipoTextoGrande()` exige bind. MySQL, SQL Server e PostgreSQL aceitam esse texto direto no SQL.
 
-Consequencia pratica para release multi-SGBD: escrita em coluna CLOB que funciona em MySQL ou SQL Server pode falhar em Oracle se o bind nao for informado. Script que grava texto longo precisa prever os dois caminhos.
+Para gravar texto longo no script, use DTO e BD: a `InfraBD` monta o bind de cada banco. Em SQL escrito à mão, ramifique por banco, com bind no ramo Oracle.
 
 ## Nomenclatura de tabela, regras do manual
 

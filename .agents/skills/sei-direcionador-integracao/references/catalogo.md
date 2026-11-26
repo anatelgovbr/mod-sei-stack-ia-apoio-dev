@@ -14,11 +14,11 @@
 
 1. Receber a intencao textual do desenvolvedor.
 2. Fazer busca nos 3 catalogos com esta prioridade: nome oficial do recurso, sinais de dominio, descricao, entrada principal e saida principal.
-3. Se encontrar em apenas 1 catalogo: apontar aquele caminho e sugerir a skill padrao.
-4. Se encontrar em 2 ou 3: listar as correspondencias e perguntar ao desenvolvedor.
+3. Se encontrar uma unica correspondencia forte: dar o veredito `Reuso do core: <nome> (<catalogo>)` e encaminhar para a skill padrao.
+4. Se encontrar 2 ou 3 correspondencias plausiveis, no mesmo catalogo ou em catalogos diferentes: listar as correspondencias e perguntar ao desenvolvedor.
 5. Se houver varias correspondencias no mesmo catalogo: priorizar as que tiverem mais sinais de dominio aderentes a intencao.
 6. Se uma entrada de `sei-mod-api-classes` aparecer apenas como contrato de suporte de uma operacao/evento ja identificado, nao trata-la como rota competidora; mencionar como complemento tecnico.
-7. Apos confirmacao do desenvolvedor, lancar a skill padrao correspondente.
+7. Com 2 ou 3 opcoes, apos confirmacao do desenvolvedor, lancar a skill padrao correspondente.
 
 ## Exemplo de fluxo
 
@@ -30,21 +30,13 @@
 4. Nao encontrar em `sei-mod-api-classes`
 5. Responder:
 
-```
-Encontrei 1 correspondencia para "gerarDocumento":
-
-► Evento: gerarDocumento
-  Catalogo: sei-mod-api-eventos
-  Contexto: Apos geracao de documento
-
-Opcao detectada: interceptar o evento apos geracao do documento via hook em *Integracao.
-
-Voce quer seguir com a interceptacao desse evento?
-  [1] Sim — usar sei-mod-api-eventos
-  [2] Nao — mostrar outras correspondencias
+```text
+Reuso do core: gerarDocumento (sei-mod-api-eventos)
+Contexto: apos geracao de documento, via hook em *Integracao
+Proximo passo: sei-mod-api-eventos
 ```
 
-6. Se o desenvolvedor escolher [1]: lancar `sei-mod-api-eventos`.
+6. Lancar `sei-mod-api-eventos`.
 
 ## Exemplos de saida esperada
 
@@ -67,15 +59,9 @@ Qual destas opcoes corresponde melhor ao seu caso?
 ### Exemplo 2: atribuir trabalho
 
 ```text
-Encontrei estas opcoes oficiais relacionadas ao que voce descreveu:
-
-1. atribuirProcesso
-   Catalogo: sei-mod-api-operacoes
-   Contexto: atribuicao de processo para usuario na unidade; sinais de dominio: atribuicao, carga de trabalho, responsavel.
-
-Observacao: se voce seguir por essa operacao, o contrato de entrada associado e `EntradaAtribuirProcessoAPI`.
-
-Voce quer seguir com essa operacao?
+Reuso do core: atribuirProcesso (sei-mod-api-operacoes)
+Contexto: atribuicao de processo para usuario na unidade; sinais de dominio: atribuicao, carga de trabalho, responsavel; contrato de entrada `EntradaAtribuirProcessoAPI`.
+Proximo passo: sei-mod-api-operacoes
 ```
 
 ### Exemplo 3: organizar por bloco
@@ -116,8 +102,8 @@ Qual destas opcoes corresponde melhor ao seu caso?
 
 ## Regras de comportamento
 
-- Esta skill **nao implementa** — apenas descobre e pergunta.
-- **Nunca** sugerir implementacao propria antes de perguntar.
+- Esta skill **nao implementa**: descobre, da o veredito e pergunta so quando houver 2 ou 3 opcoes.
+- **Nunca** sugerir implementacao propria antes do veredito.
 - Se nenhuma correspondencia for encontrada em nenhum catalogo: informar e sugerir `sei-guardrails-modulo`.
 - Limite de opcoes na pergunta: **3 no maximo**. Se encontrar mais de 3, mostrar as 3 mais relevantes e sinalizar que há mais.
 - Em buscas por dominio (ex.: `plano de trabalho`, `prazo`, `bloco`, `atribuicao`), priorizar linhas que exponham `Sinais de dominio`, `Entrada principal` ou `Saida principal`.

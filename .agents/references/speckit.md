@@ -39,14 +39,14 @@ Nenhuma fase escreve no arquivo de contexto do projeto. O `update-agent-context`
 
 ## Templates dos artefatos
 
-Os esqueletos de `spec.md`, `plan.md`, `tasks.md` e das checklists ficam em `.specify/templates/<artefato>-template.md`. O script da fase resolve o template e o copia para `specs/<feature>/` quando o arquivo ainda nao existe (`create-new-feature` para spec, `setup-plan` para plan, `setup-tasks` para tasks, `check-prerequisites --template` para checklist); a skill preenche o arquivo seguindo a estrutura do template. Esses templates carregam as secoes do SEI e sao da equipe.
+Os esqueletos de `spec.md`, `plan.md`, `tasks.md` e das checklists ficam em `.specify/templates/<artefato>-template.md`. O script da fase resolve o template. O `create-new-feature` e o `setup-plan` o copiam para `specs/<feature>/spec.md` e `specs/<feature>/plan.md` quando o arquivo ainda nao existe; o `setup-tasks` e o `check-prerequisites --template` devolvem o conteudo do template no JSON, e a skill escreve o `tasks.md` e a checklist. A skill preenche o arquivo seguindo a estrutura do template. Esses templates carregam as secoes do SEI e sao da equipe.
 
 Os templates de comando do SpecKit (`templates/commands/<fase>.md` no projeto de origem) nao ficam no repositorio: o conteudo deles ja esta em cada `SKILL.md`.
 
 ## Regra de manutencao
 
 1. Altere sempre `.agents/skills/speckit-<fase>/SKILL.md`. Nao existe segunda copia para sincronizar.
-2. Mantenha o `SKILL.md` neutro em relacao ao runtime: nada de `/speckit-plan` nem `/speckit.plan` no corpo. Cite a fase de forma generica e deixe a ferramenta resolver o gatilho.
+2. Mantenha o `SKILL.md` neutro em relacao ao runtime: nada de `/speckit-plan` nem `/speckit.plan` no corpo. Cite a fase de forma generica, como "the `plan` phase", e deixe a ferramenta resolver o gatilho. O marcador `__SPECKIT_COMMAND_<FASE>__` que vem da origem tambem vira essa citacao, porque o SpecKit ja esta instalado e nenhum instalador o troca; o `verificar_stack.py` confere.
 3. Fase nova precisa de um diretorio proprio em `.agents/skills/`, nomeado `speckit-<fase>`, com `name: speckit-<fase>` no frontmatter. O nome do diretorio e o que vira o gatilho de invocacao.
 4. Nao crie pasta de comando de ferramenta para expor a fase. Se algum dia uma ferramenta exigir isso, o arquivo aponta para o `SKILL.md` e nao carrega workflow.
-5. Estrutura de artefato gerado (secao, campo, ordem) muda em `.specify/templates/<artefato>-template.md`. A skill da fase nao repete essa estrutura.
+5. Estrutura de artefato gerado (secao, campo, ordem) muda em `.specify/templates/<artefato>-template.md`. A skill da fase nao repete essa estrutura. Excecao: a forma da linha de tarefa, que `speckit-tasks` e `speckit-converge` trazem da origem; quem muda essa forma muda o `tasks-template.md` e as duas skills, e o `verificar_stack.py` confere o verify nos tres.

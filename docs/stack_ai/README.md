@@ -143,7 +143,7 @@ As skills do projeto nascem neste repositório e são versionadas junto com ele:
 |---|---|
 | `sei-gerador-crud` | Gera o CRUD completo de uma entidade (tela de listagem, tela de cadastro, regras de negócio, acesso ao banco) |
 | `sei-guardrails-modulo` | Aplica guardrails obrigatórios para trabalhos em módulos SEI |
-| `sei-direcionador-integracao` | Ajuda a escolher entre API, evento ou operação oficial do SEI quando a intenção ainda está ambígua |
+| `sei-direcionador-integracao` | Reuso do core: procura nos catálogos dos capítulos "Classes API", "Eventos" e "Operações" do manual de Módulos o contrato oficial do SEI antes de o módulo criar função, método, hook, página ou JS que lê ou altera dado do core ou que reage a ação ou tela do core, e dá o veredito "Reuso do core". Use também quando o pedido for ambíguo entre API, evento e operação ("existe algo para fazer X", "qual usar: evento ou operação") e para conferir se o código já escrito usou classe interna do core onde existe contrato oficial ("confira o reuso do core"). Não implementa: encaminha para a skill padrão. |
 | `sei-verificacao-banco-dados` | Valida se a camada de acesso ao banco de dados segue os padrões do projeto |
 | `sei-verificacao-pagina` | Valida páginas PHP quanto a segurança e padrões SEI |
 | `sei-verificacao-rn` | Valida classes de regra de negócio quanto a transação e separação de camadas |
@@ -236,7 +236,7 @@ As quatro restantes são auxiliares e entram só quando você precisa delas.
 | Convergência | `/speckit-converge` | Compara a codebase com a spec, o plano e as tarefas, e acrescenta em `tasks.md` o que ainda falta construir |
 | Constituição | `/speckit-constitution` | Mantém o arquivo `.specify/memory/constitution.md`, que é mantido intencionalmente vazio |
 
-O `constitution.md` fica vazio de propósito e não governa o fluxo: as regras de governança vivem nas próprias skills de fase, em `.agents/skills/speckit-*/`.
+O `constitution.md` fica vazio de propósito e não governa o fluxo: as regras do projeto ficam no `AGENTS.md`, que a ferramenta carrega em toda sessão, e o fluxo de cada fase fica na skill da fase, em `.agents/skills/speckit-*/`.
 
 #### Como invocar as fases
 

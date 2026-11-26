@@ -3,14 +3,14 @@
 ## Regras SEI Explicitas
 
 ### P1 — `validarLink()`
-Base: `sei_modulos_manual_dev_3_consideracoes_previas.md`, secao `SessaoSEI`.
+Base: `docs/manuais/sei/manual_md/sei_modulos_manual_dev_3_consideracoes_previas.md`, secao `SessaoSEI`.
 
 ```php
 SessaoSEI::getInstance()->validarLink();
 ```
 
 ### P2 — `validarPermissao()`
-Base: `sei_modulos_manual_dev_3_consideracoes_previas.md` e
+Base: `docs/manuais/sei/manual_md/sei_modulos_manual_dev_3_consideracoes_previas.md` e
 `sei_modulos_manual_dev_4_infraphp.md`.
 
 ```php
@@ -22,7 +22,7 @@ SessaoSEI::getInstance()->validarPermissao($_GET['acao']);
 Base: guardrail do repositório + `.gitattributes`.
 
 ### P4 — `assinarLink()` em links de acao
-Base: `sei_modulos_manual_dev_3_consideracoes_previas.md` e exemplos do manual 9.
+Base: `docs/manuais/sei/manual_md/sei_modulos_manual_dev_3_consideracoes_previas.md` e exemplos do manual 9.
 
 ```php
 $strLink = SessaoSEI::getInstance()->assinarLink('controlador.php?acao=md_abc_acao');

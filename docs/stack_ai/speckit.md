@@ -55,7 +55,7 @@ As quatro restantes são auxiliares e entram só quando você precisa delas.
 | Convergência | `/speckit-converge` | Compara a codebase com a spec, o plano e as tarefas, e acrescenta em `tasks.md` o que ainda falta construir |
 | Constituição | `/speckit-constitution` | Mantém o arquivo `.specify/memory/constitution.md`, que é mantido intencionalmente vazio |
 
-O `constitution.md` fica vazio de propósito e não governa o fluxo: as regras de governança vivem nas próprias skills de fase, em `.agents/skills/speckit-*/`.
+O `constitution.md` fica vazio de propósito e não governa o fluxo: as regras do projeto ficam no `AGENTS.md`, que a ferramenta carrega em toda sessão, e o fluxo de cada fase fica na skill da fase, em `.agents/skills/speckit-*/`.
 
 ---
 

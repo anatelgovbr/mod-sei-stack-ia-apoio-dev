@@ -20,15 +20,16 @@ produto. Similaridade que dependa de semântica funcional não é achado técnic
 | U7 | Há acoplamento a página, sessão, entrada HTTP ou superglobal em camada interna? | ALTA | matriz V06 |
 | U8 | A visibilidade pública, protegida ou privada é a mínima exigida pelos chamadores observados? | MEDIA | chamadores localizados |
 | U9 | A adição amplia superfície de permissão, transação, release ou multi-SGBD? | conforme gate | gates aplicáveis |
-| U10 | Existe contrato oficial de core ou API com a mesma operação técnica e tipos compatíveis? | MEDIA | `sei-mod-api-classes` |
+| U10 | Existe contrato oficial de core ou API com a mesma operação técnica e tipos compatíveis? | ALTA | `sei-direcionador-integracao` |
 
 ## Busca mínima
 
-1. Inspecione a própria classe e seus chamadores.
-2. Inspecione RN, INT e DTO relacionados no mesmo módulo.
-3. Consulte os catálogos de `sei-mod-api-classes`, `sei-mod-api-operacoes` e
+1. Quando o escopo for a árvore de trabalho ou a branch atual, aplique a seção "Conferir código já escrito" de `sei-direcionador-integracao`, que roda o auditor de reuso e dá o veredito de cada chamada e de cada função listada por ele; cada uma é candidata a U10. A revisão é somente leitura: o veredito e as opções de cada item vão no relatório, sem pergunta ao desenvolvedor, encaminhamento nem escrita no plano.
+2. Inspecione a própria classe e seus chamadores.
+3. Inspecione RN, INT e DTO relacionados no mesmo módulo.
+4. Consulte os catálogos de `sei-mod-api-classes`, `sei-mod-api-operacoes` e
    `sei-mod-api-eventos` quando houver integração com o core.
-4. Consulte `.agents/references/padrao-codificacao-php.md` e
+5. Consulte `.agents/references/padrao-codificacao-php.md` e
    `.agents/references/padrao-modelagem-dados.md` para contratos técnicos.
 
 ## Evidência e decisão
@@ -38,8 +39,7 @@ produto. Similaridade que dependa de semântica funcional não é achado técnic
   chamadas e fluxo técnico. Não presuma equivalência pelo nome.
 - Se a equivalência depender de intenção funcional, não emita achado. Registre a
   verificação como inconclusiva apenas se ela impedir outra conclusão técnica.
-- Classe interna do core não é achado por si só. Registre somente risco atual de
-  segurança, transação, compatibilidade suportada ou contrato API/WS violado.
+- Classe interna do core usada onde o catálogo tem contrato equivalente é achado U10: cite o contrato e o catálogo. A equivalência segue a comparação de campos gravados, filtros e validações no `SeiRN.php` da conferência de `sei-direcionador-integracao`; com diferença que muda o resultado, a chamada interna fica e o relatório cita a diferença. Sem contrato equivalente, classe interna só é achado com risco atual de segurança, transação, compatibilidade suportada ou contrato API/WS violado.
 - Sem equivalente localizado, informe apenas que a busca técnica não encontrou
   duplicação. Isso não prova necessidade funcional.
 

@@ -1,20 +1,12 @@
 ---
 name: sei-mod-api-operacoes
 description: >
-  Implementa e testa operacoes oficiais do SEI via SeiRN usando classes da API
-  (Entrada*API / Saida*API / *API), lancamento/consulta de andamentos e
-  integracoes via WebServices quando aplicavel.
-
-  Use quando:
-  - O desenvolvedor precisa executar uma operacao oficial do SEI (gerar processo,
-    incluir documento, lancar andamento, enviar processo, etc.)
-  - Ha necessidade de integrar via WebServices usando a mesma API do core
-  - Promptlike: "implementar a operacao X", "gerar procedimento via API",
-    "lancar andamento no processo Y"
-
-  Esta skill foca em executAR operacoes.
-  Se a demanda ainda estiver ambigua entre API, evento e operacao, usar
-  sei-direcionador-integracao.
+  Executa pelo `SeiRN`, com as classes `Entrada*API` e `Saida*API`, a operacao
+  oficial do capitulo "Operações" que o modulo precisa: gerar processo, incluir
+  documento, lancar ou consultar andamento, enviar, bloquear, atribuir, listar
+  tipos para combo ou manter bloco, inclusive por WebService. Acionar antes de
+  criar funcao de modulo que faca isso com RN, DTO ou SQL do core. Duvida entre
+  API, evento e operacao: sei-direcionador-integracao.
 ---
 
 # sei-mod-api-operacoes
@@ -48,7 +40,7 @@ nao como skill principal de triagem.
 
 ## Critérios de validação
 
-- [ ] A operacao executada existe no catalogo de operacoes do manual.
+- [ ] A operacao executada existe no catalogo de operacoes.
 - [ ] Os objetos de entrada/saida usado correspondem ao contrato oficial documentado na `sei-mod-api-classes`.
 - [ ] Nao foi usada classe interna do core como payload.
 - [ ] Erro tratado sem stacktrace exposto.
@@ -69,4 +61,4 @@ nao como skill principal de triagem.
 
 **A camada de Web Services usa a mesma API.** Toda operacao disponivel por Web Services esta disponivel diretamente ao modulo pela API. Nao chamar o proprio Web Service do SEI de dentro de um modulo do SEI.
 
-**Alteracoes nos objetos e metodos.** Mudancas nos objetos da API e nos metodos da classe acompanham a versao do SEI. Ao subir de versao, conferir o capitulo 10 da versao nova antes de assumir que o contrato permaneceu.
+**Alteracoes nos objetos e metodos.** Mudancas nos objetos da API e nos metodos da classe acompanham a versao do SEI. Ao subir de versao, conferir o capitulo 10 da versao nova e rodar `python3 .agents/skills/sei-mod-api-eventos/evals/verificar_stack.py` sobre o core novo antes de assumir que o contrato permaneceu.

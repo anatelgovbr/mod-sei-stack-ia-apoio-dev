@@ -78,6 +78,8 @@ services:
     # Gerar processo grava o codigo de barras do protocolo na pasta temp do SEI.
     tmpfs:
       - /opt/sei/temp
+    # Rede do httpd do e2e, como o pw: localhost:8000 e o SIP do e2e, que as RNs do Litigioso consultam pelo web service.
+    network_mode: service:httpd
     # Depois que o /command.sh do httpd termina: o SIP ja esta com o endereco do e2e.
     depends_on:
       httpd:

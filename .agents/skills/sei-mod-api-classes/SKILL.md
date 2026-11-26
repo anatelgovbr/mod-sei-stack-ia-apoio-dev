@@ -1,23 +1,13 @@
 ---
 name: sei-mod-api-classes
 description: >
-  Verifica se existe classe API oficial do SEI antes de usar classe interna,
-  acesso direto ao core ou implementacao propria. Auxilia o agente a localizar
-  o contrato correto (Entrada*API / Saida*API / *API) para integracao via modulo.
-
-  Use quando:
-  - O desenvolvedor precisa verificar se ja existe uma API oficial para seu caso
-  - Ha necessidade de identificar qual objeto da API usar (ex: ProcedimentoAPI,
-    DocumentoAPI, AndamentoAPI, PublicacaoAPI)
-  - O agente esta prestes a propor acesso ao core ou uso de classes internas
-  - Promptlike: "qual API usar para fazer X", "existe classe oficial para Y"
-
-  Esta skill NAO implementa operacoes nem eventos — apenas orienta a localizacao
-  correta do contrato oficial de API.
-  Para implementacao de operacao, usar sei-mod-api-operacoes.
-  Para interceptacao de eventos, usar sei-mod-api-eventos.
-  Se a demanda ainda estiver ambigua entre API, evento e operacao, usar
-  sei-direcionador-integracao.
+  Localiza no catalogo do capitulo "Classes API" o contrato oficial do SEI
+  (`*API`, `Entrada*API`, `Saida*API`) antes de o modulo ler ou gravar processo,
+  documento, andamento, bloco, usuario, unidade ou contato com classe interna,
+  DTO ou RN do core, SQL em tabela do core ou implementacao propria. Use tambem
+  para "qual API usar para X" e "existe classe oficial para Y". Nao implementa:
+  operacao vai para sei-mod-api-operacoes, evento para sei-mod-api-eventos e
+  duvida entre os tres para sei-direcionador-integracao.
 ---
 
 # sei-mod-api-classes

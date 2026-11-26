@@ -603,7 +603,7 @@ Pontos de atenção conhecidos: a validação entrou na RN e na página de cadas
 
 ### Revisão Técnica de módulo ou arquivo
 
-Use para levantar o estado atual do código que está no repositório, incluindo o passivo. Em um módulo, a revisão cobre todas as dimensões técnicas e também os scripts SEI e SIP de instalação e atualização mapeados para ele. Fonte: `sei-revisao-tecnica/SKILL.md`, seção "Escopo de modulo completo".
+Use para levantar o estado atual do código que está no repositório, incluindo o passivo. Em um módulo, a revisão cobre todas as dimensões técnicas e também os scripts SEI e SIP de instalação e atualização mapeados para ele. Fonte: `sei-revisao-tecnica/SKILL.md`, seção "Escopo de módulo completo".
 
 **Prompt para módulo inteiro:**
 

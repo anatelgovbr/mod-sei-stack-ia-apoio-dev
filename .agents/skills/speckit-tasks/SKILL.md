@@ -89,11 +89,8 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 4. **Generate tasks.md**: Read the tasks template from TASKS_TEMPLATE (from the JSON output above) and use it as structure. If TASKS_TEMPLATE is empty, fall back to `.specify/templates/tasks-template.md`. Fill with:
    - Correct feature name from plan.md
-   - Phase 1: Setup tasks (project initialization)
-   - Phase 2: Foundational tasks (blocking prerequisites for all user stories)
-   - Phase 3+: One phase per user story (in priority order from spec.md)
-   - Each phase includes: story goal, independent test criteria, tests (if requested), implementation tasks
-   - Final Phase: Polish & cross-cutting concerns
+   - The phases of the template, with its headings and in its order: preparation and discovery, foundational work, one phase per user story (in priority order from spec.md), and release and validation
+   - Each user story phase includes: story goal, independent test criteria, tests (if requested), implementation tasks
    - All tasks must follow the strict checklist format (see Task Generation Rules below)
    - Clear file paths for each task
    - Dependencies section showing story completion order
@@ -142,7 +139,7 @@ Output path to generated tasks.md and summary:
 - Parallel opportunities identified
 - Independent test criteria for each story
 - Suggested MVP scope (typically just User Story 1)
-- Format validation: Confirm ALL tasks follow the checklist format (checkbox, ID, labels, file paths)
+- Format validation: Confirm ALL tasks follow the checklist format (checkbox, ID, labels, file paths, verify)
 
 Context for task generation: {ARGS}
 
@@ -159,32 +156,32 @@ The tasks.md should be immediately executable - each task must be specific enoug
 Every task MUST strictly follow this format:
 
 ```text
-- [ ] [TaskID] [P?] [Story?] Description with file path
+- [ ] [TaskID] [P?] [Story?] Description with file path → verify: <check>
 ```
 
 **Format Components**:
 
 1. **Checkbox**: ALWAYS start with `- [ ]` (markdown checkbox)
-2. **Task ID**: Sequential number (T001, T002, T003...) in execution order
+2. **Task ID**: Sequential number (T001, T002, T003...) in execution order; the release and validation phase keeps the template's T900 range (T900, T901...)
 3. **[P] marker**: Include ONLY if task is parallelizable (different files, no dependencies on incomplete tasks)
 4. **[Story] label**: REQUIRED for user story phase tasks only
    - Format: [US1], [US2], [US3], etc. (maps to user stories from spec.md)
-   - Setup phase: NO story label
-   - Foundational phase: NO story label  
-   - User Story phases: MUST have story label
-   - Polish phase: NO story label
+   - User story phases: MUST have story label
+   - Preparation and discovery, foundational work, and release and validation phases: NO story label
 5. **Description**: Clear action with exact file path
+6. **Verify**: ALWAYS end with `→ verify: <check>`, the command or inspection that proves the task done. A check that depends on the developer, such as a manual smoke test, is `→ verify: pendente do desenvolvedor (<what to check>)`
 
 **Examples**:
 
-- ✅ CORRECT: `- [ ] T001 Create project structure per implementation plan`
-- ✅ CORRECT: `- [ ] T005 [P] Implement authentication middleware in src/middleware/auth.py`
-- ✅ CORRECT: `- [ ] T012 [P] [US1] Create User model in src/models/user.py`
-- ✅ CORRECT: `- [ ] T014 [US1] Implement UserService in src/services/user_service.py`
-- ❌ WRONG: `- [ ] Create User model` (missing ID and Story label)
-- ❌ WRONG: `T001 [US1] Create model` (missing checkbox)
-- ❌ WRONG: `- [ ] [US1] Create User model` (missing Task ID)
-- ❌ WRONG: `- [ ] T001 [US1] Create model` (missing file path)
+- ✅ CORRECT: `- [ ] T001 Create project structure per implementation plan → verify: ls lists the planned directories`
+- ✅ CORRECT: `- [ ] T005 [P] Implement authentication middleware in src/middleware/auth.py → verify: a request without a token returns 401`
+- ✅ CORRECT: `- [ ] T012 [P] [US1] Create User model in src/models/user.py → verify: python -m py_compile src/models/user.py exits 0`
+- ✅ CORRECT: `- [ ] T014 [US1] Implement UserService in src/services/user_service.py → verify: python -m py_compile src/services/user_service.py exits 0`
+- ❌ WRONG: `- [ ] Create User model → verify: the model file compiles` (missing ID and Story label)
+- ❌ WRONG: `T001 [US1] Create model → verify: the model file compiles` (missing checkbox)
+- ❌ WRONG: `- [ ] [US1] Create User model → verify: the model file compiles` (missing Task ID)
+- ❌ WRONG: `- [ ] T001 [US1] Create model → verify: the model file compiles` (missing file path)
+- ❌ WRONG: `- [ ] T014 [US1] Implement UserService in src/services/user_service.py` (missing verify)
 
 ### Task Organization
 
@@ -203,25 +200,27 @@ Every task MUST strictly follow this format:
 
 3. **From Data Model**:
    - Map each entity to the user story(ies) that need it
-   - If entity serves multiple stories: Put in earliest story or Setup phase
+   - If entity serves multiple stories: Put in earliest story or the foundational work phase
    - Relationships → service layer tasks in appropriate story phase
 
 4. **From Setup/Infrastructure**:
-   - Shared infrastructure → Setup phase (Phase 1)
-   - Foundational/blocking tasks → Foundational phase (Phase 2)
+   - Discovery of the module, its release scripts and its assets → preparation and discovery phase (Fase 1)
+   - Shared infrastructure and blocking tasks → foundational work phase (Fase 2)
    - Story-specific setup → within that story's phase
 
 ### Phase Structure
 
-- **Phase 1**: Setup (project initialization)
-- **Phase 2**: Foundational (blocking prerequisites - MUST complete before user stories)
-- **Phase 3+**: User Stories in priority order (P1, P2, P3...)
-  - Within each story: Tests (if requested) → Models → Services → Endpoints → Integration
+The headings and the order of the phases come from the tasks template:
+
+- **Fase 1**: preparation and discovery
+- **Fase 2**: foundational work (blocking prerequisites - MUST complete before user stories)
+- **Fase 3+**: user stories in priority order (P1, P2, P3...)
+  - Within each story: tests (if requested), then the module layers the story touches (`dto/`, `bd/`, `rn/`, `int/`, pages)
   - Each phase should be a complete, independently testable increment
-- **Final Phase**: Polish & Cross-Cutting Concerns
+- **Fase N**: release and validation, with the T900 range
 
 ## Done When
 
-- [ ] tasks.md generated with all phases, task IDs, and file paths
+- [ ] tasks.md generated with all phases, task IDs, file paths, and verify checks
 - [ ] Extension hooks dispatched or skipped according to the rules in Mandatory Post-Execution Hooks above
 - [ ] Completion reported to user with task count, story breakdown, and MVP scope

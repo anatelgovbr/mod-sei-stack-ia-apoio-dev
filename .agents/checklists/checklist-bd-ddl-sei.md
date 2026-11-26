@@ -21,7 +21,7 @@ Checklist operacional para revisar `*BD.php`, DDL e scripts de release SEI/SIP.
 
 | # | Item | Origem | Severidade |
 |---|---|---|---|
-| 1 | DDL usa tipos portaveis e evita construtos proprietarios sem necessidade; para sequencias nativas, seguir a estrategia multi-SGBD prevista no manual | `B1`, `DB08`, manual cap. 5 `Sequencias` | BLOQUEANTE |
+| 1 | DDL usa tipos portaveis e evita construtos proprietarios sem necessidade; sequence nativa e criada com `criarSequencialNativa`, que gera nos quatro bancos o DDL do manual cap. 5 | `B1`, `B2`, `DB08`, `padrao-scripts-release.md` secao `Sequence / auto-incremento` | BLOQUEANTE |
 | 2 | `CREATE TABLE` usa `InfraMetaBD::tipo*()` e helpers do core quando disponiveis | `padrao-scripts-release.md` | ALTA |
 | 3 | PK, FK, AK, indice e sequence respeitam naming e limite de tamanho | `DB03`, `DB05`, `DB07`, `DB10`, `DB11` | BLOQUEANTE/AVISO |
 | 4 | FK relevante possui indice explicito ou helper equivalente | `DB09` | AVISO |
@@ -29,7 +29,7 @@ Checklist operacional para revisar `*BD.php`, DDL e scripts de release SEI/SIP.
 | 6 | Mudanca estrutural em modulo mapeado atualiza o script existente do modulo | `R1`, `R6` | BLOQUEANTE |
 | 7 | Impacto de release no lado SEI, SIP ou ambos esta refletido no(s) script(s) correto(s) | `R1`, `R4`, `R6` | BLOQUEANTE |
 | 8 | `getVersao()` em `*Integracao.php` esta sincronizado com os scripts quando houver bump de release | `R3` | BLOQUEANTE |
-| 9 | DDL N:N nao cria sequence desnecessaria | `padrao-modelagem-dados.md` secao `Sequencias / auto-incremento` | ALTA |
+| 9 | DDL N:N nao cria sequence desnecessaria | `padrao-modelagem-dados.md` secao `Sequências / auto-incremento` | ALTA |
 
 ## Observacoes praticas
 

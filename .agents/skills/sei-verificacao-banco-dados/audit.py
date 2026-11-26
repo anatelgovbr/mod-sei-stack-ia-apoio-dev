@@ -88,6 +88,8 @@ RE_SERIAL = re.compile(r"\bserial\b", re.IGNORECASE)
 RE_MONEY = re.compile(r"\bmoney\b", re.IGNORECASE)
 RE_TEXT = re.compile(r"\btext\b", re.IGNORECASE)
 RE_SEQ_TABLE = re.compile(r"^seq_")
+# Sequence de tabela do core que o modulo recria depois de gravar com id calculado (K8 de sei-verificacao-tarefa).
+SEQUENCIAS_DO_CORE = {"seq_tarefa"}
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -415,6 +417,8 @@ def apply_php_metadata(path: str, content: str, entities: dict[str, Entity]):
     for args, position in extract_php_calls(content, "criarSequencialNativa"):
         if args:
             sequence = php_literal(args[0])
+            if sequence.lower() in SEQUENCIAS_DO_CORE:
+                continue
             table_name = sequence[4:] if sequence.startswith("seq_") else sequence
             entity = get_entity(entities, table_name, path)
             entity.tem_sequence = True
@@ -874,6 +878,8 @@ def parse_ddl(caminho: str, conteudo: str) -> list[Entity]:
 
     for match in re.finditer(r"CREATE\s+SEQUENCE\s+([A-Za-z_][\w$#]*)", conteudo, re.IGNORECASE):
         sequence = match.group(1)
+        if sequence.lower() in SEQUENCIAS_DO_CORE:
+            continue
         table_name = sequence[4:] if sequence.lower().startswith("seq_") else sequence
         entity = get_entity(entities_by_name, table_name, caminho)
         entity.tem_sequence = True

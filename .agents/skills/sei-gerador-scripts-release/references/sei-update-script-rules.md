@@ -22,18 +22,24 @@ Esta referencia cobre apenas `fontes/sei/src/main/php/sei/scripts/*`.
 - Referencia secundaria: `fontes/sei/src/main/php/sei/scripts/sei_atualizar_versao_modulo_relacionamento_institucional.php`
 - Se o desenvolvedor apontar outra referencia, ela substitui o padrao principal para a estrutura do arquivo.
 
-## Fluxo base observado
+## Fluxo base
 
 1. validar banco suportado
 2. validar versao minima do framework
-3. testar permissao DDL com tabela temporaria (`sei_teste`)
-4. obter parametro de versao
-5. executar `switch` com `fallthrough`
-6. finalizar com log de sucesso
+3. conferir `getVersao()` da classe de integracao contra `$versaoAtualDesteModulo`, com o trecho de `.agents/references/padrao-scripts-release.md`, secao "Classe de integração do módulo"
+4. testar permissao DDL com tabela temporaria (`sei_teste`)
+5. obter parametro de versao
+6. executar `switch` com `fallthrough`
+7. finalizar com log de sucesso
+
+## Familia `InfraScriptVersao`
+
+- Script existente que estende `InfraScriptVersao` preserva essa familia: metodos `versao_X_Y_Z` registrados em `setArrVersoes()` e `setStrClasseModulo()` apontando para a classe de integracao, como em `fontes/sei/src/main/php/sei/scripts/md_julgar_atualizacao_sei.php`.
+- Nessa familia, as regras de DDL, sequence e seeds desta referencia continuam valendo; a estrutura do script, o fluxo base acima e os bloqueios estruturais abaixo valem para a familia `InfraRN`.
 
 ## Bloqueios estruturais
 
-- Bloquear se o script for gerado em `InfraScriptVersao` como classe base sem autorizacao explicita.
+- Bloquear se script novo for gerado em `InfraScriptVersao` como classe base sem autorizacao explicita.
 - Bloquear se faltar `atualizarVersaoConectado()`.
 - Bloquear se faltar `switch` incremental com `fallthrough`.
 - Bloquear se faltar qualquer um dos metadados de versao do modulo.
@@ -48,11 +54,14 @@ Esta referencia cobre apenas `fontes/sei/src/main/php/sei/scripts/*`.
 - FK via `adicionarChaveEstrangeira()`
 - indices adicionais via `criarIndice()`
 - reconciliacao de legado via `processarIndicesChavesEstrangeiras()`
+- `$objInfraMetaBD->setBolValidarIdentificador(true)` logo depois de criar a `InfraMetaBD`
+- quarto parametro de `adicionarColuna` e `alterarColuna` em texto e em minusculas: `'null'` ou `'not null'`
+- padroes multibanco de `.agents/references/padrao-scripts-release.md`: limite de cada `tipo*()`, tipo da coluna de FK, FK nas colunas da PK, indice unico, coluna `NOT NULL` em tabela com dados, alterar ou excluir coluna com FK ou indice, trocar tipo de coluna com dados, checagem de existencia e leitura e gravacao de dados no script
 
 ## Sequence
 
-- preferencia: `BancoSEI::getInstance()->criarSequencialNativa('seq_<tabela>', 1)`
-- se o script-alvo ja usar branching por SGBD para sequence, preserve esse estilo
+- criar com `BancoSEI::getInstance()->criarSequencialNativa('seq_<tabela>', 1)`, inclusive quando o script-alvo ja ramifica por banco para sequence
+- remover e ajustar o proximo valor: `.agents/references/padrao-scripts-release.md`, secoes "Remover sequence" e "Ajustar o próximo valor de uma sequence"
 - nao crie sequence para tabela N:N com PK composta
 
 ## Seeds e parametros
@@ -71,7 +80,7 @@ Esta referencia cobre apenas `fontes/sei/src/main/php/sei/scripts/*`.
 
 ## Riscos conhecidos
 
-- nao reproduza chamadas legadas como `tipoNumero(2)` ou `tipoNumeroGrande(20)` sem confirmar assinatura do core
+- `tipoNumero()` e `tipoNumeroGrande()` nao recebem parametro; gere a chamada sem argumento
 - nao misture recursos SIP, menus ou perfis no script SEI
 - nao deixe efeitos colaterais demorados dentro da transacao principal
 

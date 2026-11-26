@@ -185,7 +185,7 @@ Essas dimensões pertencem à coordenação de release.
 cd .agents/skills/sei-verificacao-banco-dados && python3 -m unittest test_audit
 ```
 
-14 testes sobre `audit.py`. O arquivo e independente de proposito: nao importa helper de
+15 testes sobre `audit.py`. O arquivo e independente de proposito: nao importa helper de
 outra skill nem de pasta compartilhada. A duplicacao de andaime e o preco de a skill
 poder ser levada inteira para outro lugar.
 

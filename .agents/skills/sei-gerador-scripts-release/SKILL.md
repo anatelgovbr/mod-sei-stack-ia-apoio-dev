@@ -38,8 +38,14 @@ Se houver nova tabela, exija especificacao suficiente de colunas, PK, FKs, seque
 
 - Padrao primario de estrutura: `fontes/sei/src/main/php/sei/scripts/sei_atualizar_versao_modulo_ia.php`
 - Referencia secundaria de validacao: `fontes/sei/src/main/php/sei/scripts/sei_atualizar_versao_modulo_relacionamento_institucional.php`
+- Variante estrutural existente no repositorio: `fontes/sei/src/main/php/sei/scripts/md_julgar_atualizacao_sei.php`
 - Se o desenvolvedor informar outra referencia explicita, essa referencia passa a ser obrigatoria para a estrutura do script.
 - Nao tratar referencia estrutural como exemplo ilustrativo. Tratar como restricao de implementacao.
+
+### Escolha da familia estrutural
+
+- Script novo: familia `*AtualizadorSeiRN extends InfraRN` do modulo IA, com a estrutura e os bloqueios abaixo.
+- Script existente que estende `InfraScriptVersao`: preserve essa familia, com metodos `versao_X_Y_Z` registrados em `setArrVersoes()` e `setStrClasseModulo()` apontando para a classe de integracao; nele, a estrutura e os bloqueios abaixo valem so para DDL, sequence e seed.
 
 ### Estrutura esperada do arquivo
 
@@ -49,13 +55,14 @@ Se houver nova tabela, exija especificacao suficiente de colunas, PK, FKs, seque
 - `inicializarObjInfraIBanco()` retornando `BancoSEI::getInstance()`
 - metodos `inicializar()`, `logar()`, `finalizar()`
 - metodo principal `atualizarVersaoConectado()`
+- conferencia de `getVersao()` da classe de integracao contra `$versaoAtualDesteModulo` em `atualizarVersaoConectado()`, antes do teste de permissao de DDL, conforme `.agents/references/padrao-scripts-release.md`, secao "Classe de integração do módulo"; os scripts de referencia nao tem esse bloco, e acrescenta-lo nao e desvio da referencia
 - `switch` com `fallthrough` sobre a versao instalada
 - metodos incrementais `instalarv*()`
 - bootstrap final do script com `SessaoSEI::getInstance(false)`, `BancoSEI::getInstance()->setBolScript(true)`, checagem de configuracao do modulo no SEI, `class_exists(*Integracao)`, autenticacao via `InfraScriptVersao::solicitarAutenticacao()` e chamada a `$objVersaoSeiRN->atualizarVersao()`
 
 ### Bloqueios estruturais
 
-- Bloquear se o script usar `InfraScriptVersao` como classe base sem autorizacao explicita do desenvolvedor.
+- Bloquear se script novo usar `InfraScriptVersao` como classe base sem autorizacao explicita do desenvolvedor.
 - Bloquear se faltar `atualizarVersaoConectado()`.
 - Bloquear se faltar `switch` incremental com `fallthrough`.
 - Bloquear se faltar qualquer um dos metadados de versao: versao atual, nome do modulo, nome do parametro ou historico de versoes.
@@ -76,6 +83,7 @@ Se houver nova tabela, exija especificacao suficiente de colunas, PK, FKs, seque
 
 Leia nesta ordem:
 - `.agents/references/padrao-modelagem-dados.md`
+- `.agents/references/padrao-scripts-release.md`
 - `references/sei-update-script-rules.md`
 - `fontes/sei/src/main/php/sei/scripts/sei_atualizar_versao_modulo_ia.php`
 - `fontes/sei/src/main/php/sei/scripts/sei_atualizar_versao_modulo_relacionamento_institucional.php`
@@ -90,13 +98,15 @@ Leia nesta ordem:
 
 - Use `CREATE TABLE` com tipos vindos de `InfraMetaBD::tipo*()`.
 - Use `InfraMetaBD` para PK, FK, indices e alteracao de coluna.
-- Prefira `criarSequencialNativa()` para sequence, preservando o estilo local do script quando necessario.
+- Crie sequence com `criarSequencialNativa()`, inclusive em script que ja ramifica por banco para sequence.
 - Use RN/DTO/BD do core para seed e parametros quando a abstracao ja existir.
+- Leia e grave dados no script conforme `.agents/references/padrao-scripts-release.md`, secao "Leitura e gravação de dados no script".
 - Em `instalarv100()`, siga o padrao do modulo IA para inserir o parametro inicial de versao em `infra_parametro`.
 - Em upgrades posteriores, so use helper local de atualizacao de versao se ele existir e seguir o padrao do script de referencia.
 
 ### 4. Atualizar metadados
 
+- Na familia `InfraScriptVersao`, acrescente o metodo `versao_X_Y_Z`, registre-o em `setArrVersoes()`, atualize `setStrVersaoAtual()` e confira a mao a versao, conforme `.agents/references/padrao-scripts-release.md`, secao "Classe de integração do módulo"; os tres itens seguintes valem para a familia `InfraRN`.
 - Atualize `case '<versao_anterior>'` no `switch` com `fallthrough` incremental.
 - Atualize `$versaoAtualDesteModulo`.
 - Atualize `$historicoVersoes` adicionando a nova versao ao final.
@@ -109,7 +119,16 @@ Leia nesta ordem:
 - Rode `python3 .agents/skills/sei-verificacao-banco-dados/audit.py --input <script_sei> --mode release_check` no script PHP gerado/alterado.
 - Rode `python3 .agents/skills/sei-verificacao-tarefa/audit.py --input <script_sei> --exit-code` quando o script cadastrar tarefa de andamento.
 - Rode os gates de modelagem aplicaveis sobre o artefato gerado, nao sobre arquivos de documentacao da skill.
-- Confirme que o script continua compativel com MySQL, SQL Server, Oracle e PostgreSQL.
+- Confirme o DDL gerado contra cada padrao multibanco de `.agents/references/padrao-scripts-release.md` que se aplica a ele, para MySQL, SQL Server, Oracle e PostgreSQL.
+- Confira a opcao de nulidade de `adicionarColuna` e `alterarColuna` nas linhas que a mudanca adicionou. Saida vazia passa; cada linha listada usa opcao fora de `'null'` ou `'not null'`, e a chamada quebrada em mais de uma linha aparece para conferencia manual:
+
+  ```bash
+  # script ja versionado
+  git diff -U0 -- <script_sei> | grep -a '^+' | grep -a -E '(adicionar|alterar)Coluna\(' | grep -a -v -E "'(null|not null)'\s*\)\s*;"
+  # script novo, ainda fora do Git
+  grep -a -n -E '(adicionar|alterar)Coluna\(' <script_sei> | grep -a -v -E "'(null|not null)'\s*\)\s*;"
+  ```
+
 - Confirme que o script final continua no padrao estrutural da referencia escolhida.
 - Confirme que o bootstrap final contem as checagens de modulo configurado e `class_exists(*Integracao)` quando aplicavel ao lado SEI.
 
@@ -118,12 +137,15 @@ Leia nesta ordem:
 - [ ] script-alvo SEI correto localizado
 - [ ] padrao estrutural do script definido e confirmado
 - [ ] nomes dentro dos limites 26/30
-- [ ] classe base `InfraRN` preservada
-- [ ] `atualizarVersaoConectado()` presente
-- [ ] `switch` incremental com `fallthrough` presente
+- [ ] classe base `InfraRN` preservada (familia `InfraRN`)
+- [ ] `atualizarVersaoConectado()` presente (familia `InfraRN`)
+- [ ] `switch` incremental com `fallthrough` presente (familia `InfraRN`)
 - [ ] bootstrap final do script alinhado ao modulo IA
 - [ ] `CREATE TABLE` com `InfraMetaBD::tipo*()`
 - [ ] PK/FK/indice com helper do core
+- [ ] DDL conferido contra cada padrao multibanco de `.agents/references/padrao-scripts-release.md` que se aplica a ele
+- [ ] opcao de nulidade `'null'` ou `'not null'` nas linhas adicionadas, pelo comando da etapa 5
+- [ ] conferencia de `getVersao()` presente em `atualizarVersaoConectado()`, ou feita a mao na familia `InfraScriptVersao`
 - [ ] sequence coerente com `TIPO_PK_NATIVA`
 - [ ] seed idempotente
 - [ ] `sei-verificacao-banco-dados` executado no script SEI gerado/alterado

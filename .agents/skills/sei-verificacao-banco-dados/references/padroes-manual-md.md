@@ -33,6 +33,8 @@ Nomes de tabelas devem:
 - `md_abc_criar_pedido` (verbo)
 - `md_abc_tipo_controle_de_demanda` (excede 26)
 
+A `seq_tarefa` é a sequence da tabela `tarefa` do core, que o módulo recria depois de cadastrar tarefa com id calculado (K8 de `sei-verificacao-tarefa`). O auditor não a trata como tabela do módulo.
+
 ---
 
 ### DB02: Relacionamento N:N: `_rel_`
@@ -370,6 +372,6 @@ Estes são conveções de nomenclatura de colunas, não regras de auditoria.
 
 ## Referencias cruzadas
 
-- **Templates DDL e InfraMetaBD**: consultar `.agents/references/padrao-modelagem-dados.md`
+- **Templates DDL e InfraMetaBD**: consultar `.agents/references/padrao-scripts-release.md`
   - Contém boilerplate de criação de tabelas, sequences multi-SGBD, tipos `InfraMetaBD`
 - **Regras DB01-DB15 (este arquivo)**: validação de modelagem contra padrões TRF4

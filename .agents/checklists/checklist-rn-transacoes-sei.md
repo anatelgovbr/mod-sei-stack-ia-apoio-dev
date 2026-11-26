@@ -5,7 +5,7 @@ e efeitos colaterais em modulos SEI/SIP.
 
 ## Fontes de verdade
 
-- `AGENTS.md` - `Padrao Transacional Obrigatorio`, `Guardrails Universais`
+- `AGENTS.md` - `Padrão Transacional Obrigatório`, `Guardrails Universais`
 - `.agents/skills/sei-verificacao-rn/SKILL.md` - `T1-T5`
 - `.agents/security/matriz-vulnerabilidades-sei.md` - `V07`
 - `.agents/checklists/checklist-seguranca.md` - secoes `1.3`, `1.6`

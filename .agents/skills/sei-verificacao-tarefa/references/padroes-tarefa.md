@@ -140,15 +140,15 @@ Lançar a 65 sem o atributo `DESCRICAO` também é não conforme.
 
 A parte mais esquecida do procedimento é a atualização da sequência no final.
 
-1. Obter o próximo id por `BancoSEI::getInstance()->getValorSequencia('seq_tarefa')`.
+1. Obter o próximo id por `BancoSEI::getInstance()->getValorSequencia('seq_tarefa')`. Por esse caminho, o passo 2 não se aplica, e o passo 5 só se aplica quando o passo 4 troca o valor por 1000. No SEI 5.0 recém-instalado, o primeiro valor é 1001 nos quatro bancos.
 2. Se a inserção for feita sem essa chamada, calcular por `select max(id_tarefa)+1 from tarefa`.
 3. Se o valor obtido for maior ou igual a 1000, utilizar esse valor.
 4. Se for menor que 1000, utilizar 1000, porque ids abaixo de 1000 são reservados do core.
-5. Depois de inserir com id calculado, atualizar a sequência `seq_tarefa` com o último valor utilizado. O comando de cada banco está no manual, capítulo 3, seção Andamentos.
+5. Depois de inserir com id calculado, recriar `seq_tarefa` com início no último id gravado mais 1, pelo trecho de `.agents/references/padrao-scripts-release.md`, seção "Ajustar o próximo valor de uma sequence". Os comandos de ajuste do manual, capítulo 3, seção Andamentos, não funcionam nos quatro bancos; a mesma seção mostra o que acontece em cada um.
 
 **Não conforme:** inserir com id calculado e não atualizar `seq_tarefa`. A próxima inserção que usar a sequência colide com o id já gravado.
 
-**Verificação automática:** no cadastro por `TarefaDTO` ou `INSERT INTO tarefa`, o auditor aceita sem realinhamento o id vindo de `getValorSequencia('seq_tarefa')`, direto ou por variável cuja última atribuição antes do uso é essa chamada. Id fixo ou calculado exige que o arquivo realinhe `seq_tarefa`, inclusive por `ScriptRN::atualizarSequencias()`. A ordem entre cálculo, realinhamento e cadastro fica para a revisão.
+**Verificação automática:** no cadastro por `TarefaDTO` ou `INSERT INTO tarefa`, o auditor aceita sem realinhamento o id vindo de `getValorSequencia('seq_tarefa')`, direto ou por variável cuja última atribuição antes do uso é essa chamada. Id fixo ou calculado passa quando o arquivo recria `seq_tarefa` por `criarSequencialNativa('seq_tarefa', ...)` ou por `ScriptRN::atualizarSequencias()`. Com ajuste por SQL próprio (`CREATE SEQUENCE`, `ALTER`, `INSERT INTO seq_tarefa`, `DBCC CHECKIDENT` ou `setval`), o auditor dá aviso, porque não lê o valor que o SQL grava: confira na revisão que a sequence começa no último id gravado mais 1 nos quatro bancos. Sem nenhum desses ajustes, dá erro. A ordem entre cálculo, realinhamento e cadastro fica para a revisão.
 
 ---
 
@@ -191,5 +191,5 @@ Definir os cinco explicitamente ao cadastrar a tarefa do módulo. `TarefaRN::cad
 | K4 | `id_tarefa_modulo` com até 50 caracteres | **Erro** |
 | K6 | Unicidade dos dois identificadores | **Erro** |
 | K7 | Tarefa 65 só no lançamento, com DESCRICAO | **Erro** |
-| K8 | Id da tarefa por `seq_tarefa` ou com realinhamento | **Erro** |
+| K8 | Id da tarefa por `seq_tarefa` ou com realinhamento | **Erro**; aviso com ajuste por SQL próprio |
 | K9 | Cinco sinalizadores explícitos, com `S` ou `N` | **Erro** |

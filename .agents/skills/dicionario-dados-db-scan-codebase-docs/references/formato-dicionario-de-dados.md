@@ -119,7 +119,7 @@ Na formula com dominio multivalorado, a frase fixa "um dominio multivalorado de 
 - Preserve a ordem comprovada do dominio; na ausencia de ordem negocial, use a ordem da fonte com maior autoridade para essa dimensao.
 - Registre qualquer limitacao do dominio no termo correspondente da ultima frase obrigatoria, nao depois da lista.
 
-## Marcacao de lacuna
+## Marcação de lacuna
 
 Nenhuma celula de descricao pode ficar vazia e nenhum significado pode ser presumido. Termo da formula sem evidencia recebe marcador de lacuna, no lugar do termo, dentro da propria frase da formula.
 

@@ -271,7 +271,7 @@ $objTarefaBD->cadastrar($objTarefaDTO);
         self.assertIn("sin_historico_completo", mensagens[1])
 
     def test_calculated_task_id_requires_seq_tarefa_realignment(self):
-        """Id calculado por max()+1 sem realinhar seq_tarefa colide com a proxima tarefa da sequencia."""
+        """Id calculado sem realinhar seq_tarefa colide com a proxima tarefa; o ajuste por SQL proprio fica para a revisao."""
         cadastro = """<?php
 $arrMax = BancoSEI::getInstance()->consultarSql('select max(id_tarefa) as max from tarefa');
 $numIdTarefa = max(1000, $arrMax[0]['max'] + 1);
@@ -286,19 +286,18 @@ $objTarefaDTO->setStrIdTarefaModulo('MD_TS_ITEM_RECEBIDO');
         self.assertEqual(2, process.returncode)
         self.assertEqual({"K008"}, self.codes(payload))
 
-        realinhado = self.write(
-            "com/sei_atualizar_versao_modulo_ts.php",
-            cadastro.replace("REALINHAMENTO", "BancoSEI::getInstance()->executarSql('INSERT INTO seq_tarefa (id) VALUES (' . $numIdTarefa . ')');"),
-        )
-        process, payload = self.run_auditor("tarefa", realinhado)
-        self.assertEqual(0, process.returncode, payload)
-
-        script_rn = self.write(
-            "script_rn/sei_atualizar_versao_modulo_ts.php",
-            cadastro.replace("REALINHAMENTO", "$objScriptRN = new ScriptRN();\n$objScriptRN->atualizarSequencias();"),
-        )
-        process, payload = self.run_auditor("tarefa", script_rn)
-        self.assertEqual(0, process.returncode, payload)
+        realinhamentos = {
+            "k8": ("BancoSEI::getInstance()->criarSequencialNativa('seq_tarefa', $numIdTarefa + 1);", 0, set()),
+            "script_rn": ("$objScriptRN = new ScriptRN();\n$objScriptRN->atualizarSequencias();", 0, set()),
+            "sql_proprio": ("BancoSEI::getInstance()->executarSql('INSERT INTO seq_tarefa (id) VALUES (' . $numIdTarefa . ')');", 1, {"K008"}),
+        }
+        for nome, (realinhamento, retorno, avisos) in realinhamentos.items():
+            with self.subTest(nome):
+                path = self.write(f"{nome}/sei_atualizar_versao_modulo_ts.php", cadastro.replace("REALINHAMENTO", realinhamento))
+                process, payload = self.run_auditor("tarefa", path)
+                self.assertEqual(retorno, process.returncode, payload)
+                self.assertEqual(set(), self.codes(payload))
+                self.assertEqual(avisos, self.codes(payload, "avisos"))
 
     def test_registration_blocks_task_65_and_unresolved_insert_and_reads_literal_insert(self):
         """A 65 e tarefa do core: o modulo lanca andamento com ela, nunca a cadastra."""
@@ -338,7 +337,9 @@ $objTarefaDTO->setStrIdTarefaModulo('MD_TS_ANDAMENTO_LIVRE');
             insert_literal + "\nBancoSEI::getInstance()->executarSql('alter table seq_tarefa AUTO_INCREMENT = 1001');",
         )
         process, payload = self.run_auditor("tarefa", realinhado)
-        self.assertEqual(0, process.returncode, payload)
+        self.assertEqual(1, process.returncode, payload)
+        self.assertEqual(set(), self.codes(payload))
+        self.assertEqual({"K008"}, self.codes(payload, "avisos"))
         self.assertEqual(1001, payload["results"][0]["tarefas"][0]["id"])
 
     def test_registration_parser_does_not_hide_invalid_records(self):

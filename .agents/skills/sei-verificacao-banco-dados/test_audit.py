@@ -371,6 +371,31 @@ CREATE TABLE md_ts_grupo (
         self.assertNotEqual(2, process.returncode, payload)
         self.assertEqual(1, len(payload["results"]))
 
+    def test_database_db01_ignores_core_seq_tarefa_and_keeps_module_sequences(self):
+        """A seq_tarefa e da tabela tarefa do core: o modulo a recria pelo K8, e o DB01 segue valendo para a sequence do modulo."""
+        recriacoes = {
+            "k8": "BancoSEI::getInstance()->executarSql('drop table seq_tarefa');\n"
+                  "BancoSEI::getInstance()->criarSequencialNativa('seq_tarefa', $numProximo);\n",
+            "sql_proprio": "BancoSEI::getInstance()->executarSql('drop sequence seq_tarefa');\n"
+                           "BancoSEI::getInstance()->executarSql('CREATE SEQUENCE seq_tarefa START WITH ' . $numProximo . ' INCREMENT BY 1 NOCACHE NOCYCLE');\n",
+        }
+        for nome, recriacao in recriacoes.items():
+            with self.subTest(nome):
+                path = self.write(
+                    f"{nome}/sei_atualizar_versao_modulo_ts.php",
+                    "<?php\n" + recriacao + "BancoSEI::getInstance()->criarSequencialNativa('seq_md_ts_item', 1);\n",
+                )
+                process, payload = self.run_auditor("banco", path)
+                self.assertEqual(["md_ts_item"], [result["entidade"] for result in payload["results"]], payload)
+
+        sem_prefixo = self.write(
+            "sem_prefixo/sei_atualizar_versao_modulo_ts.php",
+            "<?php\nBancoSEI::getInstance()->criarSequencialNativa('seq_ts_item', 1);\n",
+        )
+        process, payload = self.run_auditor("banco", sem_prefixo)
+        self.assertEqual(2, process.returncode)
+        self.assertIn("E001", self.codes(payload))
+
 
 if __name__ == "__main__":
     unittest.main()

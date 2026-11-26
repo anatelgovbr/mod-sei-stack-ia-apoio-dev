@@ -27,7 +27,7 @@ Skill de gate para validar o cadastro de tarefa de andamento de modulo SEI. Regr
 | K4 | Maximo 50 caracteres | **Erro** | `id_tarefa_modulo` tem ate 50 caracteres |
 | K6 | Unicidade nas duas dimensoes | **Erro** | Nao repete `id_tarefa` nem `id_tarefa_modulo` no modulo |
 | K7 | Tarefa 65 so no lancamento, com DESCRICAO | **Erro** | Na definicao `*_tarefa.php`, a entrada 65 exige `DESCRICAO` nao vazio |
-| K8 | Id por `seq_tarefa` ou com realinhamento | **Erro** | Id fixo ou calculado fora de `getValorSequencia('seq_tarefa')` exige realinhar `seq_tarefa` no arquivo |
+| K8 | Id por `seq_tarefa` ou com realinhamento | **Erro** | Id fixo ou calculado fora de `getValorSequencia('seq_tarefa')` exige recriar `seq_tarefa` no arquivo por `criarSequencialNativa` ou `ScriptRN::atualizarSequencias()`; o ajuste por SQL proprio e aviso |
 | K9 | Cinco sinalizadores explicitos | **Erro** | Cadastro define os cinco `sin_*` da tabela `tarefa`, com `S` ou `N` quando literal |
 
 ## Ranges de ID

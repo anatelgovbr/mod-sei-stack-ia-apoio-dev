@@ -49,10 +49,15 @@ RE_CHAMADA_SEQ_TAREFA = re.compile(
     r"getValorSequencia\s*\(\s*['\"]seq_tarefa['\"]\s*\)",
     re.IGNORECASE,
 )
-RE_REALINHA_SEQ_TAREFA = re.compile(
+# Forma do core: recria a sequence a partir do proximo id, nos quatro bancos.
+RE_REALINHA_PELO_CORE = re.compile(
+    r"criarSequencialNativa\s*\(\s*\\?['\"]seq_tarefa\b|atualizarSequencias\s*\(",
+    re.IGNORECASE,
+)
+# SQL proprio: o auditor nao le o valor, que pode ser o ultimo id gravado e colidir.
+RE_REALINHA_POR_SQL = re.compile(
     r"insert\s+into\s+seq_tarefa\b|create\s+sequence\s+seq_tarefa\b|alter\s+(?:table|sequence)\s+seq_tarefa\b"
-    r"|checkident\s*\(\s*\\?['\"]?seq_tarefa\b|criarSequencialNativa\s*\(\s*\\?['\"]seq_tarefa\b"
-    r"|setval\s*\(\s*\\?['\"]seq_tarefa\b|atualizarSequencias\s*\(",
+    r"|checkident\s*\(\s*\\?['\"]?seq_tarefa\b|setval\s*\(\s*\\?['\"]seq_tarefa\b",
     re.IGNORECASE,
 )
 
@@ -528,9 +533,14 @@ def inteiro_da_variavel(expressao, content, posicao):
 
 
 def validar_cadastro_id(tarefas, content):
-    """K1 e K8 no cadastro: id de modulo >= 1000 e id fora de getValorSequencia coerente com seq_tarefa."""
+    """K1 e K8 no cadastro: id de modulo >= 1000 e id fora de getValorSequencia coerente com seq_tarefa.
+
+    Devolve os erros e os avisos: o ajuste da seq_tarefa por SQL proprio vira aviso para a revisao.
+    """
     errors = []
-    realinha = bool(RE_REALINHA_SEQ_TAREFA.search(content))
+    warnings = []
+    realinha_pelo_core = bool(RE_REALINHA_PELO_CORE.search(content))
+    realinha_por_sql = bool(RE_REALINHA_POR_SQL.search(content))
     for t in tarefas:
         tipo = t["id_tipo"]
         base = {"id": t["id"], "nome": t["nome"], "linha": t["linha"]}
@@ -545,11 +555,16 @@ def validar_cadastro_id(tarefas, content):
         elif tipo in ("ausente", "null", "str"):
             errors.append({**base, "codigo": "K001", "regra": "K1",
                            "mensagem": "cadastro sem id_tarefa numerico; a PK de TarefaDTO e informada"})
-        elif tipo in ("int", "expr") and not (realinha or vem_da_sequencia(t["id_expr"], content, t["posicao_id"])):
+        elif tipo in ("int", "expr") and not (realinha_pelo_core or vem_da_sequencia(t["id_expr"], content, t["posicao_id"])):
             origem = f"fixo ({t['id']})" if tipo == "int" else f"calculado ({t['id_expr']})"
+            if realinha_por_sql:
+                warnings.append({**base, "codigo": "K008", "regra": "K8",
+                                 "mensagem": f"id_tarefa {origem} com seq_tarefa ajustada por SQL proprio; confirme que a "
+                                             "sequence comeca no ultimo id gravado mais 1 nos quatro bancos, ou use o trecho do K8"})
+                continue
             errors.append({**base, "codigo": "K008", "regra": "K8",
                            "mensagem": f"id_tarefa {origem} sem getValorSequencia('seq_tarefa') e sem realinhar seq_tarefa"})
-    return errors
+    return errors, warnings
 
 
 def validar_k9_sinalizadores(tarefas):
@@ -682,7 +697,9 @@ def audit_file(path):
         return {"file": os.path.basename(path), "path": path, "tarefas": [], "erros": [{"codigo": "K000", "regra": "?", "mensagem": "parser nao extraiu definicao de tarefa"}], "avisos": [], "status": "BLOCK"}
 
     if cadastros:
-        errors.extend(validar_cadastro_id(tarefas, content))
+        erros_do_id, avisos_do_id = validar_cadastro_id(tarefas, content)
+        errors.extend(erros_do_id)
+        warnings.extend(avisos_do_id)
         errors.extend(validar_k9_sinalizadores(tarefas))
     else:
         errors.extend(validar_k1_range(tarefas))

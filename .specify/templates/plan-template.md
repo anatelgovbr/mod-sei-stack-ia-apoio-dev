@@ -37,6 +37,7 @@
 - **Skill Necessaria**: [nome da skill ou nao-aplicavel]
 - **Skills de Suporte**: [ex.: `sei-validacao-padrao`, `sei-guardrails-modulo`]
 - **Status do Roteamento de Skills**: [PASS/BLOCKED/nao-aplicavel]
+- **Reuso do core:** [uma linha por funcao, metodo, hook, pagina ou JS que le ou altera dado do core ou reage a acao ou tela do core, com o nome dela e o veredito de `sei-direcionador-integracao`: `<funcao>: <NomeOficial> (<catalogo>)` ou `<funcao>: sem contrato no catalogo`; quando o contrato muda o resultado, `<funcao>: <NomeOficial> (<catalogo>), mantida a chamada interna: <diferenca>`; `nao-aplicavel` quando a feature nao toca o core]
 
 | Contrato | Localizacao | Status | Regra de Bloqueio |
 | --- | --- | --- | --- |
@@ -44,10 +45,18 @@
 
 **Notas sobre Contratos**: [questoes abertas, premissas ou motivo de nao-aplicabilidade]
 
+## Impacto Arquitetural
+
+> Triagem pela secao `Decisões Arquiteturais` do `AGENTS.md`. Quando a triagem indicar ADR, sugerir um titulo curto e aguardar a decisao do desenvolvedor antes de seguir.
+
+**Impacto Arquitetural:** [exige novo ADR / exige atualizar ADR / nenhum impacto, com o motivo]
+- Dimensoes: [dimensoes tocadas]
+- [nome do fator]: [motivo do fator valer para esta mudanca]
+
 ## Gate do Gerador de CRUD
 
 > **Preencher SOMENTE quando o desenvolvedor optar pelo gerador para uma ou mais entidades CRUD base novas**
-> Fonte de regras: `.specify/memory/constitution.md` secao `Gerador de CRUD InfraPHP`.
+> Fonte de regras: `AGENTS.md`, secao "Guardrails Universais", item **Gerador de CRUD**, e `.agents/skills/sei-gerador-crud/SKILL.md`, secao "Tres caminhos de execucao".
 > Se o gerador nao for escolhido, definir `Gerador Necessario: nao` e `Status do Gate de Planejamento: nao-aplicavel`.
 
 - **Gerador Necessario**: [sim/nao]

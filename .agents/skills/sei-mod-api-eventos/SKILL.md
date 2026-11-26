@@ -1,22 +1,14 @@
 ---
 name: sei-mod-api-eventos
 description: >
-  Intercepta eventos do SEI em *Integracao (SeiIntegracao), usando objetos da API,
-  com permissao, consistencia transacional e auditoria quando aplicavel.
-  Acionar tambem ao criar ou alterar FK ou uso funcional de registros do core,
-  inclusive protocolos de processos e documentos, mesmo sem mudanca de DDL.
-
-  Use quando:
-  - O desenvolvedor precisa interceptar um evento do SEI (assinatura, envio,
-    cancelamento, publicacao, mudanca de estado)
-  - Ha necessidade de adicionar botoes, icones ou itens de menu customizados
-  - O agente precisa implementar um hook de extensao no modulo
-  - Promptlike: "implementar o evento X", "interceptar assinatura de documento",
-    "adicionar botao no controle de processos"
-
-  Esta skill foca em interceptAR eventos.
-  Se a demanda ainda estiver ambigua entre API, evento e operacao, usar
-  sei-direcionador-integracao.
+  Implementa em `*Integracao` (`SeiIntegracao`) o evento oficial do capitulo
+  "Eventos" para o modulo reagir a acao do core (assinatura, cancelamento de
+  assinatura, envio, exclusao, publicacao, mudanca de estado) ou pôr botao,
+  icone ou menu em tela do core, com permissao, transacao e auditoria. Acionar
+  antes de criar rotina, JS ou alteracao no core para isso, e tambem ao criar ou
+  alterar FK ou uso funcional de registro do core, inclusive protocolos de
+  processos e documentos, mesmo sem mudanca de DDL. Duvida entre API, evento e
+  operacao: sei-direcionador-integracao.
 ---
 
 # sei-mod-api-eventos
@@ -46,7 +38,7 @@ como principal.
 
 0. **Dependências de registros do core**: quando a mudança afetar referência física ou uso funcional, aplicar [proteção das dependências](references/protecao-dependencias-core.md) e concluir sua matriz; inclui Administração e protocolos, sem presumir que todo evento permita veto.
 1. **Escolher o hook** no catalogo `references/catalogo-eventos.md` pelo nome do evento.
-2. **Confirmar a assinatura** do método em `SeiIntegracao.php` e o ponto de chamada no core da versão suportada. Para eventos de negócio, verifique a posição perante escrita/commit e a propagação da exceção. Para `montarBotaoControleProcessos`, `montarBotaoProcesso` ou `montarBotaoDocumento`, aplique o [contrato do filtro de botões por acesso recente](references/catalogo-eventos.md#filtro-de-botões-por-acesso-recente) e execute sua verificação. Módulos existentes são exemplos com limitações, não prova do contrato.
+2. **Copiar a assinatura** da seção [Assinaturas no core 5.0.6](references/catalogo-eventos.md#assinaturas-no-core-506), conferi-la em `SeiIntegracao.php` da versão suportada e confirmar o ponto de chamada no core. Para eventos de negócio, verifique a posição perante escrita/commit e a propagação da exceção. Para `montarBotaoControleProcessos`, `montarBotaoProcesso` ou `montarBotaoDocumento`, aplique o [contrato do filtro de botões por acesso recente](references/catalogo-eventos.md#filtro-de-botões-por-acesso-recente) e execute sua verificação. Módulos existentes são exemplos com limitações, não prova do contrato.
 3. **Implementar no `*Integracao.php`**: manter logica minima no hook; delegar para RN/servicos quando a logica crescer.
 4. **Seguranca**: negar por padrao em entradas nao confiaveis; validar permissao para qualquer efeito colateral; assinar links na geracao e validar na entrada.
 5. **Consistencia transacional**: se o evento gerar escrita relevante (BD/processo/documento), usar transacao manual ou metodo `*Controlado`.
@@ -55,6 +47,7 @@ como principal.
 ## Critérios de validação
 
 - [ ] O hook implementado corresponde a um evento documentado no catalogo.
+- [ ] A assinatura do hook é compatível com a de `SeiIntegracao.php`.
 - [ ] Logica minima mantida no hook, com delegacao para RN/servicos quando necessario.
 - [ ] Permissao validada antes de qualquer efeito colateral.
 - [ ] Link assinado na geracao e validado na entrada quando aplicavel.

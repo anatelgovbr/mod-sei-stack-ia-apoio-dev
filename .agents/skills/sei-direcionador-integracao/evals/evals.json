@@ -1,0 +1,53 @@
+{
+  "skill_name": "sei-direcionador-integracao",
+  "evals": [
+    {
+      "id": 1,
+      "contrato_esperado": "gerarProcedimento",
+      "prompt": "No módulo, crie uma função que abre um processo do tipo \"Plano de Trabalho\" na unidade do usuário, já com um despacho interno preenchido. Só planeje, sem alterar código.",
+      "expected_output": "Plano com a linha Reuso do core apontando SeiRN::gerarProcedimento.",
+      "files": [],
+      "expectations": [
+        "Cita gerarProcedimento do catálogo de operações antes de propor código.",
+        "Preenche o despacho pela DocumentoAPI, com Conteudo ou ConteudoSecoes (SecaoDocumentoAPI), sem ProcedimentoRN ou DocumentoRN do core.",
+        "Traz a linha Reuso do core no plano."
+      ]
+    },
+    {
+      "id": 2,
+      "contrato_esperado": "cancelarAssinaturaDocumento",
+      "prompt": "Quando alguém cancelar a assinatura de um documento, o módulo precisa apagar o registro que gravou para aquela assinatura. Só planeje, sem alterar código.",
+      "expected_output": "Plano com a linha Reuso do core apontando o evento cancelarAssinaturaDocumento.",
+      "files": [],
+      "expectations": [
+        "Cita o evento cancelarAssinaturaDocumento do catálogo de eventos.",
+        "Não trata o evento como dependência sem controle por estar fora do manual 5.0.",
+        "Traz a linha Reuso do core no plano."
+      ]
+    },
+    {
+      "id": 3,
+      "contrato_esperado": "listarTiposPrioridade",
+      "prompt": "A tela do módulo precisa de um combo com os tipos de prioridade de processo. Crie a função que devolve a lista. Só planeje, sem alterar código.",
+      "expected_output": "Plano com a linha Reuso do core apontando SeiRN::listarTiposPrioridade.",
+      "files": [],
+      "expectations": [
+        "Cita listarTiposPrioridade do catálogo de operações.",
+        "Não lista com TipoPrioridadeDTO ou TipoPrioridadeRN do core.",
+        "Traz a linha Reuso do core no plano."
+      ]
+    },
+    {
+      "id": 4,
+      "contrato_esperado": "alterarBloco",
+      "prompt": "O módulo precisa trocar a descrição de um bloco de assinatura e as unidades em que ele fica disponível. Crie a função. Só planeje, sem alterar código.",
+      "expected_output": "Plano com a linha Reuso do core apontando SeiRN::alterarBloco.",
+      "files": [],
+      "expectations": [
+        "Cita alterarBloco e EntradaAlterarBlocoAPI dos catálogos.",
+        "Não altera o bloco com BlocoDTO ou BlocoRN do core.",
+        "Traz a linha Reuso do core no plano."
+      ]
+    }
+  ]
+}

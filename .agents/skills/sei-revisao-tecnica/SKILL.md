@@ -45,7 +45,7 @@ diretório, frontmatter, copia, symlink ou adapter próprio.
 ## Fontes
 
 - `AGENTS.md`, seções `Escopo e Limites de Escrita`, `Guardrails Universais`,
-  `Padrao Transacional Obrigatorio`, `Qualidade Minima` e `Roteamento`
+  `Padrão Transacional Obrigatório`, `Qualidade Mínima` e `Roteamento`
 - `.agents/references/roteamento-de-skills.md`, matriz e gates por artefato
 - `.agents/references/gates-de-implementacao.md`, estados e gates G/R/C/D
 - `.agents/references/mapa-modulos-scripts.md`, impacto de release por módulo

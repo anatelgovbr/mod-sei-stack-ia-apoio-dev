@@ -78,6 +78,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Phase 0: Generate research.md (resolve all NEEDS CLARIFICATION)
    - Phase 1: Generate data-model.md, contracts/, quickstart.md
    - Re-evaluate Constitution Check post-design
+   - Fill every other section of the template, carrying out first what the section asks for (run a skill, stop for the developer's decision)
 
 ## Mandatory Post-Execution Hooks
 

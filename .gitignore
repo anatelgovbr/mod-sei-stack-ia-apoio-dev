@@ -1,28 +1,18 @@
-# Sobre os codigos-fontes do SEI e Vagrant/Docker do SEI Localhost
-/fontes/sei/src/main/php/.vagrant
-/fontes/sei/src/main/php/Vagrantfile
-/fontes/sei/src/main/php/destruir_VM_Dev_Localhost_SEI.bat
-/fontes/sei/src/main/php/iniciar_VM_Dev_Localhost_SEI.bat
-/fontes/sei/src/main/php/parar_VM_Dev_Localhost_SEI.bat
-/fontes/sei/src/main/php/provisionar_VM_Dev_Localhost_SEI.bat
-/fontes/sei/src/main/php/box_update_VM_Dev_Localhost_SEI.bat
-/fontes/sei/src/main/php/Testes-SEI_LOCALHOST-soapui-project.xml
-
+# Sobre os codigos-fontes do SEI
 /fontes/sei/src/main/php/sei/config/ConfiguracaoSEI*.*
 /fontes/sei/src/main/php/sip/config/ConfiguracaoSip*.*
 /fontes/sei/src/main/php/sei/temp/
 /fontes/sei/src/main/php/sip/temp/
 /fontes/sei/src/main/php/sei/config/mod-pen/ConfiguracaoModPEN.php
-/fontes/sei/src/main/php/.env
-/fontes/sei/src/main/php/docker-compose.yml
+/fontes/sei/src/main/php/remi/
 phpinfo.php
 
+# Sobre pasta "ops"
 /ops/docker-sei-localhost/.env
 /ops/docker-sei-localhost/env.env
 /ops/docker-sei-localhost/tests/env-test.env
 /ops/docker-sei-localhost/tests/Selenium/PythonExported/test_suiteBasics-executar.py
 /ops/docker-sei-localhost/tests/Selenium/PythonExported/resultado.xml
-/fontes/sei/src/main/php/remi/
 
 # Extensoes e pastas gerais
 *.bak
@@ -55,10 +45,8 @@ phpinfo.php
 
 # OpenCode / spec-kit / local tooling
 node_modules/
-vendor/
 *.log
 *.cache
-.env*
 .DS_Store
 Thumbs.db
 *.tmp
@@ -75,12 +63,14 @@ desktop.ini
 .specify/feature.json
 .specify/extensions/*/local-config.yml
 
-/.specify/init-options.json
-/.specify/integration.json
-
 # Python: cache de bytecode gerado ao rodar os scripts e testes das skills.
 __pycache__/
 
+.env*
+
 /specs
+
+/.specify/init-options.json
+/.specify/integration.json
 
 /.agents/memory/runbook.md

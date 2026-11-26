@@ -30,6 +30,7 @@ Executar na seguinte ordem quando os artefatos existirem:
 | DTO/BD/DDL | `python3 .agents/skills/sei-verificacao-banco-dados/audit.py --input <path> --exit-code` | 0=PASS, 1=WARN, 2=BLOCK |
 | Cadastro de tarefa (`TarefaDTO` ou `INSERT INTO tarefa`) | `python3 .agents/skills/sei-verificacao-tarefa/audit.py --input <script de release do módulo> --exit-code` | 0=PASS, 1=WARN, 2=BLOCK |
 | Controladores | `python3 .agents/skills/sei-verificacao-controladores/audit.py --input <path> --exit-code` | 0=PASS, 1=WARN, 2=BLOCK |
+| PHP de módulo SEI novo ou alterado (reuso do core) | `python3 .agents/skills/sei-direcionador-integracao/audit.py --exit-code` | 0=PASS, 1=WARN, 2=BLOCK |
 
 Acione cada auditor somente quando o artefato correspondente existir no
 escopo. Todos falham de forma fechada: entrada inexistente, tipo incompatível,
